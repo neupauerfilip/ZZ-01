@@ -2343,6 +2343,347 @@ body{
   .fidelity-h2 .exam-selection-summary{grid-template-columns:78px minmax(0,1fr)}.fidelity-h2 .exam-selection-summary img{width:75px;height:65px}
 }
 
+
+/* ======================================================================
+   VISUAL FIDELITY H7 — ZKOUŠENÍ / ZNÁMKOVÁNÍ / VÝSLEDEK
+   Podle schválených pixel-art referencí. Funkční data a ukládání zůstávají.
+   ====================================================================== */
+.exam-live-screen.fidelity-h7,
+.exam-result-screen.fidelity-h7-result{
+  width:min(790px,100%);
+  margin:0 auto;
+  padding:0 0 16px;
+}
+.fidelity-h7 .exam-live-head{
+  margin:0 0 14px;
+  padding:13px 100px 14px;
+  border-bottom:4px solid #0796bd;
+}
+.fidelity-h7 .exam-live-title{
+  color:#18dff0;
+  font-size:clamp(1.5rem,5.4vw,2.45rem);
+  text-shadow:4px 4px 0 #00243c;
+}
+.fidelity-h7 .exam-live-step{
+  top:11px;
+  border:3px solid #16dff0;
+  box-shadow:inset 0 0 0 2px #06536a,3px 3px 0 #00101c;
+}
+.fidelity-h7 .exam-live-context{
+  border:4px solid #0d9dc1;
+  background:linear-gradient(180deg,#061e31,#031725);
+  box-shadow:inset 0 0 0 2px #034f68,6px 6px 0 #00101d;
+  padding:12px 16px;
+  gap:7px;
+  clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px),0 10px);
+}
+.fidelity-h7 .exam-live-context-row{
+  grid-template-columns:118px minmax(0,1fr);
+  font-size:clamp(.92rem,2.3vw,1.12rem);
+}
+.fidelity-h7 .exam-live-context-row span{
+  color:#10dff4;
+  font-size:.72rem;
+}
+.fidelity-h7 .exam-live-main{
+  grid-template-columns:minmax(230px,.88fr) minmax(310px,1.12fr);
+  gap:16px;
+  margin-top:16px;
+  align-items:stretch;
+}
+.fidelity-h7 .exam-student-panel{
+  min-height:315px;
+  padding:10px 8px 8px;
+  border:0;
+  background:transparent;
+  box-shadow:none;
+  justify-content:flex-end;
+}
+.h7-student-art{
+  width:min(250px,92%);
+  height:auto;
+  display:block;
+  margin:auto auto 4px;
+  image-rendering:pixelated;
+}
+.fidelity-h7 .exam-encourage{
+  min-height:58px;
+  display:grid;
+  place-items:center;
+  border:4px solid #0b7898;
+  background:#061421;
+  box-shadow:inset 0 0 0 2px #023a53,5px 5px 0 #00101d;
+  color:#f5ead7;
+  font-size:clamp(.94rem,2.7vw,1.2rem);
+  font-style:normal;
+  clip-path:polygon(12px 0,calc(100% - 12px) 0,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,0 calc(100% - 12px),0 12px);
+}
+.fidelity-h7 .exam-timer-panel{
+  align-self:center;
+  border:4px solid #0a7fa1;
+  background:#051724;
+  box-shadow:inset 0 0 0 2px #02364d,6px 6px 0 #00101d;
+  padding:16px;
+  min-height:210px;
+  clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px),0 10px);
+}
+.fidelity-h7 .exam-timer-label{
+  color:#14ddf0;
+  font-size:.82rem;
+  margin-bottom:10px;
+}
+.fidelity-h7 .exam-live-timer{
+  border:0;
+  background:transparent;
+  box-shadow:none;
+  padding:6px 0 2px;
+}
+.fidelity-h7 .exam-live-timer .timer{
+  font-size:clamp(3.5rem,12vw,6.6rem);
+  color:#ff9615;
+  text-shadow:5px 5px 0 #7f3100,0 0 14px rgba(255,144,0,.18);
+}
+.fidelity-h7 .exam-live-timer.is-paused .timer{
+  color:#ffe56d;
+  text-shadow:5px 5px 0 #6e5900;
+}
+.fidelity-h7 .exam-time-track{
+  height:23px;
+  border:4px solid #0b7390;
+  background:#03101a;
+  box-shadow:inset 0 0 0 2px #00101a;
+  padding:3px;
+}
+.fidelity-h7 .exam-time-progress{
+  background:#ff8517;
+}
+.fidelity-h7 .exam-live-actions{
+  grid-template-columns:1fr 1.35fr;
+  gap:16px;
+  margin-top:14px;
+}
+.exam-pause-button,
+.fidelity-h7 .exam-end-button{
+  min-height:92px;
+  border-width:5px;
+  font-family:var(--pixel);
+  font-size:clamp(.78rem,2.7vw,1.08rem);
+  text-transform:uppercase;
+  box-shadow:inset 0 0 0 3px rgba(255,255,255,.08),6px 6px 0 #00101d;
+  clip-path:polygon(9px 0,calc(100% - 9px) 0,100% 9px,100% calc(100% - 9px),calc(100% - 9px) 100%,9px 100%,0 calc(100% - 9px),0 9px);
+}
+.exam-pause-button{
+  border:5px solid #ffd22f;
+  background:linear-gradient(180deg,#735000,#3d2900);
+  color:#fff3a3;
+}
+.exam-pause-button.is-resume{
+  border-color:#4ef28a;
+  background:linear-gradient(180deg,#0c7137,#08451f);
+  color:#e8fff0;
+}
+.fidelity-h7 .exam-end-button{
+  border-color:#ff5d61;
+  background:linear-gradient(180deg,#8a1c22,#4d0f13);
+  color:#fff2ec;
+}
+.fidelity-h7 .arcade-footer,
+.fidelity-h7-result .arcade-footer{
+  margin-top:18px;
+  border-top:3px solid #0b7d9d;
+}
+
+/* H7 grading */
+.fidelity-h7-grade-backdrop{
+  background:rgba(1,10,20,.93);
+  padding:18px;
+  align-items:center;
+}
+.grade-screen-modal.fidelity-h7-grade{
+  width:min(790px,96vw);
+  max-height:96vh;
+  padding:14px 16px 16px;
+  border:5px solid #0e9fc5;
+  background:linear-gradient(180deg,#041b2c,#021522);
+  box-shadow:inset 0 0 0 3px #03465f,9px 9px 0 #00101d;
+  clip-path:polygon(12px 0,calc(100% - 12px) 0,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,0 calc(100% - 12px),0 12px);
+}
+.fidelity-h7-grade .grade-screen-head{
+  border-bottom:4px solid #087d9d;
+  padding-bottom:13px;
+  margin-bottom:13px;
+}
+.fidelity-h7-grade .grade-screen-head h2{
+  color:#19def0;
+  font-size:clamp(1.5rem,5vw,2.35rem);
+  text-shadow:4px 4px 0 #00243c;
+}
+.fidelity-h7-grade .grade-context{
+  border:4px solid #0c8faf;
+  background:#051a29;
+  padding:11px 14px;
+  gap:6px;
+  box-shadow:inset 0 0 0 2px #033d54;
+}
+.fidelity-h7-grade .grade-context div{grid-template-columns:116px minmax(0,1fr)}
+.fidelity-h7-grade .grade-context span{
+  color:#0fe0f0;
+  font-size:.7rem;
+}
+.fidelity-h7-grade .grade-context strong{font-size:1rem}
+.fidelity-h7-grade .grade-picker-title{
+  font-size:clamp(.88rem,3vw,1.15rem);
+  color:#cafaff;
+  margin:17px 0 12px;
+}
+.fidelity-h7-grade .grade-picker{gap:12px}
+.fidelity-h7-grade .grade-choice{
+  min-height:94px;
+  border-width:5px;
+  font-size:clamp(2rem,7vw,3.15rem);
+  color:#081018;
+  text-shadow:2px 2px 0 rgba(255,255,255,.35);
+  box-shadow:inset 0 0 0 3px rgba(255,255,255,.18),5px 5px 0 #00101d;
+  clip-path:polygon(8px 0,calc(100% - 8px) 0,100% 8px,100% calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,0 calc(100% - 8px),0 8px);
+}
+.fidelity-h7-grade .grade-choice[data-grade="1"]{background:#4eea8a;border-color:#83ffae}
+.fidelity-h7-grade .grade-choice[data-grade="2"]{background:#76db42;border-color:#9cff6c}
+.fidelity-h7-grade .grade-choice[data-grade="3"]{background:#ffd044;border-color:#ffe073}
+.fidelity-h7-grade .grade-choice[data-grade="4"]{background:#f69228;border-color:#ffb04f}
+.fidelity-h7-grade .grade-choice[data-grade="5"]{background:#ee5557;border-color:#ff7779}
+.fidelity-h7-grade .grade-no-grade{
+  margin-top:18px;
+  min-height:84px;
+  border:5px solid #ff6065;
+  background:linear-gradient(180deg,#a5282e,#6b171b);
+  color:#fff6ef;
+  font-size:clamp(.78rem,3vw,1.08rem);
+  box-shadow:inset 0 0 0 3px #5f0f13,6px 6px 0 #00101d;
+}
+.fidelity-h7-grade .grade-note-box{
+  margin-top:19px;
+}
+.fidelity-h7-grade .grade-note-box label{
+  color:#14dff0;
+  font-size:.72rem;
+}
+.fidelity-h7-grade .grade-note-box label span{
+  color:#a8c5cc;
+  font-family:"Courier New",monospace;
+  text-transform:none;
+}
+.fidelity-h7-grade .grade-note-box textarea{
+  min-height:112px;
+  border:4px solid #0a7d9b;
+  background:#041624;
+  color:#f4ead6;
+  box-shadow:inset 0 0 0 2px #022e42;
+}
+.fidelity-h7-grade .grade-modal-actions-single{
+  grid-template-columns:1fr;
+}
+.fidelity-h7-grade .grade-cancel{
+  min-height:58px;
+  border:3px solid #0e86a8;
+  background:#092331;
+  color:#e7fbff;
+}
+
+/* H7 result */
+.exam-result-screen.fidelity-h7-result{
+  padding-top:6px;
+}
+.fidelity-h7-result .exam-result-head{
+  border:0;
+  margin-bottom:4px;
+}
+.fidelity-h7-result .exam-result-title{
+  color:#56ec7b;
+  font-size:clamp(1.7rem,6.3vw,2.8rem);
+  text-shadow:4px 4px 0 #0b5428;
+}
+.h7-result-art{
+  width:min(290px,56vw);
+  display:block;
+  margin:4px auto 8px;
+  image-rendering:pixelated;
+}
+.fidelity-h7-result .exam-result-summary{
+  border:4px solid #0b8ead;
+  background:#061a29;
+  padding:13px 16px;
+  gap:7px;
+  box-shadow:inset 0 0 0 2px #03384e,6px 6px 0 #00101d;
+  clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px),0 10px);
+}
+.fidelity-h7-result .exam-result-row{
+  grid-template-columns:124px minmax(0,1fr);
+  font-size:clamp(.9rem,2.4vw,1.08rem);
+}
+.fidelity-h7-result .exam-result-row span{
+  color:#12dff0;
+  font-size:.7rem;
+}
+.fidelity-h7-result .exam-result-grade{
+  min-width:54px;
+  min-height:45px;
+  border-width:4px;
+  font-size:1.25rem;
+  color:#07100a;
+}
+.fidelity-h7-result .exam-result-grade.grade-1,
+.fidelity-h7-result .exam-result-grade.grade-2{background:#50e77b;border-color:#80ffaa}
+.fidelity-h7-result .exam-result-grade.grade-3{background:#ffd04b;border-color:#ffe57e}
+.fidelity-h7-result .exam-result-grade.grade-4{background:#f39a31;border-color:#ffb75f}
+.fidelity-h7-result .exam-result-grade.grade-5{background:#ed5b5f;border-color:#ff8184}
+.fidelity-h7-result .exam-result-grade.no-grade{color:#fff;background:#8b2025;border-color:#ff686d}
+.fidelity-h7-result .exam-result-quote{
+  margin:15px 0;
+  min-height:58px;
+  display:grid;
+  place-items:center;
+  border:4px solid #087c9b;
+  background:#051725;
+  box-shadow:inset 0 0 0 2px #03364d;
+  font-size:clamp(.9rem,2.7vw,1.1rem);
+}
+.fidelity-h7-result .exam-result-actions{gap:12px}
+.fidelity-h7-result .exam-result-next,
+.fidelity-h7-result .exam-result-home{
+  min-height:76px;
+  border-width:4px;
+  font-size:clamp(.78rem,2.8vw,1rem);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.12),6px 6px 0 #00101d;
+  clip-path:polygon(8px 0,calc(100% - 8px) 0,100% 8px,100% calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,0 calc(100% - 8px),0 8px);
+}
+.fidelity-h7-result .exam-result-next{
+  border-color:#16b7ff;
+  background:linear-gradient(180deg,#0e71d8,#084d9e);
+}
+.fidelity-h7-result .exam-result-home{
+  border-color:#11c9ed;
+  background:linear-gradient(180deg,#0b3045,#062235);
+}
+
+@media(max-width:650px){
+  .fidelity-h7 .exam-live-head{padding:48px 4px 12px}
+  .fidelity-h7 .exam-live-main{grid-template-columns:1fr}
+  .fidelity-h7 .exam-student-panel{min-height:240px}
+  .h7-student-art{width:min(225px,72vw)}
+  .fidelity-h7 .exam-timer-panel{min-height:185px}
+  .fidelity-h7 .exam-live-actions{grid-template-columns:1fr 1.25fr;gap:9px}
+  .exam-pause-button,.fidelity-h7 .exam-end-button{min-height:76px;border-width:4px}
+  .fidelity-h7-grade .grade-picker{gap:5px}
+  .fidelity-h7-grade .grade-choice{min-height:70px;border-width:4px}
+}
+@media(max-width:430px){
+  .fidelity-h7 .exam-live-context-row,
+  .fidelity-h7-result .exam-result-row{grid-template-columns:87px minmax(0,1fr)}
+  .fidelity-h7-grade .grade-context div{grid-template-columns:85px minmax(0,1fr)}
+  .fidelity-h7 .exam-live-actions{grid-template-columns:1fr}
+  .fidelity-h7-grade{padding:9px!important}
+}
+
 </style>
   <title>Zkouškomat ZZ-01</title>
 </head>
@@ -4765,8 +5106,20 @@ body{
   function beginExam(topic){
     const f=state.examFlow, s=studentById(f.selectedStudentId), c=classById(f.classId);
     const startedAt=now();
-    state.activeExam={id:uid('exam'),teacherId:state.user.id,studentId:s.id,classId:c.id,subject:f.subject,schoolYear:c.schoolYear,topic:topic||'Bez tématu',startedAt,durationMs:state.settings.timerMinutes*60*1000,notified:false,liveNote:'',lockerAppeared:!!f.lockerAppeared,lockerResultId:f.lockerResult||null,lockerResultName:f.lockerResultName||'',lockerPointsDelta:Number(f.lockerPointsDelta||0),customTopicUsed:!!f.customTopicUsed};
+    const durationMs=state.settings.timerMinutes*60*1000;
+    state.activeExam={
+      id:uid('exam'),teacherId:state.user.id,studentId:s.id,classId:c.id,subject:f.subject,schoolYear:c.schoolYear,
+      topic:topic||'Bez tématu',startedAt,durationMs,timerTotalMs:durationMs,timerEndsAt:startedAt+durationMs,
+      paused:false,pausedRemainingMs:null,notified:false,
+      lockerAppeared:!!f.lockerAppeared,lockerResultId:f.lockerResult||null,lockerResultName:f.lockerResultName||'',
+      lockerPointsDelta:Number(f.lockerPointsDelta||0),customTopicUsed:!!f.customTopicUsed
+    };
     f.topic=topic||'Bez tématu'; f.stage='exam'; saveState(); render(); startTimerLoop();
+  }
+
+  function examTotalMs(){
+    if(!state.activeExam)return 0;
+    return Math.max(1,Number(state.activeExam.timerTotalMs||state.activeExam.durationMs||1));
   }
 
   function startTimerLoop(){
@@ -4777,26 +5130,23 @@ body{
       const el=document.getElementById('exam-timer');
       if(!el) return;
       const rem=remainingMs();
-      const ratio=Math.max(0,Math.min(1,rem/state.activeExam.durationMs));
+      const ratio=Math.max(0,Math.min(1,rem/examTotalMs()));
+      const paused=state.activeExam.paused===true;
       el.textContent=formatDuration(rem);
       el.classList.toggle('over',rem<=0);
+      el.classList.toggle('paused',paused);
       const progress=document.getElementById('exam-time-progress');
       if(progress)progress.style.width=`${Math.round(ratio*100)}%`;
       const timerBox=el.closest('.exam-live-timer');
-      if(timerBox)timerBox.classList.toggle('is-over',rem<=0);
-      const note=document.getElementById('exam-time-note');
-      if(note){
-        note.classList.toggle('over',rem<=0);
-        note.textContent=rem<=0?'Čas vypršel. Zkoušení pokračuje, dokud ho učitel neukončí.':'Po vypršení času se pouze zobrazí upozornění.';
+      if(timerBox){
+        timerBox.classList.toggle('is-over',rem<=0);
+        timerBox.classList.toggle('is-paused',paused);
       }
       const quote=document.getElementById('exam-encourage');
-      if(quote)quote.textContent=rem<=0?'„Čas vypršel – pokračujte podle potřeby.“':ratio<.2?'„Už jen kousek.“':ratio<.55?'„Klid, to dáš!“':'„Jdeme na to!“';
-      const avatar=document.querySelector('.pixel-student');
-      if(avatar){
-        avatar.classList.toggle('nervous',ratio<.55 && ratio>=.2);
-        avatar.classList.toggle('stressed',ratio<.2 || rem<=0);
+      if(quote){
+        quote.textContent=paused?'„Zkoušení je pozastavené.“':rem<=0?'„Čas vypršel – pokračujte podle potřeby.“':ratio<.2?'„Už jen kousek.“':ratio<.55?'„Klid, to dáš!“':'„Jdeme na to!“';
       }
-      if(rem<=0 && !state.activeExam.notified){
+      if(rem<=0 && !paused && !state.activeExam.notified){
         state.activeExam.notified=true; saveState();
         toast('Čas zkoušení vypršel.','warn');
         sendTimerNotification();
@@ -4804,28 +5154,39 @@ body{
     },500);
   }
 
-  function remainingMs(){ return state.activeExam ? state.activeExam.durationMs-(now()-state.activeExam.startedAt) : 0; }
-  function formatDuration(ms){ const over=ms<0; const t=Math.abs(ms); const m=Math.floor(t/60000); const s=Math.floor((t%60000)/1000); return `${over?'+':''}${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; }
+  function remainingMs(){
+    const e=state.activeExam;
+    if(!e)return 0;
+    if(e.paused===true && Number.isFinite(Number(e.pausedRemainingMs))) return Number(e.pausedRemainingMs);
+    if(Number.isFinite(Number(e.timerEndsAt))) return Number(e.timerEndsAt)-now();
+    return Number(e.durationMs||0)-(now()-Number(e.startedAt||now()));
+  }
+
+  function formatDuration(ms){
+    const over=ms<0, t=Math.abs(ms);
+    const m=Math.floor(t/60000), sec=Math.floor((t%60000)/1000);
+    return `${over?'+':''}${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+  }
 
   function renderActiveExam(){
     const e=state.activeExam;
     if(!e){ state.examFlow.stage='question'; return render(); }
-    const s=studentById(e.studentId), c=classById(e.classId), rem=remainingMs();
-    const ratio=Math.max(0,Math.min(1,rem/e.durationMs));
+    const st=studentById(e.studentId), cls=classById(e.classId), rem=remainingMs();
+    const ratio=Math.max(0,Math.min(1,rem/examTotalMs()));
     const percent=Math.round(ratio*100);
     const over=rem<=0;
-    const mood=over?'Čas vypršel – pokračujte podle potřeby.':ratio<.2?'Už jen kousek.':ratio<.55?'Klid, to dáš!':'Jdeme na to!';
-    const classLabel=c?`${esc(c.displayName)} · ${esc(c.schoolYear)}`:'Třída';
+    const paused=e.paused===true;
+    const mood=paused?'Zkoušení je pozastavené.':over?'Čas vypršel – pokračujte podle potřeby.':ratio<.2?'Už jen kousek.':ratio<.55?'Klid, to dáš!':'Jdeme na to!';
+    const classLabel=cls?`${esc(cls.displayName)} · ${esc(cls.schoolYear)}`:'Třída';
     const body=`
-      <section class="exam-live-screen">
+      <section class="exam-live-screen fidelity-h7">
         <div class="exam-live-head">
-          <h1 class="exam-live-title">Průběh zkoušení</h1>
-          <div class="exam-live-subtitle">Časovač pouze upozorňuje. Zkoušení se po vypršení času samo neukončí.</div>
+          <h1 class="exam-live-title">Zkoušení</h1>
           <div class="exam-live-step">KROK 6 / 6</div>
         </div>
 
         <div class="exam-live-context">
-          <div class="exam-live-context-row"><span>Žák</span><strong>${esc(s?.name||'Žák')}</strong></div>
+          <div class="exam-live-context-row"><span>Žák</span><strong>${esc(st?.name||'Žák')}</strong></div>
           <div class="exam-live-context-row"><span>Třída</span><strong>${classLabel}</strong></div>
           <div class="exam-live-context-row"><span>Předmět</span><strong>${esc(e.subject)}</strong></div>
           <div class="exam-live-context-row"><span>Téma</span><strong>${esc(e.topic)}</strong></div>
@@ -4833,32 +5194,26 @@ body{
 
         <div class="exam-live-main">
           <section class="exam-student-panel">
-            <div class="pixel-student ${over||ratio<.2?'stressed':ratio<.55?'nervous':''}" aria-hidden="true">
-              <div class="head"></div><div class="body"></div><div class="leg1"></div><div class="leg2"></div>
-            </div>
+            <img class="h7-student-art" src="assets/ui/h7-exam-student.png" alt="" aria-hidden="true">
             <div id="exam-encourage" class="exam-encourage">„${esc(mood)}“</div>
           </section>
 
           <section class="exam-timer-panel">
-            <div class="exam-timer-label">Zbývající čas</div>
-            <div class="exam-live-timer ${over?'is-over':''}">
-              <div id="exam-timer" class="timer ${over?'over':''}">${formatDuration(rem)}</div>
+            <div class="exam-timer-label">${paused?'Pozastaveno':'Zbývající čas'}</div>
+            <div class="exam-live-timer ${over?'is-over':''} ${paused?'is-paused':''}">
+              <div id="exam-timer" class="timer ${over?'over':''} ${paused?'paused':''}">${formatDuration(rem)}</div>
               <div class="exam-time-track" aria-hidden="true"><div id="exam-time-progress" class="exam-time-progress" style="width:${percent}%"></div></div>
-            </div>
-            <div id="exam-time-note" class="exam-time-note ${over?'over':''}">${over?'Čas vypršel. Zkoušení pokračuje, dokud ho učitel neukončí.':'Po vypršení času se pouze zobrazí upozornění.'}</div>
-
-            <div class="exam-live-actions">
-              <button type="button" class="exam-end-button" data-action="end-exam">■ &nbsp; Ukončit zkoušení</button>
             </div>
           </section>
         </div>
 
-        <section class="exam-live-note">
-          <label for="exam-live-note">Poznámka – průběžná / volitelná</label>
-          <textarea id="exam-live-note" placeholder="Sem si můžete během zkoušení zapsat krátkou poznámku…">${esc(e.liveNote||'')}</textarea>
-        </section>
+        <div class="exam-live-actions">
+          <button type="button" class="exam-pause-button ${paused?'is-resume':''}" data-action="toggle-exam-pause">
+            ${paused?'▶ &nbsp; Pokračovat':'Ⅱ &nbsp; Pozastavit'}
+          </button>
+          <button type="button" class="exam-end-button" data-action="end-exam">■ &nbsp; Ukončit zkoušení</button>
+        </div>
 
-        <div class="exam-live-hint"><div class="exam-live-hint-icon">i</div><div>Po ukončení zkoušení vyberete známku 1–5 nebo stav bez známky.</div></div>
         <div class="arcade-footer"><span>Dobrovolný doplněk výuky.</span><span>ZZ-01</span></div>
       </section>`;
     app.innerHTML=layout(body,'Zkoušení');
@@ -4867,50 +5222,39 @@ body{
 
   function showGradeModal(){
     const e=state.activeExam; if(!e)return;
-    const s=studentById(e.studentId),c=classById(e.classId);
-    const elapsed=Math.max(0,now()-e.startedAt);
-    modalRoot.innerHTML=`<div class="modal-backdrop grade-backdrop">
-      <section class="grade-screen-modal" role="dialog" aria-modal="true" aria-labelledby="grade-title">
+    const st=studentById(e.studentId),cls=classById(e.classId);
+    modalRoot.innerHTML=`<div class="modal-backdrop grade-backdrop fidelity-h7-grade-backdrop">
+      <section class="grade-screen-modal fidelity-h7-grade" role="dialog" aria-modal="true" aria-labelledby="grade-title">
         <div class="grade-screen-head"><h2 id="grade-title">Známkování</h2></div>
+
         <div class="grade-context">
-          <div><span>Žák</span><strong>${esc(s?.name||'Žák')}</strong></div>
-          <div><span>Třída</span><strong>${esc(c?.displayName||'')} · ${esc(c?.schoolYear||'')}</strong></div>
+          <div><span>Žák</span><strong>${esc(st?.name||'Žák')}</strong></div>
+          <div><span>Třída</span><strong>${esc(cls?.displayName||'')} · ${esc(cls?.schoolYear||'')}</strong></div>
           <div><span>Předmět</span><strong>${esc(e.subject)}</strong></div>
           <div><span>Téma</span><strong>${esc(e.topic)}</strong></div>
-          <div><span>Čas zkoušení</span><strong>${formatDuration(elapsed).replace('+','')}</strong></div>
         </div>
 
         <div class="grade-picker-title">Vyber známku</div>
         <div class="grade-picker">
-          ${[1,2,3,4,5].map(n=>`<button type="button" class="grade-choice" data-grade="${n}" aria-pressed="false">${n}</button>`).join('')}
+          ${[1,2,3,4,5].map(n=>`<button type="button" class="grade-choice" data-grade="${n}" aria-label="Uložit známku ${n}">${n}</button>`).join('')}
         </div>
 
-        <button type="button" class="grade-no-grade" id="no-grade-btn">✕ &nbsp; Vyhodit žáka od zkoušky – bez známky</button>
+        <button type="button" class="grade-no-grade" id="no-grade-btn">✕ &nbsp; Vyhodit žáka od zkoušky</button>
 
         <div class="grade-note-box">
-          <label for="grade-note">Poznámka pro učitele – volitelná</label>
-          <textarea id="grade-note" placeholder="Napište krátkou poznámku…">${esc(e.liveNote||'')}</textarea>
+          <label for="grade-note">Poznámka pro učitele <span>(volitelná)</span></label>
+          <textarea id="grade-note" placeholder="Napište krátkou poznámku…"></textarea>
         </div>
 
-        <div class="grade-modal-actions">
-          <button type="button" class="grade-cancel" id="cancel-grade">✕ &nbsp; Zrušit</button>
-          <button type="button" class="grade-save" id="save-grade" disabled>▣ &nbsp; Uložit výsledek</button>
+        <div class="grade-modal-actions grade-modal-actions-single">
+          <button type="button" class="grade-cancel" id="cancel-grade">← &nbsp; Zpět ke zkoušení</button>
         </div>
       </section>
     </div>`;
 
-    let selectedGrade=null;
-    const saveBtn=document.getElementById('save-grade');
     modalRoot.querySelectorAll('[data-grade]').forEach(b=>b.addEventListener('click',()=>{
-      selectedGrade=Number(b.dataset.grade);
-      modalRoot.querySelectorAll('[data-grade]').forEach(x=>{
-        const on=x===b;
-        x.classList.toggle('is-selected',on);
-        x.setAttribute('aria-pressed',on?'true':'false');
-      });
-      saveBtn.disabled=false;
+      finalizeExam(Number(b.dataset.grade),false);
     }));
-    saveBtn.onclick=()=>selectedGrade?finalizeExam(selectedGrade,false):toast('Nejdřív vyber známku.','warn');
     document.getElementById('no-grade-btn').onclick=()=>finalizeExam(null,true);
     document.getElementById('cancel-grade').onclick=closeModal;
   }
@@ -4918,7 +5262,7 @@ body{
   function finalizeExam(grade,noGrade){
     const e=state.activeExam; if(!e) return;
     const s=studentById(e.studentId), c=classById(e.classId);
-    const note=document.getElementById('grade-note')?.value.trim()||String(e.liveNote||'').trim();
+    const note=document.getElementById('grade-note')?.value.trim()||'';
     const endedAt=now();
     const record={
       id:uid('hist'),teacherId:state.user.id,studentId:s.id,classId:c.id,subject:e.subject,schoolYear:c.schoolYear,
@@ -4964,19 +5308,21 @@ body{
     if(!r){state.route='home';saveState();return renderHome();}
     const gradeLabel=r.noGrade?'Bez známky':String(r.grade??'—');
     const quote=r.noGrade?'Záznam byl uložen bez známky.':Number(r.grade)<=2?'Dobrá práce!':Number(r.grade)===3?'Hotovo. Další zkušenost je doma.':'Výsledek je uložen. Pokračujeme dál.';
+    const gradeClass=r.noGrade?'no-grade':`grade-${Number(r.grade)||0}`;
     const body=`
-      <section class="exam-result-screen">
+      <section class="exam-result-screen fidelity-h7-result">
         <div class="exam-result-head">
           <h1 class="exam-result-title">Výsledek uložen!</h1>
         </div>
-        <div class="exam-result-icon" aria-hidden="true"></div>
+
+        <img class="h7-result-art" src="assets/ui/h7-result-saved.png" alt="" aria-hidden="true">
 
         <div class="exam-result-summary">
           <div class="exam-result-row"><span>Žák</span><strong>${esc(r.studentName)}</strong></div>
           <div class="exam-result-row"><span>Třída</span><strong>${esc(r.className)} · ${esc(r.schoolYear)}</strong></div>
           <div class="exam-result-row"><span>Předmět</span><strong>${esc(r.subject)}</strong></div>
           <div class="exam-result-row"><span>Téma</span><strong>${esc(r.topic)}</strong></div>
-          <div class="exam-result-row"><span>Výsledek</span><strong><span class="exam-result-grade ${r.noGrade?'no-grade':''}">${esc(gradeLabel)}</span></strong></div>
+          <div class="exam-result-row"><span>Známka</span><strong><span class="exam-result-grade ${gradeClass}">${esc(gradeLabel)}</span></strong></div>
           <div class="exam-result-row"><span>Datum a čas</span><strong>${esc(fmtDate(r.at))}</strong></div>
         </div>
 
@@ -6123,6 +6469,19 @@ body{
         saveState();render();
         toast(`Vylosované téma: ${topic}`);
       },2100);
+    }
+    else if(action==='toggle-exam-pause'){
+      const e=state.activeExam; if(!e)return;
+      if(e.paused===true){
+        const rem=Number.isFinite(Number(e.pausedRemainingMs))?Number(e.pausedRemainingMs):remainingMs();
+        e.timerEndsAt=now()+rem;
+        e.paused=false;
+        e.pausedRemainingMs=null;
+      }else{
+        e.pausedRemainingMs=remainingMs();
+        e.paused=true;
+      }
+      saveState();render();
     }
     else if(action==='end-exam') showGradeModal();
     else if(action==='result-next-exam'){

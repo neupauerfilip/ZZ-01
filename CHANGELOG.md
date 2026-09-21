@@ -97,3 +97,12 @@
 - Seznam témat, vyhledávání, dvousloupcové rozložení, Kolo štěstí, vylosované téma a spodní akce byly proporčně sjednoceny s referencí.
 - Kolo používá pět tematických pixelových ikon a zachovává původní animaci i náhodný výběr.
 - Výběr uloženého tématu, vlastní téma, volitelné uložení tématu a potvrzení do zkoušení zůstávají funkčně beze změny.
+
+## 2026-09-21 — Visual fidelity H7
+- Krok 6/6 „Zkoušení“ byl přestavěn podle schválených obrazovek probíhajícího zkoušení, známkování a uloženého výsledku.
+- Probíhající zkoušení používá pixelovou postavu žáka z vizuální reference, velký oranžový časovač, stavový proužek a výrazná tlačítka Pozastavit/Pokračovat a Ukončit zkoušení.
+- Průběžná poznámka byla z obrazovky zkoušení odstraněna; volitelná poznámka zůstává až ve známkování podle schváleného toku.
+- Známky 1–5 jsou zobrazeny jako velká barevná pixelová tlačítka; kliknutí na známku výsledek rovnou uloží. Samostatné tlačítko Uložit výsledek se již nepoužívá.
+- „Vyhodit žáka od zkoušky“ ukládá výsledek bez známky.
+- Obrazovka „Výsledek uložen!“ používá zelený potvrzovací pixel-art prvek z reference a zachovává volby Další zkoušení / Zpět do hlavního menu.
+- Logika historie, bodů, ochranného intervalu a vyhodnocení zkoušení zůstala zachována.
