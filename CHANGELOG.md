@@ -55,3 +55,11 @@
 - Přidána průběžná volitelná poznámka, která se předvyplní do závěrečného hodnocení.
 - Známkování 1–5 dostalo samostatné arkádové rozhraní; stav „Vyhodit žáka od zkoušky“ se ukládá bez známky.
 - Po uložení se zobrazuje samostatná obrazovka „Výsledek uložen!“ se souhrnem a volbou dalšího zkoušení nebo návratu do menu.
+
+
+## 2026-09-21 — Visual fidelity H1
+- Hlavní menu přestavěno podle konkrétní schválené reference „Retro pixelové menu aplikace Zkouškomat“.
+- Zvětšena a zpřesněna hlavička, titul, slogan, 2×4 menu, pixelové ikony a oranžová primární dlaždice.
+- Přidána spodní dekorace knih / školních skříněk a footer podle reference.
+- Školní přehled byl z hlavního menu odstraněn, protože v referenčním návrhu není; data zůstávají dostupná ve Scoringu a dalších obrazovkách.
+- Funkční navigace hlavního menu zůstala zachována.
