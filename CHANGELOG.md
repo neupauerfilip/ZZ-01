@@ -90,3 +90,10 @@
 - Karty byly proporčně zpřesněny: pixelová postava, označení kandidáta, jméno, výrazné body a velké oranžové tlačítko Vybrat / Vybrán.
 - Informační řádek, opakování losu, hlavní potvrzení a ruční volba jiného žáka byly sjednoceny s referenčním mockupem.
 - Počet předchozích zkoušení se na kartách vizuálně nezobrazuje, ale data zůstávají zachována. Vážený los a ochranný interval se nemění.
+
+## 2026-09-21 — Visual fidelity H6
+- Krok 5/6 „Výběr tématu“ přestavěn podle schválené reference s Kolem štěstí.
+- Z předlohy byly použity samostatné pixelové UI assety pro titul, žáka, témata, učitele a vlastní téma; obrazovka není použita jako statické pozadí.
+- Seznam témat, vyhledávání, dvousloupcové rozložení, Kolo štěstí, vylosované téma a spodní akce byly proporčně sjednoceny s referencí.
+- Kolo používá pět tematických pixelových ikon a zachovává původní animaci i náhodný výběr.
+- Výběr uloženého tématu, vlastní téma, volitelné uložení tématu a potvrzení do zkoušení zůstávají funkčně beze změny.

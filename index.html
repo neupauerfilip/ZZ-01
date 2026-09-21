@@ -1110,184 +1110,173 @@ th,td{padding:clamp(7px,1.8vw,10px);}
 
 /* Visual pass v5 – krok 5 / 6: výběr tématu a Kolo štěstí */
 .topic-screen{
-  width:min(100%,980px);
+  width:min(100%,940px);
   margin:0 auto;
-  padding:4px 0 18px;
+  padding:2px 0 18px;
 }
-.topic-head{text-align:center;position:relative;margin:10px 0 14px;padding:0 76px}
+.topic-head{position:relative;text-align:center;margin:4px 0 14px;padding:0 84px}
+.topic-title-line{display:flex;align-items:center;justify-content:center;gap:14px}
+.topic-title-icon{width:68px;height:62px;object-fit:contain;image-rendering:pixelated;filter:drop-shadow(3px 3px 0 #02101b)}
 .topic-title{
-  margin:0;
-  font-family:var(--pixel);
-  color:#72e9ff;
-  text-transform:uppercase;
-  font-size:clamp(1.45rem,4.6vw,2.5rem);
-  line-height:1.12;
-  text-shadow:3px 3px 0 #063b52;
+  margin:0;font-family:var(--pixel);font-size:clamp(2rem,6vw,3.7rem);line-height:.98;
+  text-transform:uppercase;color:#76efff;letter-spacing:.02em;
+  text-shadow:0 3px 0 #0b7897,3px 6px 0 #02101b;
 }
-.topic-subtitle{margin-top:7px;color:#d8f6ff;font-size:.9rem}
-.topic-step{
-  position:absolute;right:0;top:4px;
-  border:2px solid var(--cyan-dim);
-  padding:6px 8px;background:#071d28;color:var(--orange2);
-  font-family:var(--pixel);font-size:.62rem;white-space:nowrap;
-}
+.topic-subtitle{margin-top:10px;color:#d8f8ff;font-size:clamp(.82rem,2.2vw,1.05rem)}
+.topic-step{position:absolute;right:0;top:8px;color:#20d7ee;font-family:var(--pixel);font-size:.66rem;letter-spacing:.04em}
 .topic-context{
-  display:grid;grid-template-columns:82px minmax(0,1fr) 190px;
-  gap:14px;align-items:center;
-  border:3px solid var(--cyan);background:#061826;
-  box-shadow:6px 6px 0 #02070d;padding:12px 14px;margin-bottom:14px;
+  display:grid;grid-template-columns:112px minmax(0,1fr) 215px;gap:0;align-items:stretch;
+  border:3px solid #20dced;background:#05192a;box-shadow:5px 5px 0 #010912;margin:14px 0 16px;
 }
-.topic-student-avatar{width:68px;height:68px;margin:0;transform:none}
-.topic-context-data{display:grid;gap:7px}
-.topic-context-data>div{display:grid;grid-template-columns:90px minmax(0,1fr);gap:10px;align-items:baseline}
-.topic-context-data span{color:#c8f3ff}
-.topic-context-data strong{color:#ffd94c;font-size:1.06rem;overflow-wrap:anywhere}
+.topic-student-box{display:grid;place-items:center;padding:10px;border-right:2px solid #14748d;background:#061d30}
+.topic-student-photo{width:86px;height:94px;object-fit:cover;image-rendering:pixelated}
+.topic-context-data{display:grid;gap:6px;padding:14px 18px;align-content:center}
+.topic-context-data>div{display:grid;grid-template-columns:105px minmax(0,1fr);gap:12px;align-items:baseline}
+.topic-context-data span{color:#cef7ff;font-size:.94rem}
+.topic-context-data strong{color:#ffd42f;font-size:1.02rem;overflow-wrap:anywhere}
 .topic-motto{
-  align-self:stretch;border-left:2px solid var(--cyan-dim);
-  padding:8px 10px;display:flex;align-items:center;justify-content:center;
-  text-align:left;color:#2aa7c4;font-family:var(--pixel);
-  font-size:.62rem;line-height:1.45;gap:10px;
+  border-left:2px solid #14748d;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  color:#1892af;font-family:var(--pixel);font-size:.65rem;line-height:1.38;background:#061d30;
 }
-.topic-motto span{color:#c79c38;font-size:1.4rem}
-.topic-mode-bar{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+.topic-motto-face{color:#b99531;font-size:1.65rem;font-family:system-ui,sans-serif}
+.topic-mode-bar{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:0 6px 16px}
 .topic-mode{
-  min-height:52px;display:flex;align-items:center;justify-content:center;
-  border:3px solid var(--cyan);background:#082838;color:#d7f5ff;
-  font-family:var(--pixel);font-size:.72rem;text-align:center;padding:8px;
-  box-shadow:4px 4px 0 #02070d;
+  min-height:56px;border:3px solid #20dced;background:#07273a;color:#d9f7ff;display:flex;align-items:center;justify-content:center;
+  font-family:var(--pixel);font-size:.78rem;padding:8px;text-align:center;box-shadow:4px 4px 0 #010912;
 }
-.topic-mode.active{border-color:#ffb12d;background:#ff981b;color:#07131d}
-.topic-main-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.03fr);gap:14px}
+button.topic-mode{width:100%;cursor:pointer}
+.topic-mode.active{border-color:#ffd052;background:linear-gradient(180deg,#ffab22,#ff8614);color:#0b1117;box-shadow:inset 0 0 0 3px #ffcb47,4px 4px 0 #4a2005}
+.topic-main-grid{display:grid;grid-template-columns:minmax(0,.96fr) minmax(0,1.04fr);gap:16px}
 .topic-list-panel,.topic-wheel-panel{
-  border:3px solid var(--cyan);background:#061826;
-  box-shadow:6px 6px 0 #02070d;padding:14px;min-width:0;
+  min-width:0;border:3px solid #20dced;background:#05192a;box-shadow:5px 5px 0 #010912;padding:14px;
+  clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);
 }
-.topic-list-panel h2,.topic-wheel-panel h2{
-  margin:0 0 9px;color:#caf6ff;font-family:var(--pixel);
-  font-size:.86rem;
-}
-.topic-wheel-panel h2{text-align:center}
-.topic-wheel-sub{text-align:center;color:#b9e9f4;margin:-3px 0 8px}
+.topic-list-panel h2,.topic-wheel-panel h2{margin:0;color:#d5f9ff;font-family:var(--pixel);font-size:.88rem}
+.topic-list-panel h2{margin-bottom:10px}
+.topic-wheel-panel h2{text-align:center;font-size:1rem}
+.topic-wheel-sub{text-align:center;color:#c2edf7;margin:5px 0 9px;font-weight:700}
 .topic-search-wrap{
-  display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:7px;
-  border:2px solid var(--cyan);background:#082536;padding:0 9px;margin-bottom:9px;
+  display:grid;grid-template-columns:30px minmax(0,1fr);align-items:center;gap:6px;
+  border:2px solid #16b8d1;background:#08263a;padding:0 8px;margin-bottom:10px;
 }
-.topic-search-wrap span{font-size:1.2rem;color:#cbf7ff}
-.topic-search-wrap input{border:0;background:transparent;box-shadow:none;min-height:42px;padding:7px 2px}
-.topic-list-scroll{display:flex;flex-direction:column;gap:7px;max-height:385px;overflow:auto;padding-right:4px;scrollbar-color:var(--cyan) #07131d}
+.topic-search-wrap span{font-size:1.4rem;color:#c9f8ff}
+.topic-search-wrap input{border:0;background:transparent;box-shadow:none;min-height:44px;padding:7px 2px;color:#d7f5ff}
+.topic-list-scroll{display:flex;flex-direction:column;gap:7px;max-height:455px;overflow:auto;padding-right:7px;scrollbar-color:#20dced #07131d;scrollbar-width:auto}
 .topic-list-row{
-  width:100%;display:grid;grid-template-columns:46px minmax(0,1fr) auto;gap:10px;align-items:center;
-  min-height:67px;border:2px solid #1d7289;background:#082332;color:#e7f9ff;
-  padding:8px 9px;text-align:left;box-shadow:2px 2px 0 #02070d;
+  width:100%;min-height:78px;display:grid;grid-template-columns:66px minmax(0,1fr) 112px;gap:10px;align-items:center;
+  padding:8px 10px;border:2px solid #17677f;background:#082337;color:#e8fbff;text-align:left;box-shadow:2px 2px 0 #010912;
 }
-.topic-list-row:hover{filter:brightness(1.1)}
-.topic-list-row.is-selected{border-color:var(--orange);background:#302313}
-.topic-list-icon{font-size:1.7rem;text-align:center}
-.topic-list-name{font-size:.94rem;font-weight:700;overflow-wrap:anywhere}
+.topic-list-row:hover{filter:brightness(1.08)}
+.topic-list-row.is-selected{border-color:#ffb326;background:#302516;box-shadow:inset 0 0 0 2px #6d4b11,2px 2px 0 #010912}
+.topic-list-icon{width:58px;height:58px;display:grid;place-items:center}
+.topic-list-icon img{width:58px;height:58px;object-fit:contain;image-rendering:pixelated}
+.topic-list-name{font-size:.96rem;font-weight:800;line-height:1.25;overflow-wrap:anywhere}
 .topic-list-pick{
-  border:2px solid var(--cyan);background:#0b3545;color:#dffaff;padding:8px 10px;
-  font-family:var(--pixel);font-size:.58rem;white-space:nowrap
+  min-height:44px;display:grid;place-items:center;border:2px solid #19b8d3;background:#0b3850;color:#e5fbff;padding:6px 9px;
+  font-family:var(--pixel);font-size:.58rem;text-align:center;white-space:nowrap;
 }
-.topic-list-row.is-selected .topic-list-pick{border-color:#ffb32b;background:#ff981b;color:#07131d}
+.topic-list-row.is-selected .topic-list-pick{border-color:#ffce54;background:#ff9417;color:#07131d}
 .topic-quote{
-  margin-top:10px;border-top:2px solid #165b70;padding:10px 6px 2px;
-  display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;
-  color:#20badc;font-family:var(--pixel);font-size:.58rem;line-height:1.45
+  margin-top:10px;border-top:2px solid #17677f;padding:10px 2px 0;display:grid;grid-template-columns:82px 1fr auto;gap:8px;align-items:center;
+  color:#1fb8dc;font-family:var(--pixel);font-size:.58rem;line-height:1.55;
 }
-.topic-mini-teacher{font-size:1.7rem;color:#ffd34d}
-.topic-quote>span:last-child{color:#c69a35;font-size:1.4rem}
-.topic-wheel-wrap{position:relative;width:min(330px,90%);aspect-ratio:1;margin:8px auto 12px}
+.topic-quote img{width:76px;height:76px;object-fit:cover;image-rendering:pixelated}
+.topic-quote-face{font-size:1.55rem;color:#b89731;font-family:system-ui,sans-serif}
+.topic-wheel-wrap{position:relative;width:min(350px,92%);aspect-ratio:1;margin:5px auto 11px}
 .topic-wheel{
-  width:100%;height:100%;border-radius:50%;
-  border:7px solid #6eeaff;outline:4px solid #173b4b;
-  background:conic-gradient(#ffbd27 0 20%,#288ed3 20% 40%,#ef563c 40% 60%,#35ae57 60% 80%,#8651aa 80% 100%);
-  position:relative;box-shadow:0 0 0 3px #06131c,7px 7px 0 #02070d;
-  transition:transform 2.1s cubic-bezier(.12,.68,.18,1);
+  position:relative;width:100%;height:100%;border-radius:50%;border:8px solid #72ecff;outline:4px solid #193e50;
+  background:conic-gradient(from -36deg,#ffb825 0 20%,#278fd3 20% 40%,#ef5b43 40% 60%,#38ad58 60% 80%,#8b55a8 80% 100%);
+  box-shadow:0 0 0 4px #06131c,7px 7px 0 #010912;transition:transform 2.1s cubic-bezier(.12,.68,.18,1);
 }
-.topic-wheel.is-spinning{animation:topicV5Spin 2.1s cubic-bezier(.12,.68,.18,1) forwards}
-@keyframes topicV5Spin{from{transform:rotate(0)}to{transform:rotate(1800deg)}}
+.topic-wheel::after{content:"";position:absolute;inset:7%;border-radius:50%;border:2px dashed rgba(255,255,255,.18);pointer-events:none}
+.topic-wheel.is-spinning{animation:topicFidelitySpin 2.1s cubic-bezier(.12,.68,.18,1) forwards}
+@keyframes topicFidelitySpin{from{transform:rotate(0)}to{transform:rotate(1800deg)}}
 .topic-wheel-pointer{
-  position:absolute;z-index:4;left:50%;top:-3px;transform:translate(-50%,-25%);
-  width:0;height:0;border-left:16px solid transparent;border-right:16px solid transparent;border-top:34px solid #ff8613;
-  filter:drop-shadow(2px 2px 0 #411a00)
+  position:absolute;z-index:5;left:50%;top:-4px;transform:translate(-50%,-20%);width:0;height:0;
+  border-left:18px solid transparent;border-right:18px solid transparent;border-top:42px solid #ff7b11;filter:drop-shadow(2px 2px 0 #531c00);
 }
 .topic-wheel-center{
-  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-  width:52px;height:52px;border-radius:50%;background:#ffac16;border:5px solid #b66500;
-  display:grid;place-items:center;color:#fff1a9;font-size:1.2rem;box-shadow:3px 3px 0 #34200a
+  position:absolute;z-index:4;left:50%;top:50%;transform:translate(-50%,-50%);width:54px;height:54px;border-radius:50%;
+  background:#ffae16;border:5px solid #b66b00;box-shadow:3px 3px 0 #34200a;
 }
-.topic-wheel-label{position:absolute;font-size:1.6rem;filter:drop-shadow(2px 2px 0 #09212d)}
-.topic-wheel-label.label-1{left:45%;top:10%}
-.topic-wheel-label.label-2{right:12%;top:37%}
-.topic-wheel-label.label-3{right:27%;bottom:12%}
-.topic-wheel-label.label-4{left:22%;bottom:14%}
-.topic-wheel-label.label-5{left:11%;top:37%}
-.topic-wheel-label.label-6{left:46%;top:10%}
+.topic-wheel-label{position:absolute;width:70px;height:70px;display:grid;place-items:center;z-index:2;transform:translate(-50%,-50%)}
+.topic-wheel-label img{width:62px;height:62px;object-fit:contain;image-rendering:pixelated;filter:drop-shadow(2px 2px 0 #08202a)}
+.topic-wheel-label.label-1{left:50%;top:22%}
+.topic-wheel-label.label-2{left:78%;top:42%}
+.topic-wheel-label.label-3{left:67%;top:74%}
+.topic-wheel-label.label-4{left:33%;top:74%}
+.topic-wheel-label.label-5{left:22%;top:42%}
 .topic-spin{
-  display:block;width:min(330px,90%);margin:0 auto 10px;min-height:48px;
-  border:3px solid #ffd169;background:#ff9417;color:#07131d;
-  font-family:var(--pixel);font-size:.72rem;box-shadow:4px 4px 0 #522a04
+  display:block;width:min(360px,94%);min-height:54px;margin:0 auto 12px;border:3px solid #ffdc69;background:linear-gradient(180deg,#ffa520,#ff8614);
+  color:#091018;font-family:var(--pixel);font-size:.78rem;box-shadow:inset 0 0 0 3px #ffbe37,4px 4px 0 #4a2005;
 }
 .topic-result{
-  display:grid;grid-template-columns:52px minmax(0,1fr);gap:10px;align-items:center;
-  border:2px solid var(--cyan);background:#082130;padding:9px;margin-top:10px;min-height:70px
+  display:grid;grid-template-columns:66px minmax(0,1fr);gap:10px;align-items:center;min-height:82px;padding:8px 10px;
+  border:2px solid #1c9eb9;background:#082336;margin-top:8px;
 }
-.topic-result.has-topic{border-color:#ffae23}
-.topic-result-icon{font-size:1.8rem;text-align:center}
-.topic-result-label{font-size:.72rem;color:#c7eff8}
-.topic-result-value{font-weight:800;color:#ffd94c;font-size:1rem;overflow-wrap:anywhere;margin-top:2px}
-.topic-wheel-actions{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:7px;margin-top:9px}
-.topic-wheel-actions button{min-height:46px;border:2px solid var(--cyan);background:#0a3040;color:#e0f9ff;padding:7px;font-weight:700}
-.topic-confirm-small{border-color:#ffad21!important;background:#ff9417!important;color:#07131d!important}
-.topic-wheel-actions button:disabled{opacity:.4}
+.topic-result.has-topic{border-color:#23c6df}
+.topic-result-icon{width:58px;height:58px;display:grid;place-items:center}
+.topic-result-icon img{width:56px;height:56px;object-fit:contain;image-rendering:pixelated}
+.topic-result-label{font-size:.72rem;color:#c9f0f8}
+.topic-result-value{margin-top:4px;color:#ffd42f;font-size:1.06rem;font-weight:900;overflow-wrap:anywhere}
+.topic-wheel-actions{display:grid;grid-template-columns:1.05fr 1fr 1fr;gap:9px;margin-top:10px}
+.topic-wheel-actions button{min-height:54px;border:2px solid #20dced;background:#0a3145;color:#e3fbff;padding:7px;font-weight:800;box-shadow:3px 3px 0 #010912}
+.topic-confirm-small{border-color:#ffd24f!important;background:#ff9417!important;color:#081018!important}
+.topic-wheel-actions button:disabled{opacity:.42}
 .topic-empty{border:2px dashed #286072;padding:16px;color:var(--muted);text-align:center}
-.topic-wheel-empty{margin:40px 0}
+.topic-wheel-empty{margin:44px 0}
 .topic-manual-panel{
-  margin-top:14px;border:3px solid var(--cyan);background:#071d2a;
-  padding:12px;display:grid;grid-template-columns:auto minmax(180px,1fr) auto auto;gap:10px;align-items:center;
-  box-shadow:5px 5px 0 #02070d
+  margin-top:16px;border:3px solid #20dced;background:#061d30;box-shadow:5px 5px 0 #010912;padding:12px 14px;
+  display:grid;grid-template-columns:70px auto minmax(180px,1fr) auto;grid-template-areas:"icon label input button" "icon save save button";gap:6px 12px;align-items:center;
 }
-.topic-manual-label{display:flex;align-items:center;gap:8px;color:#dffaff}
-.topic-manual-label span{font-size:1.4rem}
-.topic-manual-panel input[type="text"],.topic-manual-panel>input{min-width:0}
-.topic-save-check{display:flex;flex-direction:row;align-items:center;gap:6px;font-size:.7rem;white-space:nowrap}
-.topic-save-check input{width:20px;height:20px;min-height:0}
+.topic-manual-icon{grid-area:icon;width:58px;height:58px;object-fit:contain;image-rendering:pixelated}
+.topic-manual-label{grid-area:label;color:#dffaff;font-size:1rem;font-weight:800;white-space:nowrap}
+.topic-manual-panel>input{grid-area:input;min-width:0;border:2px solid #1aaec7;background:#08283c;color:#e7fbff;min-height:48px}
+.topic-save-check{grid-area:save;display:flex;flex-direction:row;align-items:center;gap:7px;color:#7fc7d2;font-size:.68rem}
+.topic-save-check input{width:18px;height:18px;min-height:0}
 .topic-use-manual{
-  min-height:44px;border:3px solid #ffb12c;background:#ff9518;color:#07131d;
-  padding:8px 14px;font-family:var(--pixel);font-size:.62rem;white-space:nowrap
+  grid-area:button;min-height:52px;border:3px solid #ffd153;background:#ff9417;color:#081018;padding:8px 16px;
+  font-family:var(--pixel);font-size:.65rem;white-space:nowrap;box-shadow:3px 3px 0 #4a2005;
 }
-.topic-bottom-actions{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:14px;margin-top:16px}
+.topic-bottom-actions{display:grid;grid-template-columns:minmax(0,1fr) 245px;gap:16px;margin-top:18px}
 .topic-final-confirm{
-  min-height:64px;border:4px solid #ffd264;background:#ff9518;color:#07131d;
-  box-shadow:6px 6px 0 #522a04;font-family:var(--pixel);font-size:.82rem;padding:10px
+  min-height:72px;border:4px solid #ffdb69;background:linear-gradient(180deg,#ffa822,#ff8614);color:#081018;
+  box-shadow:inset 0 0 0 3px #ffc846,6px 6px 0 #4a2005;font-family:var(--pixel);font-size:.86rem;padding:10px 16px;
 }
 .topic-final-confirm:disabled,.topic-confirm-small:disabled{opacity:.4;filter:saturate(.3)}
 .topic-back{
-  min-height:64px;border:3px solid var(--cyan);background:#082838;color:#dffaff;
-  box-shadow:5px 5px 0 #02070d;font-family:var(--pixel);font-size:.65rem;padding:10px
+  min-height:72px;border:3px solid #20dced;background:#08293c;color:#e3fbff;box-shadow:5px 5px 0 #010912;
+  font-family:var(--pixel);font-size:.66rem;padding:10px;
 }
 @media(max-width:780px){
-  .topic-head{padding:0 58px}
-  .topic-context{grid-template-columns:62px minmax(0,1fr)}
-  .topic-student-avatar{width:54px;height:54px}
-  .topic-motto{grid-column:1/-1;border-left:0;border-top:1px solid var(--cyan-dim);min-height:52px}
+  .topic-head{padding:0 55px}
+  .topic-title-icon{width:54px;height:50px}
+  .topic-context{grid-template-columns:90px minmax(0,1fr)}
+  .topic-motto{grid-column:1/-1;border-left:0;border-top:2px solid #14748d;min-height:66px}
   .topic-main-grid{grid-template-columns:1fr}
-  .topic-list-scroll{max-height:310px}
-  .topic-manual-panel{grid-template-columns:1fr}
-  .topic-save-check{white-space:normal}
+  .topic-list-scroll{max-height:330px}
+  .topic-manual-panel{grid-template-columns:58px 1fr auto;grid-template-areas:"icon label label" "input input button" "save save save"}
+  .topic-manual-icon{width:48px;height:48px}
   .topic-bottom-actions{grid-template-columns:1fr}
 }
-@media(max-width:480px){
-  .topic-head{padding:0 0 38px}
+@media(max-width:500px){
+  .topic-head{padding:0 0 32px}
   .topic-step{top:auto;bottom:0;right:50%;transform:translateX(50%)}
-  .topic-context{grid-template-columns:1fr;text-align:center}
-  .topic-student-avatar{justify-self:center}
-  .topic-context-data>div{grid-template-columns:1fr;gap:2px}
+  .topic-title-line{gap:8px}
+  .topic-title-icon{width:44px;height:42px}
+  .topic-context{grid-template-columns:78px minmax(0,1fr)}
+  .topic-student-photo{width:66px;height:74px}
+  .topic-context-data{padding:10px}
+  .topic-context-data>div{grid-template-columns:1fr;gap:1px}
   .topic-motto{display:none}
   .topic-mode-bar{grid-template-columns:1fr}
+  .topic-list-row{grid-template-columns:54px minmax(0,1fr)}
+  .topic-list-pick{grid-column:1/-1;width:100%}
   .topic-wheel-actions{grid-template-columns:1fr}
-  .topic-list-row{grid-template-columns:42px minmax(0,1fr)}
-  .topic-list-pick{grid-column:1/-1;text-align:center}
+  .topic-manual-panel{grid-template-columns:1fr;grid-template-areas:"icon" "label" "input" "save" "button";text-align:center}
+  .topic-manual-icon{justify-self:center}
+  .topic-save-check{justify-content:center}
+  .topic-use-manual{width:100%}
 }
 
 @media print{
@@ -4665,31 +4654,33 @@ body{
     const items=topicList?.items||[];
     const selectedTopic=String(f.topic||'').trim();
     const topicSource=f.topicSource||'';
-    const classLabel=cls?`${esc(cls.displayName)} · ${esc(cls.schoolYear)}`:'Třída';
+    const classLabel=cls?esc(cls.displayName):'Třída';
     const subjectLabel=f.subject?esc(f.subject):'Předmět';
 
-    const topicIcon=(topic,index)=>{
+    const topicAsset=(topic,index)=>{
       const t=String(topic||'').toLocaleLowerCase('cs');
-      if(t.includes('tepel')||t.includes('kalen')||t.includes('žíh')||t.includes('popou'))return '🔥';
-      if(t.includes('měř')||t.includes('kontrol')||t.includes('toler'))return '⌖';
-      if(t.includes('obráb')||t.includes('soustru')||t.includes('fréz'))return '⚙';
-      if(t.includes('materi')||t.includes('kov')||t.includes('ocel'))return '▤';
-      if(t.includes('výrob')||t.includes('technolog'))return '▥';
-      return ['◆','▣','▲','●','✦'][index%5];
+      if(t.includes('tepel')||t.includes('kalen')||t.includes('žíh')||t.includes('popou'))return 'h6-heat.png';
+      if(t.includes('měř')||t.includes('kontrol')||t.includes('toler'))return 'h6-measure.png';
+      if(t.includes('obráb')||t.includes('soustru')||t.includes('fréz'))return 'h6-machining.png';
+      if(t.includes('materi')||t.includes('kov')||t.includes('ocel'))return 'h6-materials.png';
+      if(t.includes('výrob')||t.includes('technolog'))return 'h6-production.png';
+      return ['h6-materials.png','h6-machining.png','h6-heat.png','h6-measure.png','h6-production.png'][index%5];
     };
 
     const topicRows=items.length
       ? items.map((topic,index)=>{
           const selected=selectedTopic===topic && topicSource!=='manual';
           return `<button type="button" class="topic-list-row ${selected?'is-selected':''}" data-action="use-saved-topic" data-index="${index}" data-topic-name="${esc(String(topic).toLocaleLowerCase('cs'))}">
-            <span class="topic-list-icon" aria-hidden="true">${topicIcon(topic,index)}</span>
+            <span class="topic-list-icon" aria-hidden="true"><img src="assets/ui/${topicAsset(topic,index)}" alt=""></span>
             <span class="topic-list-name">${esc(topic)}</span>
             <span class="topic-list-pick">${selected?'Vybráno':'Vybrat'}</span>
           </button>`;
         }).join('')
       : `<div class="topic-empty">Pro tento předmět zatím nejsou uložená žádná témata.</div>`;
 
-    const wheelLabels=items.slice(0,6).map((topic,index)=>`<span class="topic-wheel-label label-${index+1}">${topicIcon(topic,index)}</span>`).join('');
+    const wheelTopics=(items.length?items:['Materiály','Obrábění','Tepelné zpracování','Měření','Technologie výroby']).slice(0,5);
+    while(wheelTopics.length<5) wheelTopics.push(wheelTopics[wheelTopics.length%Math.max(1,wheelTopics.length)]||'Téma');
+    const wheelLabels=wheelTopics.map((topic,index)=>`<span class="topic-wheel-label label-${index+1}"><img src="assets/ui/${topicAsset(topic,index)}" alt=""></span>`).join('');
     const resultLabel=selectedTopic
       ? (topicSource==='wheel'?'Vylosované téma:':topicSource==='manual'?'Vlastní téma:':'Vybrané téma:')
       : 'Téma zatím není vybrané';
@@ -4698,24 +4689,24 @@ body{
     const body=`
       <section class="topic-screen">
         <div class="topic-head">
-          <h1 class="topic-title">Výběr tématu</h1>
-          <div class="topic-subtitle">Vyberte téma pro žáka nebo roztočte Kolo štěstí.</div>
+          <div class="topic-title-line"><img class="topic-title-icon" src="assets/ui/h6-book.png" alt="" aria-hidden="true"><h1 class="topic-title">Výběr tématu</h1></div>
+          <div class="topic-subtitle">Vyberte téma pro žáka nebo roztočte kolo štěstí.</div>
           <div class="topic-step">KROK 5 / 6</div>
         </div>
 
         <div class="topic-context">
-          <span class="topic-student-avatar candidate-pixel-avatar" aria-hidden="true"></span>
+          <div class="topic-student-box"><img class="topic-student-photo" src="assets/ui/h6-student.png" alt="" aria-hidden="true"></div>
           <div class="topic-context-data">
             <div><span>Žák:</span><strong>${esc(student?.name||'Žák')}</strong></div>
             <div><span>Třída:</span><strong>${classLabel}</strong></div>
             <div><span>Předmět:</span><strong>${subjectLabel}</strong></div>
           </div>
-          <div class="topic-motto">DOBRÉ<br>OTÁZKY<br>TVOŘÍ<br>LEPŠÍ<br>LIDI <span aria-hidden="true">☺</span></div>
+          <div class="topic-motto"><span>DOBRÉ<br>OTÁZKY<br>TVOŘÍ<br>LEPŠÍ<br>LIDI</span><span class="topic-motto-face" aria-hidden="true">●</span></div>
         </div>
 
         <div class="topic-mode-bar">
           <div class="topic-mode active">Vybrat z témat předmětu</div>
-          <div class="topic-mode">Použít vlastní téma</div>
+          <button type="button" class="topic-mode" data-action="focus-manual-topic">Použít vlastní téma</button>
         </div>
 
         <div class="topic-main-grid">
@@ -4723,7 +4714,7 @@ body{
             <h2>⌁ Seznam témat</h2>
             <label class="topic-search-wrap"><span aria-hidden="true">⌕</span><input id="topic-search" type="search" placeholder="Hledat téma…" autocomplete="off"></label>
             <div class="topic-list-scroll">${topicRows}</div>
-            <div class="topic-quote"><span class="topic-mini-teacher" aria-hidden="true">♟</span><strong>„NÁHODA PŘEJE<br>PŘIPRAVENÝM!“</strong><span aria-hidden="true">☺</span></div>
+            <div class="topic-quote"><img src="assets/ui/h6-teacher.png" alt="" aria-hidden="true"><strong>„NÁHODA PŘEJE<br>PŘIPRAVENÝM!“</strong><span class="topic-quote-face" aria-hidden="true">●</span></div>
           </section>
 
           <section class="topic-wheel-panel">
@@ -4734,14 +4725,14 @@ body{
                 <div class="topic-wheel-pointer" aria-hidden="true"></div>
                 <div class="topic-wheel" id="question-wheel" aria-label="Kolo štěstí pro losování tématu">
                   ${wheelLabels}
-                  <div class="topic-wheel-center" aria-hidden="true">●</div>
+                  <div class="topic-wheel-center" aria-hidden="true"></div>
                 </div>
               </div>
               <button type="button" class="topic-spin" data-action="spin-wheel">Roztočit kolo</button>
             `:'<div class="topic-empty topic-wheel-empty">Kolo bude dostupné po přidání témat.</div>'}
 
             <div class="topic-result ${selectedTopic?'has-topic':''}">
-              <div class="topic-result-icon" aria-hidden="true">${selectedTopic?topicIcon(selectedTopic,0):'?'}</div>
+              <div class="topic-result-icon" aria-hidden="true">${selectedTopic?`<img src="assets/ui/${topicAsset(selectedTopic,0)}" alt="">`:'?'}</div>
               <div><div class="topic-result-label">${resultLabel}</div><div class="topic-result-value">${esc(resultValue)}</div></div>
             </div>
 
@@ -4754,9 +4745,10 @@ body{
         </div>
 
         <section class="topic-manual-panel" id="manual-topic-panel">
-          <div class="topic-manual-label"><span aria-hidden="true">✎</span><strong>Vlastní téma</strong></div>
+          <img class="topic-manual-icon" src="assets/ui/h6-pencil.png" alt="" aria-hidden="true">
+          <div class="topic-manual-label">Vlastní téma</div>
           <input id="manual-topic" value="${esc(topicSource==='manual'?selectedTopic:'')}" placeholder="Napište vlastní téma…">
-          <label class="topic-save-check"><input type="checkbox" id="save-manual-topic"> Uložit mezi témata</label>
+          <label class="topic-save-check"><input type="checkbox" id="save-manual-topic"> Uložit mezi témata předmětu</label>
           <button type="button" class="topic-use-manual" data-action="use-manual-topic">Použít téma</button>
         </section>
 
@@ -4764,7 +4756,7 @@ body{
           <button type="button" class="topic-final-confirm" data-action="confirm-topic" ${!selectedTopic?'disabled':''}>➜ &nbsp; Potvrdit a přejít ke zkoušení</button>
           <button type="button" class="topic-back" data-action="back-candidates">← &nbsp; Zpět ke kandidátovi</button>
         </div>
-        <div class="arcade-footer"><span>Dobrovolný doplněk výuky.</span><span>ZZ-01</span></div>
+        <div class="arcade-footer"><span>ŠKOLA JE VÍC NEŽ ZNÁMKY</span><span>ZKOUŠKOMAT ZZ-01</span><span>UČÍME DNES PRO ZÍTŘEK</span></div>
       </section>`;
 
     app.innerHTML=layout(body,'Zkoušení');
