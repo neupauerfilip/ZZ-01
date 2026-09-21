@@ -1585,6 +1585,440 @@ body{
   .rules-count{margin-left:2px}.rules-toolbar{align-items:flex-start;flex-direction:column}.rules-manage{font-size:.72rem}
 }
 
+
+/* Visual pass v6 – krok 6 / 6: probíhající zkoušení, známkování a uložený výsledek */
+.exam-live-screen,
+.exam-result-screen{
+  width:min(920px,100%);
+  margin:0 auto;
+  padding:4px 0 18px;
+}
+.exam-live-head,
+.exam-result-head{
+  position:relative;
+  text-align:center;
+  padding:10px 74px 12px;
+  border-bottom:2px solid var(--cyan-dim);
+  margin-bottom:14px;
+}
+.exam-live-title,
+.exam-result-title{
+  margin:0;
+  font-family:var(--pixel);
+  text-transform:uppercase;
+  color:var(--cyan);
+  font-size:clamp(1.45rem,5vw,2.45rem);
+  letter-spacing:.04em;
+  text-shadow:3px 3px 0 #02070d;
+}
+.exam-live-subtitle{
+  margin-top:7px;
+  color:var(--muted);
+  font-size:.88rem;
+}
+.exam-live-step{
+  position:absolute;
+  right:0;
+  top:10px;
+  border:2px solid var(--cyan);
+  background:#071923;
+  color:var(--cream);
+  font-family:var(--pixel);
+  font-size:.66rem;
+  padding:7px 9px;
+  box-shadow:3px 3px 0 #02070d;
+}
+.exam-live-context,
+.exam-result-summary{
+  border:2px solid var(--cyan);
+  background:linear-gradient(180deg,#081d29,#06141d);
+  box-shadow:5px 5px 0 #02070d;
+  padding:12px 14px;
+  display:grid;
+  gap:5px;
+}
+.exam-live-context-row,
+.exam-result-row{
+  display:grid;
+  grid-template-columns:92px minmax(0,1fr);
+  gap:10px;
+  align-items:baseline;
+  font-size:.9rem;
+}
+.exam-live-context-row span,
+.exam-result-row span{
+  color:var(--cyan);
+  font-family:var(--pixel);
+  font-size:.62rem;
+  text-transform:uppercase;
+}
+.exam-live-context-row strong,
+.exam-result-row strong{
+  color:var(--cream);
+  overflow-wrap:anywhere;
+}
+.exam-live-main{
+  display:grid;
+  grid-template-columns:minmax(240px,.85fr) minmax(280px,1.15fr);
+  gap:14px;
+  margin-top:14px;
+}
+.exam-student-panel,
+.exam-timer-panel{
+  border:2px solid var(--cyan-dim);
+  background:#071720;
+  box-shadow:5px 5px 0 #02070d;
+  min-width:0;
+}
+.exam-student-panel{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:20px 14px 16px;
+  min-height:310px;
+  overflow:hidden;
+}
+.exam-student-panel .pixel-student{
+  transform:scale(1.55);
+  transform-origin:center;
+  margin:30px auto 34px;
+}
+.exam-encourage{
+  width:100%;
+  border:2px solid #2a6170;
+  background:#06131c;
+  padding:10px;
+  color:var(--cream);
+  text-align:center;
+  font-weight:700;
+  font-style:italic;
+  box-shadow:3px 3px 0 #02070d;
+}
+.exam-timer-panel{
+  padding:18px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.exam-timer-label{
+  color:var(--cyan);
+  text-align:center;
+  font-family:var(--pixel);
+  font-size:.72rem;
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
+.exam-live-timer{
+  border:3px solid var(--cyan-dim);
+  background:#020a10;
+  padding:16px 10px 13px;
+  box-shadow:inset 0 0 0 3px #0c2530,5px 5px 0 #02070d;
+}
+.exam-live-timer .timer{
+  font-family:var(--pixel);
+  font-size:clamp(3rem,10vw,5.6rem);
+  line-height:1;
+  color:var(--orange2);
+  text-shadow:4px 4px 0 #442810;
+}
+.exam-time-track{
+  height:18px;
+  margin-top:13px;
+  border:2px solid #285b66;
+  background:#041016;
+  padding:2px;
+}
+.exam-time-progress{
+  height:100%;
+  width:100%;
+  background:linear-gradient(90deg,var(--orange),var(--orange2));
+  transition:width .45s linear;
+}
+.timer.over + .exam-time-track .exam-time-progress,
+.exam-live-timer.is-over .exam-time-progress{
+  background:var(--danger);
+}
+.exam-time-note{
+  text-align:center;
+  color:var(--muted);
+  font-size:.76rem;
+  margin-top:10px;
+  line-height:1.4;
+}
+.exam-time-note.over{
+  color:#ff9a8f;
+  font-weight:700;
+}
+.exam-live-actions{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+  margin-top:14px;
+}
+.exam-end-button{
+  width:100%;
+  min-height:58px;
+  border:3px solid #ff625a;
+  background:#4c1718;
+  color:#fff5ec;
+  box-shadow:5px 5px 0 #210606;
+  font-family:var(--pixel);
+  font-size:.82rem;
+  text-transform:uppercase;
+}
+.exam-end-button:hover{filter:brightness(1.1)}
+.exam-live-note{
+  margin-top:14px;
+  border:2px solid var(--cyan-dim);
+  background:#071720;
+  padding:12px;
+  box-shadow:4px 4px 0 #02070d;
+}
+.exam-live-note label{
+  color:var(--cyan);
+  font-family:var(--pixel);
+  font-size:.66rem;
+  text-transform:uppercase;
+}
+.exam-live-note textarea{
+  margin-top:8px;
+  min-height:90px;
+  background:#04131b;
+}
+.exam-live-hint{
+  display:grid;
+  grid-template-columns:32px minmax(0,1fr);
+  gap:10px;
+  align-items:center;
+  margin-top:12px;
+  border:2px solid #245967;
+  background:#071923;
+  padding:10px 12px;
+  color:var(--muted);
+}
+.exam-live-hint-icon{
+  width:28px;height:28px;
+  border:2px solid var(--cyan);
+  display:grid;place-items:center;
+  color:var(--cyan);
+  font-family:var(--pixel);
+}
+
+/* známkování */
+.grade-backdrop{
+  padding:14px;
+  align-items:center;
+}
+.grade-screen-modal{
+  width:min(720px,96vw);
+  max-height:94vh;
+  overflow:auto;
+  border:3px solid var(--cyan);
+  background:#06151f;
+  box-shadow:8px 8px 0 #02070d;
+  padding:16px;
+}
+.grade-screen-head{
+  text-align:center;
+  border-bottom:2px solid var(--cyan-dim);
+  padding-bottom:12px;
+  margin-bottom:12px;
+}
+.grade-screen-head h2{
+  margin:0;
+  color:var(--cyan);
+  font-family:var(--pixel);
+  text-transform:uppercase;
+  font-size:clamp(1.3rem,5vw,2rem);
+}
+.grade-context{
+  border:2px solid var(--cyan-dim);
+  background:#071c27;
+  padding:10px 12px;
+  display:grid;
+  gap:4px;
+  margin-bottom:14px;
+}
+.grade-context div{
+  display:grid;
+  grid-template-columns:88px minmax(0,1fr);
+  gap:8px;
+}
+.grade-context span{
+  color:var(--cyan);
+  font-family:var(--pixel);
+  font-size:.58rem;
+  text-transform:uppercase;
+}
+.grade-context strong{color:var(--cream)}
+.grade-picker-title{
+  text-align:center;
+  color:var(--cyan);
+  font-family:var(--pixel);
+  font-size:.76rem;
+  text-transform:uppercase;
+  margin:8px 0 10px;
+}
+.grade-picker{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:8px;
+}
+.grade-choice{
+  min-height:70px;
+  border:3px solid currentColor;
+  background:#07151d;
+  box-shadow:4px 4px 0 #02070d;
+  font-family:var(--pixel);
+  font-size:clamp(1.4rem,5vw,2.2rem);
+  font-weight:900;
+}
+.grade-choice[data-grade="1"],.grade-choice[data-grade="2"]{color:#57dc77;background:#0a2c1b}
+.grade-choice[data-grade="3"]{color:#ffd05e;background:#392a0b}
+.grade-choice[data-grade="4"]{color:#ff9f43;background:#40250d}
+.grade-choice[data-grade="5"]{color:#ff665f;background:#431416}
+.grade-choice.is-selected{
+  outline:3px solid #fff2cf;
+  outline-offset:2px;
+  transform:translate(2px,2px);
+  box-shadow:2px 2px 0 #02070d;
+}
+.grade-no-grade{
+  width:100%;
+  margin-top:14px;
+  min-height:54px;
+  border:3px solid #ff665f;
+  background:#451719;
+  color:#fff4ed;
+  font-family:var(--pixel);
+  font-size:.72rem;
+  text-transform:uppercase;
+}
+.grade-note-box{margin-top:14px}
+.grade-note-box label{
+  color:var(--cyan);
+  font-family:var(--pixel);
+  font-size:.62rem;
+  text-transform:uppercase;
+}
+.grade-modal-actions{
+  display:grid;
+  grid-template-columns:1fr 1.25fr;
+  gap:10px;
+  margin-top:14px;
+}
+.grade-cancel,.grade-save{
+  min-height:52px;
+  border:2px solid var(--cyan-dim);
+  font-family:var(--pixel);
+  text-transform:uppercase;
+  font-size:.68rem;
+  box-shadow:4px 4px 0 #02070d;
+}
+.grade-cancel{background:#10212a;color:var(--cream)}
+.grade-save{border-color:#53e87a;background:#143c20;color:#edfff1}
+.grade-save:disabled{opacity:.4;cursor:not-allowed}
+
+/* uložený výsledek */
+.exam-result-head{
+  padding-left:0;padding-right:0;
+}
+.exam-result-title{
+  color:#58e77a;
+  font-size:clamp(1.55rem,6vw,2.65rem);
+}
+.exam-result-icon{
+  width:112px;height:112px;
+  margin:14px auto 18px;
+  position:relative;
+  border:4px solid #d7ecff;
+  background:#f5fbff;
+  box-shadow:7px 7px 0 #033545;
+}
+.exam-result-icon::before{
+  content:"✓";
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  color:#25c95a;
+  font-family:var(--pixel);
+  font-size:3.4rem;
+  text-shadow:3px 3px 0 #0b6830;
+}
+.exam-result-icon::after{
+  content:"";
+  position:absolute;
+  inset:-14px;
+  border:4px dashed #45e46c;
+  animation:resultPulse 1.15s steps(2,end) infinite;
+}
+@keyframes resultPulse{50%{opacity:.3;transform:scale(1.08)}}
+.exam-result-summary{margin-top:8px}
+.exam-result-grade{
+  display:inline-grid;
+  place-items:center;
+  min-width:42px;
+  min-height:36px;
+  padding:3px 8px;
+  border:2px solid #57e878;
+  background:#123920;
+  color:#ecfff1;
+  font-family:var(--pixel);
+}
+.exam-result-grade.no-grade{
+  border-color:#ff6a61;
+  background:#411516;
+}
+.exam-result-quote{
+  margin:14px 0;
+  border:2px solid var(--cyan-dim);
+  padding:12px;
+  text-align:center;
+  color:var(--cream);
+  font-style:italic;
+  background:#071923;
+}
+.exam-result-actions{
+  display:grid;
+  gap:10px;
+}
+.exam-result-next,
+.exam-result-home{
+  min-height:56px;
+  font-family:var(--pixel);
+  font-size:.74rem;
+  text-transform:uppercase;
+  box-shadow:5px 5px 0 #02070d;
+}
+.exam-result-next{
+  border:3px solid #59a8ff;
+  background:#0e58a5;
+  color:#fff;
+}
+.exam-result-home{
+  border:2px solid var(--cyan);
+  background:#09202c;
+  color:var(--cream);
+}
+
+@media(max-width:700px){
+  .exam-live-main{grid-template-columns:1fr}
+  .exam-student-panel{min-height:245px}
+  .exam-live-head{padding-left:4px;padding-right:4px;padding-top:48px}
+  .exam-live-step{left:50%;right:auto;transform:translateX(-50%);top:5px}
+  .grade-picker{gap:5px}
+  .grade-choice{min-height:60px}
+}
+@media(max-width:420px){
+  .exam-live-context-row,.exam-result-row{grid-template-columns:76px minmax(0,1fr)}
+  .grade-context div{grid-template-columns:72px minmax(0,1fr)}
+  .grade-modal-actions{grid-template-columns:1fr}
+  .grade-screen-modal{padding:10px}
+  .exam-result-icon{width:92px;height:92px}
+}
+
 </style>
   <title>Zkouškomat ZZ-01</title>
 </head>
@@ -2885,7 +3319,7 @@ body{
     }
 
     // Jednoúrovňové obrazovky se vracejí do hlavního menu.
-    if(['classes','subjects','grades','scoring','history','wheel','settings','admin','help','staffroom'].includes(state.route)){
+    if(['classes','subjects','grades','scoring','history','wheel','settings','admin','help','staffroom','exam-result'].includes(state.route)){
       state.route='home';
       saveState();
       return render();
@@ -3985,7 +4419,7 @@ body{
   function beginExam(topic){
     const f=state.examFlow, s=studentById(f.selectedStudentId), c=classById(f.classId);
     const startedAt=now();
-    state.activeExam={id:uid('exam'),teacherId:state.user.id,studentId:s.id,classId:c.id,subject:f.subject,schoolYear:c.schoolYear,topic:topic||'Bez tématu',startedAt,durationMs:state.settings.timerMinutes*60*1000,notified:false,lockerAppeared:!!f.lockerAppeared,lockerResultId:f.lockerResult||null,lockerResultName:f.lockerResultName||'',lockerPointsDelta:Number(f.lockerPointsDelta||0),customTopicUsed:!!f.customTopicUsed};
+    state.activeExam={id:uid('exam'),teacherId:state.user.id,studentId:s.id,classId:c.id,subject:f.subject,schoolYear:c.schoolYear,topic:topic||'Bez tématu',startedAt,durationMs:state.settings.timerMinutes*60*1000,notified:false,liveNote:'',lockerAppeared:!!f.lockerAppeared,lockerResultId:f.lockerResult||null,lockerResultName:f.lockerResultName||'',lockerPointsDelta:Number(f.lockerPointsDelta||0),customTopicUsed:!!f.customTopicUsed};
     f.topic=topic||'Bez tématu'; f.stage='exam'; saveState(); render(); startTimerLoop();
   }
 
@@ -3997,13 +4431,24 @@ body{
       const el=document.getElementById('exam-timer');
       if(!el) return;
       const rem=remainingMs();
+      const ratio=Math.max(0,Math.min(1,rem/state.activeExam.durationMs));
       el.textContent=formatDuration(rem);
       el.classList.toggle('over',rem<=0);
+      const progress=document.getElementById('exam-time-progress');
+      if(progress)progress.style.width=`${Math.round(ratio*100)}%`;
+      const timerBox=el.closest('.exam-live-timer');
+      if(timerBox)timerBox.classList.toggle('is-over',rem<=0);
+      const note=document.getElementById('exam-time-note');
+      if(note){
+        note.classList.toggle('over',rem<=0);
+        note.textContent=rem<=0?'Čas vypršel. Zkoušení pokračuje, dokud ho učitel neukončí.':'Po vypršení času se pouze zobrazí upozornění.';
+      }
+      const quote=document.getElementById('exam-encourage');
+      if(quote)quote.textContent=rem<=0?'„Čas vypršel – pokračujte podle potřeby.“':ratio<.2?'„Už jen kousek.“':ratio<.55?'„Klid, to dáš!“':'„Jdeme na to!“';
       const avatar=document.querySelector('.pixel-student');
       if(avatar){
-        const ratio=Math.max(0,rem/state.activeExam.durationMs);
         avatar.classList.toggle('nervous',ratio<.55 && ratio>=.2);
-        avatar.classList.toggle('stressed',ratio<.2);
+        avatar.classList.toggle('stressed',ratio<.2 || rem<=0);
       }
       if(rem<=0 && !state.activeExam.notified){
         state.activeExam.notified=true; saveState();
@@ -4020,15 +4465,106 @@ body{
     const e=state.activeExam;
     if(!e){ state.examFlow.stage='question'; return render(); }
     const s=studentById(e.studentId), c=classById(e.classId), rem=remainingMs();
-    const body=`<div class="grid grid-2"><div class="stack"><div class="badge">${esc(c.displayName)} — ${esc(c.schoolYear)} · ${esc(e.subject)}</div><h2 class="pixel-title">${esc(s.name)}</h2><div><span class="muted">Téma:</span> ${esc(e.topic)}</div><div><span class="muted">Byl už zkoušen v tomto pololetí:</span> ${s.examsCountPeriod}×</div><div class="pixel-student ${rem/e.durationMs<.2?'stressed':rem/e.durationMs<.55?'nervous':''}"><div class="head"></div><div class="body"></div><div class="leg1"></div><div class="leg2"></div></div></div><div class="stack" style="justify-content:center"><div id="exam-timer" class="timer ${rem<=0?'over':''}">${formatDuration(rem)}</div><div class="muted" style="text-align:center">Čas se po vypršení nezastaví automaticky.</div></div></div>`;
-    app.innerHTML=examFrame('Probíhá zkoušení',body,`<button class="btn danger" data-action="end-exam">Ukončit zkoušení</button>`);
+    const ratio=Math.max(0,Math.min(1,rem/e.durationMs));
+    const percent=Math.round(ratio*100);
+    const over=rem<=0;
+    const mood=over?'Čas vypršel – pokračujte podle potřeby.':ratio<.2?'Už jen kousek.':ratio<.55?'Klid, to dáš!':'Jdeme na to!';
+    const classLabel=c?`${esc(c.displayName)} · ${esc(c.schoolYear)}`:'Třída';
+    const body=`
+      <section class="exam-live-screen">
+        <div class="exam-live-head">
+          <h1 class="exam-live-title">Průběh zkoušení</h1>
+          <div class="exam-live-subtitle">Časovač pouze upozorňuje. Zkoušení se po vypršení času samo neukončí.</div>
+          <div class="exam-live-step">KROK 6 / 6</div>
+        </div>
+
+        <div class="exam-live-context">
+          <div class="exam-live-context-row"><span>Žák</span><strong>${esc(s?.name||'Žák')}</strong></div>
+          <div class="exam-live-context-row"><span>Třída</span><strong>${classLabel}</strong></div>
+          <div class="exam-live-context-row"><span>Předmět</span><strong>${esc(e.subject)}</strong></div>
+          <div class="exam-live-context-row"><span>Téma</span><strong>${esc(e.topic)}</strong></div>
+        </div>
+
+        <div class="exam-live-main">
+          <section class="exam-student-panel">
+            <div class="pixel-student ${over||ratio<.2?'stressed':ratio<.55?'nervous':''}" aria-hidden="true">
+              <div class="head"></div><div class="body"></div><div class="leg1"></div><div class="leg2"></div>
+            </div>
+            <div id="exam-encourage" class="exam-encourage">„${esc(mood)}“</div>
+          </section>
+
+          <section class="exam-timer-panel">
+            <div class="exam-timer-label">Zbývající čas</div>
+            <div class="exam-live-timer ${over?'is-over':''}">
+              <div id="exam-timer" class="timer ${over?'over':''}">${formatDuration(rem)}</div>
+              <div class="exam-time-track" aria-hidden="true"><div id="exam-time-progress" class="exam-time-progress" style="width:${percent}%"></div></div>
+            </div>
+            <div id="exam-time-note" class="exam-time-note ${over?'over':''}">${over?'Čas vypršel. Zkoušení pokračuje, dokud ho učitel neukončí.':'Po vypršení času se pouze zobrazí upozornění.'}</div>
+
+            <div class="exam-live-actions">
+              <button type="button" class="exam-end-button" data-action="end-exam">■ &nbsp; Ukončit zkoušení</button>
+            </div>
+          </section>
+        </div>
+
+        <section class="exam-live-note">
+          <label for="exam-live-note">Poznámka – průběžná / volitelná</label>
+          <textarea id="exam-live-note" placeholder="Sem si můžete během zkoušení zapsat krátkou poznámku…">${esc(e.liveNote||'')}</textarea>
+        </section>
+
+        <div class="exam-live-hint"><div class="exam-live-hint-icon">i</div><div>Po ukončení zkoušení vyberete známku 1–5 nebo stav bez známky.</div></div>
+        <div class="arcade-footer"><span>Dobrovolný doplněk výuky.</span><span>ZZ-01</span></div>
+      </section>`;
+    app.innerHTML=layout(body,'Zkoušení');
     startTimerLoop();
   }
 
   function showGradeModal(){
-    const body=`<p>Vyber známku jedním kliknutím.</p><div class="grade-grid">${[1,2,3,4,5].map(n=>`<button class="btn secondary grade-btn" data-grade="${n}">${n}</button>`).join('')}</div><hr class="pixel"><label>Krátká poznámka (volitelné)<textarea id="grade-note" placeholder="Poznámka k průběhu"></textarea></label>`;
-    modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal" role="dialog" aria-modal="true"><h2 class="pixel-title">Výsledek zkoušení</h2>${body}<div class="modal-actions"><button class="btn danger" id="no-grade-btn">Vyhodit žáka od zkoušky</button><button class="btn ghost" id="cancel-grade">Zrušit</button></div></section></div>`;
-    modalRoot.querySelectorAll('[data-grade]').forEach(b=>b.addEventListener('click',()=>finalizeExam(Number(b.dataset.grade),false)));
+    const e=state.activeExam; if(!e)return;
+    const s=studentById(e.studentId),c=classById(e.classId);
+    const elapsed=Math.max(0,now()-e.startedAt);
+    modalRoot.innerHTML=`<div class="modal-backdrop grade-backdrop">
+      <section class="grade-screen-modal" role="dialog" aria-modal="true" aria-labelledby="grade-title">
+        <div class="grade-screen-head"><h2 id="grade-title">Známkování</h2></div>
+        <div class="grade-context">
+          <div><span>Žák</span><strong>${esc(s?.name||'Žák')}</strong></div>
+          <div><span>Třída</span><strong>${esc(c?.displayName||'')} · ${esc(c?.schoolYear||'')}</strong></div>
+          <div><span>Předmět</span><strong>${esc(e.subject)}</strong></div>
+          <div><span>Téma</span><strong>${esc(e.topic)}</strong></div>
+          <div><span>Čas zkoušení</span><strong>${formatDuration(elapsed).replace('+','')}</strong></div>
+        </div>
+
+        <div class="grade-picker-title">Vyber známku</div>
+        <div class="grade-picker">
+          ${[1,2,3,4,5].map(n=>`<button type="button" class="grade-choice" data-grade="${n}" aria-pressed="false">${n}</button>`).join('')}
+        </div>
+
+        <button type="button" class="grade-no-grade" id="no-grade-btn">✕ &nbsp; Vyhodit žáka od zkoušky – bez známky</button>
+
+        <div class="grade-note-box">
+          <label for="grade-note">Poznámka pro učitele – volitelná</label>
+          <textarea id="grade-note" placeholder="Napište krátkou poznámku…">${esc(e.liveNote||'')}</textarea>
+        </div>
+
+        <div class="grade-modal-actions">
+          <button type="button" class="grade-cancel" id="cancel-grade">✕ &nbsp; Zrušit</button>
+          <button type="button" class="grade-save" id="save-grade" disabled>▣ &nbsp; Uložit výsledek</button>
+        </div>
+      </section>
+    </div>`;
+
+    let selectedGrade=null;
+    const saveBtn=document.getElementById('save-grade');
+    modalRoot.querySelectorAll('[data-grade]').forEach(b=>b.addEventListener('click',()=>{
+      selectedGrade=Number(b.dataset.grade);
+      modalRoot.querySelectorAll('[data-grade]').forEach(x=>{
+        const on=x===b;
+        x.classList.toggle('is-selected',on);
+        x.setAttribute('aria-pressed',on?'true':'false');
+      });
+      saveBtn.disabled=false;
+    }));
+    saveBtn.onclick=()=>selectedGrade?finalizeExam(selectedGrade,false):toast('Nejdřív vyber známku.','warn');
     document.getElementById('no-grade-btn').onclick=()=>finalizeExam(null,true);
     document.getElementById('cancel-grade').onclick=closeModal;
   }
@@ -4036,14 +4572,77 @@ body{
   function finalizeExam(grade,noGrade){
     const e=state.activeExam; if(!e) return;
     const s=studentById(e.studentId), c=classById(e.classId);
-    const note=document.getElementById('grade-note')?.value.trim()||'';
-    state.history.push({
-      id:uid('hist'),teacherId:state.user.id,studentId:s.id,classId:c.id,subject:e.subject,schoolYear:c.schoolYear,semester:state.ui.gradeSemester||'1',at:now(),startedAt:e.startedAt,endedAt:now(),topic:e.topic,grade,completed:true,noGradeStatus:noGrade?'Vyhozen od zkoušky':null,note,passUsed:false,lockerAppeared:e.lockerAppeared,lockerResultId:e.lockerResultId||null,lockerResultName:e.lockerResultName||'',lockerPointsDelta:Number(e.lockerPointsDelta||0),customTopicUsed:!!e.customTopicUsed
-    });
-    s.examsCountPeriod=(s.examsCountPeriod||0)+1; s.lastExamAt=now();
+    const note=document.getElementById('grade-note')?.value.trim()||String(e.liveNote||'').trim();
+    const endedAt=now();
+    const record={
+      id:uid('hist'),teacherId:state.user.id,studentId:s.id,classId:c.id,subject:e.subject,schoolYear:c.schoolYear,
+      semester:state.ui.gradeSemester||'1',at:endedAt,startedAt:e.startedAt,endedAt,topic:e.topic,grade,
+      completed:true,noGradeStatus:noGrade?'Vyhozen od zkoušky':null,note,passUsed:false,
+      lockerAppeared:e.lockerAppeared,lockerResultId:e.lockerResultId||null,lockerResultName:e.lockerResultName||'',
+      lockerPointsDelta:Number(e.lockerPointsDelta||0),customTopicUsed:!!e.customTopicUsed
+    };
+    state.history.push(record);
+    s.examsCountPeriod=(s.examsCountPeriod||0)+1;
+    s.lastExamAt=endedAt;
     Object.keys(s.ruleStates||{}).forEach(rid=>{ if(!ruleById(rid)?.system) s.ruleStates[rid]=false; });
     s.lockerPointAdjust=0;
-    state.activeExam=null; state.examFlow=null; state.route='home'; closeModal(); syncCurrentTeacherStats(); const newlyUnlocked=evaluateTrophies(state.user.id); saveState(); toast('Výsledek zkoušení uložen.'); render(); if(newlyUnlocked.length)setTimeout(()=>showTrophyUnlocked(newlyUnlocked[newlyUnlocked.length-1]),120);
+
+    state.ui.lastExamResult={
+      recordId:record.id,
+      studentId:s.id,
+      studentName:s.name,
+      classId:c.id,
+      className:c.displayName,
+      schoolYear:c.schoolYear,
+      subject:e.subject,
+      topic:e.topic,
+      grade:grade,
+      noGrade:!!noGrade,
+      note,
+      at:endedAt
+    };
+
+    state.activeExam=null;
+    state.examFlow=null;
+    state.route='exam-result';
+    closeModal();
+    syncCurrentTeacherStats();
+    const newlyUnlocked=evaluateTrophies(state.user.id);
+    saveState();
+    render();
+    if(newlyUnlocked.length)setTimeout(()=>showTrophyUnlocked(newlyUnlocked[newlyUnlocked.length-1]),180);
+  }
+
+  function renderExamResult(){
+    const r=state.ui.lastExamResult;
+    if(!r){state.route='home';saveState();return renderHome();}
+    const gradeLabel=r.noGrade?'Bez známky':String(r.grade??'—');
+    const quote=r.noGrade?'Záznam byl uložen bez známky.':Number(r.grade)<=2?'Dobrá práce!':Number(r.grade)===3?'Hotovo. Další zkušenost je doma.':'Výsledek je uložen. Pokračujeme dál.';
+    const body=`
+      <section class="exam-result-screen">
+        <div class="exam-result-head">
+          <h1 class="exam-result-title">Výsledek uložen!</h1>
+        </div>
+        <div class="exam-result-icon" aria-hidden="true"></div>
+
+        <div class="exam-result-summary">
+          <div class="exam-result-row"><span>Žák</span><strong>${esc(r.studentName)}</strong></div>
+          <div class="exam-result-row"><span>Třída</span><strong>${esc(r.className)} · ${esc(r.schoolYear)}</strong></div>
+          <div class="exam-result-row"><span>Předmět</span><strong>${esc(r.subject)}</strong></div>
+          <div class="exam-result-row"><span>Téma</span><strong>${esc(r.topic)}</strong></div>
+          <div class="exam-result-row"><span>Výsledek</span><strong><span class="exam-result-grade ${r.noGrade?'no-grade':''}">${esc(gradeLabel)}</span></strong></div>
+          <div class="exam-result-row"><span>Datum a čas</span><strong>${esc(fmtDate(r.at))}</strong></div>
+        </div>
+
+        <div class="exam-result-quote">„${esc(quote)}“</div>
+
+        <div class="exam-result-actions">
+          <button type="button" class="exam-result-next" data-action="result-next-exam">➜ &nbsp; Další zkoušení</button>
+          <button type="button" class="exam-result-home" data-action="result-home">⌂ &nbsp; Zpět do hlavního menu</button>
+        </div>
+        <div class="arcade-footer"><span>Dobrovolný doplněk výuky.</span><span>ZZ-01</span></div>
+      </section>`;
+    app.innerHTML=layout(body,'Výsledek');
   }
 
   function renderStandaloneWheel(){
@@ -4710,6 +5309,7 @@ body{
     if(state.route==='classes') return renderClasses();
     if(state.route==='class-detail') return renderClassDetail();
     if(state.route==='exam') return renderExamFlow();
+    if(state.route==='exam-result') return renderExamResult();
     if(state.route==='wheel') return renderStandaloneWheel();
     if(state.route==='grades') return renderGrades();
     if(state.route==='subjects') return renderSubjects();
@@ -4965,6 +5565,9 @@ body{
       document.querySelectorAll('[data-topic-name]').forEach(row=>{
         row.hidden=!!q && !String(row.dataset.topicName||'').includes(q);
       });
+    }else if(e.target.id==='exam-live-note' && state.activeExam){
+      state.activeExam.liveNote=e.target.value;
+      saveState();
     }
   });
 
@@ -5167,6 +5770,12 @@ body{
       },2100);
     }
     else if(action==='end-exam') showGradeModal();
+    else if(action==='result-next-exam'){
+      const r=state.ui.lastExamResult||{};
+      state.examFlow={stage:'select',classId:r.classId||state.classes[0]?.id||'',subject:r.subject||'',attendance:{},selectedStudentId:null,candidates:[],topic:'',lockerAppeared:false,lockerResult:null,ignoreProtection:false};
+      state.route='exam';saveState();render();
+    }
+    else if(action==='result-home'){state.route='home';saveState();render();}
     else if(action==='spin-standalone'){
       const subject=document.getElementById('wheel-subject')?.value||state.ui.wheelSubject;
       const items=questionSetForSubject(subject,false)?.items||[];

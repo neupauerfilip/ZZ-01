@@ -47,3 +47,11 @@
 - Kolo štěstí losuje téma přímo do obrazovky, podporuje opakované roztočení a zachovává gamifikační událost.
 - Vlastní téma lze zvolit samostatně a volitelně uložit mezi témata předmětu.
 - Přidáno bezpečné finální tlačítko „Potvrdit a přejít ke zkoušení“ a návrat ke kandidátovi.
+
+## 2026-09-21 — Visual pass v6
+- Obrazovka „Průběh zkoušení“ převedena podle schválených pixel-art referencí jako krok 6/6.
+- Přidán výrazný časovač, grafický průběh zbývajícího času a nezesměšňující reakce postavičky podle zbývajícího času.
+- Po vypršení času se zkoušení samo neukončí; aplikace pouze výrazně upozorní a čas pokračuje.
+- Přidána průběžná volitelná poznámka, která se předvyplní do závěrečného hodnocení.
+- Známkování 1–5 dostalo samostatné arkádové rozhraní; stav „Vyhodit žáka od zkoušky“ se ukládá bez známky.
+- Po uložení se zobrazuje samostatná obrazovka „Výsledek uložen!“ se souhrnem a volbou dalšího zkoušení nebo návratu do menu.
