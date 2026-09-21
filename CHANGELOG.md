@@ -63,3 +63,10 @@
 - Přidána spodní dekorace knih / školních skříněk a footer podle reference.
 - Školní přehled byl z hlavního menu odstraněn, protože v referenčním návrhu není; data zůstávají dostupná ve Scoringu a dalších obrazovkách.
 - Funkční navigace hlavního menu zůstala zachována.
+## 2026-09-21 — Visual fidelity H2
+- Krok 1/6 „Zahájit zkoušení“ přestavěn podle schválených referencí Výběr třídy a předmětu.
+- Výběr třídy je skutečné otevírací pixelové dropdown menu s oranžově zvýrazněnou aktivní třídou.
+- Předměty, souhrn výběru a hlavní tlačítko byly proporčně a barevně přiblíženy schválenému mockupu.
+- V režimu zkoušení se v horní navigaci zobrazuje pouze Zpět, aby rozložení odpovídalo referenci.
+- Funkční logika výběru třídy, předmětu a pokračování k přítomnosti zůstala zachována.
+

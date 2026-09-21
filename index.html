@@ -2126,6 +2126,114 @@ body{
   .home-bottom-decor{grid-template-columns:78px 1fr 70px}.home-motto{font-size:.45rem}.home-bottom-decor::after{left:82px;right:74px}
 }
 
+
+/* ======================================================================
+   VISUAL FIDELITY PASS H2 — KROK 1 / VÝBĚR TŘÍDY A PŘEDMĚTU
+   Rekonstrukce podle schválených referencí „Výběr třídy a předmětu“
+   a „Zkouškomat s rozbaleným výběrem třídy“.
+   ====================================================================== */
+.fidelity-h2{max-width:881px;margin:0 auto;padding:0 0 10px}
+.fidelity-h2 .exam-start-head{margin:32px 0 28px;padding:0 96px 0;text-align:center}
+.fidelity-h2 .exam-start-title{
+  font-size:clamp(3.15rem,9.7vw,5.8rem);line-height:.88;letter-spacing:-.045em;color:#fff0b7;
+  text-shadow:0 5px 0 #ff4e11,0 9px 0 #aa2a07,5px 10px 0 #00101e
+}
+.fidelity-h2 .exam-start-title::before,.fidelity-h2 .exam-start-title::after{font-size:.30em;margin:0 .2em;vertical-align:.18em;color:#20e7f2}
+.fidelity-h2 .exam-start-subtitle{margin-top:20px;font-size:clamp(1rem,3.3vw,1.55rem);letter-spacing:.015em;color:#2ae7f0;text-shadow:0 2px 0 #06394d}
+.fidelity-h2 .exam-step{right:2px;bottom:-1px;font-size:clamp(.72rem,2.2vw,1rem);letter-spacing:.04em;color:#2ae7f0}
+.fidelity-h2 .exam-start-section{margin-top:24px}
+.fidelity-h2 .arcade-section-label{gap:14px;margin-bottom:10px}
+.fidelity-h2 .arcade-section-label img{width:118px;height:88px;object-fit:contain}
+.fidelity-h2 .arcade-section-label h2{font-size:clamp(1.75rem,5.5vw,2.85rem);letter-spacing:-.03em;color:#fff1c7;text-shadow:2px 2px 0 #06283b}
+
+/* Custom opening class dropdown matching the approved open-state mockup. */
+.class-picker{position:relative;margin:0;padding:0}
+.class-picker summary{list-style:none}
+.class-picker summary::-webkit-details-marker{display:none}
+.class-picker-summary{
+  position:relative;min-height:82px;display:grid;grid-template-columns:auto minmax(0,1fr) 56px;align-items:center;
+  padding:11px 20px 10px 34px;border:5px solid #21e9f3;background:#031b31;color:#fff2c7;
+  box-shadow:inset 0 0 0 4px #07506d,inset 0 0 0 7px #02111f,5px 5px 0 #00101d;cursor:pointer
+}
+.class-picker-summary-name{font-family:var(--pixel);font-size:clamp(1.35rem,4.7vw,2.15rem);font-weight:900;line-height:1;color:#fff3cd}
+.class-picker-summary-name::after{content:" — ";color:#fff3cd}
+.class-picker-summary-year{font-family:var(--pixel);font-size:clamp(1.05rem,3.7vw,1.75rem);font-weight:900;line-height:1;color:#fff3cd;justify-self:start}
+.class-picker-arrow{justify-self:end;color:#24e8f3;font-family:var(--pixel);font-size:2.25rem;line-height:1;transition:transform .12s steps(2,end)}
+.class-picker[open] .class-picker-arrow{transform:rotate(180deg)}
+.class-picker-menu{
+  border:5px solid #21e9f3;border-top:0;background:#031b31;
+  box-shadow:inset 0 0 0 4px #07506d,inset 0 0 0 7px #02111f,5px 5px 0 #00101d;
+  padding:6px 10px 10px
+}
+.class-picker-option{
+  width:100%;min-height:58px;display:grid;grid-template-columns:42px auto minmax(0,1fr);gap:10px;align-items:center;
+  padding:8px 18px;border:0;border-bottom:3px solid #0b4662;background:#031b31;color:#fff1c7;text-align:left;
+  font-family:var(--pixel);font-weight:900
+}
+.class-picker-option:last-child{border-bottom:0}
+.class-picker-option:hover{background:#08283d}
+.class-picker-option.is-selected{
+  background:linear-gradient(180deg,#ff9d1a,#ff7410);color:#111725;
+  box-shadow:inset 0 0 0 3px #ffd544,inset 0 0 0 6px #d84a08
+}
+.class-picker-check{font-size:1.65rem;text-align:center;line-height:1;color:inherit}
+.class-picker-name{font-size:clamp(1rem,3.6vw,1.55rem);white-space:nowrap}
+.class-picker-name::after{content:" — ";margin-left:8px}
+.class-picker-year{font-size:clamp(.92rem,3.1vw,1.35rem);white-space:nowrap}
+
+.fidelity-h2 .subject-choice-list{gap:9px}
+.fidelity-h2 .arcade-subject-choice{
+  min-height:76px;padding:9px 24px;grid-template-columns:54px minmax(0,1fr);gap:16px;
+  border-width:5px;background:#031b31;
+  box-shadow:inset 0 0 0 4px #07506d,inset 0 0 0 7px #02111f,5px 5px 0 #00101d;
+  font-size:clamp(1.05rem,3.65vw,1.55rem);letter-spacing:-.02em
+}
+.fidelity-h2 .arcade-subject-choice.selected{
+  border-color:#fff0a0;background:linear-gradient(180deg,#ff9d1a,#ff7410);color:#111725;
+  box-shadow:inset 0 0 0 4px #ffd544,inset 0 0 0 8px #d84808,5px 5px 0 #00101d
+}
+.fidelity-h2 .arcade-check{width:39px;height:39px;border-width:4px;font-size:1.35rem}
+.fidelity-h2 .subject-choice-copy strong{font:inherit;font-weight:900}
+.fidelity-h2 .subject-choice-note{font-size:.63rem;line-height:1.25;margin-top:5px}
+
+.fidelity-h2 .exam-selection-summary{
+  min-height:123px;margin:20px 0 22px;padding:13px 22px;grid-template-columns:170px minmax(0,1fr);gap:20px;
+  border-width:5px;background:#031b31;
+  box-shadow:inset 0 0 0 4px #07506d,inset 0 0 0 7px #02111f,5px 5px 0 #00101d
+}
+.fidelity-h2 .exam-selection-summary img{width:160px;height:105px;object-fit:contain;transform:translateY(3px)}
+.fidelity-h2 .selection-kicker{font-size:clamp(.85rem,2.6vw,1.14rem);text-transform:none;letter-spacing:0;color:#2ae7f0}
+.fidelity-h2 .selection-class{font-size:clamp(1.25rem,4vw,1.9rem);color:#ffb11d;margin-left:10px}
+.fidelity-h2 .selection-subject{margin-top:5px;font-family:var(--pixel);font-size:clamp(.92rem,3vw,1.28rem);font-weight:900;color:#fff2cb}
+.fidelity-h2 .exam-continue{
+  min-height:111px;padding:16px 36px;border-width:6px;font-size:clamp(1.2rem,4.4vw,2rem);
+  background:linear-gradient(180deg,#ff9e1d,#ff7610);border-color:#fff1a4;
+  box-shadow:inset 0 0 0 5px #ffd642,inset 0 0 0 11px #d44707,6px 6px 0 #00101d
+}
+.fidelity-h2 .exam-continue .arrow{font-size:1.55em;margin-left:auto;color:#111725}
+.fidelity-h2 .arcade-footer{margin-top:48px;padding-top:24px;border-top-width:4px;font-size:clamp(.7rem,2.3vw,1rem);letter-spacing:.07em}
+
+@media(max-width:760px){
+  .fidelity-h2{padding:0 2px 8px}
+  .fidelity-h2 .exam-start-head{margin:24px 0 20px;padding:0 0 0}
+  .fidelity-h2 .exam-step{position:static;margin-top:10px;text-align:right}
+  .fidelity-h2 .arcade-section-label img{width:82px;height:65px}
+  .fidelity-h2 .arcade-section-label h2{font-size:clamp(1.4rem,7vw,2rem)}
+  .class-picker-summary{min-height:68px;padding:8px 12px 8px 18px;grid-template-columns:auto minmax(0,1fr) 40px;border-width:4px}
+  .class-picker-summary-name{font-size:clamp(1rem,5.2vw,1.4rem)}.class-picker-summary-year{font-size:clamp(.82rem,4.3vw,1.15rem)}.class-picker-arrow{font-size:1.7rem}
+  .class-picker-menu{border-width:4px;padding:4px 7px 7px}.class-picker-option{min-height:50px;padding:6px 10px;grid-template-columns:30px auto minmax(0,1fr);gap:6px}.class-picker-check{font-size:1.2rem}.class-picker-name{font-size:clamp(.8rem,4.6vw,1.1rem)}.class-picker-year{font-size:clamp(.72rem,3.8vw,.95rem)}
+  .fidelity-h2 .arcade-subject-choice{min-height:64px;padding:8px 11px;grid-template-columns:42px minmax(0,1fr);gap:10px;border-width:4px;font-size:clamp(.82rem,4.6vw,1.1rem)}
+  .fidelity-h2 .arcade-check{width:34px;height:34px;border-width:3px}
+  .fidelity-h2 .exam-selection-summary{min-height:94px;grid-template-columns:100px minmax(0,1fr);gap:10px;padding:8px 12px;border-width:4px}.fidelity-h2 .exam-selection-summary img{width:96px;height:78px}
+  .fidelity-h2 .exam-continue{min-height:86px;padding:12px 18px;border-width:5px;font-size:clamp(.9rem,5vw,1.3rem)}
+  .fidelity-h2 .arcade-footer{margin-top:34px}
+}
+@media(max-width:460px){
+  .class-picker-summary{grid-template-columns:minmax(0,1fr) 38px}.class-picker-summary-year{grid-column:1}.class-picker-summary-name::after{content:""}.class-picker-summary-year{margin-top:5px}.class-picker-arrow{grid-column:2;grid-row:1/3}
+  .class-picker-option{grid-template-columns:30px minmax(0,1fr)}.class-picker-year{grid-column:2;margin-top:-3px}.class-picker-name::after{content:""}
+  .fidelity-h2 .exam-selection-summary{grid-template-columns:78px minmax(0,1fr)}.fidelity-h2 .exam-selection-summary img{width:75px;height:65px}
+}
+
 </style>
   <title>Zkouškomat ZZ-01</title>
 </head>
@@ -3231,7 +3339,7 @@ body{
           <button class="icon-btn account-exit" data-action="account-menu" aria-label="Účet, škola a odhlášení" title="Nastavení účtu / školy">⚙</button>
         </div>
       </header>
-      ${state.route!=='home'?`<div class="screen-nav"><button class="back-nav-btn" data-action="nav-back" aria-label="Zpět"><span class="back-arrow">←</span>Zpět</button><button class="home-nav-btn" data-action="go-home" aria-label="Hlavní menu">⌂ Hlavní menu</button></div>`:''}
+      ${state.route!=='home'?`<div class="screen-nav"><button class="back-nav-btn" data-action="nav-back" aria-label="Zpět"><span class="back-arrow">←</span>Zpět</button>${state.route==='exam'?'':`<button class="home-nav-btn" data-action="go-home" aria-label="Hlavní menu">⌂ Hlavní menu</button>`}</div>`:''}
       <main class="container ${state.route==='home'?'home-container':''}">${content}</main>`;
   }
 
@@ -4089,24 +4197,41 @@ body{
     const choices=subjectGroups.all.map(s=>`
       <button type="button" class="arcade-subject-choice ${f.subject===s?'selected':''}" data-action="exam-subject-choice" data-subject="${esc(s)}" aria-pressed="${f.subject===s?'true':'false'}">
         <span class="arcade-check">${f.subject===s?'✓':''}</span>
-        <span>${esc(s)}${linkedSet.has(s)?'':`<small class="subject-choice-note">Při prvním použití se přiřadí k této třídě.</small>`}</span>
+        <span class="subject-choice-copy"><strong>${esc(s)}</strong>${linkedSet.has(s)?'':`<small class="subject-choice-note">Při prvním použití se přiřadí k této třídě.</small>`}</span>
       </button>`).join('');
     const selectedClass=c?`${esc(c.displayName)} — ${esc(c.schoolYear)}`:'Nevybrána';
     const selectedSubject=f.subject?esc(f.subject):'Vyber předmět';
+    const classChoices=state.classes.map(item=>`
+      <button type="button" class="class-picker-option ${c?.id===item.id?'is-selected':''}" data-action="exam-class-choice" data-id="${item.id}">
+        <span class="class-picker-check">${c?.id===item.id?'✓':''}</span>
+        <span class="class-picker-name">${esc(item.displayName)}</span>
+        <span class="class-picker-year">${esc(item.schoolYear)}</span>
+      </button>`).join('');
+
     const body=`
-      <section class="exam-start">
+      <section class="exam-start fidelity-h2">
         <div class="exam-start-head">
           <h1 class="exam-start-title">Zahájit<br>zkoušení</h1>
           <div class="exam-start-subtitle">Vyberte třídu a předmět</div>
           <div class="exam-step">KROK 1 / 6</div>
         </div>
 
-        <div class="exam-start-section">
+        <div class="exam-start-section class-section">
           <div class="arcade-section-label"><img src="assets/ui/select-class.png" alt="" aria-hidden="true"><h2>Třída</h2></div>
-          <div class="arcade-select-wrap"><select id="exam-class" class="arcade-select" aria-label="Vyber třídu">${classOptions}</select></div>
+          ${state.classes.length?`
+            <details class="class-picker">
+              <summary class="class-picker-summary" aria-label="Vybrat třídu">
+                <span class="class-picker-summary-name">${c?esc(c.displayName):'Vyber třídu'}</span>
+                <span class="class-picker-summary-year">${c?esc(c.schoolYear):''}</span>
+                <span class="class-picker-arrow" aria-hidden="true">⌄</span>
+              </summary>
+              <div class="class-picker-menu">${classChoices}</div>
+            </details>
+          `:'<div class="exam-start-empty">Zatím nemáš žádnou třídu. Vytvoř ji v „Moje třídy“.</div>'}
+          <select id="exam-class" class="sr-only-select" aria-label="Vyber třídu">${classOptions}</select>
         </div>
 
-        <div class="exam-start-section">
+        <div class="exam-start-section subject-section">
           <div class="arcade-section-label"><img src="assets/ui/select-subject.png" alt="" aria-hidden="true"><h2>Předmět</h2></div>
           ${subjectGroups.all.length?`<div class="subject-choice-list">${choices}</div>`:'<div class="exam-start-empty">Zatím nemáš žádný předmět. Vytvoř ho v „Moje předměty“.</div>'}
           <select id="exam-subject" class="sr-only-select" aria-label="Vybraný předmět"><option value="">Vyber předmět</option>${subjectOptions}</select>
@@ -4114,7 +4239,7 @@ body{
 
         <div class="exam-selection-summary">
           <img src="assets/ui/select-summary.png" alt="" aria-hidden="true">
-          <div><div class="selection-kicker">Vybráno: <span class="selection-class">${selectedClass}</span></div><div class="selection-subject">${selectedSubject}</div></div>
+          <div class="selection-copy"><div class="selection-kicker">Vybráno: <span class="selection-class">${selectedClass}</span></div><div class="selection-subject">${selectedSubject}</div></div>
         </div>
 
         <button class="exam-continue" data-action="exam-next-attendance" ${!c||!f.subject?'disabled':''}><span>Pokračovat k přítomnosti</span><span class="arrow">▶</span></button>
@@ -5787,6 +5912,15 @@ body{
     else if(action==='save-class'){const c=classById(btn.dataset.id);c.displayName=document.getElementById('class-name').value.trim()||c.displayName;c.schoolYear=document.getElementById('class-year').value.trim()||c.schoolYear;c.subjects=document.getElementById('class-subjects').value.split(',').map(x=>x.trim()).filter(Boolean);saveState();toast('Třída uložena.');render();}
     else if(action==='promote-class') promoteClassModal(btn.dataset.id);
     else if(action==='clean-slate') cleanSlate();
+    else if(action==='exam-class-choice'){
+      const id=btn.dataset.id||'';
+      if(!classById(id))return;
+      state.examFlow.classId=id;
+      state.examFlow.subject='';
+      state.examFlow.candidates=[];
+      state.examFlow.candidateChoiceId=null;
+      saveState();render();
+    }
     else if(action==='exam-subject-choice'){
       state.examFlow.subject=btn.dataset.subject||'';saveState();render();
     }
