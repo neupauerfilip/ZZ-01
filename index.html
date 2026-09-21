@@ -1179,8 +1179,113 @@ body{
 .exam-continue:disabled{filter:grayscale(.65);opacity:.55}
 .exam-start-empty{border:3px dashed var(--arcade-cyan-dark);padding:15px;color:var(--muted)}
 
+
+/* Přítomnost — krok 2 */
+.attendance-screen{max-width:860px;margin:0 auto}
+.attendance-head{text-align:center;position:relative;margin:4px 0 18px;padding:2px 92px 0}
+.attendance-title{
+  margin:0;color:var(--arcade-cream);font-family:var(--pixel);font-weight:900;text-transform:uppercase;
+  font-size:clamp(2rem,8vw,4.75rem);line-height:.95;letter-spacing:.015em;
+  text-shadow:0 3px 0 var(--arcade-orange),0 7px 0 #a92c08,4px 7px 0 #010913
+}
+.attendance-subtitle{
+  margin-top:12px;color:var(--arcade-cyan);font-family:var(--pixel);font-weight:900;
+  font-size:clamp(.92rem,3vw,1.2rem)
+}
+.attendance-step{
+  position:absolute;right:0;bottom:-4px;color:var(--arcade-cyan);font-family:var(--pixel);
+  font-weight:900;font-size:.82rem;letter-spacing:.04em
+}
+.attendance-context{
+  margin:16px 0 12px;padding:12px 18px;display:grid;grid-template-columns:92px minmax(0,1fr);
+  gap:14px;align-items:center;border:4px solid var(--arcade-cyan);background:#061c30;
+  box-shadow:inset 0 0 0 3px #07394e,5px 5px 0 #010913
+}
+.attendance-context img{width:86px;height:76px;object-fit:contain;image-rendering:pixelated}
+.attendance-context-class{
+  color:var(--arcade-cream);font-family:var(--pixel);font-weight:900;
+  font-size:clamp(1rem,4vw,1.52rem);line-height:1.18
+}
+.attendance-context-subject{
+  margin-top:5px;color:var(--arcade-cream);font-family:var(--pixel);font-weight:900;
+  font-size:clamp(.78rem,2.8vw,1.05rem);line-height:1.25;opacity:.95
+}
+.attendance-list{
+  display:flex;flex-direction:column;gap:8px;max-height:min(49vh,620px);overflow:auto;
+  padding:2px 5px 5px 0;scrollbar-width:thin;scrollbar-color:var(--arcade-cyan) #061521;
+  -webkit-overflow-scrolling:touch
+}
+.attendance-row{
+  min-height:72px;padding:9px 18px;display:grid;grid-template-columns:54px minmax(0,1fr) 42px auto;
+  gap:13px;align-items:center;border:4px solid var(--arcade-cyan);background:linear-gradient(180deg,#072139,#04182a);
+  box-shadow:inset 0 0 0 2px #07394e,4px 4px 0 #010913;cursor:pointer;color:var(--arcade-cream)
+}
+.attendance-row:hover{filter:brightness(1.08)}
+.attendance-row.is-absent{background:linear-gradient(180deg,#092033,#071724);color:#8aa4b0}
+.attendance-person{
+  width:42px;height:44px;position:relative;color:var(--arcade-cyan);filter:drop-shadow(3px 3px 0 #012132)
+}
+.attendance-person::before{
+  content:"";position:absolute;left:14px;top:1px;width:16px;height:16px;background:currentColor;
+  box-shadow:0 3px 0 currentColor
+}
+.attendance-person::after{
+  content:"";position:absolute;left:9px;top:21px;width:26px;height:17px;background:currentColor;
+  box-shadow:-5px 7px 0 -2px currentColor,5px 7px 0 -2px currentColor
+}
+.attendance-row.is-absent .attendance-person{color:#7894a2;filter:none}
+.attendance-name{
+  min-width:0;color:inherit;font-family:var(--pixel);font-weight:900;
+  font-size:clamp(.88rem,3.5vw,1.28rem);line-height:1.1;overflow-wrap:anywhere
+}
+.attendance-check{
+  appearance:none;-webkit-appearance:none;width:38px;height:38px;min-height:38px;margin:0;
+  border:4px solid var(--arcade-cream);background:#071421;display:grid;place-content:center;cursor:pointer
+}
+.attendance-check::after{
+  content:"";width:20px;height:11px;border-left:7px solid #35ef42;border-bottom:7px solid #35ef42;
+  transform:rotate(-45deg) scale(0);transform-origin:center;transition:transform .05s steps(1,end)
+}
+.attendance-check:checked::after{transform:rotate(-45deg) scale(1)}
+.attendance-status{
+  min-width:104px;text-align:left;color:var(--arcade-cyan);font-family:var(--pixel);font-weight:900;
+  font-size:clamp(.78rem,3vw,1.02rem)
+}
+.attendance-row.is-absent .attendance-status{color:var(--arcade-orange-hi)}
+.attendance-summary{
+  margin-top:14px;padding:13px 18px;display:grid;grid-template-columns:1fr 4px 1fr;gap:18px;align-items:center;
+  border:4px solid var(--arcade-cyan);background:#061c30;box-shadow:inset 0 0 0 3px #07394e,5px 5px 0 #010913;
+  font-family:var(--pixel);font-weight:900;text-align:center
+}
+.attendance-summary-sep{width:4px;height:42px;background:var(--arcade-cyan);justify-self:center}
+.attendance-summary strong{font-size:clamp(1.5rem,5.2vw,2.25rem);margin-left:8px}
+.attendance-summary .present-count{color:#2cf142}
+.attendance-summary .absent-count{color:var(--arcade-orange-hi)}
+.attendance-info{
+  margin-top:12px;padding:12px 16px;display:grid;grid-template-columns:46px minmax(0,1fr);gap:12px;align-items:center;
+  border:4px solid var(--arcade-cyan);background:#061c30;box-shadow:inset 0 0 0 3px #07394e,4px 4px 0 #010913;
+  color:var(--arcade-cream);font-family:var(--pixel);font-weight:900;font-size:clamp(.72rem,2.5vw,.94rem);line-height:1.35
+}
+.attendance-info-icon{
+  width:38px;height:38px;display:grid;place-items:center;border-radius:50%;background:var(--arcade-cyan);
+  color:#04182a;font-family:var(--pixel);font-size:1.15rem;font-weight:900
+}
+.attendance-continue{margin-top:16px}
+.attendance-empty{
+  padding:24px;border:4px dashed var(--arcade-cyan-dark);color:var(--muted);text-align:center;font-family:var(--pixel)
+}
+
 @media(max-width:700px){
   .container{padding:14px 14px 28px}
+  .attendance-head{padding:2px 0 0}.attendance-step{position:static;text-align:right;margin-top:8px}
+  .attendance-context{grid-template-columns:72px minmax(0,1fr);padding:10px 12px}
+  .attendance-context img{width:68px;height:60px}
+  .attendance-row{grid-template-columns:42px minmax(0,1fr) 36px auto;padding:8px 10px;gap:9px;min-height:66px}
+  .attendance-person{transform:scale(.82);transform-origin:center}
+  .attendance-check{width:34px;height:34px;min-height:34px;border-width:3px}
+  .attendance-check::after{width:17px;height:9px;border-width:0 0 6px 6px}
+  .attendance-status{min-width:86px}
+  .attendance-list{max-height:min(48vh,560px)}
   .topbar{width:calc(100% - 18px);margin-top:9px;padding:8px 10px}
   .screen-nav{width:calc(100% - 22px);margin-top:12px}
   .brand-mark{width:48px;height:44px}.brand-main{font-size:1rem}.brand-code{font-size:.7rem}
@@ -1195,6 +1300,14 @@ body{
 }
 @media(max-width:420px){
   .home-grid{grid-template-columns:1fr}
+  .attendance-row{grid-template-columns:34px minmax(0,1fr) 32px auto;gap:7px;padding:7px 8px}
+  .attendance-person{transform:scale(.72)}
+  .attendance-check{width:30px;height:30px;min-height:30px}
+  .attendance-status{min-width:70px;font-size:.7rem}
+  .attendance-summary{gap:8px;padding:11px 8px}
+  .attendance-summary strong{display:block;margin:5px 0 0}
+  .attendance-info{grid-template-columns:38px minmax(0,1fr);padding:10px}
+
   .home-card{grid-template-columns:95px minmax(0,1fr)}
   .arcade-home-title::before,.arcade-home-title::after,.exam-start-title::before,.exam-start-title::after{display:none}
   .arcade-footer{font-size:.62rem}
@@ -1213,7 +1326,7 @@ body{
   'use strict';
 
   const STORAGE_KEY = 'zkouskomat_zz01_state_v1';
-  const APP_VERSION = 'ZZ-01 / VISUAL v1 / MENU + START';
+  const APP_VERSION = 'ZZ-01 / VISUAL v2 / ATTENDANCE';
   const app = document.getElementById('app');
   const toastRoot = document.getElementById('toast-root');
   const modalRoot = document.getElementById('modal-root');
@@ -3197,11 +3310,57 @@ body{
 
   function renderAttendance(f){
     const list=studentsForClass(f.classId);
-    const body=`<p class="muted">Výchozí stav: všichni přítomni. Odškrtni pouze chybějící.</p><div class="list">${list.map(s=>{
+    const c=classById(f.classId);
+    const presentCount=list.filter(s=>f.attendance[s.id]!==false).length;
+    const absentCount=Math.max(0,list.length-presentCount);
+    const classLabel=c?`${esc(c.displayName)} · ${esc(c.schoolYear)}`:'Třída';
+    const subjectLabel=f.subject?esc(f.subject):'Bez vybraného předmětu';
+
+    const rows=list.map(s=>{
       const present=f.attendance[s.id]!==false;
-      return `<label class="list-item check-row"><input type="checkbox" data-attendance="${s.id}" ${present?'checked':''}><div><div class="student-name">${esc(s.name)}</div><div class="meta">${present?'Přítomen':'Nepřítomen'}</div></div></label>`;
-    }).join('')}</div>`;
-    app.innerHTML=examFrame('Přítomnost',body,`<button class="btn ghost" data-action="exam-back-select">Zpět</button><button class="btn primary" data-action="exam-next-rules">Pravidla a body</button>`);
+      return `<label class="attendance-row ${present?'is-present':'is-absent'}">
+        <span class="attendance-person" aria-hidden="true"></span>
+        <span class="attendance-name">${esc(s.name)}</span>
+        <input class="attendance-check" type="checkbox" data-attendance="${s.id}" ${present?'checked':''} aria-label="${present?'Přítomen':'Chybí'} – ${esc(s.name)}">
+        <span class="attendance-status">${present?'Přítomen':'Chybí'}</span>
+      </label>`;
+    }).join('');
+
+    const body=`
+      <section class="attendance-screen">
+        <div class="attendance-head">
+          <h1 class="attendance-title">Přítomnost</h1>
+          <div class="attendance-subtitle">Označte, kdo je dnes ve třídě.</div>
+          <div class="attendance-step">KROK 2 / 6</div>
+        </div>
+
+        <div class="attendance-context">
+          <img src="assets/ui/select-class.png" alt="" aria-hidden="true">
+          <div>
+            <div class="attendance-context-class">Třída: ${classLabel}</div>
+            <div class="attendance-context-subject">${subjectLabel}</div>
+          </div>
+        </div>
+
+        ${list.length?`<div class="attendance-list">${rows}</div>`:'<div class="attendance-empty">V této třídě zatím nejsou žádní žáci.</div>'}
+
+        <div class="attendance-summary" aria-live="polite">
+          <div>Přítomní: <strong class="present-count">${presentCount}</strong></div>
+          <div class="attendance-summary-sep" aria-hidden="true"></div>
+          <div>Chybí: <strong class="absent-count">${absentCount}</strong></div>
+        </div>
+
+        <div class="attendance-info">
+          <div class="attendance-info-icon" aria-hidden="true">i</div>
+          <div>Do losování vstoupí pouze přítomní žáci.</div>
+        </div>
+
+        <button class="exam-continue attendance-continue" data-action="exam-next-rules" ${!presentCount?'disabled':''}>
+          <span>Pokračovat k pravidlům</span><span class="arrow">▶</span>
+        </button>
+        <div class="arcade-footer"><span>Dobrovolný doplněk výuky.</span><span>ZZ-01</span></div>
+      </section>`;
+    app.innerHTML=layout(body,'Zkoušení');
   }
 
   function renderExamRules(f){
