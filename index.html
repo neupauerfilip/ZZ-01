@@ -1404,140 +1404,137 @@ body{
 .exam-start-empty{border:3px dashed var(--arcade-cyan-dark);padding:15px;color:var(--muted)}
 
 
-/* Přítomnost — krok 2 */
-.attendance-screen{max-width:860px;margin:0 auto}
-.attendance-head{text-align:center;position:relative;margin:4px 0 18px;padding:2px 92px 0}
+/* ======================================================================
+   VISUAL FIDELITY H3 — KROK 2/6: PŘÍTOMNOST
+   Přesnější rekonstrukce podle schválené reference „Přítomnost žáků v Zkouškomatu“.
+   Funkční logika přítomnosti zůstává beze změny.
+   ====================================================================== */
+.attendance-screen{max-width:860px;margin:0 auto;padding:0 0 4px}
+.attendance-head{text-align:center;position:relative;margin:3px 0 17px;padding:0 96px 0}
 .attendance-title{
-  margin:0;color:var(--arcade-cream);font-family:var(--pixel);font-weight:900;text-transform:uppercase;
-  font-size:clamp(2rem,8vw,4.75rem);line-height:.95;letter-spacing:.015em;
-  text-shadow:0 3px 0 var(--arcade-orange),0 7px 0 #a92c08,4px 7px 0 #010913
+  margin:0;color:#fff1bf;font-family:var(--pixel);font-weight:900;text-transform:uppercase;
+  font-size:clamp(2.35rem,8.2vw,4.9rem);line-height:.93;letter-spacing:.012em;
+  text-shadow:0 3px 0 #ff7120,0 7px 0 #b82d08,5px 8px 0 #010913
 }
 .attendance-subtitle{
-  margin-top:12px;color:var(--arcade-cyan);font-family:var(--pixel);font-weight:900;
-  font-size:clamp(.92rem,3vw,1.2rem)
+  margin-top:12px;color:#25e8f4;font-family:var(--pixel);font-weight:900;
+  font-size:clamp(.92rem,3vw,1.18rem);letter-spacing:.01em
 }
 .attendance-step{
-  position:absolute;right:0;bottom:-4px;color:var(--arcade-cyan);font-family:var(--pixel);
-  font-weight:900;font-size:.82rem;letter-spacing:.04em
+  position:absolute;right:0;bottom:-2px;color:#25e8f4;font-family:var(--pixel);
+  font-weight:900;font-size:.82rem;letter-spacing:.05em;white-space:nowrap
 }
 .attendance-context{
-  margin:16px 0 12px;padding:12px 18px;display:grid;grid-template-columns:92px minmax(0,1fr);
-  gap:14px;align-items:center;border:4px solid var(--arcade-cyan);background:#061c30;
-  box-shadow:inset 0 0 0 3px #07394e,5px 5px 0 #010913
+  margin:16px 0 12px;padding:12px 18px;display:grid;grid-template-columns:118px minmax(0,1fr);
+  gap:12px;align-items:center;border:4px solid #25e8f4;background:linear-gradient(180deg,#08243a,#041a2c);
+  box-shadow:inset 0 0 0 3px #07566c,inset 0 -5px 0 rgba(0,0,0,.28),5px 5px 0 #010913;
+  clip-path:polygon(12px 0,calc(100% - 12px) 0,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,0 calc(100% - 12px),0 12px)
 }
-.attendance-context img{width:86px;height:76px;object-fit:contain;image-rendering:pixelated}
+.attendance-context img{width:106px;height:86px;object-fit:contain;image-rendering:pixelated;filter:drop-shadow(3px 3px 0 #010913)}
 .attendance-context-class{
-  color:var(--arcade-cream);font-family:var(--pixel);font-weight:900;
-  font-size:clamp(1rem,4vw,1.52rem);line-height:1.18
+  color:#fff3cf;font-family:var(--pixel);font-weight:900;
+  font-size:clamp(1.05rem,4vw,1.62rem);line-height:1.13;letter-spacing:.01em
 }
 .attendance-context-subject{
-  margin-top:5px;color:var(--arcade-cream);font-family:var(--pixel);font-weight:900;
-  font-size:clamp(.78rem,2.8vw,1.05rem);line-height:1.25;opacity:.95
+  margin-top:7px;color:#fff3cf;font-family:var(--pixel);font-weight:900;
+  font-size:clamp(.82rem,2.8vw,1.12rem);line-height:1.2
 }
 .attendance-list{
-  display:flex;flex-direction:column;gap:8px;max-height:min(49vh,620px);overflow:auto;
-  padding:2px 5px 5px 0;scrollbar-width:thin;scrollbar-color:var(--arcade-cyan) #061521;
+  display:flex;flex-direction:column;gap:8px;max-height:min(49vh,590px);overflow:auto;
+  padding:2px 6px 5px 0;scrollbar-width:thin;scrollbar-color:#25e8f4 #041522;
   -webkit-overflow-scrolling:touch
 }
 .attendance-row{
-  min-height:72px;padding:9px 18px;display:grid;grid-template-columns:54px minmax(0,1fr) 42px auto;
-  gap:13px;align-items:center;border:4px solid var(--arcade-cyan);background:linear-gradient(180deg,#072139,#04182a);
-  box-shadow:inset 0 0 0 2px #07394e,4px 4px 0 #010913;cursor:pointer;color:var(--arcade-cream)
+  position:relative;min-height:70px;padding:8px 17px;display:grid;
+  grid-template-columns:56px minmax(0,1fr) 48px 128px;gap:12px;align-items:center;
+  border:4px solid #25e8f4;background:linear-gradient(180deg,#08233a 0%,#041a2c 100%);
+  box-shadow:inset 0 0 0 2px #07566c,inset 0 -4px 0 rgba(0,0,0,.32),4px 4px 0 #010913;
+  clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px),0 10px);
+  cursor:pointer;color:#fff3cf;transition:filter .08s linear,transform .08s linear
 }
-.attendance-row:hover{filter:brightness(1.08)}
-.attendance-row.is-absent{background:linear-gradient(180deg,#092033,#071724);color:#8aa4b0}
+.attendance-row:hover{filter:brightness(1.1)}
+.attendance-row:active{transform:translate(1px,1px)}
+.attendance-row.is-absent{background:linear-gradient(180deg,#071d31,#061827);color:#8198a8}
 .attendance-person{
-  width:42px;height:44px;position:relative;color:var(--arcade-cyan);filter:drop-shadow(3px 3px 0 #012132)
+  width:46px;height:48px;position:relative;color:#25e8f4;filter:drop-shadow(3px 3px 0 #012132);image-rendering:pixelated
 }
 .attendance-person::before{
-  content:"";position:absolute;left:14px;top:1px;width:16px;height:16px;background:currentColor;
-  box-shadow:0 3px 0 currentColor
+  content:"";position:absolute;left:15px;top:1px;width:17px;height:17px;background:currentColor;
+  box-shadow:-3px 3px 0 currentColor,3px 3px 0 currentColor
 }
 .attendance-person::after{
-  content:"";position:absolute;left:9px;top:21px;width:26px;height:17px;background:currentColor;
-  box-shadow:-5px 7px 0 -2px currentColor,5px 7px 0 -2px currentColor
+  content:"";position:absolute;left:9px;top:23px;width:29px;height:18px;background:currentColor;
+  box-shadow:-5px 6px 0 -1px currentColor,5px 6px 0 -1px currentColor
 }
-.attendance-row.is-absent .attendance-person{color:#7894a2;filter:none}
+.attendance-row.is-absent .attendance-person{color:#7892a4;filter:drop-shadow(2px 2px 0 #02111d)}
 .attendance-name{
   min-width:0;color:inherit;font-family:var(--pixel);font-weight:900;
-  font-size:clamp(.88rem,3.5vw,1.28rem);line-height:1.1;overflow-wrap:anywhere
+  font-size:clamp(.92rem,3.4vw,1.31rem);line-height:1.08;overflow-wrap:anywhere
 }
 .attendance-check{
-  appearance:none;-webkit-appearance:none;width:38px;height:38px;min-height:38px;margin:0;
-  border:4px solid var(--arcade-cream);background:#071421;display:grid;place-content:center;cursor:pointer
+  appearance:none;-webkit-appearance:none;width:42px;height:42px;min-height:42px;margin:0;padding:0;
+  border:4px solid #fff4d5;background:#071421;display:grid;place-content:center;cursor:pointer;
+  box-shadow:inset 0 0 0 2px #142b37,2px 2px 0 #010913
 }
 .attendance-check::after{
-  content:"";width:20px;height:11px;border-left:7px solid #35ef42;border-bottom:7px solid #35ef42;
-  transform:rotate(-45deg) scale(0);transform-origin:center;transition:transform .05s steps(1,end)
+  content:"";width:13px;height:24px;border:solid #32ef45;border-width:0 7px 7px 0;
+  transform:rotate(45deg) scale(0);transform-origin:center;transition:transform .05s steps(1,end);margin-top:-5px
 }
-.attendance-check:checked::after{transform:rotate(-45deg) scale(1)}
+.attendance-check:checked::after{transform:rotate(45deg) scale(1)}
 .attendance-status{
-  min-width:104px;text-align:left;color:var(--arcade-cyan);font-family:var(--pixel);font-weight:900;
-  font-size:clamp(.78rem,3vw,1.02rem)
+  min-width:0;text-align:left;color:#25e8f4;font-family:var(--pixel);font-weight:900;
+  font-size:clamp(.8rem,2.8vw,1.03rem);white-space:nowrap
 }
-.attendance-row.is-absent .attendance-status{color:var(--arcade-orange-hi)}
+.attendance-row.is-absent .attendance-status{color:#ff9b19}
 .attendance-summary{
-  margin-top:14px;padding:13px 18px;display:grid;grid-template-columns:1fr 4px 1fr;gap:18px;align-items:center;
-  border:4px solid var(--arcade-cyan);background:#061c30;box-shadow:inset 0 0 0 3px #07394e,5px 5px 0 #010913;
-  font-family:var(--pixel);font-weight:900;text-align:center
+  margin-top:14px;padding:13px 20px;display:grid;grid-template-columns:1fr 4px 1fr;gap:18px;align-items:center;
+  border:4px solid #25e8f4;background:linear-gradient(180deg,#082238,#041a2b);
+  box-shadow:inset 0 0 0 3px #07566c,5px 5px 0 #010913;
+  clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px),0 10px);
+  color:#fff3cf;font-family:var(--pixel);font-weight:900;text-align:center;font-size:clamp(.88rem,3vw,1.08rem)
 }
-.attendance-summary-sep{width:4px;height:42px;background:var(--arcade-cyan);justify-self:center}
-.attendance-summary strong{font-size:clamp(1.5rem,5.2vw,2.25rem);margin-left:8px}
-.attendance-summary .present-count{color:#2cf142}
-.attendance-summary .absent-count{color:var(--arcade-orange-hi)}
+.attendance-summary-sep{width:4px;height:48px;background:#25e8f4;justify-self:center;box-shadow:2px 0 0 #054858}
+.attendance-summary strong{font-size:clamp(1.65rem,5.2vw,2.35rem);margin-left:9px;text-shadow:2px 2px 0 #010913}
+.attendance-summary .present-count{color:#25ec42}
+.attendance-summary .absent-count{color:#ff9b19}
 .attendance-info{
-  margin-top:12px;padding:12px 16px;display:grid;grid-template-columns:46px minmax(0,1fr);gap:12px;align-items:center;
-  border:4px solid var(--arcade-cyan);background:#061c30;box-shadow:inset 0 0 0 3px #07394e,4px 4px 0 #010913;
-  color:var(--arcade-cream);font-family:var(--pixel);font-weight:900;font-size:clamp(.72rem,2.5vw,.94rem);line-height:1.35
+  margin-top:12px;padding:11px 16px;display:grid;grid-template-columns:55px minmax(0,1fr);gap:12px;align-items:center;
+  border:4px solid #25e8f4;background:linear-gradient(180deg,#082238,#041a2b);
+  box-shadow:inset 0 0 0 3px #07566c,4px 4px 0 #010913;
+  clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px),0 10px);
+  color:#fff3cf;font-family:var(--pixel);font-weight:900;font-size:clamp(.75rem,2.55vw,.96rem);line-height:1.32
 }
 .attendance-info-icon{
-  width:38px;height:38px;display:grid;place-items:center;border-radius:50%;background:var(--arcade-cyan);
-  color:#04182a;font-family:var(--pixel);font-size:1.15rem;font-weight:900
+  width:46px;height:46px;display:grid;place-items:center;background:#25e8f4;color:#04182a;
+  font-family:var(--pixel);font-size:1.38rem;font-weight:900;
+  clip-path:polygon(9px 0,calc(100% - 9px) 0,100% 9px,100% calc(100% - 9px),calc(100% - 9px) 100%,9px 100%,0 calc(100% - 9px),0 9px)
 }
-.attendance-continue{margin-top:16px}
+.attendance-continue{margin-top:17px}
 .attendance-empty{
-  padding:24px;border:4px dashed var(--arcade-cyan-dark);color:var(--muted);text-align:center;font-family:var(--pixel)
+  padding:24px;border:4px dashed #087c9b;background:#041a2b;color:#9bb8bd;text-align:center;font-family:var(--pixel)
 }
 
 @media(max-width:700px){
-  .container{padding:14px 14px 28px}
-  .attendance-head{padding:2px 0 0}.attendance-step{position:static;text-align:right;margin-top:8px}
-  .attendance-context{grid-template-columns:72px minmax(0,1fr);padding:10px 12px}
-  .attendance-context img{width:68px;height:60px}
-  .attendance-row{grid-template-columns:42px minmax(0,1fr) 36px auto;padding:8px 10px;gap:9px;min-height:66px}
-  .attendance-person{transform:scale(.82);transform-origin:center}
-  .attendance-check{width:34px;height:34px;min-height:34px;border-width:3px}
-  .attendance-check::after{width:17px;height:9px;border-width:0 0 6px 6px}
-  .attendance-status{min-width:86px}
+  .attendance-head{padding:0}.attendance-step{position:static;text-align:right;margin-top:8px}
+  .attendance-context{grid-template-columns:88px minmax(0,1fr);padding:10px 12px}
+  .attendance-context img{width:80px;height:68px}
+  .attendance-row{grid-template-columns:46px minmax(0,1fr) 40px 100px;padding:8px 10px;gap:9px;min-height:66px}
+  .attendance-person{transform:scale(.84);transform-origin:center}
+  .attendance-check{width:36px;height:36px;min-height:36px;border-width:3px}
+  .attendance-check::after{width:11px;height:20px;border-width:0 6px 6px 0}
   .attendance-list{max-height:min(48vh,560px)}
-  .topbar{width:calc(100% - 18px);margin-top:9px;padding:8px 10px}
-  .screen-nav{width:calc(100% - 22px);margin-top:12px}
-  .brand-mark{width:48px;height:44px}.brand-main{font-size:1rem}.brand-code{font-size:.7rem}
-  .topbar .icon-btn{min-width:40px;min-height:40px;font-size:1.25rem}
-  .home-card{grid-template-columns:86px minmax(0,1fr);min-height:116px;padding:10px 11px}
-  .home-card .home-icon{height:78px}
-  .home-summary-grid{grid-template-columns:1fr}
-  .exam-start-head{padding:4px 0 0}.exam-step{position:static;text-align:right;margin-top:8px}
-  .arcade-section-label img{width:60px;height:55px}
-  .exam-selection-summary{grid-template-columns:72px minmax(0,1fr)}
-  .exam-selection-summary img{width:68px;height:62px}
 }
-@media(max-width:420px){
-  .home-grid{grid-template-columns:1fr}
-  .attendance-row{grid-template-columns:34px minmax(0,1fr) 32px auto;gap:7px;padding:7px 8px}
-  .attendance-person{transform:scale(.72)}
-  .attendance-check{width:30px;height:30px;min-height:30px}
-  .attendance-status{min-width:70px;font-size:.7rem}
+@media(max-width:480px){
+  .attendance-row{grid-template-columns:34px minmax(0,1fr) 34px 78px;gap:7px;padding:7px 8px}
+  .attendance-person{transform:scale(.7)}
+  .attendance-check{width:31px;height:31px;min-height:31px}
+  .attendance-check::after{width:9px;height:17px;border-width:0 5px 5px 0}
+  .attendance-status{font-size:.69rem}
   .attendance-summary{gap:8px;padding:11px 8px}
   .attendance-summary strong{display:block;margin:5px 0 0}
-  .attendance-info{grid-template-columns:38px minmax(0,1fr);padding:10px}
-
-  .home-card{grid-template-columns:95px minmax(0,1fr)}
-  .arcade-home-title::before,.arcade-home-title::after,.exam-start-title::before,.exam-start-title::after{display:none}
-  .arcade-footer{font-size:.62rem}
+  .attendance-info{grid-template-columns:42px minmax(0,1fr);padding:10px}
+  .attendance-info-icon{width:38px;height:38px;font-size:1.05rem}
 }
-
-
 
 /* VISUAL PASS V3 – Krok 3/6: pravidla a trestné body */
 .rules-screen{max-width:900px;margin:0 auto;padding:4px 0 18px}
@@ -4267,7 +4264,7 @@ body{
     }).join('');
 
     const body=`
-      <section class="attendance-screen">
+      <section class="attendance-screen fidelity-h3">
         <div class="attendance-head">
           <h1 class="attendance-title">Přítomnost</h1>
           <div class="attendance-subtitle">Označte, kdo je dnes ve třídě.</div>
@@ -4282,7 +4279,7 @@ body{
           </div>
         </div>
 
-        ${list.length?`<div class="attendance-list">${rows}</div>`:'<div class="attendance-empty">V této třídě zatím nejsou žádní žáci.</div>'}
+        ${list.length?`<div class="attendance-list" role="list" aria-label="Seznam žáků a jejich přítomnost">${rows}</div>`:'<div class="attendance-empty">V této třídě zatím nejsou žádní žáci.</div>'}
 
         <div class="attendance-summary" aria-live="polite">
           <div>Přítomní: <strong class="present-count">${presentCount}</strong></div>

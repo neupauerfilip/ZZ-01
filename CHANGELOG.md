@@ -70,3 +70,9 @@
 - V režimu zkoušení se v horní navigaci zobrazuje pouze Zpět, aby rozložení odpovídalo referenci.
 - Funkční logika výběru třídy, předmětu a pokračování k přítomnosti zůstala zachována.
 
+## 2026-09-21 — Visual fidelity H3
+- Krok 2/6 „Přítomnost“ přestavěn podle konkrétní schválené reference Přítomnost žáků v Zkouškomatu.
+- Řádky žáků, pixelové postavy, checkboxy a stavy Přítomen / Chybí byly proporčně a barevně zpřesněny podle předlohy.
+- Nepřítomní žáci mají utlumený šedý vzhled a oranžový stav; přítomní cyan/zelené zvýraznění.
+- Souhrn Přítomní / Chybí, informační panel a pokračovací tlačítko byly sjednoceny s referenční obrazovkou.
+- Seznam zůstává scrollovací pro početné třídy a funkční logika přítomnosti se nemění.
