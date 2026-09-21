@@ -1050,6 +1050,189 @@ th,td{padding:clamp(7px,1.8vw,10px);}
   .topic-row{grid-template-columns:1fr}
   .topic-actions .btn{flex:1 1 120px}
 }
+
+/* Visual pass v5 – krok 5 / 6: výběr tématu a Kolo štěstí */
+.topic-screen{
+  width:min(100%,980px);
+  margin:0 auto;
+  padding:4px 0 18px;
+}
+.topic-head{text-align:center;position:relative;margin:10px 0 14px;padding:0 76px}
+.topic-title{
+  margin:0;
+  font-family:var(--pixel);
+  color:#72e9ff;
+  text-transform:uppercase;
+  font-size:clamp(1.45rem,4.6vw,2.5rem);
+  line-height:1.12;
+  text-shadow:3px 3px 0 #063b52;
+}
+.topic-subtitle{margin-top:7px;color:#d8f6ff;font-size:.9rem}
+.topic-step{
+  position:absolute;right:0;top:4px;
+  border:2px solid var(--cyan-dim);
+  padding:6px 8px;background:#071d28;color:var(--orange2);
+  font-family:var(--pixel);font-size:.62rem;white-space:nowrap;
+}
+.topic-context{
+  display:grid;grid-template-columns:82px minmax(0,1fr) 190px;
+  gap:14px;align-items:center;
+  border:3px solid var(--cyan);background:#061826;
+  box-shadow:6px 6px 0 #02070d;padding:12px 14px;margin-bottom:14px;
+}
+.topic-student-avatar{width:68px;height:68px;margin:0;transform:none}
+.topic-context-data{display:grid;gap:7px}
+.topic-context-data>div{display:grid;grid-template-columns:90px minmax(0,1fr);gap:10px;align-items:baseline}
+.topic-context-data span{color:#c8f3ff}
+.topic-context-data strong{color:#ffd94c;font-size:1.06rem;overflow-wrap:anywhere}
+.topic-motto{
+  align-self:stretch;border-left:2px solid var(--cyan-dim);
+  padding:8px 10px;display:flex;align-items:center;justify-content:center;
+  text-align:left;color:#2aa7c4;font-family:var(--pixel);
+  font-size:.62rem;line-height:1.45;gap:10px;
+}
+.topic-motto span{color:#c79c38;font-size:1.4rem}
+.topic-mode-bar{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+.topic-mode{
+  min-height:52px;display:flex;align-items:center;justify-content:center;
+  border:3px solid var(--cyan);background:#082838;color:#d7f5ff;
+  font-family:var(--pixel);font-size:.72rem;text-align:center;padding:8px;
+  box-shadow:4px 4px 0 #02070d;
+}
+.topic-mode.active{border-color:#ffb12d;background:#ff981b;color:#07131d}
+.topic-main-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.03fr);gap:14px}
+.topic-list-panel,.topic-wheel-panel{
+  border:3px solid var(--cyan);background:#061826;
+  box-shadow:6px 6px 0 #02070d;padding:14px;min-width:0;
+}
+.topic-list-panel h2,.topic-wheel-panel h2{
+  margin:0 0 9px;color:#caf6ff;font-family:var(--pixel);
+  font-size:.86rem;
+}
+.topic-wheel-panel h2{text-align:center}
+.topic-wheel-sub{text-align:center;color:#b9e9f4;margin:-3px 0 8px}
+.topic-search-wrap{
+  display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:7px;
+  border:2px solid var(--cyan);background:#082536;padding:0 9px;margin-bottom:9px;
+}
+.topic-search-wrap span{font-size:1.2rem;color:#cbf7ff}
+.topic-search-wrap input{border:0;background:transparent;box-shadow:none;min-height:42px;padding:7px 2px}
+.topic-list-scroll{display:flex;flex-direction:column;gap:7px;max-height:385px;overflow:auto;padding-right:4px;scrollbar-color:var(--cyan) #07131d}
+.topic-list-row{
+  width:100%;display:grid;grid-template-columns:46px minmax(0,1fr) auto;gap:10px;align-items:center;
+  min-height:67px;border:2px solid #1d7289;background:#082332;color:#e7f9ff;
+  padding:8px 9px;text-align:left;box-shadow:2px 2px 0 #02070d;
+}
+.topic-list-row:hover{filter:brightness(1.1)}
+.topic-list-row.is-selected{border-color:var(--orange);background:#302313}
+.topic-list-icon{font-size:1.7rem;text-align:center}
+.topic-list-name{font-size:.94rem;font-weight:700;overflow-wrap:anywhere}
+.topic-list-pick{
+  border:2px solid var(--cyan);background:#0b3545;color:#dffaff;padding:8px 10px;
+  font-family:var(--pixel);font-size:.58rem;white-space:nowrap
+}
+.topic-list-row.is-selected .topic-list-pick{border-color:#ffb32b;background:#ff981b;color:#07131d}
+.topic-quote{
+  margin-top:10px;border-top:2px solid #165b70;padding:10px 6px 2px;
+  display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;
+  color:#20badc;font-family:var(--pixel);font-size:.58rem;line-height:1.45
+}
+.topic-mini-teacher{font-size:1.7rem;color:#ffd34d}
+.topic-quote>span:last-child{color:#c69a35;font-size:1.4rem}
+.topic-wheel-wrap{position:relative;width:min(330px,90%);aspect-ratio:1;margin:8px auto 12px}
+.topic-wheel{
+  width:100%;height:100%;border-radius:50%;
+  border:7px solid #6eeaff;outline:4px solid #173b4b;
+  background:conic-gradient(#ffbd27 0 20%,#288ed3 20% 40%,#ef563c 40% 60%,#35ae57 60% 80%,#8651aa 80% 100%);
+  position:relative;box-shadow:0 0 0 3px #06131c,7px 7px 0 #02070d;
+  transition:transform 2.1s cubic-bezier(.12,.68,.18,1);
+}
+.topic-wheel.is-spinning{animation:topicV5Spin 2.1s cubic-bezier(.12,.68,.18,1) forwards}
+@keyframes topicV5Spin{from{transform:rotate(0)}to{transform:rotate(1800deg)}}
+.topic-wheel-pointer{
+  position:absolute;z-index:4;left:50%;top:-3px;transform:translate(-50%,-25%);
+  width:0;height:0;border-left:16px solid transparent;border-right:16px solid transparent;border-top:34px solid #ff8613;
+  filter:drop-shadow(2px 2px 0 #411a00)
+}
+.topic-wheel-center{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:52px;height:52px;border-radius:50%;background:#ffac16;border:5px solid #b66500;
+  display:grid;place-items:center;color:#fff1a9;font-size:1.2rem;box-shadow:3px 3px 0 #34200a
+}
+.topic-wheel-label{position:absolute;font-size:1.6rem;filter:drop-shadow(2px 2px 0 #09212d)}
+.topic-wheel-label.label-1{left:45%;top:10%}
+.topic-wheel-label.label-2{right:12%;top:37%}
+.topic-wheel-label.label-3{right:27%;bottom:12%}
+.topic-wheel-label.label-4{left:22%;bottom:14%}
+.topic-wheel-label.label-5{left:11%;top:37%}
+.topic-wheel-label.label-6{left:46%;top:10%}
+.topic-spin{
+  display:block;width:min(330px,90%);margin:0 auto 10px;min-height:48px;
+  border:3px solid #ffd169;background:#ff9417;color:#07131d;
+  font-family:var(--pixel);font-size:.72rem;box-shadow:4px 4px 0 #522a04
+}
+.topic-result{
+  display:grid;grid-template-columns:52px minmax(0,1fr);gap:10px;align-items:center;
+  border:2px solid var(--cyan);background:#082130;padding:9px;margin-top:10px;min-height:70px
+}
+.topic-result.has-topic{border-color:#ffae23}
+.topic-result-icon{font-size:1.8rem;text-align:center}
+.topic-result-label{font-size:.72rem;color:#c7eff8}
+.topic-result-value{font-weight:800;color:#ffd94c;font-size:1rem;overflow-wrap:anywhere;margin-top:2px}
+.topic-wheel-actions{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:7px;margin-top:9px}
+.topic-wheel-actions button{min-height:46px;border:2px solid var(--cyan);background:#0a3040;color:#e0f9ff;padding:7px;font-weight:700}
+.topic-confirm-small{border-color:#ffad21!important;background:#ff9417!important;color:#07131d!important}
+.topic-wheel-actions button:disabled{opacity:.4}
+.topic-empty{border:2px dashed #286072;padding:16px;color:var(--muted);text-align:center}
+.topic-wheel-empty{margin:40px 0}
+.topic-manual-panel{
+  margin-top:14px;border:3px solid var(--cyan);background:#071d2a;
+  padding:12px;display:grid;grid-template-columns:auto minmax(180px,1fr) auto auto;gap:10px;align-items:center;
+  box-shadow:5px 5px 0 #02070d
+}
+.topic-manual-label{display:flex;align-items:center;gap:8px;color:#dffaff}
+.topic-manual-label span{font-size:1.4rem}
+.topic-manual-panel input[type="text"],.topic-manual-panel>input{min-width:0}
+.topic-save-check{display:flex;flex-direction:row;align-items:center;gap:6px;font-size:.7rem;white-space:nowrap}
+.topic-save-check input{width:20px;height:20px;min-height:0}
+.topic-use-manual{
+  min-height:44px;border:3px solid #ffb12c;background:#ff9518;color:#07131d;
+  padding:8px 14px;font-family:var(--pixel);font-size:.62rem;white-space:nowrap
+}
+.topic-bottom-actions{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:14px;margin-top:16px}
+.topic-final-confirm{
+  min-height:64px;border:4px solid #ffd264;background:#ff9518;color:#07131d;
+  box-shadow:6px 6px 0 #522a04;font-family:var(--pixel);font-size:.82rem;padding:10px
+}
+.topic-final-confirm:disabled,.topic-confirm-small:disabled{opacity:.4;filter:saturate(.3)}
+.topic-back{
+  min-height:64px;border:3px solid var(--cyan);background:#082838;color:#dffaff;
+  box-shadow:5px 5px 0 #02070d;font-family:var(--pixel);font-size:.65rem;padding:10px
+}
+@media(max-width:780px){
+  .topic-head{padding:0 58px}
+  .topic-context{grid-template-columns:62px minmax(0,1fr)}
+  .topic-student-avatar{width:54px;height:54px}
+  .topic-motto{grid-column:1/-1;border-left:0;border-top:1px solid var(--cyan-dim);min-height:52px}
+  .topic-main-grid{grid-template-columns:1fr}
+  .topic-list-scroll{max-height:310px}
+  .topic-manual-panel{grid-template-columns:1fr}
+  .topic-save-check{white-space:normal}
+  .topic-bottom-actions{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .topic-head{padding:0 0 38px}
+  .topic-step{top:auto;bottom:0;right:50%;transform:translateX(50%)}
+  .topic-context{grid-template-columns:1fr;text-align:center}
+  .topic-student-avatar{justify-self:center}
+  .topic-context-data>div{grid-template-columns:1fr;gap:2px}
+  .topic-motto{display:none}
+  .topic-mode-bar{grid-template-columns:1fr}
+  .topic-wheel-actions{grid-template-columns:1fr}
+  .topic-list-row{grid-template-columns:42px minmax(0,1fr)}
+  .topic-list-pick{grid-column:1/-1;text-align:center}
+}
+
 @media print{
   body{background:#fff!important;color:#000!important}
   .topbar,.grade-actions,.tabs,.offline-banner,.toast-root,.modal-root{display:none!important}
@@ -3688,56 +3871,115 @@ body{
   function goQuestion(id){ state.examFlow.selectedStudentId=id; state.examFlow.stage='question'; saveState(); render(); }
 
   function renderQuestionStep(f){
-    const s=studentById(f.selectedStudentId);
+    const student=studentById(f.selectedStudentId);
+    const cls=classById(f.classId);
     const topicList=questionSetForSubject(f.subject,false);
     const items=topicList?.items||[];
+    const selectedTopic=String(f.topic||'').trim();
+    const topicSource=f.topicSource||'';
+    const classLabel=cls?`${esc(cls.displayName)} · ${esc(cls.schoolYear)}`:'Třída';
+    const subjectLabel=f.subject?esc(f.subject):'Předmět';
 
-    const savedTopics=items.length
-      ? `<div class="exam-wheel-wrap" aria-label="Animované kolo štěstí pro výběr tématu">
-           <div class="exam-wheel-pointer" aria-hidden="true">▼</div>
-           <div class="wheel exam-topic-wheel" id="question-wheel" aria-hidden="true">
-             <div class="wheel-center">KOLO<br>TÉMAT</div>
-           </div>
-         </div>
-         <div class="wheel-caption">Kolo se pomalu otáčí a při losování se roztočí naplno.</div>
-         <div class="row" style="justify-content:center;margin-bottom:14px">
-           <button class="btn primary" data-action="spin-wheel">Roztočit kolo štěstí</button>
-         </div>
-         <div class="topic-choice-grid">${items.map((topic,index)=>`
-          <button class="btn secondary topic-choice" data-action="use-saved-topic" data-index="${index}">
-            <strong>${esc(topic)}</strong>
-            <small>Vybrat toto téma</small>
-          </button>`).join('')}</div>`
-      : `<div class="empty">Pro předmět <strong>${esc(f.subject)}</strong> zatím nejsou vytvořená žádná témata. Přidej je v <strong>Moje předměty → ${esc(f.subject)}</strong>. Vlastní téma můžeš použít i bez uložených témat.</div>`;
+    const topicIcon=(topic,index)=>{
+      const t=String(topic||'').toLocaleLowerCase('cs');
+      if(t.includes('tepel')||t.includes('kalen')||t.includes('žíh')||t.includes('popou'))return '🔥';
+      if(t.includes('měř')||t.includes('kontrol')||t.includes('toler'))return '⌖';
+      if(t.includes('obráb')||t.includes('soustru')||t.includes('fréz'))return '⚙';
+      if(t.includes('materi')||t.includes('kov')||t.includes('ocel'))return '▤';
+      if(t.includes('výrob')||t.includes('technolog'))return '▥';
+      return ['◆','▣','▲','●','✦'][index%5];
+    };
 
-    const body=`<div class="stack">
-      <div>
-        <h2>${esc(s?.name||'Žák')}</h2>
-        <div class="badge">${esc(f.subject)}</div>
-        <p class="muted">Vyber jedno z témat, která sis vytvořil u tohoto předmětu, nebo zadej vlastní téma.</p>
-      </div>
+    const topicRows=items.length
+      ? items.map((topic,index)=>{
+          const selected=selectedTopic===topic && topicSource!=='manual';
+          return `<button type="button" class="topic-list-row ${selected?'is-selected':''}" data-action="use-saved-topic" data-index="${index}" data-topic-name="${esc(String(topic).toLocaleLowerCase('cs'))}">
+            <span class="topic-list-icon" aria-hidden="true">${topicIcon(topic,index)}</span>
+            <span class="topic-list-name">${esc(topic)}</span>
+            <span class="topic-list-pick">${selected?'Vybráno':'Vybrat'}</span>
+          </button>`;
+        }).join('')
+      : `<div class="topic-empty">Pro tento předmět zatím nejsou uložená žádná témata.</div>`;
 
-      <section class="pixel-frame card">
-        <h3>Vybrat uložené téma</h3>
-        ${savedTopics}
-      </section>
+    const wheelLabels=items.slice(0,6).map((topic,index)=>`<span class="topic-wheel-label label-${index+1}">${topicIcon(topic,index)}</span>`).join('');
+    const resultLabel=selectedTopic
+      ? (topicSource==='wheel'?'Vylosované téma:':topicSource==='manual'?'Vlastní téma:':'Vybrané téma:')
+      : 'Téma zatím není vybrané';
+    const resultValue=selectedTopic||'—';
 
-      <section class="pixel-frame card">
-        <h3>Vlastní téma</h3>
-        <label>Téma ke zkoušení
-          <input id="manual-topic" value="${esc(f.topic||'')}" placeholder="Např. Tolerance">
-        </label>
-        <label class="check-row" style="margin-top:10px">
-          <input type="checkbox" id="save-manual-topic">
-          <span>Uložit také do témat předmětu ${esc(f.subject)}</span>
-        </label>
-        <div class="row" style="margin-top:12px">
-          <button class="btn primary" data-action="use-manual-topic">Použít vlastní téma</button>
+    const body=`
+      <section class="topic-screen">
+        <div class="topic-head">
+          <h1 class="topic-title">Výběr tématu</h1>
+          <div class="topic-subtitle">Vyberte téma pro žáka nebo roztočte Kolo štěstí.</div>
+          <div class="topic-step">KROK 5 / 6</div>
         </div>
-      </section>
-    </div>`;
 
-    app.innerHTML=examFrame('Téma ke zkoušení',body,`<button class="btn ghost" data-action="back-candidates">Zpět ke kandidátům</button>`);
+        <div class="topic-context">
+          <span class="topic-student-avatar candidate-pixel-avatar" aria-hidden="true"></span>
+          <div class="topic-context-data">
+            <div><span>Žák:</span><strong>${esc(student?.name||'Žák')}</strong></div>
+            <div><span>Třída:</span><strong>${classLabel}</strong></div>
+            <div><span>Předmět:</span><strong>${subjectLabel}</strong></div>
+          </div>
+          <div class="topic-motto">DOBRÉ<br>OTÁZKY<br>TVOŘÍ<br>LEPŠÍ<br>LIDI <span aria-hidden="true">☺</span></div>
+        </div>
+
+        <div class="topic-mode-bar">
+          <div class="topic-mode active">Vybrat z témat předmětu</div>
+          <div class="topic-mode">Použít vlastní téma</div>
+        </div>
+
+        <div class="topic-main-grid">
+          <section class="topic-list-panel">
+            <h2>⌁ Seznam témat</h2>
+            <label class="topic-search-wrap"><span aria-hidden="true">⌕</span><input id="topic-search" type="search" placeholder="Hledat téma…" autocomplete="off"></label>
+            <div class="topic-list-scroll">${topicRows}</div>
+            <div class="topic-quote"><span class="topic-mini-teacher" aria-hidden="true">♟</span><strong>„NÁHODA PŘEJE<br>PŘIPRAVENÝM!“</strong><span aria-hidden="true">☺</span></div>
+          </section>
+
+          <section class="topic-wheel-panel">
+            <h2>Kolo štěstí</h2>
+            <div class="topic-wheel-sub">Náhodný výběr tématu</div>
+            ${items.length?`
+              <div class="topic-wheel-wrap">
+                <div class="topic-wheel-pointer" aria-hidden="true"></div>
+                <div class="topic-wheel" id="question-wheel" aria-label="Kolo štěstí pro losování tématu">
+                  ${wheelLabels}
+                  <div class="topic-wheel-center" aria-hidden="true">●</div>
+                </div>
+              </div>
+              <button type="button" class="topic-spin" data-action="spin-wheel">Roztočit kolo</button>
+            `:'<div class="topic-empty topic-wheel-empty">Kolo bude dostupné po přidání témat.</div>'}
+
+            <div class="topic-result ${selectedTopic?'has-topic':''}">
+              <div class="topic-result-icon" aria-hidden="true">${selectedTopic?topicIcon(selectedTopic,0):'?'}</div>
+              <div><div class="topic-result-label">${resultLabel}</div><div class="topic-result-value">${esc(resultValue)}</div></div>
+            </div>
+
+            <div class="topic-wheel-actions">
+              <button type="button" class="topic-confirm-small" data-action="confirm-topic" ${!selectedTopic?'disabled':''}>Potvrdit téma</button>
+              <button type="button" class="topic-spin-again" data-action="spin-wheel" ${!items.length?'disabled':''}>Točit znovu</button>
+              <button type="button" class="topic-manual-focus" data-action="focus-manual-topic">Vybrat ručně</button>
+            </div>
+          </section>
+        </div>
+
+        <section class="topic-manual-panel" id="manual-topic-panel">
+          <div class="topic-manual-label"><span aria-hidden="true">✎</span><strong>Vlastní téma</strong></div>
+          <input id="manual-topic" value="${esc(topicSource==='manual'?selectedTopic:'')}" placeholder="Napište vlastní téma…">
+          <label class="topic-save-check"><input type="checkbox" id="save-manual-topic"> Uložit mezi témata</label>
+          <button type="button" class="topic-use-manual" data-action="use-manual-topic">Použít téma</button>
+        </section>
+
+        <div class="topic-bottom-actions">
+          <button type="button" class="topic-final-confirm" data-action="confirm-topic" ${!selectedTopic?'disabled':''}>➜ &nbsp; Potvrdit a přejít ke zkoušení</button>
+          <button type="button" class="topic-back" data-action="back-candidates">← &nbsp; Zpět ke kandidátovi</button>
+        </div>
+        <div class="arcade-footer"><span>Dobrovolný doplněk výuky.</span><span>ZZ-01</span></div>
+      </section>`;
+
+    app.innerHTML=layout(body,'Zkoušení');
   }
 
   function beginExam(topic){
@@ -4718,6 +4960,11 @@ body{
       const pos=e.target.selectionStart;
       renderAdmin();
       const n=document.getElementById('admin-teacher-search'); if(n){n.focus(); try{n.setSelectionRange(pos,pos)}catch(_){}}
+    }else if(e.target.id==='topic-search'){
+      const q=String(e.target.value||'').trim().toLocaleLowerCase('cs');
+      document.querySelectorAll('[data-topic-name]').forEach(row=>{
+        row.hidden=!!q && !String(row.dataset.topicName||'').includes(q);
+      });
     }
   });
 
@@ -4868,8 +5115,10 @@ body{
       const q=questionSetForSubject(state.examFlow.subject,false);
       const topic=q?.items?.[Number(btn.dataset.index)];
       if(!topic)return toast('Téma se nepodařilo načíst.','error');
+      state.examFlow.topic=topic;
+      state.examFlow.topicSource='saved';
       state.examFlow.customTopicUsed=false;
-      beginExam(topic);
+      saveState();render();
     }
     else if(action==='use-manual-topic'){
       const input=document.getElementById('manual-topic');
@@ -4880,11 +5129,21 @@ body{
         const q=questionSetForSubject(state.examFlow.subject,true);
         if(!q.items.some(x=>x.localeCompare(topic,'cs',{sensitivity:'base'})===0)){
           q.items.push(topic);
-          saveState();
           toast('Téma přidáno do předmětu.');
         }
       }
+      state.examFlow.topic=topic;
+      state.examFlow.topicSource='manual';
       state.examFlow.customTopicUsed=true;
+      saveState();render();
+    }
+    else if(action==='focus-manual-topic'){
+      document.getElementById('manual-topic-panel')?.scrollIntoView({behavior:'smooth',block:'center'});
+      setTimeout(()=>document.getElementById('manual-topic')?.focus(),250);
+    }
+    else if(action==='confirm-topic'){
+      const topic=String(state.examFlow.topic||'').trim();
+      if(!topic)return toast('Nejdřív vyber téma.','warn');
       beginExam(topic);
     }
     else if(action==='spin-wheel'){
@@ -4897,17 +5156,14 @@ body{
         void wheel.offsetWidth;
         wheel.classList.add('is-spinning');
       }
-      btn.disabled=true;
+      document.querySelectorAll('[data-action="spin-wheel"]').forEach(b=>b.disabled=true);
       setTimeout(()=>{
         const topic=items[Math.floor(Math.random()*items.length)];
         state.examFlow.topic=topic;
-        modal({title:'Vylosované téma',body:`<p><strong>${esc(topic)}</strong></p>`,actions:[
-          {label:'Roztočit znovu',className:'secondary',onClick:()=>{
-            render();
-            setTimeout(()=>document.querySelector('[data-action="spin-wheel"]')?.click(),0);
-          }},
-          {label:'Použít téma',className:'primary',onClick:()=>{state.examFlow.customTopicUsed=false;beginExam(topic);}}
-        ]});
+        state.examFlow.topicSource='wheel';
+        state.examFlow.customTopicUsed=false;
+        saveState();render();
+        toast(`Vylosované téma: ${topic}`);
       },2100);
     }
     else if(action==='end-exam') showGradeModal();

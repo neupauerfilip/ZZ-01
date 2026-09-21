@@ -39,3 +39,11 @@
 - Kandidát se nově nejprve označí a teprve tlačítkem „Potvrdit vybraného“ pokračuje do dalšího toku.
 - Zachován vážený los, ochranný interval, možnost losovat znovu a ručně zvolit jiného žáka.
 - Při shodě bodů zůstává náhodný výběr; informační panel zobrazuje aktuální režim losu.
+
+## 2026-09-21 — Visual pass v5
+- Obrazovka „Výběr tématu“ převedena podle schválené reference s Kolem štěstí.
+- Přidán krok 5/6, kontext žáka, třídy a předmětu, scrollovací seznam uložených témat a vyhledávání.
+- Výběr uloženého tématu již nespouští zkoušení okamžitě; téma se nejprve označí a následně potvrdí.
+- Kolo štěstí losuje téma přímo do obrazovky, podporuje opakované roztočení a zachovává gamifikační událost.
+- Vlastní téma lze zvolit samostatně a volitelně uložit mezi témata předmětu.
+- Přidáno bezpečné finální tlačítko „Potvrdit a přejít ke zkoušení“ a návrat ke kandidátovi.
