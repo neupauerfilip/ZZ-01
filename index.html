@@ -5222,6 +5222,15 @@ body{
 
   function showGradeModal(){
     const e=state.activeExam; if(!e)return;
+    if(!e.gradingStartedAt){
+      e.gradingStartedAt=now();
+      e.gradingWasPaused=e.paused===true;
+      if(e.paused!==true){
+        e.pausedRemainingMs=remainingMs();
+        e.paused=true;
+      }
+      saveState();
+    }
     const st=studentById(e.studentId),cls=classById(e.classId);
     modalRoot.innerHTML=`<div class="modal-backdrop grade-backdrop fidelity-h7-grade-backdrop">
       <section class="grade-screen-modal fidelity-h7-grade" role="dialog" aria-modal="true" aria-labelledby="grade-title">
@@ -5256,14 +5265,29 @@ body{
       finalizeExam(Number(b.dataset.grade),false);
     }));
     document.getElementById('no-grade-btn').onclick=()=>finalizeExam(null,true);
-    document.getElementById('cancel-grade').onclick=closeModal;
+    document.getElementById('cancel-grade').onclick=()=>{
+      const current=state.activeExam;
+      if(current?.gradingStartedAt){
+        if(current.gradingWasPaused!==true){
+          const rem=Number.isFinite(Number(current.pausedRemainingMs))?Number(current.pausedRemainingMs):remainingMs();
+          current.timerEndsAt=now()+rem;
+          current.paused=false;
+          current.pausedRemainingMs=null;
+        }
+        delete current.gradingStartedAt;
+        delete current.gradingWasPaused;
+        saveState();
+      }
+      closeModal();
+      render();
+    };
   }
 
   function finalizeExam(grade,noGrade){
     const e=state.activeExam; if(!e) return;
     const s=studentById(e.studentId), c=classById(e.classId);
     const note=document.getElementById('grade-note')?.value.trim()||'';
-    const endedAt=now();
+    const endedAt=Number(e.gradingStartedAt)||now();
     const record={
       id:uid('hist'),teacherId:state.user.id,studentId:s.id,classId:c.id,subject:e.subject,schoolYear:c.schoolYear,
       semester:state.ui.gradeSemester||'1',at:endedAt,startedAt:e.startedAt,endedAt,topic:e.topic,grade,

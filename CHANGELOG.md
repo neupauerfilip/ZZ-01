@@ -106,3 +106,9 @@
 - „Vyhodit žáka od zkoušky“ ukládá výsledek bez známky.
 - Obrazovka „Výsledek uložen!“ používá zelený potvrzovací pixel-art prvek z reference a zachovává volby Další zkoušení / Zpět do hlavního menu.
 - Logika historie, bodů, ochranného intervalu a vyhodnocení zkoušení zůstala zachována.
+
+## 2026-09-21 — QA audit hlavního toku 1→6
+- Ověřeny návaznosti všech akcí v hlavním zkoušecím toku; nebyla nalezena žádná neobsloužená tlačítka.
+- Opraven přechod „Ukončit zkoušení“ → známkování: časovač se při otevření známkování zmrazí a do výsledku se nezapočítává čas strávený hodnocením.
+- Pokud se učitel ze známkování vrátí zpět ke zkoušení, časovač se obnoví ze stejného zbývajícího času; pokud byl pozastaven už předtím, zůstane pozastavený.
+- Uložený čas ukončení zkoušení nyní odpovídá okamžiku přechodu do známkování.
