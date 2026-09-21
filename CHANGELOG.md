@@ -8,3 +8,11 @@
 - Zachovány prototypy logiky i vizuálního návrhu pro porovnání.
 - Přidán `AGENTS.md` pro bezpečné pokračování vývoje bez přepisování existující logiky.
 - Přidána pravidla ochrany dat a `.gitignore`.
+
+## 2026-09-21 — Visual pass v1
+- Hlavní menu převedeno do schváleného retro/pixelového vzhledu podle vizuální reference.
+- Přidány výřezy schválených menu ikon jako samostatné UI assety.
+- Horní lišta sjednocena s vizuálem Zkouškomatu.
+- Obrazovka „Zahájit zkoušení“ přepracována na krok 1/6.
+- Výběr třídy zůstává rozbalovací pole; předmět se volí velkými arkádovými tlačítky.
+- Zachována stávající logika zkoušení, návaznost na přítomnost a automatické přiřazení předmětu ke třídě.

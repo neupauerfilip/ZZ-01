@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#07121f" />
   <meta name="description" content="Zkouškomat ZZ-01 MVP v0.4 – hravý pomocník pro ústní zkoušení." />
+  <link rel="manifest" href="assets/icons/manifest.webmanifest" />
+  <link rel="icon" href="assets/icons/Zkouskomat_APP_ICON_favicon.ico" />
+  <link rel="apple-touch-icon" href="assets/icons/Zkouskomat_APP_ICON_AppleTouch_180.png" />
   <style>
 :root{
   --bg:#07121f;
@@ -1016,6 +1019,187 @@ th,td{padding:clamp(7px,1.8vw,10px);}
   .gradebook-table th,.gradebook-table td{position:static!important;background:#fff!important;color:#000!important;border:1px solid #555!important;font-size:9pt!important;padding:5px!important}
 }
 
+
+/* ======================================================================
+   VISUAL PASS V1 — HLAVNÍ MENU + ZAHÁJENÍ ZKOUŠENÍ
+   Vychází ze schválených pixel-art referencí ZZ-01.
+   Funkční logika zůstává zachována.
+   ====================================================================== */
+:root{
+  --pixel:"Courier New",ui-monospace,monospace;
+  --arcade-bg:#031426;
+  --arcade-panel:#051d31;
+  --arcade-panel-2:#08263a;
+  --arcade-cyan:#28e2f1;
+  --arcade-cyan-dark:#087c9b;
+  --arcade-orange:#ff8514;
+  --arcade-orange-hi:#ffbd3c;
+  --arcade-cream:#fff0bd;
+  --arcade-ink:#08101a;
+}
+body{
+  background:
+    radial-gradient(circle at 50% -15%,rgba(20,102,136,.22),transparent 40%),
+    linear-gradient(180deg,#04182b 0%,#031426 52%,#02101e 100%);
+}
+.crt-overlay{opacity:.22}
+.container{width:min(940px,100%);padding:18px 22px 38px}
+.topbar{
+  position:sticky;top:8px;
+  width:min(900px,calc(100% - 28px));
+  margin:12px auto 0;
+  padding:10px 14px;
+  border:3px solid var(--arcade-cyan);
+  border-bottom-width:5px;
+  background:rgba(3,20,38,.97);
+  box-shadow:0 0 0 2px #063c52,0 8px 0 #010913;
+  backdrop-filter:none;
+}
+.brand-lockup{display:flex;align-items:center;gap:12px;min-width:0}
+.brand-mark{width:58px;height:52px;object-fit:cover;image-rendering:pixelated;flex:0 0 auto}
+.brand-copy{min-width:0;line-height:1}
+.brand-main{
+  font-family:var(--pixel);font-weight:900;font-size:clamp(1.05rem,3.7vw,1.7rem);
+  letter-spacing:.035em;color:var(--arcade-cream);white-space:nowrap;
+  text-shadow:2px 0 var(--arcade-orange),0 2px var(--arcade-orange),2px 2px #8e2d08;
+}
+.brand-code{margin-top:4px;font-family:var(--pixel);font-weight:900;letter-spacing:.15em;color:var(--arcade-cyan);font-size:.84rem}
+.context-strip{display:none}
+.nav-actions{gap:7px}
+.topbar .icon-btn{
+  min-width:46px;min-height:46px;padding:5px 8px;border:0;box-shadow:none;
+  background:transparent;color:var(--arcade-cyan);font-size:1.5rem;
+}
+.topbar .icon-btn:hover{background:#08283a;filter:none}
+.topbar .icon-btn.account-exit{border:0;background:transparent;color:var(--arcade-cyan)}
+.topbar .avatar-chip{transform:scale(.92)}
+.screen-nav{
+  width:min(900px,calc(100% - 28px));margin:16px auto 0;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+}
+.screen-nav .back-nav-btn,.screen-nav .home-nav-btn{
+  min-height:40px;padding:5px 4px;border:0;background:transparent;box-shadow:none;
+  color:var(--arcade-cyan);font-family:var(--pixel);font-size:.8rem;
+}
+.screen-nav .back-nav-btn:hover,.screen-nav .home-nav-btn:hover{background:transparent;color:var(--arcade-cream)}
+.screen-nav .back-arrow{font-size:1.35em;margin-right:5px}
+
+/* Hlavní menu */
+.arcade-home-head{text-align:center;margin:24px 0 20px}
+.arcade-home-title{
+  margin:0;font-family:var(--pixel);font-weight:900;letter-spacing:.025em;text-transform:uppercase;
+  font-size:clamp(2rem,8vw,4.9rem);line-height:.94;color:var(--arcade-cream);
+  text-shadow:0 3px 0 var(--arcade-orange),0 7px 0 #a92c08,4px 7px 0 #010913;
+}
+.arcade-home-title::before,.arcade-home-title::after{content:"—";color:var(--arcade-cyan);font-size:.42em;vertical-align:middle;text-shadow:none;margin:0 .28em}
+.arcade-home-slogan{margin-top:16px;color:var(--arcade-cyan);font-family:var(--pixel);font-weight:700;font-size:clamp(.8rem,2.7vw,1.15rem);letter-spacing:.015em}
+.home-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:22px}
+.home-card{
+  min-height:132px;padding:13px 16px;display:grid;grid-template-columns:112px minmax(0,1fr);align-items:center;gap:10px;
+  text-align:left;overflow:hidden;border:4px solid var(--arcade-cyan);border-radius:0;
+  background:linear-gradient(180deg,#08233a,#04182a);box-shadow:inset 0 0 0 3px #073a50,6px 6px 0 #010913;
+}
+.home-card::after{display:none}
+.home-card[data-action="exam"]{
+  border-color:var(--arcade-orange-hi);background:linear-gradient(180deg,#ff9e1e,#ff7411);
+  box-shadow:inset 0 0 0 4px #ffcf4a,inset 0 0 0 8px #c44808,6px 6px 0 #010913;color:var(--arcade-ink)
+}
+.home-card:hover{filter:brightness(1.12)}
+.home-card:active{transform:translate(2px,2px);box-shadow:inset 0 0 0 3px #073a50,3px 3px 0 #010913}
+.home-card[data-action="exam"]:active{box-shadow:inset 0 0 0 4px #ffcf4a,inset 0 0 0 8px #c44808,3px 3px 0 #010913}
+.home-card h2{margin:0;font-family:var(--pixel);font-weight:900;font-size:clamp(1rem,3.8vw,1.48rem);line-height:1.08;text-transform:none;letter-spacing:0;text-shadow:none}
+.home-card[data-action="exam"] h2{color:#111;text-shadow:none}
+.home-card .home-icon{width:100%;height:96px;display:grid;place-items:center;font-size:0;overflow:hidden}
+.home-card .home-icon img{width:100%;height:100%;object-fit:contain;image-rendering:pixelated}
+.home-card-desc{display:none}
+.home-card .unread-pill{margin-left:7px}
+.home-divider{
+  margin:24px 0 18px;display:flex;align-items:center;gap:12px;color:var(--arcade-cyan);
+  font-family:var(--pixel);font-size:.72rem;letter-spacing:.12em;text-align:center;text-transform:uppercase
+}
+.home-divider::before,.home-divider::after{content:"";height:3px;flex:1;background:var(--arcade-cyan);box-shadow:0 3px 0 #054b61}
+.home-overview-label{margin:0 0 9px;color:var(--arcade-cyan);font-family:var(--pixel);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase}
+.home-summary-grid{margin-top:0}
+.arcade-footer{
+  margin-top:24px;padding-top:13px;border-top:3px solid var(--arcade-cyan);display:flex;justify-content:space-between;gap:12px;
+  color:var(--arcade-cyan);font-family:var(--pixel);font-size:.7rem;letter-spacing:.05em
+}
+
+/* Zahájení zkoušení — krok 1 */
+.exam-start{max-width:860px;margin:0 auto}
+.exam-start-head{text-align:center;position:relative;margin:8px 0 22px;padding:4px 90px 0}
+.exam-start-title{
+  margin:0;color:var(--arcade-cream);font-family:var(--pixel);font-weight:900;text-transform:uppercase;
+  font-size:clamp(2rem,7.2vw,4.4rem);line-height:.93;letter-spacing:.015em;
+  text-shadow:0 3px 0 var(--arcade-orange),0 7px 0 #a92c08,4px 7px 0 #010913
+}
+.exam-start-title::before,.exam-start-title::after{content:"—";color:var(--arcade-cyan);font-size:.32em;vertical-align:middle;text-shadow:none;margin:0 .15em}
+.exam-start-subtitle{margin-top:13px;color:var(--arcade-cyan);font-family:var(--pixel);font-weight:700;font-size:clamp(.9rem,2.8vw,1.18rem)}
+.exam-step{position:absolute;right:0;bottom:-2px;color:var(--arcade-cyan);font-family:var(--pixel);font-weight:900;font-size:.8rem;letter-spacing:.04em}
+.exam-start-section{margin-top:18px}
+.arcade-section-label{display:flex;align-items:center;gap:12px;margin:0 0 8px;color:var(--arcade-cream)}
+.arcade-section-label img{width:72px;height:64px;object-fit:contain;image-rendering:pixelated;flex:0 0 auto}
+.arcade-section-label h2{margin:0;font-family:var(--pixel);font-weight:900;font-size:clamp(1.35rem,4.5vw,2.05rem)}
+.arcade-select-wrap{position:relative}
+.arcade-select-wrap::after{content:"⌄";position:absolute;right:18px;top:50%;transform:translateY(-54%);color:var(--arcade-cyan);font-size:2rem;font-weight:900;pointer-events:none}
+.arcade-select{
+  appearance:none;-webkit-appearance:none;width:100%;min-height:70px;padding:10px 56px 10px 22px;
+  border:4px solid var(--arcade-cyan);border-radius:0;background:#061c30;color:var(--arcade-cream);
+  box-shadow:inset 0 0 0 3px #07394e,5px 5px 0 #010913;font-family:var(--pixel);font-size:clamp(1rem,4vw,1.55rem);font-weight:900
+}
+.subject-choice-list{display:grid;gap:8px}
+.arcade-subject-choice{
+  width:100%;min-height:68px;padding:9px 17px;display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;align-items:center;
+  text-align:left;border:4px solid var(--arcade-cyan);border-radius:0;background:#061c30;color:var(--arcade-cream);
+  box-shadow:inset 0 0 0 3px #07394e,5px 5px 0 #010913;font-family:var(--pixel);font-weight:900;font-size:clamp(.9rem,3.3vw,1.28rem)
+}
+.arcade-subject-choice.selected{
+  border-color:var(--arcade-orange-hi);background:linear-gradient(180deg,#ff9d1c,#ff7410);color:#101010;
+  box-shadow:inset 0 0 0 4px #ffcf4a,inset 0 0 0 8px #c44808,5px 5px 0 #010913
+}
+.arcade-check{width:32px;height:32px;display:grid;place-items:center;border:3px solid currentColor;background:#071421;color:var(--arcade-cream);font-size:1.15rem}
+.arcade-subject-choice.selected .arcade-check{background:var(--arcade-cream);color:#071421;border-color:#071421}
+.subject-choice-note{display:block;margin-top:4px;font-family:"Courier New",monospace;font-size:.68rem;font-weight:400;opacity:.75}
+.sr-only-select{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.exam-selection-summary{
+  margin:18px 0 16px;padding:10px 16px;display:grid;grid-template-columns:92px minmax(0,1fr);gap:12px;align-items:center;
+  border:4px solid var(--arcade-cyan);background:#061c30;box-shadow:inset 0 0 0 3px #07394e,5px 5px 0 #010913
+}
+.exam-selection-summary img{width:88px;height:76px;object-fit:contain;image-rendering:pixelated}
+.selection-kicker{color:var(--arcade-cyan);font-family:var(--pixel);font-weight:900;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em}
+.selection-class{color:var(--arcade-orange-hi);font-family:var(--pixel);font-size:1.1rem;font-weight:900;margin-left:5px}
+.selection-subject{margin-top:4px;color:var(--arcade-cream);font-weight:700;font-size:1rem;overflow-wrap:anywhere}
+.exam-continue{
+  width:100%;min-height:86px;padding:12px 22px;display:flex;align-items:center;justify-content:center;gap:16px;
+  border:5px solid var(--arcade-orange-hi);border-radius:0;background:linear-gradient(180deg,#ff9d1c,#ff7410);color:#101010;
+  box-shadow:inset 0 0 0 4px #ffd04e,inset 0 0 0 9px #c44808,6px 6px 0 #010913;
+  font-family:var(--pixel);font-weight:900;font-size:clamp(1rem,4vw,1.55rem);text-transform:none
+}
+.exam-continue .arrow{font-size:1.45em;margin-left:auto}
+.exam-continue:disabled{filter:grayscale(.65);opacity:.55}
+.exam-start-empty{border:3px dashed var(--arcade-cyan-dark);padding:15px;color:var(--muted)}
+
+@media(max-width:700px){
+  .container{padding:14px 14px 28px}
+  .topbar{width:calc(100% - 18px);margin-top:9px;padding:8px 10px}
+  .screen-nav{width:calc(100% - 22px);margin-top:12px}
+  .brand-mark{width:48px;height:44px}.brand-main{font-size:1rem}.brand-code{font-size:.7rem}
+  .topbar .icon-btn{min-width:40px;min-height:40px;font-size:1.25rem}
+  .home-card{grid-template-columns:86px minmax(0,1fr);min-height:116px;padding:10px 11px}
+  .home-card .home-icon{height:78px}
+  .home-summary-grid{grid-template-columns:1fr}
+  .exam-start-head{padding:4px 0 0}.exam-step{position:static;text-align:right;margin-top:8px}
+  .arcade-section-label img{width:60px;height:55px}
+  .exam-selection-summary{grid-template-columns:72px minmax(0,1fr)}
+  .exam-selection-summary img{width:68px;height:62px}
+}
+@media(max-width:420px){
+  .home-grid{grid-template-columns:1fr}
+  .home-card{grid-template-columns:95px minmax(0,1fr)}
+  .arcade-home-title::before,.arcade-home-title::after,.exam-start-title::before,.exam-start-title::after{display:none}
+  .arcade-footer{font-size:.62rem}
+}
+
 </style>
   <title>Zkouškomat ZZ-01</title>
 </head>
@@ -1029,7 +1213,7 @@ th,td{padding:clamp(7px,1.8vw,10px);}
   'use strict';
 
   const STORAGE_KEY = 'zkouskomat_zz01_state_v1';
-  const APP_VERSION = 'ZZ-01 / TEST v7 / SCORING FILTER';
+  const APP_VERSION = 'ZZ-01 / VISUAL v1 / MENU + START';
   const app = document.getElementById('app');
   const toastRoot = document.getElementById('toast-root');
   const modalRoot = document.getElementById('modal-root');
@@ -2111,17 +2295,17 @@ th,td{padding:clamp(7px,1.8vw,10px);}
   function layout(content,title='Zkouškomat'){
     return `${!state.online?'<div class="offline-banner">Bez připojení – změny zůstávají v tomto zařízení.</div>':''}
       <header class="topbar">
-        <div>
-          <div class="brand">ZKOUŠKOMAT <span class="accent">ZZ-01</span></div>
+        <div class="brand-lockup">
+          <img class="brand-mark" src="assets/ui/header-mark.png" alt="" aria-hidden="true">
+          <div class="brand-copy"><div class="brand-main">ZKOUŠKOMAT</div><div class="brand-code">ZZ-01</div></div>
           <div class="context-strip"><span class="status-dot ${state.online?'':'offline'}"></span><span>${esc(state.school.name)}</span><span>•</span><span>${esc(title)}</span></div>
         </div>
         <div class="nav-actions">
-          ${state.route!=='home'?'<button class="icon-btn back-nav-btn" data-action="nav-back" aria-label="Zpět" title="Zpět"><span class="back-arrow">←</span>ZPĚT</button>':''}
-          ${state.route!=='home'?'<button class="icon-btn" data-action="go-home" aria-label="Domů" title="Hlavní menu">⌂</button>':''}
           <button class="icon-btn" data-action="settings" aria-label="Můj profil a nastavení" title="Můj profil">${avatarMarkup(state.user.avatar,'sm')}</button>
-          <button class="icon-btn account-exit" data-action="account-menu" aria-label="Účet, škola a odhlášení" title="Účet / škola / odhlášení">⏻</button>
+          <button class="icon-btn account-exit" data-action="account-menu" aria-label="Účet, škola a odhlášení" title="Nastavení účtu / školy">⚙</button>
         </div>
       </header>
+      ${state.route!=='home'?`<div class="screen-nav"><button class="back-nav-btn" data-action="nav-back" aria-label="Zpět"><span class="back-arrow">←</span>Zpět</button><button class="home-nav-btn" data-action="go-home" aria-label="Hlavní menu">⌂ Hlavní menu</button></div>`:''}
       <main class="container">${content}</main>`;
   }
 
@@ -2596,19 +2780,25 @@ th,td{padding:clamp(7px,1.8vw,10px);}
   function renderHome(){
     syncCurrentTeacherStats();
     const content=`
-      <div class="section-title"><div><div class="muted tiny">${esc(state.school.schoolYear)}</div><h1 class="pixel-title">Hlavní panel</h1></div><div class="badge">${esc(state.user.nickname||state.user.name)} · ${state.user.role==='admin'?'ADMIN':'UČITEL'}</div></div>
+      <section class="arcade-home-head">
+        <h1 class="arcade-home-title">Hlavní menu</h1>
+        <div class="arcade-home-slogan">Proč zkoušet jednoduše, když to jde složitě?</div>
+      </section>
       <div class="home-grid">
         ${homeCard('exam','▣','Zahájit zkoušení','Přítomnost → pravidla → vážený los → téma → známka')}
-        ${homeCard('grades','▥','Známkování','Třída + předmět → známky → tisk / Excel')}
-        ${homeCard('subjects','▤','Moje předměty','Předměty a jejich témata ke zkoušení')}
         ${homeCard('wheel','◉','Kolo štěstí','Samostatné losování témat a otázek')}
         ${homeCard('classes','▦','Moje třídy','Žáci, přiřazení předmětů a školní rok')}
+        ${homeCard('subjects','▤','Moje předměty','Předměty a jejich témata ke zkoušení')}
+        ${homeCard('grades','▥','Známkování','Třída + předmět → známky → tisk / Excel')}
         ${homeCard('scoring','▲','Scoring / Přehledy','Žáci, celá škola a učitelé')}
         ${homeCard('staffroom','☕','Sborovna','Jednoduchý společný chat učitelů',staffroomUnreadCount())}
         ${homeCard('help','?','Nápověda','Jak Zkouškomat funguje a co může která role')}
       </div>
-      ${renderHomeSchoolOverview()}`;
-    app.innerHTML=layout(content,'Hlavní panel');
+      <div class="home-divider">Disciplína · znalosti · výsledky</div>
+      <div class="home-overview-label">Přehled školy · ${esc(state.school.schoolYear)} · ${esc(state.user.nickname||state.user.name)}</div>
+      ${renderHomeSchoolOverview()}
+      <div class="arcade-footer"><span>Dobrovolný doplněk výuky.</span><span>ZZ-01</span></div>`;
+    app.innerHTML=layout(content,'Hlavní menu');
   }
 
   function renderHomeSchoolOverview(){
@@ -2680,8 +2870,13 @@ th,td{padding:clamp(7px,1.8vw,10px);}
   }
 
   function homeCard(action,icon,title,desc,unread=0){
-    return `<button class="home-card pixel-frame" data-action="${action}" aria-label="${esc(title)}">
-      <div class="home-icon">${icon}</div><div><h2 class="pixel-title">${esc(title)}${Number(unread)>0?`<span class="unread-pill">${Math.min(99,Number(unread))}</span>`:''}</h2><div class="muted">${esc(desc)}</div></div>
+    const asset={
+      exam:'home-exam.png',wheel:'home-wheel.png',classes:'home-classes.png',subjects:'home-subjects.png',
+      grades:'home-grades.png',scoring:'home-scoring.png',staffroom:'home-staffroom.png',help:'home-help.png'
+    }[action];
+    return `<button class="home-card" data-action="${action}" aria-label="${esc(title)}">
+      <div class="home-icon">${asset?`<img src="assets/ui/${asset}" alt="" aria-hidden="true">`:icon}</div>
+      <div><h2>${esc(title)}${Number(unread)>0?`<span class="unread-pill">${Math.min(99,Number(unread))}</span>`:''}</h2><div class="home-card-desc">${esc(desc)}</div></div>
     </button>`;
   }
 
@@ -2961,17 +3156,43 @@ th,td{padding:clamp(7px,1.8vw,10px);}
     const c=classById(f.classId)||state.classes[0];
     if(c && !f.classId) f.classId=c.id;
     const subjectGroups=subjectsForExamClass(c?.id);
-    const linkedOptions=subjectGroups.linked.map(s=>`<option value="${esc(s)}" ${f.subject===s?'selected':''}>${esc(s)}</option>`).join('');
-    const otherOptions=subjectGroups.rest.map(s=>`<option value="${esc(s)}" ${f.subject===s?'selected':''}>${esc(s)}</option>`).join('');
-    const subjectOptions=[
-      linkedOptions?`<optgroup label="Předměty této třídy">${linkedOptions}</optgroup>`:'',
-      otherOptions?`<optgroup label="Moje další předměty">${otherOptions}</optgroup>`:''
-    ].join('');
-    const subjectHint=subjectGroups.all.length
-      ? '<div class="tiny muted" style="margin-top:6px">Nový předmět vytvořený v „Moje předměty“ se zde zobrazí automaticky. Pokud ještě není přiřazen této třídě, při prvním použití se k ní připojí.</div>'
-      : '<div class="tiny muted" style="margin-top:6px">Zatím nemáš žádný předmět. Vytvoř ho v „Moje předměty“.</div>';
-    const body=`<div class="form-grid"><label>Třída<select id="exam-class">${classOptions}</select></label><label>Předmět<select id="exam-subject"><option value="">Vyber předmět</option>${subjectOptions}</select>${subjectHint}</label></div>`;
-    app.innerHTML=examFrame('Zahájit zkoušení',body,`<button class="btn primary" data-action="exam-next-attendance" ${!c?'disabled':''}>Pokračovat k přítomnosti</button>`);
+    const subjectOptions=subjectGroups.all.map(s=>`<option value="${esc(s)}" ${f.subject===s?'selected':''}>${esc(s)}</option>`).join('');
+    const linkedSet=new Set(subjectGroups.linked);
+    const choices=subjectGroups.all.map(s=>`
+      <button type="button" class="arcade-subject-choice ${f.subject===s?'selected':''}" data-action="exam-subject-choice" data-subject="${esc(s)}" aria-pressed="${f.subject===s?'true':'false'}">
+        <span class="arcade-check">${f.subject===s?'✓':''}</span>
+        <span>${esc(s)}${linkedSet.has(s)?'':`<small class="subject-choice-note">Při prvním použití se přiřadí k této třídě.</small>`}</span>
+      </button>`).join('');
+    const selectedClass=c?`${esc(c.displayName)} — ${esc(c.schoolYear)}`:'Nevybrána';
+    const selectedSubject=f.subject?esc(f.subject):'Vyber předmět';
+    const body=`
+      <section class="exam-start">
+        <div class="exam-start-head">
+          <h1 class="exam-start-title">Zahájit<br>zkoušení</h1>
+          <div class="exam-start-subtitle">Vyberte třídu a předmět</div>
+          <div class="exam-step">KROK 1 / 6</div>
+        </div>
+
+        <div class="exam-start-section">
+          <div class="arcade-section-label"><img src="assets/ui/select-class.png" alt="" aria-hidden="true"><h2>Třída</h2></div>
+          <div class="arcade-select-wrap"><select id="exam-class" class="arcade-select" aria-label="Vyber třídu">${classOptions}</select></div>
+        </div>
+
+        <div class="exam-start-section">
+          <div class="arcade-section-label"><img src="assets/ui/select-subject.png" alt="" aria-hidden="true"><h2>Předmět</h2></div>
+          ${subjectGroups.all.length?`<div class="subject-choice-list">${choices}</div>`:'<div class="exam-start-empty">Zatím nemáš žádný předmět. Vytvoř ho v „Moje předměty“.</div>'}
+          <select id="exam-subject" class="sr-only-select" aria-label="Vybraný předmět"><option value="">Vyber předmět</option>${subjectOptions}</select>
+        </div>
+
+        <div class="exam-selection-summary">
+          <img src="assets/ui/select-summary.png" alt="" aria-hidden="true">
+          <div><div class="selection-kicker">Vybráno: <span class="selection-class">${selectedClass}</span></div><div class="selection-subject">${selectedSubject}</div></div>
+        </div>
+
+        <button class="exam-continue" data-action="exam-next-attendance" ${!c||!f.subject?'disabled':''}><span>Pokračovat k přítomnosti</span><span class="arrow">▶</span></button>
+        <div class="arcade-footer"><span>Dobrovolný doplněk výuky.</span><span>ZZ-01</span></div>
+      </section>`;
+    app.innerHTML=layout(body,'Zkoušení');
   }
 
   function renderAttendance(f){
@@ -4225,6 +4446,9 @@ th,td{padding:clamp(7px,1.8vw,10px);}
     else if(action==='save-class'){const c=classById(btn.dataset.id);c.displayName=document.getElementById('class-name').value.trim()||c.displayName;c.schoolYear=document.getElementById('class-year').value.trim()||c.schoolYear;c.subjects=document.getElementById('class-subjects').value.split(',').map(x=>x.trim()).filter(Boolean);saveState();toast('Třída uložena.');render();}
     else if(action==='promote-class') promoteClassModal(btn.dataset.id);
     else if(action==='clean-slate') cleanSlate();
+    else if(action==='exam-subject-choice'){
+      state.examFlow.subject=btn.dataset.subject||'';saveState();render();
+    }
     else if(action==='exam-next-attendance'){
       const cId=document.getElementById('exam-class').value,subject=document.getElementById('exam-subject').value;if(!subject)return toast('Vyber předmět.','error');state.examFlow.classId=cId;state.examFlow.subject=subject;const newlyLinked=linkSubjectToClass(subject,cId);studentsForClass(cId).forEach(s=>{if(state.examFlow.attendance[s.id]===undefined)state.examFlow.attendance[s.id]=true;});state.examFlow.stage='attendance';saveState();if(newlyLinked)toast('Předmět byl přiřazen k této třídě.');render();
     }
