@@ -24,3 +24,11 @@
 - Seznam žáků je při větším počtu scrollovací; ostatní ovládací prvky zůstávají dostupné.
 - Do losování nadále vstupují pouze přítomní žáci; původní datová logika byla zachována.
 - Pokračování k pravidlům je zablokováno, pokud není přítomen žádný žák.
+
+## 2026-09-21 — Visual pass v3
+- Obrazovka „Pravidla a trestné body“ převedena podle schválených pixel-art referencí.
+- Přidán krok 3/6 a kontext vybrané třídy a předmětu.
+- Všichni přítomní žáci jsou v jednom scrollovacím seznamu a každý má vlastní nezávislý stav.
+- Žáka lze rozbalit přímo v seznamu; jeho pravidla lze zapínat a vypínat bez opuštění obrazovky.
+- Zachováno systémové potvrzení při vypnutí pravidla „Neodevzdal práci v termínu“.
+- Zachován filtr pouze žáků s trestnými body, správce editovatelných pravidel a vážený výběr kandidátů.

@@ -1313,6 +1313,54 @@ body{
   .arcade-footer{font-size:.62rem}
 }
 
+
+
+/* VISUAL PASS V3 – Krok 3/6: pravidla a trestné body */
+.rules-screen{max-width:900px;margin:0 auto;padding:4px 0 18px}
+.rules-head{text-align:center;position:relative;margin:8px 0 18px}
+.rules-title{margin:0;text-transform:uppercase;font-family:var(--pixel);font-size:clamp(2rem,7vw,4.6rem);line-height:.98;color:var(--cream);text-shadow:4px 4px 0 #ef4f27,7px 7px 0 #160b08;letter-spacing:.02em}
+.rules-subtitle{margin-top:8px;color:var(--cyan);font-size:clamp(.9rem,2.7vw,1.2rem);font-weight:700}
+.rules-step{margin-top:3px;text-align:right;color:var(--cyan);font-family:var(--pixel);font-size:.78rem}
+.rules-context{display:grid;grid-template-columns:70px minmax(0,1fr);gap:12px;align-items:center;border:3px solid var(--cyan);background:linear-gradient(180deg,#0a2432,#071821);box-shadow:5px 5px 0 #02070d,inset 0 0 0 3px rgba(28,101,116,.45);padding:10px 14px;margin-bottom:12px}
+.rules-context img{width:58px;height:58px;object-fit:contain;image-rendering:pixelated}
+.rules-context-class{font-family:var(--pixel);font-size:clamp(.8rem,2.5vw,1.05rem);color:var(--cream)}
+.rules-context-subject{margin-top:5px;color:var(--cream);font-size:clamp(.88rem,2.7vw,1.14rem);font-weight:700}
+.rules-toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:10px 2px 8px;flex-wrap:wrap}
+.rules-filter{display:flex;flex-direction:row;align-items:center;gap:10px;color:var(--cream);font-weight:700;min-height:44px}
+.rules-filter input{width:28px;height:28px;min-height:0;accent-color:var(--orange)}
+.rules-count{color:var(--cyan);font-size:.82rem;margin:-2px 0 9px 44px}
+.rules-student-list{display:flex;flex-direction:column;gap:8px;max-height:min(55vh,610px);overflow:auto;padding:2px 7px 3px 2px;scrollbar-color:var(--cyan) #071821;scrollbar-width:thin}
+.rules-student-card{border:3px solid #17758a;background:#081b27;box-shadow:3px 3px 0 #02070d;overflow:hidden}
+.rules-student-card.is-open{border-color:var(--cyan);box-shadow:4px 4px 0 #02070d,inset 0 0 0 2px rgba(79,224,219,.18)}
+.rules-student-summary{width:100%;min-height:68px;border:0;background:linear-gradient(180deg,#0a2432,#071a25);color:var(--cream);display:grid;grid-template-columns:34px minmax(0,1fr) auto 30px;gap:10px;align-items:center;padding:10px 13px;text-align:left;box-shadow:none;text-transform:none;letter-spacing:0}
+.rules-student-summary:hover{filter:brightness(1.1)}
+.rules-person{width:27px;height:27px;position:relative;display:inline-block}
+.rules-person::before{content:"";position:absolute;width:11px;height:11px;border-radius:2px;background:var(--cyan);top:0;left:8px;box-shadow:0 0 8px rgba(79,224,219,.35)}
+.rules-person::after{content:"";position:absolute;width:25px;height:12px;background:var(--cyan);left:1px;bottom:0;clip-path:polygon(25% 0,75% 0,100% 100%,0 100%)}
+.rules-student-name{font-size:clamp(.98rem,3vw,1.28rem);font-weight:800;min-width:0;overflow-wrap:anywhere}
+.rules-points{font-family:var(--pixel);font-size:clamp(.75rem,2.4vw,1rem);color:#ffb31c;white-space:nowrap;text-align:right}
+.rules-chevron{color:var(--cyan);font-size:1.7rem;line-height:1;transform:rotate(0deg);transition:transform .12s ease}
+.rules-student-card.is-open .rules-chevron{transform:rotate(180deg)}
+.rules-inline-list{border-top:2px solid var(--cyan);padding:5px 12px 9px;background:#071821}
+.rules-inline-row{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:10px;align-items:center;min-height:52px;border-bottom:2px solid #25869a;padding:5px 2px}
+.rules-inline-row:last-child{border-bottom:0}
+.rules-inline-toggle{width:30px;height:30px;min-height:30px;padding:0;border:3px solid var(--cream);background:#06121a;color:#ffb31c;display:grid;place-items:center;box-shadow:2px 2px 0 #02070d;font-weight:900;font-size:1.15rem}
+.rules-inline-toggle.on{border-color:var(--cream);background:#162532;color:#ffb31c}
+.rules-inline-name{font-weight:800;color:var(--cream);line-height:1.15}
+.rules-inline-system{display:block;margin-top:3px;color:var(--cyan);font-size:.67rem;font-weight:600}
+.rules-inline-points{font-family:var(--pixel);color:#ffb31c;font-size:.8rem;white-space:nowrap}
+.rules-manage{width:100%;margin-top:12px;min-height:54px;border:3px solid var(--cyan);background:#092331;color:var(--cyan);font-family:var(--pixel);font-size:.82rem;box-shadow:4px 4px 0 #02070d}
+.rules-info{display:grid;grid-template-columns:44px minmax(0,1fr);gap:10px;align-items:center;margin:12px 0 10px;border:3px solid var(--cyan);background:#0a2230;padding:10px 13px;color:var(--cream);font-weight:700}
+.rules-info-icon{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--cyan);color:#07121f;font-family:var(--pixel);font-size:.9rem}
+.rules-empty{border:3px dashed var(--cyan-dim);padding:22px;text-align:center;color:var(--muted)}
+@media(max-width:560px){
+  .rules-screen{padding-left:2px;padding-right:2px}
+  .rules-context{grid-template-columns:54px minmax(0,1fr);padding:9px 10px}.rules-context img{width:48px;height:48px}
+  .rules-student-summary{grid-template-columns:28px minmax(0,1fr) auto 22px;padding:9px 8px;gap:7px}.rules-person{transform:scale(.88)}
+  .rules-inline-list{padding:4px 8px 8px}.rules-inline-row{grid-template-columns:30px minmax(0,1fr) auto;gap:7px}.rules-inline-points{font-size:.68rem}
+  .rules-count{margin-left:2px}.rules-toolbar{align-items:flex-start;flex-direction:column}.rules-manage{font-size:.72rem}
+}
+
 </style>
   <title>Zkouškomat ZZ-01</title>
 </head>
@@ -3367,8 +3415,92 @@ body{
     const students=studentsForClass(f.classId).filter(s=>f.attendance[s.id]!==false);
     const filter=state.ui.onlyPoints===true;
     const visible=filter?students.filter(s=>currentPoints(s)>0):students;
-    const body=`<div class="row" style="justify-content:space-between"><label class="check-row"><input type="checkbox" id="only-points" ${filter?'checked':''}> Pouze žáci s trestnými body</label><button class="btn secondary" data-action="manage-rules">Upravit pravidla</button></div><div class="list">${visible.map(s=>`<div class="list-item student-row"><div><div class="student-name">${esc(s.name)}</div><div class="meta">${currentPoints(s)} aktuální · ${s.collectedPoints} nasbírané</div></div><span class="score-pill">${currentPoints(s)}</span><div class="student-actions"><button class="btn secondary" data-action="student-rules" data-id="${s.id}">Pravidla</button></div></div>`).join('')||'<div class="empty">Žádný žák neodpovídá filtru.</div>'}</div>`;
-    app.innerHTML=examFrame('Pravidla a trestné body',body,`<button class="btn ghost" data-action="exam-back-attendance">Zpět</button><button class="btn primary" data-action="draw-candidates">Vybrat kandidáty</button>`);
+    const c=classById(f.classId);
+    const classLabel=c?`${esc(c.displayName)} · ${esc(c.schoolYear)}`:'Třída';
+    const subjectLabel=f.subject?esc(f.subject):'Bez vybraného předmětu';
+    const rules=activeRules();
+
+    if(!state.ui.ruleOpenStudentId || !visible.some(s=>s.id===state.ui.ruleOpenStudentId)){
+      const preferred=visible.find(s=>currentPoints(s)>0)||visible[0];
+      state.ui.ruleOpenStudentId=preferred?.id||'';
+    }
+
+    const pointText=n=>{
+      n=Number(n)||0;
+      return `${n} ${n===1?'bod':(n>=2&&n<=4?'body':'bodů')}`;
+    };
+
+    const studentCards=visible.map(s=>{
+      const open=state.ui.ruleOpenStudentId===s.id;
+      const rows=open?rules.map(r=>{
+        const on=!!s.ruleStates[r.id];
+        return `<div class="rules-inline-row">
+          <button type="button" class="rules-inline-toggle ${on?'on':''}" data-action="exam-inline-rule-toggle" data-student="${s.id}" data-rule="${r.id}" aria-pressed="${on?'true':'false'}" aria-label="${on?'Vypnout':'Zapnout'} ${esc(r.name)}">${on?'✓':''}</button>
+          <div class="rules-inline-name">${esc(r.name)}${r.system?'<span class="rules-inline-system">SYSTÉMOVÉ PRAVIDLO</span>':''}</div>
+          <div class="rules-inline-points">+${Number(r.points)||0}</div>
+        </div>`;
+      }).join(''):'';
+
+      return `<article class="rules-student-card ${open?'is-open':''}">
+        <button type="button" class="rules-student-summary" data-action="exam-rule-student-toggle" data-id="${s.id}" aria-expanded="${open?'true':'false'}">
+          <span class="rules-person" aria-hidden="true"></span>
+          <span class="rules-student-name">${esc(s.name)}</span>
+          <span class="rules-points">${pointText(currentPoints(s))}</span>
+          <span class="rules-chevron" aria-hidden="true">⌄</span>
+        </button>
+        ${open?`<div class="rules-inline-list">${rows||'<div class="rules-empty">Nejsou aktivní žádná pravidla.</div>'}</div>`:''}
+      </article>`;
+    }).join('');
+
+    const body=`
+      <section class="rules-screen">
+        <div class="rules-head">
+          <h1 class="rules-title">Pravidla<br>a trestné body</h1>
+          <div class="rules-subtitle">Vyberte žáka a upravte jeho pravidla.</div>
+          <div class="rules-step">KROK 3 / 6</div>
+        </div>
+
+        <div class="rules-context">
+          <img src="assets/ui/select-class.png" alt="" aria-hidden="true">
+          <div>
+            <div class="rules-context-class">Třída: ${classLabel}</div>
+            <div class="rules-context-subject">${subjectLabel}</div>
+          </div>
+        </div>
+
+        <div class="rules-toolbar">
+          <label class="rules-filter"><input type="checkbox" id="only-points" ${filter?'checked':''}> Pouze žáci s trestnými body</label>
+        </div>
+        <div class="rules-count">${visible.length} z ${students.length} přítomných žáků</div>
+
+        ${visible.length?`<div class="rules-student-list">${studentCards}</div>`:'<div class="rules-empty">Žádný žák neodpovídá zvolenému filtru.</div>'}
+
+        <button type="button" class="rules-manage" data-action="manage-rules">✎ &nbsp; Upravit pravidla</button>
+
+        <div class="rules-info"><div class="rules-info-icon">i</div><div>Vyšší počet bodů zvyšuje šanci při váženém losu.</div></div>
+
+        <button class="exam-continue" data-action="draw-candidates" ${!students.length?'disabled':''}>
+          <span>Vybrat kandidáty</span><span class="arrow">▶</span>
+        </button>
+        <div class="arcade-footer"><span>Dobrovolný doplněk výuky.</span><span>ZZ-01</span></div>
+      </section>`;
+    app.innerHTML=layout(body,'Zkoušení');
+  }
+
+  function toggleExamRuleInline(studentId,ruleId){
+    const s=studentById(studentId),r=ruleById(ruleId); if(!s||!r)return;
+    const was=!!s.ruleStates[r.id];
+    if(was && r.system){
+      modal({title:'Potvrzení odevzdání',body:`<p>Opravdu žák <strong>${esc(s.name)}</strong> práci odevzdal?</p>`,actions:[
+        {label:'Ne',className:'secondary'},
+        {label:'Ano',className:'primary',onClick:()=>{s.ruleStates[r.id]=false;saveState();toast('Pravidlo označeno jako vyřešené.');render();}}
+      ]});
+      return;
+    }
+    s.ruleStates[r.id]=!was;
+    if(!was)s.collectedPoints+=(Number(r.points)||0);
+    saveState();
+    render();
   }
 
   function weightedCandidates(f,ignoreProtection=false){
@@ -4615,6 +4747,12 @@ body{
     else if(action==='exam-next-rules'){state.examFlow.stage='rules';saveState();render();}
     else if(action==='exam-back-attendance'){state.examFlow.stage='attendance';render();}
     else if(action==='exam-back-rules'){state.examFlow.stage='rules';render();}
+    else if(action==='exam-rule-student-toggle'){
+      const id=btn.dataset.id||'';
+      state.ui.ruleOpenStudentId=state.ui.ruleOpenStudentId===id?'':id;
+      saveState();render();
+    }
+    else if(action==='exam-inline-rule-toggle') toggleExamRuleInline(btn.dataset.student,btn.dataset.rule);
     else if(action==='student-rules') showStudentRules(btn.dataset.id);
     else if(action==='manage-rules') showRulesManager();
     else if(action==='manage-lockers') showLockersManager();
