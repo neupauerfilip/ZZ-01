@@ -242,6 +242,47 @@ textarea{min-height:90px;resize:vertical}
 .candidate{padding:18px;text-align:center;min-height:150px;display:flex;flex-direction:column;justify-content:center;gap:10px}
 .candidate .avatar{font-size:2.3rem}
 .candidate .name{font-weight:700;font-size:1.08rem}
+
+/* VISUAL V4 – kandidáti ke zkoušení */
+.candidates-screen{max-width:760px;margin:0 auto;padding:8px 0 4px}
+.candidates-head{position:relative;text-align:center;padding:2px 0 14px}
+.candidates-title{margin:0;color:#fff8e8;font-family:var(--pixel);font-size:clamp(1.8rem,7vw,3.55rem);line-height:1.08;text-transform:uppercase;text-shadow:3px 3px 0 #ff5b2e,6px 6px 0 #07121f}
+.candidates-subtitle{margin-top:10px;color:var(--cyan);font-family:var(--pixel);font-size:clamp(.72rem,2.7vw,1rem);letter-spacing:.04em}
+.candidates-step{margin-top:8px;text-align:right;color:var(--cyan);font-family:var(--pixel);font-size:.78rem}
+.candidates-context{display:grid;grid-template-columns:58px minmax(0,1fr);gap:12px;align-items:center;border:3px solid var(--cyan);background:linear-gradient(180deg,#0b2533,#071923);padding:12px 14px;box-shadow:5px 5px 0 #02070d;margin:0 0 16px}
+.candidates-context img{width:52px;height:52px;object-fit:contain;image-rendering:pixelated}
+.candidates-context-class{font-family:var(--pixel);font-size:.8rem;color:var(--cream)}
+.candidates-context-subject{margin-top:4px;font-weight:800;color:var(--cream);font-size:1.05rem}
+.candidates-list{display:grid;gap:10px}
+.candidate-choice{width:100%;display:grid;grid-template-columns:72px minmax(0,1fr) auto;gap:12px;align-items:center;min-height:118px;padding:12px 14px;text-align:left;border:3px solid var(--cyan);background:linear-gradient(180deg,#0a2a38,#071923);color:var(--cream);box-shadow:5px 5px 0 #02070d;transition:filter .12s ease,transform .12s ease,border-color .12s ease,background .12s ease}
+.candidate-choice:hover{filter:brightness(1.08)}
+.candidate-choice:active{transform:translate(2px,2px);box-shadow:3px 3px 0 #02070d}
+.candidate-choice.is-selected{border-color:var(--orange);background:linear-gradient(180deg,#57410b,#2e250a);box-shadow:0 0 0 2px #ffe3a4 inset,5px 5px 0 #02070d}
+.candidate-pixel-avatar{width:58px;height:72px;position:relative;margin:auto;image-rendering:pixelated}
+.candidate-pixel-avatar::before{content:"";position:absolute;width:28px;height:28px;left:15px;top:5px;background:#f0d4ae;box-shadow:-5px -5px 0 #15222a,5px -5px 0 #15222a,-10px 0 0 #15222a,10px 0 0 #15222a}
+.candidate-pixel-avatar::after{content:"";position:absolute;width:42px;height:28px;left:8px;top:39px;background:#38e5e0;box-shadow:-5px 5px 0 #07121f,5px 5px 0 #07121f}
+.candidate-copy{min-width:0}
+.candidate-kicker{font-family:var(--pixel);font-size:.7rem;color:var(--cyan);text-transform:uppercase}
+.candidate-choice.is-selected .candidate-kicker{color:#7ff4ee}
+.candidate-name{margin-top:4px;font-weight:900;font-size:clamp(1.05rem,3.8vw,1.55rem);color:#fff8e8;overflow-wrap:anywhere}
+.candidate-points{margin-top:3px;color:#ffc02f;font-family:var(--pixel);font-size:.9rem}
+.candidate-history{margin-top:5px;color:var(--muted);font-size:.74rem}
+.candidate-select-pill{min-width:112px;min-height:50px;display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 13px;border:3px solid var(--orange);background:#ff851c;color:#160f07;font-family:var(--pixel);font-size:.76rem;box-shadow:inset 0 0 0 2px #ffd86c,4px 4px 0 #02070d;text-transform:uppercase}
+.candidate-choice.is-selected .candidate-select-pill::before{content:"✓";font-family:system-ui,sans-serif;font-size:1.1rem;font-weight:900}
+.candidates-info{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:center;margin:16px 0 10px;padding:10px 12px;border:2px solid var(--cyan);background:#071c26;color:var(--cream)}
+.candidates-info-icon{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--cyan);color:#041016;font-family:var(--pixel);font-weight:900}
+.candidates-redraw,.candidates-other{width:100%;min-height:52px;margin-top:8px;border:3px solid var(--cyan);background:#082431;color:var(--cyan);font-family:var(--pixel);font-size:.8rem;text-transform:uppercase;box-shadow:4px 4px 0 #02070d}
+.candidates-confirm{width:100%;min-height:66px;margin-top:12px;border:4px solid #fff0c3;background:#ff8517;color:#160f07;font-family:var(--pixel);font-size:clamp(.86rem,3.3vw,1.12rem);text-transform:uppercase;box-shadow:inset 0 0 0 3px #ffc633,5px 5px 0 #02070d}
+.candidates-confirm:disabled{opacity:.45;filter:saturate(.3)}
+.candidates-other{margin-top:12px}
+@media(max-width:620px){
+  .candidates-screen{padding:2px 0}
+  .candidate-choice{grid-template-columns:58px minmax(0,1fr);min-height:102px;padding:10px}
+  .candidate-pixel-avatar{width:48px;height:62px;transform:scale(.88);transform-origin:center}
+  .candidate-select-pill{grid-column:1/-1;width:100%;min-height:44px}
+  .candidates-context{grid-template-columns:48px minmax(0,1fr);padding:10px}
+  .candidates-context img{width:44px;height:44px}
+}
 .timer{font-size:clamp(2.6rem,12vw,5.2rem);font-weight:700;text-align:center;color:var(--orange2);text-shadow:4px 4px 0 #442810}
 .timer.over{color:var(--danger);animation:blink .9s steps(1) infinite}
 @keyframes blink{50%{opacity:.45}}
@@ -3292,7 +3333,7 @@ body{
   }
 
   function startExamFlow(){
-    state.examFlow={stage:'select',classId:state.classes[0]?.id||'',subject:'',attendance:{},selectedStudentId:null,candidates:[],topic:'',lockerAppeared:false,lockerResult:null,ignoreProtection:false};
+    state.examFlow={stage:'select',classId:state.classes[0]?.id||'',subject:'',attendance:{},selectedStudentId:null,candidateChoiceId:null,candidates:[],topic:'',lockerAppeared:false,lockerResult:null,ignoreProtection:false};
     state.route='exam'; saveState(); render();
   }
 
@@ -3521,9 +3562,59 @@ body{
   }
 
   function renderCandidates(f){
-    const items=f.candidates.map((id,i)=>{const s=studentById(id);return `<button class="candidate pixel-frame" data-action="choose-candidate" data-id="${id}"><div class="avatar">${['▣','◆','▲'][i%3]}</div><div><div class="tiny muted">KANDIDÁT ${i+1}</div><div class="name">${esc(s.name)}</div><div class="meta">${currentPoints(s)} b. · zkoušen ${s.examsCountPeriod}×</div></div><span class="score-pill">${currentPoints(s)}</span></button>`;}).join('');
-    const body=`${state.ui.drawMessage?`<div class="badge" style="margin-bottom:12px">${esc(state.ui.drawMessage)}</div>`:''}<div class="candidate-grid">${items||'<div class="empty">Žádní kandidáti.</div>'}</div>`;
-    app.innerHTML=examFrame('Kandidáti ke zkoušení',body,`<button class="btn ghost" data-action="exam-back-rules">Zpět</button><button class="btn secondary" data-action="draw-candidates">Losovat znovu</button><button class="btn secondary" data-action="choose-other">Zvolit jiného</button>`);
+    const c=classById(f.classId);
+    const classLabel=c?`${esc(c.displayName)} · ${esc(c.schoolYear)}`:'Třída';
+    const subjectLabel=f.subject?esc(f.subject):'Bez vybraného předmětu';
+    const validIds=(f.candidates||[]).filter(id=>studentById(id));
+    if(!validIds.includes(f.candidateChoiceId)) f.candidateChoiceId=validIds[0]||null;
+
+    const pointText=n=>{
+      n=Number(n)||0;
+      return `${n} ${n===1?'bod':(n>=2&&n<=4?'body':'bodů')}`;
+    };
+
+    const items=validIds.map((id,i)=>{
+      const s=studentById(id);
+      const selected=f.candidateChoiceId===id;
+      return `<button type="button" class="candidate-choice ${selected?'is-selected':''}" data-action="choose-candidate" data-id="${id}" aria-pressed="${selected?'true':'false'}">
+        <span class="candidate-pixel-avatar" aria-hidden="true"></span>
+        <span class="candidate-copy">
+          <span class="candidate-kicker">Kandidát ${i+1}</span>
+          <span class="candidate-name">${esc(s.name)}</span>
+          <span class="candidate-points">${pointText(currentPoints(s))}</span>
+          <span class="candidate-history">Zkoušen v období: ${Number(s.examsCountPeriod||0)}×</span>
+        </span>
+        <span class="candidate-select-pill">${selected?'Vybrán':'Vybrat'}</span>
+      </button>`;
+    }).join('');
+
+    const message=state.ui.drawMessage||'Vážený los zohledňuje aktuální trestné body.';
+    const body=`
+      <section class="candidates-screen">
+        <div class="candidates-head">
+          <h1 class="candidates-title">Kandidáti<br>ke zkoušení</h1>
+          <div class="candidates-subtitle">Návrh podle váženého losu.</div>
+          <div class="candidates-step">KROK 4 / 6</div>
+        </div>
+
+        <div class="candidates-context">
+          <img src="assets/ui/select-class.png" alt="" aria-hidden="true">
+          <div>
+            <div class="candidates-context-class">Třída: ${classLabel}</div>
+            <div class="candidates-context-subject">${subjectLabel}</div>
+          </div>
+        </div>
+
+        ${validIds.length?`<div class="candidates-list">${items}</div>`:'<div class="rules-empty">Pro tento los nejsou dostupní žádní kandidáti.</div>'}
+
+        <div class="candidates-info"><div class="candidates-info-icon">i</div><div>${esc(message)}</div></div>
+
+        <button type="button" class="candidates-redraw" data-action="draw-candidates">↻ &nbsp; Losovat znovu</button>
+        <button type="button" class="candidates-confirm" data-action="confirm-candidate" ${f.candidateChoiceId?'':'disabled'}>Potvrdit vybraného &nbsp; ✓</button>
+        <button type="button" class="candidates-other" data-action="choose-other">↝ &nbsp; Zvolit jiného žáka</button>
+        <div class="arcade-footer"><span>Dobrovolný doplněk výuky.</span><span>ZZ-01</span></div>
+      </section>`;
+    app.innerHTML=layout(body,'Zkoušení');
   }
 
   function candidatePrecheck(id){
@@ -4760,10 +4851,17 @@ body{
       const f=state.examFlow; const present=studentsForClass(f.classId).filter(s=>f.attendance[s.id]!==false);
       if(!present.length)return toast('Není označen žádný přítomný žák.','error');
       let picks=weightedCandidates(f,false);
-      if(!picks.length && present.length){modal({title:'Všichni jsou v ochranném intervalu',body:'<p>Pro tento los můžeš ochranu jednorázově ignorovat, nebo se vrátit a vybrat žáka ručně.</p>',actions:[{label:'Zpět',className:'secondary'},{label:'Ignorovat ochranu pro tento los',className:'primary',onClick:()=>{f.ignoreProtection=true;f.candidates=weightedCandidates(f,true);f.stage='candidates';state.ui.drawMessage='Ochranný interval byl pro tento los ignorován.';saveState();render();}}]});return;}
-      const points=present.filter(s=>!isProtected(s)).map(currentPoints);state.ui.drawMessage=points.length&&points.every(p=>p===points[0])?'Všichni mají stejné body – probíhá náhodný výběr.':'Vážený los: váha = 1 + aktuální trestné body.';f.candidates=picks;f.stage='candidates';saveState();render();
+      if(!picks.length && present.length){modal({title:'Všichni jsou v ochranném intervalu',body:'<p>Pro tento los můžeš ochranu jednorázově ignorovat, nebo se vrátit a vybrat žáka ručně.</p>',actions:[{label:'Zpět',className:'secondary'},{label:'Ignorovat ochranu pro tento los',className:'primary',onClick:()=>{f.ignoreProtection=true;f.candidates=weightedCandidates(f,true);f.candidateChoiceId=f.candidates[0]||null;f.stage='candidates';state.ui.drawMessage='Ochranný interval byl pro tento los ignorován.';saveState();render();}}]});return;}
+      const points=present.filter(s=>!isProtected(s)).map(currentPoints);state.ui.drawMessage=points.length&&points.every(p=>p===points[0])?'Při shodě bodů probíhá náhodný výběr.':'Vážený los: vyšší počet aktuálních bodů zvyšuje šanci na výběr.';f.candidates=picks;f.candidateChoiceId=picks[0]||null;f.stage='candidates';saveState();render();
     }
-    else if(action==='choose-candidate') candidatePrecheck(btn.dataset.id);
+    else if(action==='choose-candidate'){
+      state.examFlow.candidateChoiceId=btn.dataset.id||null;saveState();render();
+    }
+    else if(action==='confirm-candidate'){
+      const id=state.examFlow.candidateChoiceId;
+      if(!id)return toast('Nejdřív vyber kandidáta.','warn');
+      candidatePrecheck(id);
+    }
     else if(action==='choose-other') showOtherStudentChooser();
     else if(action==='back-candidates'){state.examFlow.stage='candidates';render();}
     else if(action==='use-saved-topic'){

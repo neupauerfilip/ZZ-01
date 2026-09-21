@@ -32,3 +32,10 @@
 - Žáka lze rozbalit přímo v seznamu; jeho pravidla lze zapínat a vypínat bez opuštění obrazovky.
 - Zachováno systémové potvrzení při vypnutí pravidla „Neodevzdal práci v termínu“.
 - Zachován filtr pouze žáků s trestnými body, správce editovatelných pravidel a vážený výběr kandidátů.
+
+## 2026-09-21 — Visual pass v4
+- Obrazovka „Kandidáti ke zkoušení“ převedena podle schválené pixel-art reference.
+- Přidán krok 4/6, kontext třídy a předmětu a tři výrazné kandidátní karty.
+- Kandidát se nově nejprve označí a teprve tlačítkem „Potvrdit vybraného“ pokračuje do dalšího toku.
+- Zachován vážený los, ochranný interval, možnost losovat znovu a ručně zvolit jiného žáka.
+- Při shodě bodů zůstává náhodný výběr; informační panel zobrazuje aktuální režim losu.
