@@ -112,3 +112,10 @@
 - Opraven přechod „Ukončit zkoušení“ → známkování: časovač se při otevření známkování zmrazí a do výsledku se nezapočítává čas strávený hodnocením.
 - Pokud se učitel ze známkování vrátí zpět ke zkoušení, časovač se obnoví ze stejného zbývajícího času; pokud byl pozastaven už předtím, zůstane pozastavený.
 - Uložený čas ukončení zkoušení nyní odpovídá okamžiku přechodu do známkování.
+
+## 2026-09-21 — H4.1 Přehlednější podmínky žáků
+- Obrazovka „Pravidla a trestné body“ byla upravena podle praktického testu ve třídním seznamu.
+- Žáci se po otevření obrazovky už automaticky nerozbalují; každý je zobrazen jako čistý řádek se jménem, aktuálními body a samostatným tlačítkem „Upravit podmínky“.
+- Podmínky se zobrazují pouze u jednoho vybraného žáka. Detail má vlastní souhrn bodů a tlačítko „Hotovo“ pro rychlé sbalení.
+- Přidán přehled počtu přítomných žáků a počtu žáků s trestnými body.
+- Body se nadále počítají automaticky ze zaškrtnutých podmínek; filtr, systémová pravidla a vážený los zůstávají funkčně beze změny.

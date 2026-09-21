@@ -1695,6 +1695,197 @@ body{
 }
 
 
+/* H4.1 – přehlednější zadávání podmínek žáků před zkoušením */
+.fidelity-h4-1 .rules-overview{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+  margin:0 0 12px;
+}
+.fidelity-h4-1 .rules-overview>div{
+  min-height:60px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:9px 13px;
+  border:3px solid #087693;
+  background:#061927;
+  box-shadow:inset 0 0 0 2px #092c41;
+}
+.fidelity-h4-1 .rules-overview span{
+  color:#9bd2d9;
+  font-size:.78rem;
+  font-weight:800;
+}
+.fidelity-h4-1 .rules-overview strong{
+  font-family:var(--pixel);
+  color:#20edf1;
+  font-size:1rem;
+}
+.fidelity-h4-1 .rules-overview strong.warn{color:#ffb313}
+
+.fidelity-h4-1 .rules-student-list{
+  gap:10px;
+  max-height:min(54vh,620px);
+}
+.fidelity-h4-1 .rules-student-card{
+  overflow:visible;
+  background:#061927;
+}
+.fidelity-h4-1 .rules-student-card.is-open{
+  border-color:#20edf1;
+  box-shadow:inset 0 0 0 3px #0a6075,5px 5px 0 #02070d;
+}
+.fidelity-h4-1 .rules-student-summary{
+  min-height:78px;
+  display:grid;
+  grid-template-columns:52px minmax(0,1fr) auto minmax(170px,210px);
+  gap:12px;
+  align-items:center;
+  padding:9px 12px;
+  background:linear-gradient(180deg,#09283b,#061b29);
+}
+.fidelity-h4-1 .rules-student-name{
+  font-size:clamp(1.02rem,3vw,1.38rem);
+  line-height:1.2;
+  overflow-wrap:anywhere;
+  min-width:0;
+}
+.fidelity-h4-1 .rules-points-badge{
+  min-width:92px;
+  min-height:42px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:6px 10px;
+  border:3px solid #1b7184;
+  background:#071c29;
+  color:#90b6bc;
+  font-family:var(--pixel);
+  font-size:clamp(.68rem,2.1vw,.86rem);
+  white-space:nowrap;
+  box-shadow:inset 0 0 0 2px #04121b;
+}
+.fidelity-h4-1 .rules-points-badge.has-points{
+  border-color:#ffae12;
+  background:#2a1b08;
+  color:#ffbd24;
+  box-shadow:inset 0 0 0 2px #6f4300;
+}
+.fidelity-h4-1 .rules-edit-btn{
+  min-height:50px;
+  width:100%;
+  padding:8px 12px;
+  border:4px solid #20edf1;
+  background:linear-gradient(180deg,#0b3446,#071f2e);
+  color:#25f0f3;
+  font-family:var(--pixel);
+  font-size:clamp(.64rem,1.9vw,.8rem);
+  line-height:1.25;
+  text-transform:none;
+  box-shadow:inset 0 0 0 2px #075a70,4px 4px 0 #02070d;
+  clip-path:polygon(7px 0,calc(100% - 7px) 0,100% 7px,100% calc(100% - 7px),calc(100% - 7px) 100%,7px 100%,0 calc(100% - 7px),0 7px);
+}
+.fidelity-h4-1 .rules-edit-btn:hover{filter:brightness(1.12)}
+.fidelity-h4-1 .rules-edit-btn.is-open{
+  border-color:#fff3d7;
+  background:#4b3008;
+  color:#ffbd24;
+  box-shadow:inset 0 0 0 2px #b66c00,4px 4px 0 #02070d;
+}
+.fidelity-h4-1 .rules-inline-list{
+  padding:10px 14px 14px;
+  border-top:4px solid #20edf1;
+  background:linear-gradient(180deg,#061824,#04131d);
+}
+.fidelity-h4-1 .rules-detail-head{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:12px;
+  align-items:center;
+  padding:5px 4px 12px;
+  margin-bottom:2px;
+  border-bottom:2px dashed #136578;
+}
+.fidelity-h4-1 .rules-detail-head strong{
+  display:block;
+  color:#fff5dc;
+  font-family:var(--pixel);
+  font-size:clamp(.78rem,2.4vw,1rem);
+  line-height:1.35;
+}
+.fidelity-h4-1 .rules-detail-head span:not(.rules-detail-points){
+  display:block;
+  margin-top:4px;
+  color:#9bb8bd;
+  font-size:.76rem;
+}
+.fidelity-h4-1 .rules-detail-points{
+  color:#ffb313;
+  font-family:var(--pixel);
+  font-size:.8rem;
+  white-space:nowrap;
+}
+.fidelity-h4-1 .rules-inline-row{
+  min-height:62px;
+  grid-template-columns:50px minmax(0,1fr) 58px;
+  gap:12px;
+  padding:6px 4px;
+}
+.fidelity-h4-1 .rules-inline-name{
+  font-size:clamp(.9rem,2.4vw,1.08rem);
+  line-height:1.25;
+}
+.fidelity-h4-1 .rules-inline-points{
+  min-width:52px;
+  text-align:right;
+  font-size:.82rem;
+}
+.fidelity-h4-1 .rules-done-btn{
+  width:100%;
+  min-height:54px;
+  margin-top:12px;
+  border:4px solid #fff3d7;
+  background:linear-gradient(180deg,#ff9d16,#ff770d);
+  color:#141006;
+  font-family:var(--pixel);
+  font-size:.8rem;
+  box-shadow:inset 0 0 0 3px #ffd134,4px 4px 0 #02070d;
+  clip-path:polygon(8px 0,calc(100% - 8px) 0,100% 8px,100% calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,0 calc(100% - 8px),0 8px);
+}
+.fidelity-h4-1 .rules-manage{
+  color:#d8f7f8;
+}
+@media(max-width:760px){
+  .fidelity-h4-1 .rules-overview{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .fidelity-h4-1 .rules-overview>div:last-child:nth-child(3){grid-column:1/-1}
+  .fidelity-h4-1 .rules-student-summary{
+    grid-template-columns:44px minmax(0,1fr) auto;
+    gap:8px;
+    padding:8px;
+  }
+  .fidelity-h4-1 .rules-edit-btn{
+    grid-column:2/-1;
+    min-height:46px;
+  }
+  .fidelity-h4-1 .rules-points-badge{min-width:82px}
+}
+@media(max-width:430px){
+  .fidelity-h4-1 .rules-overview{grid-template-columns:1fr}
+  .fidelity-h4-1 .rules-overview>div:last-child:nth-child(3){grid-column:auto}
+  .fidelity-h4-1 .rules-student-summary{
+    grid-template-columns:36px minmax(0,1fr) auto;
+  }
+  .fidelity-h4-1 .rules-person{transform:scale(.78);transform-origin:center}
+  .fidelity-h4-1 .rules-student-name{font-size:.94rem}
+  .fidelity-h4-1 .rules-points-badge{min-width:70px;padding:5px 7px;font-size:.61rem}
+  .fidelity-h4-1 .rules-edit-btn{font-size:.68rem}
+  .fidelity-h4-1 .rules-detail-head{grid-template-columns:1fr}
+  .fidelity-h4-1 .rules-detail-points{justify-self:start}
+}
+
+
 /* Visual pass v6 – krok 6 / 6: probíhající zkoušení, známkování a uložený výsledek */
 .exam-live-screen,
 .exam-result-screen{
@@ -4757,14 +4948,16 @@ body{
     const students=studentsForClass(f.classId).filter(s=>f.attendance[s.id]!==false);
     const filter=state.ui.onlyPoints===true;
     const visible=filter?students.filter(s=>currentPoints(s)>0):students;
+    const studentsWithPoints=students.filter(s=>currentPoints(s)>0).length;
     const c=classById(f.classId);
     const classLabel=c?`${esc(c.displayName)} · ${esc(c.schoolYear)}`:'Třída';
     const subjectLabel=f.subject?esc(f.subject):'Bez vybraného předmětu';
     const rules=activeRules();
 
-    if(!state.ui.ruleOpenStudentId || !visible.some(s=>s.id===state.ui.ruleOpenStudentId)){
-      const preferred=visible.find(s=>currentPoints(s)>0)||visible[0];
-      state.ui.ruleOpenStudentId=preferred?.id||'';
+    // H4.1: po vstupu na obrazovku necháváme všechny žáky sbalené.
+    // Otevřený zůstane jen žák, kterého učitel výslovně rozklikl.
+    if(state.ui.ruleOpenStudentId && !visible.some(s=>s.id===state.ui.ruleOpenStudentId)){
+      state.ui.ruleOpenStudentId='';
     }
 
     const pointText=n=>{
@@ -4773,6 +4966,7 @@ body{
     };
 
     const studentCards=visible.map(s=>{
+      const points=currentPoints(s);
       const open=state.ui.ruleOpenStudentId===s.id;
       const rows=open?rules.map(r=>{
         const on=!!s.ruleStates[r.id];
@@ -4784,21 +4978,33 @@ body{
       }).join(''):'';
 
       return `<article class="rules-student-card ${open?'is-open':''}">
-        <button type="button" class="rules-student-summary" data-action="exam-rule-student-toggle" data-id="${s.id}" aria-expanded="${open?'true':'false'}">
+        <div class="rules-student-summary">
           <span class="rules-person" aria-hidden="true"></span>
           <span class="rules-student-name">${esc(s.name)}</span>
-          <span class="rules-points">${pointText(currentPoints(s))}</span>
-          <span class="rules-chevron" aria-hidden="true">⌄</span>
-        </button>
-        ${open?`<div class="rules-inline-list">${rows||'<div class="rules-empty">Nejsou aktivní žádná pravidla.</div>'}</div>`:''}
+          <span class="rules-points-badge ${points>0?'has-points':'zero-points'}">${pointText(points)}</span>
+          <button type="button" class="rules-edit-btn ${open?'is-open':''}" data-action="exam-rule-student-toggle" data-id="${s.id}" aria-expanded="${open?'true':'false'}">
+            ${open?'Zavřít':'Upravit podmínky'}
+          </button>
+        </div>
+        ${open?`<div class="rules-inline-list">
+          <div class="rules-detail-head">
+            <div>
+              <strong>${esc(s.name)}</strong>
+              <span>Zaškrtněte podmínky, které u žáka právě platí.</span>
+            </div>
+            <span class="rules-detail-points">${pointText(points)}</span>
+          </div>
+          ${rows||'<div class="rules-empty">Nejsou aktivní žádná pravidla.</div>'}
+          <button type="button" class="rules-done-btn" data-action="exam-rule-student-toggle" data-id="${s.id}">✓ &nbsp; Hotovo</button>
+        </div>`:''}
       </article>`;
     }).join('');
 
     const body=`
-      <section class="rules-screen fidelity-h4">
+      <section class="rules-screen fidelity-h4 fidelity-h4-1">
         <div class="rules-head">
           <h1 class="rules-title">Pravidla<br>a trestné body</h1>
-          <div class="rules-subtitle">Vyberte žáka a upravte jeho pravidla.</div>
+          <div class="rules-subtitle">U každého žáka otevřete jen podmínky, které potřebujete upravit.</div>
           <div class="rules-step">KROK 3 / 6</div>
         </div>
 
@@ -4813,13 +5019,18 @@ body{
         <div class="rules-toolbar">
           <label class="rules-filter"><input type="checkbox" id="only-points" ${filter?'checked':''}> Pouze žáci s trestnými body</label>
         </div>
-        <div class="rules-count">${filter?`${visible.length} z ${students.length}`:`${students.length}`} přítomných žáků</div>
+
+        <div class="rules-overview" aria-live="polite">
+          <div><span>Přítomní</span><strong>${students.length}</strong></div>
+          <div><span>S trestnými body</span><strong class="${studentsWithPoints?'warn':''}">${studentsWithPoints}</strong></div>
+          ${filter?`<div><span>Zobrazeno</span><strong>${visible.length}</strong></div>`:''}
+        </div>
 
         ${visible.length?`<div class="rules-list-shell"><div class="rules-student-list">${studentCards}</div></div>`:'<div class="rules-empty">Žádný žák neodpovídá zvolenému filtru.</div>'}
 
-        <button type="button" class="rules-manage" data-action="manage-rules">✎ &nbsp; Upravit pravidla</button>
+        <button type="button" class="rules-manage" data-action="manage-rules">✎ &nbsp; Správa seznamu pravidel</button>
 
-        <div class="rules-info"><div class="rules-info-icon">i</div><div>Vyšší počet bodů zvyšuje šanci při váženém losu.</div></div>
+        <div class="rules-info"><div class="rules-info-icon">i</div><div>Body se počítají automaticky ze zaškrtnutých podmínek. Vyšší počet bodů zvyšuje šanci při váženém losu.</div></div>
 
         <button class="exam-continue" data-action="draw-candidates" ${!students.length?'disabled':''}>
           <span>Vybrat kandidáty</span><span class="arrow">▶</span>
