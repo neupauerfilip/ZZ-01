@@ -1,0 +1,317 @@
+ZKOUŠKOMAT ZZ-01 – VIZUÁLNÍ ZADÁNÍ PRO WORK
+Verze: vizuál v1
+Datum: 21. 9. 2026
+
+CÍL
+Sjednotit celou aplikaci Zkouškomat ZZ-01 do jednotného arkádového / retro pixelového stylu podle dříve domluveného skillu „Zkouškomat vizuál“. Nejde teď o přidávání nových funkcí, ale o sjednocení vzhledu, zlepšení přehlednosti, dotažení atmosféry a konzistence mezi obrazovkami.
+
+HLAVNÍ ZÁSADA
+Každá obrazovka aplikace musí vypadat jako součást jednoho systému.
+Nesmí vznikat dojem, že každá sekce je z jiného projektu.
+Vizuální jazyk musí být jednotný:
+- arkádový styl
+- pixel-art prvky
+- neonově-retro barevnost
+- stejné komponenty
+- stejné rozvržení
+- stejné typy ikon
+- stejné chování navigace
+
+======================================================================
+1. GLOBÁLNÍ VIZUÁLNÍ PRAVIDLA
+======================================================================
+
+1.1 Styl
+- Retro arkádový / pixelový styl.
+- Vizuál má být hravý, ale ne přeplácaný.
+- Má působit jako „školní arkádový systém“.
+- Mírně ironický a vtipný tón je v pořádku, ale UI musí zůstat dobře čitelné.
+- Zachovat technický řád a přehlednost.
+
+1.2 Barevná paleta
+Používat omezenou, jednotnou paletu:
+- tmavé pozadí (tmavě modrá / tmavě petrolejová / černo-modrá)
+- hlavní akcent: tyrkysová / cyan
+- vedlejší akcent: oranžová / jantarová
+- doplňkově: zelená, červená, žlutá pro statusy
+- světlý text: bílá / světle šedá
+- tlumené sekundární texty: šedozelená / studená šedá
+
+1.3 Typografie
+- Nadpisy: pixelový font / retro font
+- Běžný text: dobře čitelný bezpatkový font
+- Nadpisy a důležité popisky mohou být VELKÝMI PÍSMENY
+- Běžný text musí zůstat přehledný a čitelný i na mobilu
+
+1.4 Rámečky a komponenty
+- Používat pixelové rámečky
+- Karty, panely, modální okna, tabulky i tlačítka musí mít stejný konstrukční styl
+- Všechny důležité sekce budou v „pixel frame“ stylu
+- Shadow / glow používat střídmě a konzistentně
+
+1.5 Tlačítka
+- Jednotný styl tlačítek napříč aplikací
+- Primární tlačítko: zvýrazněné, arcade styl
+- Sekundární tlačítko: vizuálně slabší
+- Destruktivní tlačítko: červené
+- Speciální herní tlačítka: mohou mít ikonku a výraznější akcent
+- Hover / active / pressed stav musí být čitelný
+
+1.6 Ikony
+- Každá důležitá obrazovka musí mít jednu symbolickou ikonu
+- Ikony mají být jednoduché, pixelové nebo stylově sjednocené
+- Nesmí se míchat několik různých sad ikon
+- Pokud nejsou ručně kreslené pixel ikony, musí alespoň působit jednotně
+
+1.7 Hlavička obrazovky
+Každá hlavní obrazovka bude mít stejnou logiku:
+- symbolická ikona sekce
+- název obrazovky
+- krátký podtitulek
+- případný badge / stavový štítek
+
+Příklad:
+[ikona] SBOROVNA
+společný chat učitelů školy
+[ONLINE]
+
+1.8 Spodní část / status
+- Zachovat stylizovanou patu nebo status řádek
+- Nesmí být rušivý
+- Vhodné pro drobné systémové info, slogan, stav nebo označení verze
+
+1.9 Responsivita
+- Všechno musí dobře fungovat na mobilu
+- Žádné překrývání textu
+- Scrollovatelné seznamy a tabulky
+- Velikosti prvků přizpůsobit menším obrazovkám
+- Na mobilu zachovat stejný styl, ne „rozpadlou“ zjednodušenou verzi
+
+======================================================================
+2. JEDNOTNÝ ROZVRH OBRAZOVEK
+======================================================================
+
+Každá hlavní obrazovka by měla obsahovat:
+1. horní lištu
+2. název + ikonu + podtitulek
+3. hlavní obsah v kartách / blocích
+4. tlačítko ZPĚT tam, kde je potřeba krok zpět
+5. horní univerzální akce:
+   - nastavení
+   - odhlásit se / odejít ze školy
+6. případně badge s kontextem (např. ONLINE, AKTUÁLNÍ SEZÓNA, ADMIN, ŠÉFOVÁ, atd.)
+
+======================================================================
+3. IKONY PRO JEDNOTLIVÉ OBRAZOVKY
+======================================================================
+
+Použít tento systém symbolických ikon:
+
+- Hlavní menu → domov / arkádový automat
+- Zahájit zkoušení → ukazovátko / tabule
+- Kolo štěstí → kolo
+- Moje třídy → třídní kniha
+- Moje předměty → učebnice / sešit
+- Známkování → červená propiska
+- Scoring / Přehledy → stupně vítězů / pohár
+- Sborovna → hrnek kávy
+- Nápověda → otazník / manuál
+- Nastavení → ozubené kolečko
+- Administrace školy → budova školy / štít
+- Kabinet trofejí / vše co mohu získat → pohár / vitrína
+- Čistý štít → guma / svitek / čistý pergamen
+- Historie → hodiny / kronika
+- Profil učitele / avatar → portrét / postavička
+
+======================================================================
+4. CO SE MÁ VIZUÁLNĚ SJEDNOTIT
+======================================================================
+
+4.1 Hlavní menu
+- Karty v hlavním menu musí mít stejnou velikost, rozestupy, styl rámečku a ikony
+- Všechny dlaždice musí vypadat jako jedna rodina
+- Badge s počtem nepřečtených zpráv ve Sborovně musí být zapracovaný stylově
+- Ve spodní části hlavního menu může být krátký přehled:
+  - stručný scoring učitelů
+  - nejhorší žák ve škole + jeho třída
+- I tento spodní přehled musí být ve stejném arkádovém stylu
+
+4.2 Zahájit zkoušení
+- Celý krokový průchod musí působit jako jedna „mise“
+- Jednotný styl:
+  - výběr třídy
+  - výběr předmětu
+  - přítomnost / nepřítomnost
+  - pravidla / trestné body
+  - výběr kandidáta
+  - skříňka
+  - téma
+  - kolo štěstí
+  - samotné zkoušení
+  - výsledek
+- Každý krok musí mít jasný nadpis a pořadí
+- Tlačítka DALŠÍ / ZPĚT musí být konzistentní
+- Animované nebo výrazné herní prvky (např. kolo štěstí, kandidát ke zkoušení, časovač) mají být vizuálně dominantnější
+
+4.3 Moje třídy
+- Seznam tříd musí být vizuálně čistý
+- Karty tříd, jejich školní rok a detail musí být sjednocené
+- Správa žáků, přidání / odebrání, filtr a tlačítko Čistý štít musí vypadat jako součást stejného systému
+- Důležitá je čitelnost seznamů
+
+4.4 Moje předměty
+- Předměty musí být přehledné a vizuálně odlišené jako samostatné položky
+- Témata uvnitř předmětu musí mít elegantní jednoduchý seznam
+- Akce přidat / upravit / smazat musí mít sjednocené ikonky
+
+4.5 Známkování
+- Tabulkový přehled musí být čitelný i na mobilu
+- Ikony pro tisk a export do Excelu musí zapadat do arkádového stylu
+- Filtry (třída, předmět, období) musí vypadat jako herní ovládací panel, ale zůstat praktické
+
+4.6 Scoring / Přehledy
+- Toto je jedna z nejdůležitějších sekcí pro vizuální dotažení
+- Musí působit opravdu „herně“
+- Zachovat:
+  - podium TOP 3
+  - tabulku scoringu učitelů
+  - školní výzvy
+  - kabinet trofejí
+  - strom trofejí
+  - tlačítko „Vše co mohu získat“
+- Strom trofejí musí být jasný, čitelný, graficky atraktivní a stále v arkádovém stylu
+- Každá trofej musí mít konzistentní pixelový vzhled
+- Rozlišení vzácností a stupňů musí být graficky jasné
+- Kabinet trofejí musí působit jako vitrína / herní výstavka
+
+4.7 Sborovna
+- Sborovna musí vypadat jednoduše, stroze, ale pořád stylově
+- Má být zřejmé, že jde o chat, ale ve vizuálu Zkouškomatu
+- Bubliny zpráv, avatary, emoji řádek i přepínač notifikací musí být sladěné se zbytkem appky
+- Nesmí působit jako cizí messenger
+- Je žádoucí „školně-herní“ atmosféra, ne běžný komerční chat
+
+4.8 Nápověda
+- Nápověda má být přehledná a vizuálně rozčleněná
+- Karty / sekce vysvětlení musí být dobře čitelné
+- Musí být jasné, že jde o manuál aplikace
+- Může lehce připomínat „instrukce ke hře“
+
+4.9 Nastavení
+- Nastavení musí být přehledné a nepřehuštěné
+- Kategorie:
+  - obecné
+  - notifikace
+  - časovač
+  - ochranný interval
+  - skříňky
+  - profil / avatar
+- Admin rozšíření musí být jasně oddělená
+- Šéfová a admin nesmí působit vizuálně chaoticky
+
+4.10 Administrace školy
+- Správa učitelů a jejich práv musí být přehledná
+- Je potřeba dobře odlišit:
+  - běžný učitel
+  - šéfová
+  - admin
+- Role mohou mít vlastní badge
+- Přidělování práv musí být přehledné, nejlépe formou čisté tabulky / seznamu s přepínači
+
+======================================================================
+5. AVATARY
+======================================================================
+
+- Zachovat možnost pixelových avatarů
+- Zachovat možnost nahrát vlastní obrázek
+- Všude používat stejné zobrazení avataru
+- Avatar se má ukazovat:
+  - v horní liště
+  - ve scoringu
+  - ve Sborovně
+  - ve správě učitelů
+  - případně v podiu
+
+Avatar má být součást vizuální identity aplikace, ne nahodilý prvek.
+
+======================================================================
+6. HERNÍ / ATMOSFÉRICKÉ PRVKY
+======================================================================
+
+Dotažení atmosféry, ale bez přetížení:
+- jemné blikání / pulse u důležitých prvků
+- zvýraznění trofejí a odměn
+- animovaný dojem u kola štěstí
+- výraznější prezentace kandidáta ke zkoušení
+- loading obrazovka musí odpovídat stejnému stylu
+- vše musí působit jako součást jedné „retro školní hry“
+
+Pozor:
+- neudělat z toho kýč
+- neudělat z toho nepřehledný chaos
+- uživatelská přehlednost je důležitější než efekty
+
+======================================================================
+7. CO TEĎ NEDĚLAT
+======================================================================
+
+Teď se nemá:
+- přidávat velké nové funkce
+- měnit logiku aplikace bez nutnosti
+- rozkopat fungující části
+- míchat další nové styly
+- zavádět složité grafické experimenty mimo dohodnutý arkádový vizuál
+
+Cíl teď není „víc funkcí“, ale:
+- sjednocení
+- dotažení
+- vyčištění
+- profesionalizace vzhledu
+
+======================================================================
+8. KONKRÉTNÍ ÚKOL PRO WORK
+======================================================================
+
+Úkol:
+Projít celou aplikaci a vizuálně ji sjednotit podle výše uvedených pravidel.
+
+Konkrétně:
+1. Zavést jednotný design systém
+2. Sjednotit hlavní komponenty
+3. Doplnit symbolické ikony ke každé sekci
+4. Učesat layout jednotlivých obrazovek
+5. Zachovat plnou responsivitu
+6. Udržet vše v arkádovém stylu podle skillu „Zkouškomat vizuál“
+7. Dát pozor, aby trofeje, scoring a sborovna stále působily jako součást stejného světa
+8. Nedělat teď další funkční expanzi, pokud není nezbytná pro vzhled
+
+======================================================================
+9. PRIORITA PRÁCE
+======================================================================
+
+Doporučené pořadí:
+1. Hlavní menu
+2. Zahájit zkoušení
+3. Scoring / Přehledy
+4. Strom trofejí + kabinet trofejí
+5. Sborovna
+6. Moje třídy
+7. Moje předměty
+8. Známkování
+9. Nastavení
+10. Administrace školy
+11. Nápověda
+
+======================================================================
+10. VÝSTUP
+======================================================================
+
+Výsledkem má být:
+- vizuálně sjednocená aplikace
+- všechny klíčové obrazovky ve stejném stylu
+- jasné ikonky sekcí
+- lepší přehlednost
+- profesionálnější dojem
+- stále zábavný herní charakter Zkouškomatu
+
+KONEC ZADÁNÍ

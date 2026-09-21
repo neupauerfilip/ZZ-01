@@ -1,0 +1,449 @@
+======================================================================
+NOVÝ SYSTÉM TROFEJÍ – 20 ZÁKLADNÍCH TROFEJÍ × 4 STUPNĚ
+======================================================================
+
+CÍL:
+Rozšířit současný systém achievementů/trofejí bez zbytečného přidávání
+dalších a dalších samostatných odměn.
+
+Uživatelsky používat především pojem:
+TROFEJ
+
+Pojem „achievement“ může zůstat pouze interně v kódu, pokud je potřeba
+kvůli zpětné kompatibilitě.
+
+Každá veřejná trofej má 4 postupové stupně:
+
+1. BRONZ
+2. STŘÍBRO
+3. ZLATO
+4. DIAMANT
+
+DŮLEŽITÉ:
+- STUPEŇ trofeje a VZÁCNOST trofeje jsou dvě různé věci.
+- Stupeň říká, jak daleko učitel v konkrétní trofeji postoupil.
+- Vzácnost říká, jak neobvyklá / náročná je samotná trofejní řada.
+
+Vzácnosti zůstávají:
+- BĚŽNÁ
+- NEOBVYKLÁ
+- VZÁCNÁ
+- EPICKÁ
+- LEGENDÁRNÍ
+
+Příklad:
+„Kolo osudu“ může být VZÁCNÁ trofej a zároveň ji učitel může mít
+na stupni BRONZ / STŘÍBRO / ZLATO / DIAMANT.
+
+======================================================================
+CHOVÁNÍ SYSTÉMU
+======================================================================
+
+- Učitel získává vždy nejvyšší dosažený stupeň trofeje.
+- Nižší stupně zůstávají v historii jako dříve dosažené.
+- Při dosažení dalšího stupně se stejná trofej v Kabinetu nevytvoří podruhé.
+  Pouze se její vzhled a označení povýší.
+- Datum získání každého stupně se uloží samostatně.
+- Trofej se po získání nesmí zpětně ztratit, ani pokud se později změní
+  aktuální hodnota některého ukazatele.
+- Každý nový stupeň může vyvolat obrazovku:
+  „NOVÁ TROFEJ!“
+  + název
+  + nový stupeň
+  + vzácnost
+  + krátký popis
+  + „ULOŽENO DO KABINETU“
+
+======================================================================
+20 ZÁKLADNÍCH VEŘEJNÝCH TROFEJÍ
+======================================================================
+
+1. KUS KŘÍDY
+Vzácnost: BĚŽNÁ
+Metrika: počet dokončených zkoušení
+Bronz: 1
+Stříbro: 10
+Zlato: 30
+Diamant: 75
+
+2. HRNEK ZE SBOROVNY
+Vzácnost: BĚŽNÁ
+Metrika: počet různých dnů, kdy učitel dokončil alespoň jedno zkoušení
+Bronz: 3 dny
+Stříbro: 10 dnů
+Zlato: 25 dnů
+Diamant: 60 dnů
+
+3. ČERVENÁ PROPISKA
+Vzácnost: BĚŽNÁ
+Metrika: počet různých žáků, které učitel alespoň jednou zkoušel
+Bronz: 5 žáků
+Stříbro: 20
+Zlato: 50
+Diamant: 100
+
+4. TŘÍDNÍ KNIHA
+Vzácnost: BĚŽNÁ
+Metrika: počet uložených známek
+Bronz: 10
+Stříbro: 30
+Zlato: 75
+Diamant: 150
+
+5. ŠKOLNÍ ZVONEK
+Vzácnost: BĚŽNÁ
+Metrika: počet spuštěných zkoušení s časovačem
+Bronz: 5
+Stříbro: 20
+Zlato: 50
+Diamant: 100
+
+6. POZNÁMKOVÝ BLOK
+Vzácnost: BĚŽNÁ
+Metrika: počet zkoušení, ke kterým učitel přidal poznámku
+Bronz: 3
+Stříbro: 10
+Zlato: 25
+Diamant: 50
+
+7. TŘÍDNÍ TURISTA
+Vzácnost: NEOBVYKLÁ
+Metrika: počet různých tříd, ve kterých učitel zkoušel
+Bronz: 2
+Stříbro: 3
+Zlato: 5
+Diamant: 8
+
+8. PESTRÝ REPERTOÁR
+Vzácnost: NEOBVYKLÁ
+Metrika: počet různých témat použitých při zkoušení
+Bronz: 5
+Stříbro: 10
+Zlato: 20
+Diamant: 40
+
+9. PŘEDMĚTÁŘ
+Vzácnost: NEOBVYKLÁ
+Metrika: počet různých předmětů, ve kterých učitel zkoušel
+Bronz: 2
+Stříbro: 3
+Zlato: 5
+Diamant: 8
+
+10. VLASTNÍ TÉMA
+Vzácnost: NEOBVYKLÁ
+Metrika: počet použitých vlastních ručně zadaných témat
+Bronz: 3
+Stříbro: 10
+Zlato: 25
+Diamant: 50
+
+11. KOLO OSUDU
+Vzácnost: VZÁCNÁ
+Metrika: počet roztočení Kola štěstí při výběru tématu
+Bronz: 5
+Stříbro: 15
+Zlato: 40
+Diamant: 100
+
+12. ŠKOLNÍ SKŘÍŇKA
+Vzácnost: VZÁCNÁ
+Metrika: počet skutečných výskytů školní skříňky při zkoušení
+Bronz: 3
+Stříbro: 10
+Zlato: 25
+Diamant: 50
+
+13. ZLATÁ PROPUSTKA
+Vzácnost: VZÁCNÁ
+Metrika: počet použitých propustek
+Bronz: 1
+Stříbro: 3
+Zlato: 8
+Diamant: 15
+
+14. PRAVIDELNÝ ZKOUŠEČ
+Vzácnost: VZÁCNÁ
+Metrika: počet různých dnů se zkoušením v aktuální sezóně
+Bronz: 5
+Stříbro: 15
+Zlato: 30
+Diamant: 60
+
+15. LOVEC VÝZEV
+Vzácnost: VZÁCNÁ
+Metrika: počet dokončených veřejných školních výzev
+Bronz: 1
+Stříbro: 3
+Zlato: 6
+Diamant: 10
+
+16. VŠESTRANNÝ UČITEL
+Vzácnost: EPICKÁ
+Metrika: kombinace tříd + předmětů + témat
+Bronz: 2 třídy + 2 předměty + 10 témat
+Stříbro: 3 třídy + 3 předměty + 20 témat
+Zlato: 5 tříd + 4 předměty + 30 témat
+Diamant: 8 tříd + 5 předmětů + 50 témat
+
+17. VETERÁN ZZ-01
+Vzácnost: EPICKÁ
+Metrika: počet dokončených zkoušení + počet různých témat
+Bronz: 20 zkoušení + 8 témat
+Stříbro: 50 + 15 témat
+Zlato: 100 + 25 témat
+Diamant: 200 + 40 témat
+
+18. SEZÓNNÍ VYTRVALEC
+Vzácnost: EPICKÁ
+Metrika: počet dokončených a archivovaných sezón, ve kterých učitel aktivně zkoušel
+Bronz: 1 sezóna
+Stříbro: 2
+Zlato: 4
+Diamant: 6
+
+19. TROFEJNÍ VITRÍNA
+Vzácnost: EPICKÁ
+Metrika: počet různých získaných stupňů veřejných trofejí
+Bronz: 5 stupňů
+Stříbro: 15
+Zlato: 30
+Diamant: 50
+
+20. MISTR ZZ-01
+Vzácnost: LEGENDÁRNÍ
+Metrika: celkový postup napříč veřejnými trofejemi
+Bronz: získat alespoň Bronz u 10 různých veřejných trofejí
+Stříbro: získat alespoň Stříbro u 10 různých veřejných trofejí
+Zlato: získat alespoň Zlato u 10 různých veřejných trofejí
+Diamant: získat Diamant u 10 různých veřejných trofejí
+
+======================================================================
+TAJNÉ TROFEJE
+======================================================================
+
+Tajné trofeje nejsou součástí výše uvedených 20 veřejných řad.
+
+Pravidla:
+- tajná trofej se nezobrazuje ve „Vše co mohu získat“,
+- nezobrazuje se ani jako „???“,
+- před získáním pro ni není v Kabinetu prázdné místo,
+- po získání se objeví jako normální objevená trofej,
+- tajná trofej může mít také více stupňů, ale není to povinné,
+- současný „Tajný pohár“ lze zachovat jako první tajnou trofej.
+
+======================================================================
+KABINET TROFEJÍ
+======================================================================
+
+Kabinet trofejí má působit jako skutečná pixelová vitrína / police.
+
+Každá veřejná trofej má jednu pozici.
+
+Na kartě / polici zobrazit:
+- pixelový obrázek trofeje,
+- název,
+- vzácnost,
+- aktuální dosažený stupeň,
+- progres k dalšímu stupni.
+
+Příklad:
+KOLO OSUDU
+STŘÍBRO
+15 / 40 k dalšímu stupni
+Vzácnost: VZÁCNÁ
+
+Pokud ještě není získán ani Bronz:
+- zobrazit tmavou siluetu veřejné trofeje,
+- zobrazit název,
+- zobrazit podmínku pro Bronz.
+
+Pokud je dosažen Diamant:
+- zobrazit „MAX“ nebo „DIAMANT DOKONČEN“,
+- další progress bar už nezobrazovat.
+
+VZHLED STUPŇŮ:
+- stejné základní pixelové vyobrazení trofeje,
+- Bronz / Stříbro / Zlato / Diamant mění materiál, rámeček a drobný efekt,
+- nevytvářet čtyři různé obsahové trofeje,
+- učitel má stále jeden předmět, který se vizuálně povyšuje.
+
+======================================================================
+„VŠE CO MOHU ZÍSKAT“
+======================================================================
+
+Současné tlačítko:
+„Vše co mohu získat“
+
+zobrazí 20 veřejných trofejních řad.
+
+Řazení:
+1. podle vzácnosti
+2. uvnitř vzácnosti podle názvu nebo pevného pořadí
+
+U každé řady:
+- název,
+- ikona / pixelový obrázek,
+- vzácnost,
+- aktuální stupeň,
+- čtyři milníky,
+- aktuální progres,
+- získané stupně označit,
+- další stupeň zvýraznit.
+
+Tajné trofeje se zde nikdy neukazují před získáním.
+
+======================================================================
+DATOVÝ MODEL PRO IMPLEMENTACI
+======================================================================
+
+Doporučený nový katalog:
+
+trophyDefs = [
+  {
+    id,
+    name,
+    rarity,
+    hidden,
+    visualId,
+    metric,
+    tiers: [
+      { id:'bronze', label:'Bronz', target:... },
+      { id:'silver', label:'Stříbro', target:... },
+      { id:'gold', label:'Zlato', target:... },
+      { id:'diamond', label:'Diamant', target:... }
+    ]
+  }
+]
+
+Pro kombinované trofeje může tier místo jednoho target obsahovat:
+requirements:{...}
+
+Stav konkrétního učitele:
+
+teacherTrophies[teacherId][trophyId] = {
+  highestTier: 0 | 1 | 2 | 3 | 4,
+  unlockedAt: {
+    bronze: timestamp | null,
+    silver: timestamp | null,
+    gold: timestamp | null,
+    diamond: timestamp | null
+  }
+}
+
+0 = nezískána
+1 = Bronz
+2 = Stříbro
+3 = Zlato
+4 = Diamant
+
+DŮLEŽITÉ:
+- neukládat pouze „aktuálně splněno“,
+- ukládat datum skutečného odemčení každého stupně,
+- tím se zabrání ztrátě historicky získané trofeje.
+
+======================================================================
+METRIKY, KTERÉ UŽ PROTOTYP ČÁSTEČNĚ MÁ
+======================================================================
+
+Současný prototyp již eviduje / používá:
+- completedExams
+- passesUsed
+- uniqueClasses
+- uniqueTopics
+- wheelSpins
+- lockerAppearances
+
+Ty lze přímo využít při migraci.
+
+Nově bude potřeba dopočítat nebo evidovat:
+- activeExamDays / uniqueExamDays
+- uniqueStudentsExamined
+- gradesRecorded
+- timerUses
+- examsWithNote
+- uniqueSubjects
+- customTopicsUsed
+- completedPublicChallenges
+- completedActiveSeasons
+- totalUnlockedPublicTrophyTiers
+
+U metrik, které lze spolehlivě dopočítat z historie, preferovat dopočet z historie
+před zavedením duplicitního čítače.
+
+======================================================================
+MIGRACE ZE SOUČASNÝCH ACHIEVEMENTŮ
+======================================================================
+
+Při přechodu nesmí učitel přijít o již získané odměny.
+
+Doporučené mapování:
+
+first_exam / První zkoušení
+→ KUS KŘÍDY – minimálně Bronz
+
+three_classes / Třídní turista
+→ TŘÍDNÍ TURISTA – odpovídající stupeň podle aktuální hodnoty
+
+eight_topics / Pestrý repertoár
+→ PESTRÝ REPERTOÁR – odpovídající stupeň
+
+five_wheels / Kolo rozhodlo
+→ KOLO OSUDU – odpovídající stupeň
+
+locker_luck / Šatnář štěstěny
+→ ŠKOLNÍ SKŘÍŇKA – odpovídající stupeň
+
+veteran / Veterán ZZ-01
+→ VETERÁN ZZ-01 – minimálně Bronz
+
+ten_exams / Desítka
+→ podle aktuálního počtu dokončených zkoušení přepočítat KUS KŘÍDY
+  a zachovat historickou odměnu v migračním záznamu, pokud je potřeba.
+
+secret_clean / Tajný pohár
+→ zachovat jako tajnou trofej mimo veřejných 20.
+
+Migrace musí být jednorázová a idempotentní:
+- opakované načtení aplikace nesmí trofeje znovu duplikovat,
+- přidat version flag pro trophy schema.
+
+======================================================================
+VYHODNOCOVÁNÍ A ODEMKNUTÍ
+======================================================================
+
+Vyhodnocení veřejných trofejí spustit po událostech, které mohou změnit progres:
+- dokončení zkoušení,
+- uložení známky,
+- použití tématu,
+- roztočení kola,
+- výskyt / použití skříňky,
+- použití propustky,
+- dokončení školní výzvy,
+- uzavření sezóny.
+
+Po každém vyhodnocení:
+1. zjistit aktuální hodnotu metriky,
+2. porovnat s jednotlivými stupni,
+3. zjistit nejvyšší nově dosažený stupeň,
+4. uložit datum odemčení,
+5. vytvořit herní událost,
+6. zobrazit „NOVÁ TROFEJ!“ pouze při skutečně novém stupni.
+
+Nesmí docházet k:
+- opakovanému udělení stejného stupně,
+- dvojímu zápisu po dvojkliku,
+- ztrátě získaného stupně při pozdějším poklesu aktuálního ukazatele.
+
+======================================================================
+CO NYNÍ NEDĚLAT
+======================================================================
+
+Aby se aplikace zbytečně nekomplikovala:
+- nyní nepřidávat editor vlastních trofejí pro admina,
+- nepřidávat virtuální měnu,
+- nepřidávat obchod ani nákup odměn,
+- nepřidávat desítky dalších samostatných trofejí.
+
+Cílem je dotáhnout 20 základních trofejních řad a jejich 4 stupně.
+To dává 80 veřejných dosažitelných milníků bez přeplnění aplikace.

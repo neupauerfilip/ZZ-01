@@ -1,0 +1,620 @@
+Zkouškomat – interní systém ZZ-01
+
+- Slogan: „Proč zkoušet jednoduše, když to jde složitě.“
+- Základní idea: dobrovolný doplněk ke zkoušení pro odlehčení atmosféry a snížení stresu, ne povinný nástroj pro každou hodinu.
+- Uživatelé: učitelé s vlastními účty; každý si spravuje své třídy a data zvlášť.
+- Třídy a žáci: možnost zakládat více tříd, přidávat a upravovat žáky a mít přehled napříč třídami.
+- Pravidla a bodování: učitel si definuje vlastní pravidla a trestné body za jejich porušení.
+- Losování: různé režimy – náhodné, s vlivem bodů nebo podle nejvyššího počtu bodů; systém má zohledňovat spravedlnost a nedávné zkoušení.
+- Zápis zkoušení: zkoušení se zapíše až po potvrzení učitelem.
+- Kolo otázek: může fungovat samostatně nebo být propojené s losováním žáka; podporuje témata, konkrétní otázky i číselné rozsahy.
+- Bonusová školní šatní skříňka: volitelná funkce před zkoušením.
+- Skříňka může odečíst trestné body, ale nikdy pod nulu.
+- Skříňka může také neudělat nic nebo přidělit speciálního žolíka.
+- Obsah skříňky má být školně laděný a humorný.
+- U skříňky bude možné nastavit pravděpodobnosti jednotlivých výsledků.
+- Žolík „Propustka od zkoušení“: jednorázový bonus, který si student může ponechat a rozhodnout se, kdy ho později použije.
+- Historie a statistiky: přehledné pro jednotlivé žáky, celé třídy i napříč třídami.
+- Design: čistý školní tech styl s lehkým retro nádechem a recesí; nemá působit jako dětská hra.
+- Úvodní obrazovka: jednoduchá, se čtyřmi hlavními volbami.
+- Animace losování: může být pseudovědecká a humorná, ale nesmí žáky zesměšňovat.
+- Platforma: webová i mobilní verze pro iOS a Android s jedním společným základem.
+- Rozšiřitelnost: možnost budoucích dalších modulů navazujících na ZZ-01.
+
+ORGANIZACE ŠKOLY A UŽIVATELŮ
+
+- Struktura systému: Zkouškomat → škola → učitelé → třídy → žáci.
+- Každá škola bude mít svého hlavního administrátora.
+- Hlavní administrátor založí školu a bude schvalovat učitelské účty, které se chtějí k dané škole připojit.
+- Cílem schvalování účtů je zabránit tomu, aby se do prostředí školy dostali neoprávnění uživatelé, například studenti.
+- Přihlášení uživatelů bude vhodné řešit přes běžný bezpečný účet, například Google nebo Microsoft.
+- Samotné přihlášení přes Google nebo Microsoft nebude automaticky znamenat přístup do konkrétní školy; členství ve škole musí být schváleno administrátorem.
+- Jednotlivé školy budou mezi sebou oddělené, aby se učitelé, třídy a data různých škol nemíchaly.
+- Třídy a seznamy žáků budou sdílené na úrovni školy.
+- Jedna konkrétní třída bude v systému vytvořena pouze jednou a všichni oprávnění učitelé budou pracovat se stejným seznamem žáků.
+- Každý učitel si ke společné třídě přiřadí pouze svůj předmět nebo svoje použití třídy.
+- Každý učitel při běžném používání uvidí pouze svoje třídy a předměty, které si sám nastavil nebo ke kterým je přiřazen.
+- Učitel nebude moci omylem spustit zkoušení v předmětu jiného učitele.
+- Data vztahující se ke konkrétnímu učiteli, jeho zkoušení, pravidlům a bodování budou oddělená od dat ostatních učitelů.
+
+UČITELSKÝ SCORING
+
+- V aplikaci bude jednoduché tlačítko Domů pro návrat na hlavní obrazovku.
+- Součástí aplikace bude samostatná část věnovaná učitelskému scoringu.
+- Učitelský scoring bude probíhat vždy pouze uvnitř konkrétní školy.
+- Základní plusové body budou vycházet z uskutečněných zkoušení.
+- Základní mínusové body budou vycházet z případů, kdy student využije propustku/žolíka a zkoušení se tím neuskuteční.
+- Hlavní skóre bude vznikat jako kombinace uskutečněných zkoušení a využitých propustek.
+- Scoring nesmí být založen jen na absolutním počtu vyzkoušených žáků, protože každý učitel učí jiný počet tříd a jiný počet žáků.
+- Pro spravedlivější porovnání se bude pracovat s poměrovými hodnotami, například počtem zkoušení vztaženým k počtu žáků a k určitému období.
+- U scoringu bude vhodné zobrazovat také procento nebo podíl zkoušení, při kterých byla použita bonusová školní šatní skříňka.
+- Pokud učitel skříňku nepoužívá, musí to být ve scoringu transparentně viditelné.
+- Do budoucna lze nastavit pravidlo, že pouze zkoušení splňující společná školní pravidla scoringu se započítají do soutěžního žebříčku.
+- Používání bonusové skříňky může být pro běžné zkoušení dobrovolné, ale podmínky školního scoringu může sjednotit administrátor školy.
+- Učitelský scoring bude mít i hravou vizuální podobu.
+- První tři učitelé se mohou zobrazovat na stupních vítězů.
+- Na stupních vítězů bude u každého učitele zobrazen jeho avatar a jméno nebo přezdívka.
+- Každý učitel si bude moci vybrat vlastní avatar z předem připravené sady.
+- Avataři budou jednotného stylu, aby aplikace působila vizuálně konzistentně.
+
+UŽIVATELSKÝ PROFIL UČITELE
+
+- Každý učitel bude mít vlastní uživatelský profil.
+- V profilu si bude moci nastavit jméno, příjmení, přezdívku a vybrat avatara.
+- Jméno nebo přezdívka spolu s avatarem se budou používat například v učitelském žebříčku a na stupních vítězů.
+
+HERNÍ PRVKY PRO UČITELE
+
+- Zkouškomat má fungovat také jako lehká hra pro učitele.
+- Kromě číselného skóre mohou učitelé získávat čistě humorné symbolické odměny nebo tresty.
+- Tyto odměny a tresty nebudou znamenat skutečné pracovní povinnosti; půjde pouze o recesi uvnitř aplikace.
+- Příklady pozitivních symbolických odměn: „Kafe ve sborovně navíc“, „Můžeš už domů“, „Klidná přestávka“.
+- Příklady negativních symbolických trestů: „Suplovaná hodina navíc“, „Papírování level 2“, „Další přípravy“, „Ještě jedna porada“.
+- Smyslem této části je posílit herní charakter aplikace pro učitele, nikoli reálně trestat nebo odměňovat.
+
+UKONČENÍ ZKOUŠENÍ A ZÁPIS ZNÁMKY
+
+- Po dokončení zkoušení bude mít učitel tlačítko „Konec zkoušení a zapsat známku“.
+- Po stisknutí se zobrazí jednoduchý formulář pro rychlé zadání výsledku zkoušení.
+- Známka se nebude zapisovat ručně na klávesnici.
+- Učitel vybere známku jedním kliknutím z pěti velkých tlačítek: 1, 2, 3, 4 nebo 5.
+- Zadaná známka se uloží ke konkrétnímu žákovi, třídě a předmětu.
+- Pro každou třídu a předmět se bude postupně vytvářet přehledná tabulka uskutečněných zkoušení a zadaných známek.
+- Po kliknutí na jednotlivou známku se zobrazí krátká humorná grafická reakce odpovídající výsledku.
+- Grafická reakce má vystihnout radost, spokojenost, rozpaky nebo zklamání podle známky, ale nesmí studenta zesměšňovat.
+- Rychlé zadání známky má být co nejjednodušší, aby učitele nezdržovalo při běžné výuce.
+
+PŘÍTOMNOST ŽÁKŮ PRO KONKRÉTNÍ HODINU
+
+- Před zahájením zkoušení bude možné zadat aktuální přítomnost žáků ve třídě pro daný den nebo konkrétní hodinu.
+- Učitel jednoduše označí, kdo je přítomen a kdo chybí.
+- Do losování se budou automaticky zahrnovat pouze přítomní žáci.
+- Nepřítomný žák nebude moci být v dané hodině vylosován.
+- Přítomnost bude součástí záznamu konkrétního zkoušení/hodiny, aby bylo zpětně jasné, z jakého počtu žáků se losovalo.
+
+TÉMA ZKOUŠENÍ
+
+- Každé zkoušení bude mít evidované téma.
+- Pokud bylo téma zvoleno předem v rámci kola otázek nebo jiné části Zkouškomatu, zapíše se do záznamu automaticky.
+- Učitel bude mít možnost automaticky vyplněné téma ručně upravit nebo úplně přepsat.
+- Téma se uloží ke konkrétnímu zkoušení, žákovi, předmětu a známce.
+- V přehledu známek bude vedle data a známky viditelné také téma, ze kterého byl žák zkoušen.
+
+TABULKA ZNÁMEK A EXPORT
+
+- Pro každou kombinaci třída + předmět bude k dispozici samostatná přehledná tabulka zkoušení.
+- Tabulka bude obsahovat minimálně žáka, datum, známku a téma zkoušení.
+- Učitel bude moci tabulku zobrazit na obrazovce, vytisknout nebo exportovat.
+- Export bude dostupný minimálně do formátu Excel.
+- Pro přehledný tisk a archivaci bude možné vytvořit také PDF.
+- PDF bude sloužit především jako vizuálně upravený přehled pro tisk.
+- Tisk a export mají být dostupné přímo z obrazovky tabulky, ideálně jedním tlačítkem nebo přes jednoduché menu.
+
+HISTORIE A PŘEHLEDY
+
+- Historie zkoušení a známek bude členěná podle školních roků.
+- Každý školní rok bude dále rozdělen na 1. pololetí a 2. pololetí.
+- Učitel se bude moci snadno přepínat mezi aktuálním pololetím, předchozím pololetím a staršími školními roky.
+- Přehledy budou dostupné minimálně podle třídy, předmětu, žáka a pololetí.
+- Starší data zůstanou zachována pro zpětné dohledání a export.
+
+UKONČENÍ ZKOUŠENÍ – ZNÁMKA NEBO VYHOZENÍ ŽÁKA OD ZKOUŠKY
+
+- Během probíhajícího zkoušení bude k dispozici tlačítko „Ukončit zkoušení“.
+- Po jeho stisknutí se zobrazí přehledná nabídka šesti možností.
+- Pět hlavních tlačítek bude představovat známky 1, 2, 3, 4 a 5.
+- Kliknutím na jednu ze známek se zkoušení ukončí a vybraná známka se automaticky zapíše do tabulky ke konkrétnímu žákovi, třídě, předmětu, datu a tématu zkoušení.
+- Vedle známek bude samostatné tlačítko „Vyhodit žáka od zkoušky“.
+- Tlačítko „Vyhodit žáka od zkoušky“ ukončí právě probíhající zkoušení bez zápisu známky.
+- Při vyhození žáka od zkoušky se do klasifikace nezapíše žádná známka.
+- Učitel může mít možnost přidat stručný důvod ukončení zkoušení pouze pro vlastní historii nebo poznámku.
+- Vyhození žáka od zkoušky nemá automaticky znamenat neúspěšnou známku ani jiný klasifikační postih.
+- Tato možnost slouží pro situace, kdy je potřeba zkoušení z praktického nebo organizačního důvodu předčasně ukončit.
+
+DOPLNĚNÍ – PRŮBĚH ZKOUŠENÍ, NAVIGACE A ČASOMÍRA
+
+- Po vylosování žáka se během probíhajícího zkoušení zobrazí jeho jméno a základní informace o průběhu zkoušky.
+- U každého žáka bude během zkoušení viditelný údaj „Byl už zkoušen v tomto pololetí“.
+- Tento údaj bude zobrazovat počet předchozích zkoušení v aktuálním pololetí, například 0×, 1×, 2× nebo 3×.
+- Počet zkoušení se bude automaticky zapisovat a průběžně aktualizovat.
+- Tento údaj má učiteli rychle ukázat, jak často už byl konkrétní žák v daném pololetí zkoušen, a pomoci udržet zkoušení spravedlivější.
+
+- V aplikaci bude trvale dostupná ikonka domečku pro návrat do hlavního menu.
+- Pokud učitel klikne na domeček během právě probíhajícího zkoušení, aplikace zobrazí potvrzovací okno, aby nedošlo k nechtěnému přerušení zkoušky.
+- Potvrzovací dialog nabídne možnosti bezpečného návratu do menu bez náhodné ztráty rozpracovaných dat.
+- Pokud uživatel pouze přepne na telefonu do jiné aplikace nebo Zkouškomat minimalizuje, probíhající zkoušení se nezruší.
+- Po návratu do aplikace se zobrazí přesně stav, ve kterém učitel skončil.
+- Stav probíhajícího zkoušení musí být průběžně uložen tak, aby se minimalizovalo riziko ztráty dat při přepnutí aplikace, zhasnutí displeje nebo krátkém přerušení práce.
+- Součástí aplikace bude také možnost aplikaci opustit nebo se odhlásit přes příslušné menu.
+
+- Po zahájení zkoušení se spustí časomíra.
+- Délku zkoušení si bude moci učitel nastavit.
+- Nastavení časového limitu může být provedeno před zahájením zkoušení nebo prostřednictvím výchozího nastavení učitele.
+- Na obrazovce bude během zkoušení dobře viditelný zbývající čas.
+- Po vypršení nastaveného času aplikace učitele vizuálně upozorní.
+- Upozornění na konec času má být lehce humorné a má odpovídat celkovému recesistickému stylu Zkouškomatu.
+
+- Vedle časomíry bude animovaná postavička.
+- Na začátku zkoušení bude postavička působit klidně a uvolněně.
+- S ubývajícím časem se bude její výraz a chování postupně měnit.
+- Přibližně v prostřední části časového limitu začne postavička působit mírně nervózně.
+- Ke konci časového limitu bude viditelně ve stresu, například se začne potit nebo nervózně sledovat hodiny.
+- Po vypršení času může postavička přejít do krátké výraznější animace, která upozorní, že čas skončil.
+- Animace má být vtipná a čitelná, ale nesmí být rušivá při samotném zkoušení.
+
+TECHNICKÁ POZNÁMKA PRO BUDOUCÍ IMPLEMENTACI
+
+- Mobilní verze musí správně pracovat s životním cyklem aplikace.
+- Při přepnutí aplikace na pozadí se nesmí ztratit stav právě probíhajícího zkoušení.
+- Stav rozpracovaného zkoušení je vhodné ukládat lokálně nebo do databáze průběžně, ne až při jeho ukončení.
+- Časomíra se po návratu do aplikace musí správně dopočítat podle skutečně uplynulého času, nikoli pouze pokračovat od poslední zobrazené sekundy.
+
+
+DOPLNĚNÍ V5 – PRAVIDLA, TRESTNÉ BODY A OBRAZOVKA PODMÍNEK ZKOUŠENÍ
+
+- Pravidla pro trestné body budou plně editovatelná.
+- Aplikace může obsahovat výchozí doporučenou sadu pravidel, ale tato pravidla nebudou pevná ani povinná.
+- U každého přednastaveného pravidla bude možné kdykoliv změnit název, popis i bodovou hodnotu.
+- Přednastavené pravidlo bude možné vypnout nebo úplně smazat.
+- Učitel může mít seznam pravidel klidně úplně prázdný.
+- Učitel si bude moci vytvořit libovolný počet vlastních pravidel pomocí funkce „Přidat nové pravidlo“.
+- U nového pravidla půjde nastavit minimálně název, stručný popis a bodový dopad.
+- Počet vlastních pravidel nebude uměle omezen.
+- Všechna pravidla budou fungovat stejným principem: učitel je ručně označí u konkrétního žáka a aplikace podle nastavené hodnoty přičte příslušné trestné body.
+- Pravidla nebudou automaticky spouštět zkoušení ani jiné akce; jejich účelem je bodové hodnocení pro losování a přehled.
+- Mezi doporučená výchozí pravidla patří například pozdní příchod, chybějící pomůcky a „často neodevzdává práce v termínu“.
+- Pravidlo „často neodevzdává práce v termínu“ bude stejně jako ostatní pravidla ručně použitelné, bez automatického počítání počtu pozdních odevzdání.
+
+OBRAZOVKA PRO NASTAVENÍ PODMÍNEK PŘED ZKOUŠENÍM
+
+- Před zahájením zkoušení bude učitel moci projít seznam žáků aktuální třídy a u každého nastavit, která pravidla se ho v dané hodině týkají.
+- Základní zobrazení bude tvořit přehledný seznam žáků ve sloupci.
+- Po klepnutí na konkrétního žáka se otevře menší detail/panel s přepínači nebo zaškrtávacími tlačítky pro jednotlivá aktivní pravidla.
+- Učitel tak pouze rychle označí, zda daný žák konkrétní „trestňák“ má nebo nemá.
+- Rozhraní nemá působit jako přeplácaná tabulka s desítkami sloupců; prioritou je rychlé použití na mobilu i počítači.
+- U žáka bude na první pohled vidět, zda má pro danou hodinu nějaké aktivní trestné body.
+- Bude vhodné umožnit rychlý filtr, například zobrazení pouze žáků s aktuálně přiděleným trestňákem.
+- Nastavení pravidel u žáků se uloží do stavu konkrétní hodiny/zkoušení a následně se použije při losování podle zvoleného režimu.
+- Stejná obrazovka může navazovat na zadání přítomnosti žáků, aby učitel před losováním na jednom místě připravil aktuální stav třídy.
+
+
+DOPLNĚNÍ V6 – VÝBĚR KANDIDÁTŮ, ROVNOST BODŮ A ODEBÍRÁNÍ PRAVIDEL
+
+- Na obrazovce podmínek bude rychlý filtr „Pouze žáci s trestnými body“.
+- Filtr nebude navázaný na konkrétní pravidlo ani na obecný stav „má trestňák“, ale přímo na to, zda má žák aktuálně nenulový počet trestných bodů.
+
+VÁŽENÝ LOS A KANDIDÁT KE ZKOUŠENÍ
+
+- Hlavní princip výběru žáka bude založený na váženém losu podle trestných bodů.
+- Vyšší počet trestných bodů zvýší pravděpodobnost, že se žák objeví mezi kandidáty ke zkoušení.
+- Aplikace nebude učiteli nařizovat, koho musí zkoušet.
+- Výsledek losování bude označen jako „Kandidát ke zkoušení“.
+- Učitel má vždy poslední slovo a může navrženého kandidáta přijmout, odmítnout nebo vybrat libovolného jiného přítomného žáka.
+- Na obrazovce bude jasná možnost „Vybrat kandidáty“ a také možnost „Zvolit jiného“.
+- Návrh počítá s tím, že aplikace může nabídnout více kandidátů, například tři, ze kterých si učitel vybere.
+
+ROVNOST TRESTNÝCH BODŮ
+
+- Pokud mají všichni přítomní žáci stejný počet trestných bodů, váha trestných bodů nemůže nikoho zvýhodnit.
+- Stejný princip platí i tehdy, když nemá žádný žák žádné trestné body.
+- V takovém případě se systém automaticky přepne na čistě náhodný výběr mezi všemi oprávněnými přítomnými žáky.
+- Aplikace může zobrazit krátkou informaci ve smyslu: „Všichni mají stejné body – probíhá náhodný výběr.“
+
+ODEBRÁNÍ AKTIVNÍHO PRAVIDLA U ŽÁKA
+
+- Některá pravidla mohou popisovat stav, který se později vyřeší, například „Neodevzdal práci v termínu“.
+- Když učitel pravidlo u žáka zapne, příslušné trestné body se žákovi započítají.
+- Když bude chtít učitel takové pravidlo později vypnout, aplikace zobrazí potvrzovací okno, aby nedošlo k nechtěnému odebrání bodů.
+- Příklad potvrzení: „Opravdu žák práci odevzdal?“
+- Volba ANO: pravidlo se u žáka deaktivuje a body z tohoto pravidla se přestanou počítat do aktuálního součtu.
+- Volba NE: nic se nezmění a pravidlo zůstane aktivní.
+- Vyřešené pravidlo se nemá z historie úplně mazat; má zůstat dohledatelné jako vyřešená událost, aby bylo možné zpětně zjistit, co se stalo.
+- Historie tak rozliší aktuálně aktivní trestné body od dřívějších, již vyřešených událostí.
+
+POZNÁMKA PRO DALŠÍ PRÁCI VE WORKU
+
+- Ve Worku navázat na dosavadní arkádový vizuální styl Zkouškomatu a již vytvořené návrhy obrazovek.
+- Vytvořit konkrétní návrh obrazovky pro přípravu zkoušení: seznam žáků, přítomnost, detail žáka s přepínači pravidel a filtr „Pouze žáci s trestnými body“.
+- Navrhnout obrazovku váženého losování s označením „Kandidát ke zkoušení“, možností nabídnout více kandidátů a tlačítkem „Zvolit jiného“.
+- Doplnit stav pro situaci, kdy mají všichni stejný počet bodů nebo nulu: čistě náhodný los s krátkou vysvětlující hláškou.
+- Navrhnout potvrzovací dialog při vypínání pravidla, například u neodevzdané práce, a odlišit aktivní pravidla od vyřešených záznamů v historii.
+- V dalších technických krocích vyřešit přesný vzorec váženého losu tak, aby vyšší počet bodů zvyšoval pravděpodobnost výběru, ale nevytvářel absolutní jistotu výběru jednoho žáka.
+
+DOPLNĚNÍ V7 – ZÁVAZNÝ VIZUÁLNÍ STYL A OBRAZOVKA TRESTNÝCH BODŮ
+
+ZÁVAZNÝ VIZUÁLNÍ STYL
+
+- Další obrazovky Zkouškomatu musí vizuálně navazovat na již vytvořené referenční návrhy, které uživatel znovu nahrál do chatu.
+- Tento vzhled je nyní závazný referenční styl aplikace; nemá se nahrazovat jiným obecně „arkádovým“ nebo neonovým stylem.
+- Základ tvoří tmavé námořnické až téměř černé pozadí s retro CRT / pixelovou atmosférou.
+- Hlavní rámečky, linky a sekundární ovládací prvky používají výraznou tyrkysovou / cyan barvu.
+- Primární akční tlačítka a důležité zvýraznění používají oranžovou barvu.
+- Text je převážně krémově bílý až světle šedý, s dobře čitelným pixelovým / retro herním fontem.
+- Rozhraní má působit jako promyšlený retro arkádový ovládací panel, nikoli jako moderní mobilní aplikace s náhodně přidanými neonovými prvky.
+- Zachovat hranaté pixelové rámečky, jednoduché ikony, retro herní symboliku a přehledné rozložení.
+- Vzhled nesmí působit dětsky; má být hravý, technický a lehce recesistický.
+- Při navrhování dalších obrazovek se mají jako vizuální reference používat už existující grafiky pro hlavní obrazovku, nastavení třídy, kolo štěstí / losování a herní objekty jako propustka, svačina, čistý štít a zmuchlaný papír.
+
+OBRAZOVKA PRO NASTAVENÍ TRESTNÝCH BODŮ U ŽÁKŮ
+
+- Obrazovka bude vytvořena ve stejném závazném retro arkádovém stylu jako předchozí obrazovky.
+- Hlavní část tvoří vertikální seznam žáků aktuální třídy.
+- U každého žáka bude na první pohled vidět aktuální počet trestných bodů.
+- Počet trestných bodů bude vizuálně zvýrazněn, vhodně v oranžové jako hlavní akční / výstražné barvě.
+- V horní části bude filtr „Pouze žáci s trestnými body“.
+- Filtr po aktivaci skryje žáky s nulovým počtem trestných bodů a ponechá pouze ty, kteří mají body přidělené.
+- Kliknutí na konkrétního žáka otevře menší detailní panel.
+- V detailu budou jednotlivá pravidla zobrazena jako rychlé přepínače / tlačítka.
+- Aktivní pravidlo bude vizuálně jasně odlišeno od neaktivního, přičemž je vhodné držet oranžovou pro aktivní stav a tyrkysovou pro neaktivní / běžný stav.
+- Učitel tak na jednom místě rychle nastaví, která pravidla se konkrétního žáka týkají.
+- Rozhraní nemá používat širokou tabulku s mnoha sloupci; priorita je rychlost, přehlednost a pohodlné použití na mobilu i počítači.
+
+POTVRZOVACÍ DIALOG PŘI ODEBRÁNÍ PRAVIDLA
+
+- Při vypnutí pravidla, které představuje stav později napravený žákem, se zobrazí malé potvrzovací okno ve stejném pixelovém stylu.
+- Příklad: při vypnutí pravidla „Neodevzdal práci v termínu“ se zobrazí otázka „Opravdu žák práci odevzdal?“
+- Dialog nabídne dvě výrazná tlačítka ANO a NE.
+- Volba ANO pravidlo deaktivuje a příslušné body odebere z aktuálního součtu.
+- Volba NE ponechá pravidlo i body beze změny.
+- Událost zůstane uložená v historii jako vyřešená, nikoli smazaná.
+
+NAVAZUJÍCÍ OBRAZOVKA – KANDIDÁT KE ZKOUŠENÍ
+
+- Po dokončení přípravy třídy následuje obrazovka váženého losování.
+- Musí být vytvořena ve stejném závazném pixel / CRT / arcade stylu jako referenční grafiky.
+- Hlavní akce bude „Vybrat kandidáty“.
+- Výsledek bude označen jako „Kandidát ke zkoušení“.
+- Aplikace může nabídnout více kandidátů, například tři.
+- Učitel může navrženého kandidáta přijmout nebo použít volbu „Zvolit jiného“ a vybrat libovolného přítomného žáka.
+- Při shodném počtu trestných bodů u všech žáků nebo při nulových bodech u všech se systém automaticky přepne na čistě náhodný výběr.
+- V takovém případě může zobrazit krátkou hlášku: „Všichni mají stejné body – probíhá náhodný výběr.“
+
+POZNÁMKA PRO WORK / IMPLEMENTACI
+
+- Při pokračování ve Worku nepřegenerovávat vizuální styl od nuly.
+- Nejprve použít jako referenci již vytvořené obrazovky a nahrané obrázky; nové obrazovky musí na ně vizuálně přímo navazovat.
+- Zachovat barevnost, typografii, pixelové rámečky, hustotu prvků a celkovou retro arkádovou atmosféru.
+- Další konkrétní návrh k vytvoření: obrazovka „Nastavení trestných bodů“ a následně obrazovka „Kandidát ke zkoušení“.
+DOPLNĚNÍ V8 – KLASIFIKAČNÍ TABULKA, TISK A EXPORT DO EXCELU
+
+- Do aplikace přidat samostatnou část „Známky / Klasifikace“ v sekci Přehledy.
+- Učitel si nahoře zvolí školní rok, pololetí, třídu a předmět.
+- Aplikace zobrazí klasifikační tabulku pro konkrétní třídu a předmět.
+- Řádky tabulky tvoří jednotliví žáci.
+- Sloupce tvoří jednotlivá uskutečněná zkoušení.
+- V buňkách jsou známky 1–5.
+- U zkoušení ukončeného bez známky se nesmí automaticky zobrazit známka 5; stav musí být veden jako „bez známky“.
+- Po otevření známky má být dohledatelné datum, téma / okruh a případná poznámka.
+- Vedle klasické tabulky bude možné přepnout na jednoduchý seznam záznamů: datum, žák, třída, předmět, známka / stav, téma, poznámka.
+- V horní části budou malé pixelové ikony ve stylu Zkouškomat vizuál:
+  - tiskárnička = vytisknout přehled,
+  - Excel / tabulka = export do Excelu.
+- Tisk respektuje právě nastavené filtry.
+- Tisková verze bude čistá a bez arkádových ovládacích prvků, vhodná pro A4, ideálně na šířku.
+- Tiskový přehled má obsahovat název školy, třídu, předmět, školní rok, pololetí a jméno učitele.
+- Z tiskového dialogu musí být možné dokument uložit také jako PDF.
+- Export do Excelu bude ve formátu .xlsx.
+- Excel export respektuje aktivní filtry a obsahuje minimálně jméno žáka, třídu, školní rok, pololetí, předmět, datum zkoušení, známku / stav bez známky, téma a poznámku.
+- Na mobilu musí být klasifikační přehled responzivní; nelze zmenšit širokou tabulku do nečitelné podoby.
+- V mobilu použít scroll uvnitř tabulky nebo adaptivní kartový / řádkový pohled.
+- Ikony Tisk a Excel musí zůstat dobře dostupné i na malém displeji.
+- Tato funkce je nově považována za povinnou součást Zkouškomatu, ne za pozdější volitelný export.
+
+DOPLNĚNÍ V9 – VÝBĚR EXISTUJÍCÍ ŠKOLY A SPRÁVA UČITELŮ
+
+- Po přihlášení má nový uživatel dvě možnosti: vybrat existující školu nebo založit novou.
+- Výběr existující školy obsahuje hledací pole.
+- Hledání probíhá podle názvu školy, města a adresy.
+- Výsledky jsou scrollovatelné a stejnojmenné školy se rozlišují městem a adresou.
+- Po výběru školy uživatel odešle žádost o připojení.
+- V produkční verzi žádost schvaluje administrátor školy.
+- Pokud škola není nalezena, lze založit novou školu.
+- Při založení nové školy se zadá název, město, adresa a školní rok.
+- První zakladatel nové školy je její první administrátor.
+- Ve Správě školy má admin seznam učitelů s vyhledáváním podle jména nebo e-mailu.
+- Admin může učitele přidat / pozvat, schválit čekajícího uživatele a odebrat učitele ze školy.
+- Odebrání učitele vyžaduje potvrzení a nesmí smazat jeho historické záznamy zkoušení.
+- Běžný učitel nemá přístup k administrátorským akcím správy členství.
+
+DOPLNĚNÍ V10 – HLAVNÍ MENU: ZNÁMKOVÁNÍ + MOJE PŘEDMĚTY
+
+- Do hlavního menu přidat samostatné tlačítko „Známkování“.
+- Známkování: volba školního roku, pololetí, třídy a konkrétního předmětu.
+- Zobrazit klasifikační tabulku a seznam známek.
+- Dostupné ikony Tisk / PDF a Export do Excelu.
+- Tisk a export vždy respektují aktivní filtry.
+- Do hlavního menu přidat samostatné tlačítko „Moje předměty“.
+- V Moje předměty učitel spravuje seznam předmětů používaných při zkoušení.
+- Předmět lze přidat, přejmenovat, přiřadit ke třídám nebo odebrat z aktuální nabídky.
+- Po rozkliknutí předmětu lze přidávat, měnit a odebírat jednotlivá témata / otázky ke zkoušení.
+- Tato témata se používají v Kole štěstí během zkoušení.
+- Historické známky nesmí zmizet při odebrání předmětu z aktuální nabídky.
+- Doporučené pořadí hlavního menu: Zahájit zkoušení, Známkování, Moje předměty, Kolo štěstí, Moje třídy, Scoring / Přehledy.
+
+DOPLNĚNÍ – VLASTNÍ TÉMA PŘI ZKOUŠENÍ
+
+- Každý předmět má vlastní seznam témat, který učitel spravuje v sekci „Moje předměty“.
+- Témata lze přidávat, upravovat, přejmenovat a odebírat.
+- Při zkoušení má učitel dvě možnosti:
+  1. vybrat existující téma daného předmětu,
+  2. zadat vlastní jednorázové téma.
+- Jednorázové vlastní téma se vždy uloží k aktuálnímu zkoušení, takže se objeví v historii, známkování, tisku i Excel exportu.
+- Vlastní téma se standardně nepřidává do trvalého seznamu témat předmětu.
+- U pole pro vlastní téma bude volba „Uložit také do témat předmětu“.
+- Pokud ji učitel zapne, téma se uloží k aktuálnímu zkoušení a současně se přidá mezi trvalá témata aktuálního předmětu.
+- Takto uložené téma bude dostupné i při dalších zkoušeních a v Kole štěstí / Kole otázek.
+- Historie zkoušení musí zachovat původní znění tématu i v případě, že se trvalé téma později přejmenuje nebo smaže.
+
+DOPLNĚNÍ – VÝBĚR EXISTUJÍCÍCH ŽÁKŮ
+
+- Při přidávání žáka do třídy lze vybírat z existujících žáků školy nebo založit nového.
+- Celý řádek existujícího žáka je klikací, ne jen malý checkbox.
+- Lze označit více žáků najednou.
+- Označení je výrazně viditelné a obsahuje fajfku / aktivní stav.
+- Zobrazuje se počet právě vybraných žáků.
+- Přidat vyhledávací pole nad seznam existujících žáků.
+- Vyhledávání funguje podle jména i příjmení a průběžně filtruje seznam.
+- Má fungovat i pro část jména, bez ohledu na velikost písmen a pokud možno bez citlivosti na českou diakritiku.
+- Výběr již označených žáků se při filtrování neztrácí.
+- Seznam je scrollovatelný a celé ovládání musí být spolehlivé na mobilním dotyku.
+
+DOPLNĚNÍ – FILTR TŘÍDY VE SCORINGU
+
+- V části „Scoring / Přehledy → Žáci – moje třídy“ přidat filtr konkrétní třídy.
+- Výchozí volba je „Všechny moje třídy“.
+- V seznamu tříd zobrazovat název i školní rok, např. „2.A — 2026/2027“.
+- Po výběru třídy se zobrazí a přepočítá žebříček pouze pro žáky této třídy.
+- Pořadí se čísluje znovu podle filtrovaného seznamu.
+- Filtr musí automaticky zahrnout i nově založené třídy.
+- U žáka zobrazit jméno, třídu / školní rok, nasbírané body, aktuální body a počet zkoušení.
+- Při volbě „Všechny moje třídy“ zobrazit žáky ze všech učitelových tříd.
+- Stejnojmenné třídy z různých školních roků musí být jednoznačně rozlišené.
+- Filtr i tabulka musí být plně responzivní na mobilu.
+
+DOPLNĚNÍ – MOJE PŘEDMĚTY ↔ ZKOUŠENÍ
+
+- Každý předmět vytvořený v „Moje předměty“ musí být dostupný při zahájení zkoušení.
+- Nesmí nastat stav, kdy je předmět vidět v „Moje předměty“, ale v nabídce zkoušení chybí.
+- Při výběru předmětu ve zkoušení zobrazit nejdříve předměty přiřazené dané třídě a potom ostatní učitelovy předměty.
+- Pokud učitel vybere předmět, který ještě není přiřazen této třídě, aplikace ho při prvním použití ke třídě automaticky přiřadí.
+- Při vytvoření předmětu lze nadále rovnou zvolit třídy, ke kterým patří.
+- I nepřiřazený předmět však zůstává dostupný v katalogu učitele a ve výběru zkoušení.
+- Po automatickém přiřazení musí být předmět dostupný také ve Známkování dané třídy.
+- Starší uložená data s chybějící vazbou předmět–třída musí aplikace bezpečně zvládnout.
+
+DOPLNĚNÍ – PŘEDMĚT → TÉMATA
+
+- Ruší se uživatelský koncept „sada otázek“.
+- Uživatel nevytváří žádné sady otázek.
+- Každý předmět má přímo vlastní seznam témat ke zkoušení.
+- Témata se spravují přes „Moje předměty → konkrétní předmět“.
+- Téma lze přidat, upravit, přejmenovat nebo odebrat.
+- Při zkoušení se po výběru žáka zobrazí přímo jednotlivá uložená témata aktuálního předmětu.
+- Učitel může klepnout přímo na konkrétní téma.
+- Alternativně může zadat vlastní jednorázové téma.
+- U vlastního tématu zůstává možnost „Uložit také do témat předmětu“.
+- Kolo štěstí používá stejný seznam témat daného předmětu.
+- Pokud předmět nemá žádná témata, aplikace pouze oznámí, že zatím nejsou vytvořena, a odkáže na „Moje předměty“. Vlastní téma lze použít vždy.
+- V části Moje třídy se záložka „Otázky“ mění na „Témata“ a pouze odkazuje na témata jednotlivých přiřazených předmětů.
+- V UI se již nepoužívají pojmy „sada otázek“, „nová sada“ ani „upravit sadu“.
+
+DOPLNĚNÍ – STÁLÁ IKONA PRO ODCHOD / ODHLÁŠENÍ
+
+- Vedle ozubeného kola Nastavení je v horní liště vždy viditelná pixelová ikona účtu / odchodu.
+- Po kliknutí se otevře nabídka „Účet a škola“.
+- Nabídka obsahuje „Odejít ze školy“ a „Odhlásit se“.
+- „Odejít ze školy“ ponechá účet přihlášený a vrátí uživatele na výběr školy.
+- „Odhlásit se“ pouze odhlásí účet; členství ve škole zůstává zachované.
+- Obě akce mají potvrzovací dialog.
+- Během aktivního zkoušení nelze školu opustit.
+- Historická data školy se odchodem nemažou.
+- Data různých škol musí být oddělená a nesmějí se při změně školy promíchat.
+- Stejné akce mohou zůstat také v Nastavení jako záložní cesta.
+
+DOPLNĚNÍ – ZPĚT + ANIMOVANÉ KOLO TÉMAT
+
+- V horní liště je na všech obrazovkách mimo hlavní menu stálé tlačítko „← ZPĚT“.
+- Návrat je vždy o jeden logický krok, ne automaticky vždy domů.
+- Detail třídy se vrací do Moje třídy, detail předmětu do Moje předměty.
+- Jednoúrovňové sekce se vrací do hlavního menu.
+- Při přípravě zkoušení funguje návrat po krocích:
+  výběr třídy/předmětu ← přítomnost ← pravidla ← kandidáti ← téma.
+- Z výběru tématu se tedy lze vrátit až zpět k zadávání přítomnosti a nepřítomnosti.
+- Během skutečně probíhajícího zkoušení se návrat chová bezpečně a nezruší časovač bez varování.
+
+- Ve fázi výběru tématu je nově viditelná animovaná pixelová grafika Kola štěstí.
+- Kolo se v klidu pomalu otáčí.
+- Po stisku „Roztočit kolo štěstí“ se výrazně roztočí a následně vybere jedno z uložených témat aktuálního předmětu.
+- Lze použít vylosované téma nebo roztočit znovu.
+- Přímý výběr tématu i vlastní téma zůstávají zachované.
+- Pokud předmět nemá uložená témata, kolo se nezobrazuje.
+
+DOPLNĚNÍ – HERNÍ SCORING UČITELŮ
+
+- Scoring učitelů se rozšíří o herní systém.
+- NEPOUŽÍVAJÍ se žádné ZZ-Coiny ani jiná virtuální měna.
+- Učitelé získávají přímo odznaky, trofeje a pixelové sběratelské předměty.
+- Každý učitel má „Kabinet trofejí“, kde se zobrazují získané i dosud nezískané odměny.
+- Trofeje zůstávají učiteli i po skončení sezóny.
+- Scoring funguje v pololetních sezónách.
+- Každá sezóna má vlastní pořadí, pravidla, výzvy a datum začátku / konce.
+- Po skončení sezóny se pořadí archivuje a nová sezóna začíná znovu.
+- Admin školy nastavuje herní pravidla a školní výzvy.
+- Admin může určit podmínky výzev, bodové hodnoty, odměny, viditelnost a období platnosti.
+- Výzvy mohou být například za počet dokončených zkoušení, více různých tříd, používání různých témat nebo Kola štěstí.
+- Achievementy mohou být viditelné i skryté.
+- Scoring nesmí fungovat jako skutečné hodnocení pracovního výkonu.
+- V aplikaci bude upozornění: „Scoring je herní prvek Zkouškomatu. Neslouží k hodnocení pracovního výkonu učitelů.“
+- Vizuálně budou použity pixelové trofeje, odznaky, arkádové kartičky, podium a kabinet trofejí.
+
+
+IMPLEMENTOVÁNO V PROTOTYPU – HERNÍ SCORING
+- sezóny, žebříček, školní výzvy, bonusové body, achievementy, Kabinet trofejí a archiv sezón,
+- administrátor může herní scoring zapnout/vypnout a spravovat pravidla výzev,
+- bez ZZ-Coinů nebo jiné virtuální měny,
+- trofeje zůstávají po skončení sezóny.
+
+OPRAVA – SCORING UČITELŮ
+
+- V záložce „Scoring → Učitelé“ musí být vždy viditelné původní podium TOP 3 a tabulka scoringu.
+- Gamifikace je pouze doplněk a nesmí základní scoring nahradit.
+- Tabulka nově ukazuje původní skóre ZZ-01, bonus za výzvy a celkové skóre.
+- Zachovávají se údaje o zkoušení, propustkách, počtu žáků, skříňkách a jejich výskytech.
+- Podium a tabulka zůstávají na obrazovce i při přepnutí na „Moje výzvy“, „Kabinet trofejí“ nebo „Archiv sezón“.
+- Přepínání mění pouze spodní herní část obrazovky.
+
+DOPLNĚNÍ – HLAVNÍ PANEL
+
+- Spodní žákovský souhrn KPI se ruší.
+- Místo něj je stručný TOP 3 scoring učitelů a aktuální pozice přihlášeného učitele.
+- Druhá karta ukazuje žáka s nejvyšším počtem nasbíraných trestných bodů v celé škole.
+- U žáka je jméno, třída, školní rok, nasbírané body a aktuální body.
+- V UI se používá neutrální označení „Nejvíce trestných bodů ve škole“.
+- Na mobilu se obě karty skládají pod sebe.
+
+DOPLNĚNÍ – VLASTNÍ SKŘÍŇKY
+
+- Učitel má v Nastavení novou část „Moje skříňky“.
+- Základní předdefinované skříňky zůstávají pevně v katalogu a mají vlastní pixelové obrázky.
+- Předdefinované skříňky lze odebrat z aktivního losování a zase vrátit, ale nelze je přejmenovat ani trvale smazat.
+- Základní položky jsou „Mínus jeden bod“, „Prázdná skříňka“ a „Propustka“.
+- Učitel může vytvářet vlastní skříňky.
+- U vlastní skříňky zadává název a počet bodů, které přidá nebo ubere.
+- Záporné číslo body ubírá, kladné přidává, nula znamená bez bodové změny.
+- Aktuální trestné body nikdy neklesnou pod nulu.
+- Vlastní skříňka nemá obrázek; z otevřené šatní skříně vypadne pouze text s názvem vytvořeným učitelem a informace o bodovém efektu.
+- Vlastní skříňky lze upravit, vypnout, znovu zapnout nebo smazat.
+- Losuje se pouze z aktivních skříněk učitele.
+- Bodový efekt skříňky mění aktuální trestné body, ne historické nasbírané body.
+- Výsledek skříňky se ukládá do historie zkoušení.
+
+DOPLNĚNÍ – ROLE ŠÉFOVÁ
+
+- Admin může určit jednoho běžného učitele jako „Šéfovou“.
+- Šéfová může ručně přidělovat nebo ubírat herní body učitelům za události mimo zkoušení.
+- Admin nastavuje maximální rozsah na jednu událost; výchozí limit je ±5.
+- Šéfová vybírá učitele, zadává počet bodů a povinný vlastní důvod.
+- Šéfová nemůže bodovat sama sebe.
+- Ve scoringu je nový sloupec „Šéfová“.
+- Celkové skóre = Skóre ZZ-01 + bonusy za výzvy + body od Šéfové.
+- Body se započítávají pouze do aktuální sezóny.
+- Každý zásah má historii; chybný zásah se nemaže, ale stornuje opačným záznamem.
+- Role je v UI označena pixelovým štítkem „ŠÉFOVÁ“.
+- Tyto body jsou pouze herní a nemají vliv na známky ani body žáků.
+
+OPRAVA – SPRÁVA UČITELŮ A PRÁV
+
+- V Nastavení má admin výraznou část „Administrace školy“.
+- Přímé volby: Učitelé a práva, Profil školy, Herní scoring.
+- Správa školy je rozdělena do záložek.
+- Učitelé jsou vedeni jako účty navázané na e-mail, ne pouze jako jména.
+- Admin může pozvat, schválit a odebrat účet učitele.
+- U každého učitele admin nastavuje individuální oprávnění: třídy, žáci, předměty/témata, školní scoring, herní scoring a správa učitelů.
+- Přidělování práv zůstává pouze adminovi.
+- Role Šéfová je výrazně nahoře v „Učitelé a práva“ jako samostatný výběr.
+- Šéfovou určuje pouze admin.
+- Role Šéfová je nezávislá na ostatních právech.
+- Oprávnění jsou při provádění správcovských akcí kontrolována.
+
+DOPLNĚNÍ – NÁPOVĚDA A ACHIEVEMENTY
+
+- Hlavní menu má novou kartu „Nápověda“.
+- Nápověda vysvětluje celý průběh používání Zkouškomatu a samostatně role Učitel, Šéfová a Admin.
+- Obsahuje také zkoušení, body, ochranný interval, propustky, skříňky, známkování, scoring, práva a uchování historie.
+- Ve Scoring → Učitelé je nové tlačítko „Všechny achievementy“.
+- Veřejné achievementy jsou seskupené podle vzácnosti: Běžné, Neobvyklé, Vzácné, Epické a systém je připraven pro Legendární.
+- U achievementu je podmínka, odměna a stav získání.
+- Tajné achievementy se v katalogu vůbec nezobrazují.
+- Tajný achievement se v Kabinetu neukazuje, dokud není získán.
+- Tajné školní výzvy se učiteli před splněním nezobrazují.
+
+DROBNÁ ÚPRAVA:
+- Tlačítko „Všechny achievementy“ se nově jmenuje „Vše co mohu získat“.
+- Funkce tlačítka se nemění.
+
+DOPLNĚNÍ – AVATARY UČITELŮ
+
+- Každý učitel si v Nastavení → Můj profil spravuje svůj vlastní avatar.
+- K dispozici jsou předdefinované pixelové postavičky ve stylu Zkouškomatu.
+- Učitel může nahrát i vlastní fotografii / obrázek.
+- Nahraný obrázek se automaticky ořízne na čtverec a zmenší.
+- Admin avatar jinému učiteli nenastavuje.
+- Avatar se zobrazuje v horní liště, na hlavním panelu, podiu, scoringu a ve správě učitelů.
+- Změna avataru se synchronizuje s profilem stejného učitelského účtu ve škole.
+
+DOPLNĚNÍ – LOADING
+
+- Úvodní loading Zkouškomatu trvá minimálně 4 sekundy.
+- Loading zároveň čeká na skutečné připravení dat.
+- Pravidlo: doba loadingu = max(4 s, skutečná doba načtení dat).
+- V offline prototypu jsou data z localStorage obvykle připravena okamžitě, takže loading běží zhruba 4 s.
+- Budoucí online verze má stejným mechanismem čekat na účet, školu, práva, třídy, žáky, předměty, historii, scoring a synchronizaci.
+- Progress animace je upravena na pomalejší čtyřsekundový cyklus.
+
+DOPLNĚNÍ – VÍCESTUPŇOVÉ TROFEJE
+
+- Systém trofejí se mění z jednotlivých achievementů na 20 základních veřejných trofejních řad.
+- Každá trofej má 4 stupně: Bronz, Stříbro, Zlato, Diamant.
+- Vzácnost a stupeň jsou dvě různé věci.
+- Vzácnosti zůstávají: Běžná, Neobvyklá, Vzácná, Epická, Legendární.
+- Jedna trofej se v Kabinetu neduplikuje; při postupu se pouze povýší její stupeň a vzhled.
+- U každého stupně se ukládá datum získání.
+- Celkem 20 × 4 = 80 veřejných dosažitelných milníků.
+- Tajné trofeje nejsou součástí veřejných 20 a před získáním se nikde nezobrazují.
+- „Vše co mohu získat“ ukazuje 20 veřejných trofejí, jejich čtyři stupně a progres.
+- Kabinet trofejí má fungovat jako pixelová vitrína s jednou pozicí pro každou veřejnou trofej.
+- Současné achievementy se mají migrovat na odpovídající trofeje bez ztráty již získaných odměn.
+- Nové schéma ukládá highestTier a timestamp každého dosaženého stupně.
+- Zatím nepřidávat editor vlastních trofejí, virtuální měnu ani obchod.
+
+AKTUALIZACE – NÁPOVĚDA
+
+- Nápověda byla kompletně srovnána se současným stavem aplikace.
+- Nově popisuje vážený los, body žáků, propustky, vlastní skříňky, témata, časovač, známkování a historii.
+- Podrobně vysvětluje scoring učitelů, výzvy, trofeje, body Šéfové a tajné odměny.
+- Obsahuje samostatný popis rolí Učitel, Šéfová a Admin.
+- Vysvětluje účty učitelů, individuální práva, pozvánky a odebrání účtu.
+- Doplněny avatary, Čistý štít, uchování dat, loading a offline režim.
+- Nápověda má vždy popisovat jen reálně implementované funkce; vícestupňové trofeje se do ní plně doplní až po nasazení do aplikace.
+
+IMPLEMENTOVÁNO – TROFEJNÍ STROM v22
+
+- 20 veřejných trofejí je už skutečně v HTML aplikaci.
+- Každá má Bronz, Stříbro, Zlato a Diamant.
+- Celkem 80 veřejných milníků.
+- „Vše co mohu získat“ zobrazuje strom trofejí s podmínkami a progressem.
+- Kabinet je rozdělen do vitrín podle vzácnosti.
+- Trofej se při postupu neduplikuje, ale povyšuje.
+- Tajné trofeje před získáním nejsou vidět.
+- Nápověda byla doplněna o celý nový systém.
+
+DOPLNĚNÍ – SBOROVNA v23
+
+- Hlavní menu má novou položku „Sborovna“.
+- Sborovna je jednoduchý chat schválených učitelů aktuální školy.
+- Podporuje text, emoji, jméno/avatar autora, čas a historii zpráv.
+- Hlavní menu umí zobrazit počet nepřečtených zpráv.
+- Každý učitel může upozornění na nové zprávy zapnout/vypnout.
+- Offline prototyp ukládá chat pouze lokálně v prohlížeči.
+- Skutečný chat mezi zařízeními a mobilní push při zavřené aplikaci vyžaduje backend, databázi, realtime přenos, PWA/Service Worker a push službu.
+- Nápověda byla rozšířena o Sborovnu a vysvětlení notifikací.

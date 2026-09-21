@@ -1,0 +1,211 @@
+ZKOUŠKOMAT ZZ-01
+VIZUÁLNÍ REFERENCE PRO WORK
+Průběžně aktualizovaný společný soubor
+
+ÚČEL SOUBORU
+Tento soubor je jediný společný přehled schválených vizuálních referencí aplikace Zkouškomat ZZ-01.
+Work má při další práci používat zde uvedené obrázky jako závazné vizuální reference a nemá vytvářet nový výtvarný styl.
+
+PRAVIDLO PRO DALŠÍ PRÁCI
+Při každém novém schváleném obrázku:
+1. obrázek dostane jednoznačný a popisný název,
+2. uloží se mezi podklady projektu Zkouškomat ZZ-01,
+3. do tohoto jediného souboru se doplní nový záznam,
+4. nevytváří se nový doprovodný textový soubor pro každý obrázek,
+5. starší záznam se upraví pouze tehdy, když nový obrázek nahrazuje starší verzi.
+
+--------------------------------------------------
+ZÁVAZNÝ VIZUÁLNÍ STYL – „ZKOUŠKOMAT VIZUÁL“
+--------------------------------------------------
+
+- retro arkádový / pixel-art styl
+- tmavě modré až téměř černé pozadí
+- tyrkysové / cyan rámečky, linky a sekundární prvky
+- oranžová jako výrazná akcentní barva
+- světlý krémový / bílý text
+- pixelová typografie
+- jednoduché, dobře čitelné 8bit/16bit ilustrace
+- lehký CRT / scanline dojem
+- hranaté pixelové rámečky
+- vysoký kontrast
+- čitelnost a praktičnost mají přednost před dekorací
+- nepoužívat moderní flat/cartoon styl
+- nepoužívat generický neonový vzhled, který se odchyluje od stávajících obrazovek
+- horní část aplikace má používat pouze název „ZKOUŠKOMAT“
+- nepoužívat slogan „Učení má větší smysl“ v hlavičce obrazovek
+
+--------------------------------------------------
+AKTUÁLNÍ SCHVÁLENÉ VIZUÁLNÍ REFERENCE
+--------------------------------------------------
+
+1. VÝBĚR TÉMATU A KOLO ŠTĚSTÍ
+Doporučený název:
+Zkouskomat_ZZ01_vizual_VYBER_TEMATU_KOLO_STESTI.png
+
+Původní pracovní název v knihovně:
+Výběr tématu a Kolo štěstí.png
+
+Použití:
+Obrazovka výběru tématu před zkoušením.
+
+Důležité prvky:
+- kontext vybraného žáka, třídy a předmětu
+- seznam uložených témat
+- sekce Kolo štěstí
+- možnost roztočit kolo
+- zobrazení náhodně vybraného tématu
+- pole pro vlastní téma
+- jednotný mobilní pixel-art styl Zkouškomatu
+
+
+2. APP IKONA – UČITEL S UKAZOVÁTKEM
+Hlavní referenční název:
+Zkouskomat_APP_ICON_MASTER_1024.png
+
+Použití:
+Oficiální ikona aplikace a zdroj pro další platformní velikosti.
+
+Motiv:
+- zjednodušený učitel z boku
+- ukazovátko
+- školní tabule
+- výrazný oranžový otazník
+- tmavé pozadí
+- cyan / tyrkysový pixelový rámeček
+
+Existující exporty:
+- Zkouskomat_APP_ICON_MASTER_1024.png
+- Zkouskomat_APP_ICON_GooglePlay_512.png
+- Zkouskomat_APP_ICON_Android_192.png
+- Zkouskomat_APP_ICON_PWA_192.png
+- Zkouskomat_APP_ICON_PWA_512.png
+- Zkouskomat_APP_ICON_PWA_MASKABLE_512.png
+- Zkouskomat_APP_ICON_AppleTouch_180.png
+- Zkouskomat_APP_ICON_iOS_AppStore_1024.png
+- Zkouskomat_APP_ICON_favicon.ico
+- Zkouskomat_APP_ICON_manifest.webmanifest
+
+Důležité:
+Work nemá navrhovat novou ikonu, pokud uživatel výslovně nepožádá o změnu.
+
+
+3. PRŮBĚH ZKOUŠENÍ
+Doporučený název:
+Zkouskomat_ZZ01_vizual_ZKOUSENI_prubeh.png
+
+Použití:
+Aktivní obrazovka během ústního zkoušení.
+
+Důležité prvky:
+- hlavička pouze „ZKOUŠKOMAT“
+- tlačítko Zpět
+- informace o žákovi
+- třída
+- předmět
+- téma
+- pixelová postava žáka
+- výrazný časovač
+- tlačítko POZASTAVIT
+- tlačítko POKRAČOVAT
+- z této obrazovky se přechází na udělení známky
+
+Výslovně NEPOUŽÍVAT:
+- pole pro průběžnou poznámku učitele
+- tlačítko „Ukončit bez známky“
+- slogan „Učení má větší smysl“
+
+Logika:
+Po ukončení zkoušení se otevře obrazovka Známkování.
+
+
+4. ZNÁMKOVÁNÍ
+Doporučený název:
+Zkouskomat_ZZ01_vizual_ZNAMKOVANI_vyber.png
+
+Použití:
+Obrazovka bezprostředně po ukončení zkoušení.
+
+Důležité prvky:
+- hlavička pouze „ZKOUŠKOMAT“
+- informace o žákovi, třídě, předmětu a tématu
+- velká tlačítka známek 1, 2, 3, 4, 5
+- samostatné výrazné tlačítko „VYHODIT ŽÁKA OD ZKOUŠKY“
+- volitelné pole „POZNÁMKA PRO UČITELE“
+
+Zásadní logika:
+- kliknutí na známku 1–5 okamžitě uloží výsledek
+- kliknutí na „Vyhodit žáka od zkoušky“ okamžitě uloží výsledek bez známky
+- NEPOUŽÍVAT další tlačítko „Uložit výsledek“
+- po uložení se otevře potvrzovací obrazovka
+
+
+5. VÝSLEDEK ULOŽEN
+Doporučený název:
+Zkouskomat_ZZ01_vizual_VYSLEDEK_ulozen.png
+
+Použití:
+Potvrzovací obrazovka po uložení výsledku zkoušení.
+
+Důležité prvky:
+- výrazný stav „VÝSLEDEK ULOŽEN!“
+- potvrzovací pixelová ilustrace / fajfka
+- žák
+- třída
+- předmět
+- téma
+- uložená známka, pokud byla udělena
+- datum / čas
+- tlačítko „DALŠÍ ZKOUŠENÍ“
+- tlačítko „ZPĚT DO HLAVNÍHO MENU“
+- hlavička pouze „ZKOUŠKOMAT“
+
+
+6. SPOLEČNÁ REFERENCE TOKU ZKOUŠENÍ
+Doporučený název:
+Zkouskomat_ZZ01_vizual_TRIPTYCH_zkouseni.png
+
+Použití:
+Přehled celého toku:
+1. Průběh zkoušení
+2. Známkování
+3. Výsledek uložen
+
+Tato společná reference slouží hlavně k zachování:
+- stejného rozložení
+- stejné velikosti prvků
+- stejného barevného systému
+- stejné navigace
+- stejné typografie
+- stejného vizuálního rytmu mezi obrazovkami
+
+--------------------------------------------------
+INSTRUKCE PRO WORK
+--------------------------------------------------
+
+Při převodu těchto referencí do skutečné aplikace:
+
+- NEVKLÁDAT celé screenshoty jako pozadí aplikace.
+- Obrazovky vytvořit jako skutečné interaktivní HTML/CSS/JS rozhraní.
+- Obrázky používat jako vizuální předlohu.
+- Samostatné ilustrace, ikony, avatary, trofeje a další grafické assety lze používat jako obrazové soubory.
+- Zachovat funkční logiku aplikace.
+- Nevymýšlet nové prvky, které nejsou v zadání nebo schválených funkcích.
+- Pokud je nový návrh v rozporu se starším obrázkem, platí nejnovější schválená reference a tento textový soubor.
+- Při pochybnosti dát přednost jednoduchosti, čitelnosti a již schválenému stylu.
+
+--------------------------------------------------
+PROCEDURA AKTUALIZACE TOHOTO SOUBORU
+--------------------------------------------------
+
+Tento soubor je živý dokument.
+Při každém dalším schváleném vizuálu se do něj přidá nový očíslovaný záznam:
+- název souboru,
+- účel obrazovky / assetu,
+- hlavní vizuální prvky,
+- funkční význam,
+- prvky, které se nesmí měnit nebo přidávat.
+
+Nevytvářet paralelní vizuální zadání bez důvodu.
+Tento soubor je hlavní společný index vizuálních referencí pro Work.
+
+KONEC AKTUÁLNÍ VERZE
