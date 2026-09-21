@@ -83,3 +83,10 @@
 - Checkboxy pravidel, filtr, tlačítko „Upravit pravidla“, informační panel a hlavní oranžové tlačítko byly proporčně sjednoceny s předlohou.
 - Seznam zůstává scrollovací i pro početnou třídu; každý žák si zachovává vlastní nezávislý stav pravidel.
 - Funkce váženého losu, filtru a systémového potvrzení pravidla zůstaly beze změny.
+
+## 2026-09-21 — Visual fidelity H5
+- Krok 4/6 „Kandidáti ke zkoušení“ přestavěn podle schválené reference Výběr kandidáta ke zkoušení.
+- Vybraný kandidát má zlatý panel s krémovým okrajem; ostatní kandidáti mají cyan pixelové panely.
+- Karty byly proporčně zpřesněny: pixelová postava, označení kandidáta, jméno, výrazné body a velké oranžové tlačítko Vybrat / Vybrán.
+- Informační řádek, opakování losu, hlavní potvrzení a ruční volba jiného žáka byly sjednoceny s referenčním mockupem.
+- Počet předchozích zkoušení se na kartách vizuálně nezobrazuje, ale data zůstávají zachována. Vážený los a ochranný interval se nemění.
