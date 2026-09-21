@@ -76,3 +76,10 @@
 - Nepřítomní žáci mají utlumený šedý vzhled a oranžový stav; přítomní cyan/zelené zvýraznění.
 - Souhrn Přítomní / Chybí, informační panel a pokračovací tlačítko byly sjednoceny s referenční obrazovkou.
 - Seznam zůstává scrollovací pro početné třídy a funkční logika přítomnosti se nemění.
+
+## 2026-09-21 — Visual fidelity H4
+- Krok 3/6 „Pravidla a trestné body“ přestavěn podle obou schválených referencí z knihovny.
+- Přidán výrazný pixelový rám scrollovacího seznamu, větší řádky žáků, cyan postavy, oranžové body a přesnější rozbalení pravidel.
+- Checkboxy pravidel, filtr, tlačítko „Upravit pravidla“, informační panel a hlavní oranžové tlačítko byly proporčně sjednoceny s předlohou.
+- Seznam zůstává scrollovací i pro početnou třídu; každý žák si zachovává vlastní nezávislý stav pravidel.
+- Funkce váženého losu, filtru a systémového potvrzení pravidla zůstaly beze změny.
