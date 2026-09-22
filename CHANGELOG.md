@@ -119,3 +119,10 @@
 - Podmínky se zobrazují pouze u jednoho vybraného žáka. Detail má vlastní souhrn bodů a tlačítko „Hotovo“ pro rychlé sbalení.
 - Přidán přehled počtu přítomných žáků a počtu žáků s trestnými body.
 - Body se nadále počítají automaticky ze zaškrtnutých podmínek; filtr, systémová pravidla a vážený los zůstávají funkčně beze změny.
+
+## 2026-09-22 — H7.1 Animovaný žák při zkoušení
+- Statický obrázek žáka byl nahrazen živou pixelovou postavičkou napojenou přímo na zbývající čas.
+- Nad 55 % času je žák klidný; mezi 20–55 % času je nervózní; pod 20 % času se výrazněji třese a potí.
+- Stav se mění automaticky během běžícího časovače bez obnovení obrazovky.
+- Při pozastavení zkoušení se animace zastaví a po pokračování naváže podle aktuálního zbývajícího času.
+

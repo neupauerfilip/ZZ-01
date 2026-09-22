@@ -2597,6 +2597,63 @@ body{
   margin:auto auto 4px;
   image-rendering:pixelated;
 }
+/* H7.1 – živý pixelový žák: klid → nervozita → pot */
+.h7-student-actor{
+  width:min(230px,72vw);
+  height:228px;
+  margin:auto auto 6px;
+  position:relative;
+  image-rendering:pixelated;
+  filter:drop-shadow(6px 6px 0 #02111c);
+  transform-origin:center bottom;
+}
+.h7-student-head{
+  position:absolute;left:72px;top:14px;width:82px;height:82px;
+  background:#f6d3a5;border:6px solid #102532;box-shadow:inset 0 -10px 0 rgba(0,0,0,.06);
+}
+.h7-student-head::before,
+.h7-student-head::after{
+  content:"";position:absolute;top:32px;width:10px;height:10px;background:#102532;
+}
+.h7-student-head::before{left:18px;box-shadow:30px 0 0 #102532}
+.h7-student-head::after{left:24px;top:52px;width:24px;height:6px;background:#8b4f32}
+.h7-student-hair{
+  position:absolute;left:66px;top:2px;width:94px;height:34px;background:#7c4d2d;
+  box-shadow:0 10px 0 #7c4d2d,0 0 0 6px #102532;
+}
+.h7-student-body{
+  position:absolute;left:57px;top:95px;width:112px;height:76px;
+  background:#22dfe7;border:6px solid #103643;box-shadow:inset 0 -10px 0 rgba(0,0,0,.12);
+}
+.h7-student-arm{
+  position:absolute;top:106px;width:26px;height:70px;background:#22dfe7;border:6px solid #103643;
+}
+.h7-student-arm.left{left:31px;transform:rotate(8deg)}
+.h7-student-arm.right{right:31px;transform:rotate(-8deg)}
+.h7-student-leg{
+  position:absolute;top:171px;width:28px;height:52px;background:#d7dde0;border:6px solid #102532;
+}
+.h7-student-leg.left{left:69px}
+.h7-student-leg.right{right:69px}
+.h7-student-shoe{position:absolute;top:210px;width:40px;height:18px;background:#102532}
+.h7-student-shoe.left{left:58px}
+.h7-student-shoe.right{right:58px}
+.h7-student-mouth{position:absolute;left:102px;top:70px;width:22px;height:6px;background:#8b4f32}
+.h7-student-sweat{
+  position:absolute;right:46px;top:64px;width:10px;height:18px;background:#79f6ff;border:3px solid #0a5f7f;
+  opacity:0;transform:translateY(0);
+}
+.h7-student-sweat.drop-2{right:31px;top:86px;height:14px}
+.h7-student-actor.calm .h7-student-mouth{height:5px;top:69px}
+.h7-student-actor.nervous{animation:wobble .45s steps(2) infinite}
+.h7-student-actor.nervous .h7-student-mouth{height:8px;top:69px;clip-path:polygon(0 100%,15% 55%,32% 85%,48% 35%,65% 80%,82% 45%,100% 100%,100% 100%,0 100%)}
+.h7-student-actor.nervous .h7-student-head::before{box-shadow:30px 2px 0 #102532}
+.h7-student-actor.stressed{animation:wobble .18s steps(2) infinite}
+.h7-student-actor.stressed .h7-student-mouth{height:10px;top:67px;clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}
+.h7-student-actor.stressed .h7-student-sweat{opacity:1;animation:h7Sweat 1s steps(3,end) infinite}
+.h7-student-actor.stressed .h7-student-sweat.drop-2{animation-delay:.25s}
+.h7-student-actor.is-paused{animation:none!important;filter:drop-shadow(6px 6px 0 #02111c) saturate(.88)}
+@keyframes h7Sweat{0%{transform:translateY(0)}100%{transform:translateY(14px)}}
 .fidelity-h7 .exam-encourage{
   min-height:58px;
   display:grid;
@@ -5357,6 +5414,13 @@ body{
       if(quote){
         quote.textContent=paused?'„Zkoušení je pozastavené.“':rem<=0?'„Čas vypršel – pokračujte podle potřeby.“':ratio<.2?'„Už jen kousek.“':ratio<.55?'„Klid, to dáš!“':'„Jdeme na to!“';
       }
+      const avatar=document.getElementById('exam-student-avatar');
+      if(avatar){
+        const avatarMood=paused?'calm':rem<=0||ratio<.2?'stressed':ratio<.55?'nervous':'calm';
+        avatar.classList.remove('calm','nervous','stressed');
+        avatar.classList.add(avatarMood);
+        avatar.classList.toggle('is-paused',paused);
+      }
       if(rem<=0 && !paused && !state.activeExam.notified){
         state.activeExam.notified=true; saveState();
         toast('Čas zkoušení vypršel.','warn');
@@ -5388,6 +5452,7 @@ body{
     const over=rem<=0;
     const paused=e.paused===true;
     const mood=paused?'Zkoušení je pozastavené.':over?'Čas vypršel – pokračujte podle potřeby.':ratio<.2?'Už jen kousek.':ratio<.55?'Klid, to dáš!':'Jdeme na to!';
+    const avatarMood=paused?'calm':over||ratio<.2?'stressed':ratio<.55?'nervous':'calm';
     const classLabel=cls?`${esc(cls.displayName)} · ${esc(cls.schoolYear)}`:'Třída';
     const body=`
       <section class="exam-live-screen fidelity-h7">
@@ -5405,7 +5470,20 @@ body{
 
         <div class="exam-live-main">
           <section class="exam-student-panel">
-            <img class="h7-student-art" src="assets/ui/h7-exam-student.png" alt="" aria-hidden="true">
+            <div id="exam-student-avatar" class="h7-student-actor ${avatarMood} ${paused?'is-paused':''}" aria-hidden="true">
+              <span class="h7-student-hair"></span>
+              <span class="h7-student-head"></span>
+              <span class="h7-student-body"></span>
+              <span class="h7-student-arm left"></span>
+              <span class="h7-student-arm right"></span>
+              <span class="h7-student-leg left"></span>
+              <span class="h7-student-leg right"></span>
+              <span class="h7-student-shoe left"></span>
+              <span class="h7-student-shoe right"></span>
+              <span class="h7-student-mouth"></span>
+              <span class="h7-student-sweat drop-1"></span>
+              <span class="h7-student-sweat drop-2"></span>
+            </div>
             <div id="exam-encourage" class="exam-encourage">„${esc(mood)}“</div>
           </section>
 
