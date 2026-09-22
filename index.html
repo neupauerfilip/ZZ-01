@@ -3156,6 +3156,90 @@ body{
 @media(max-width:760px){.pack-a-hero,.pack-a-detail-head{grid-template-columns:1fr;align-items:stretch}.pack-a-detail-head .pack-a-back{order:-1}.pack-a-subject-grid{grid-template-columns:1fr}.pack-a-detail-grid{grid-template-columns:1fr}.pack-a-grade-filter{grid-template-columns:repeat(2,minmax(0,1fr))}.pack-a-score-tabs{grid-template-columns:1fr}.scoring-fidelity .game-toolbar{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:520px){.pack-a-kpis,.pack-a-kpis.two,.pack-a-kpis.three{grid-template-columns:1fr 1fr}.pack-a-kpis>div:last-child:nth-child(odd){grid-column:1/-1}.pack-a-subject-card{grid-template-columns:48px minmax(0,1fr);min-height:130px}.pack-a-subject-open{grid-column:1/-1;border-left:0;border-top:2px dashed #177a91;min-height:42px;flex-direction:row}.pack-a-grade-filter{grid-template-columns:1fr}.pack-a-grade-actions{display:grid}.pack-a-view-toggle,.pack-a-export-actions{display:grid;grid-template-columns:1fr 1fr}.pack-a-topic-row{grid-template-columns:42px minmax(0,1fr)}.pack-a-topic-actions{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr}.scoring-fidelity .game-toolbar{grid-template-columns:1fr}.pack-a-hero h1,.pack-a-detail-head h1{font-size:clamp(1.8rem,10vw,2.8rem)}}
 
+
+
+/* ================================================================
+   VISUAL PACK B — H12 Sborovna + H13 Nastavení
+   ================================================================ */
+.staffroom-screen,.settings-screen{width:min(1040px,100%);margin:0 auto;padding:2px 0 18px}
+.staffroom-hero,.settings-hero{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center;
+  margin:2px 0 15px;padding:18px 20px;border:4px solid #20ebef;
+  background:linear-gradient(180deg,#0b3346,#061d2b);box-shadow:inset 0 0 0 3px #07121f,6px 6px 0 #02070d;
+  clip-path:polygon(12px 0,calc(100% - 12px) 0,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,0 calc(100% - 12px),0 12px)
+}
+.staffroom-kicker,.settings-kicker{font-family:var(--pixel);font-size:.68rem;letter-spacing:.08em;color:#20f0f2;text-transform:uppercase;margin-bottom:5px}
+.staffroom-title,.settings-title{margin:0;color:#fff7e2;font-family:var(--pixel);font-size:clamp(2rem,6vw,3.65rem);line-height:1;text-transform:uppercase;text-shadow:4px 4px 0 #ff542f,7px 7px 0 #06121d}
+.staffroom-subtitle,.settings-subtitle{margin:9px 0 0;color:#b9d8dc;font-weight:700;line-height:1.45}
+.staffroom-hero-badge,.settings-hero-badge{
+  min-width:150px;min-height:74px;display:grid;place-items:center;text-align:center;padding:10px 14px;
+  border:4px solid #ff9d18;background:#3b260d;color:#fff4dc;font-family:var(--pixel);font-size:.75rem;line-height:1.45;
+  box-shadow:inset 0 0 0 3px #6e4308,5px 5px 0 #02070d
+}
+.staffroom-stats,.settings-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.staffroom-stat,.settings-stat{
+  min-height:82px;padding:12px 14px;border:3px solid #0c8ea3;background:#061a26;box-shadow:4px 4px 0 #02070d;
+  display:flex;flex-direction:column;justify-content:center;gap:3px
+}
+.staffroom-stat span,.settings-stat span{color:#8fb8bf;font-family:var(--pixel);font-size:.6rem;text-transform:uppercase}
+.staffroom-stat strong,.settings-stat strong{color:#fff5dc;font-family:var(--pixel);font-size:clamp(1rem,3vw,1.35rem);overflow-wrap:anywhere}
+.staffroom-stat.accent,.settings-stat.accent{border-color:#ff9412}.staffroom-stat.accent strong,.settings-stat.accent strong{color:#ffb51b}
+.staffroom-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:14px;align-items:start}
+.staffroom-chat-shell,.staffroom-side-panel,.settings-card{
+  border:4px solid #17dfe8;background:linear-gradient(180deg,#082638,#051722);box-shadow:inset 0 0 0 3px #074e63,6px 6px 0 #02070d;
+  clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px),0 10px)
+}
+.staffroom-chat-shell{padding:14px;min-height:590px;display:flex;flex-direction:column}
+.staffroom-chat-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:2px 2px 12px;border-bottom:2px dashed #146275}
+.staffroom-chat-head h2,.staffroom-side-panel h2,.settings-card h2{margin:0;color:#fff4dc;font-family:var(--pixel);font-size:clamp(.92rem,2.8vw,1.15rem)}
+.staffroom-chat-head p{margin:5px 0 0;color:#8eb3b9;font-size:.76rem}
+.staffroom-status-chip{display:inline-flex;align-items:center;gap:8px;min-height:38px;padding:7px 10px;border:2px solid #1dbbc8;background:#071b26;color:#aee4e6;font-family:var(--pixel);font-size:.62rem;white-space:nowrap}
+.staffroom-chat-shell .chat-messages{margin-top:12px;min-height:330px;max-height:54vh;border:3px solid #0a7188;background:#03111b;padding:12px;gap:12px;scrollbar-color:#24e8ec #082333}
+.staffroom-chat-shell .chat-bubble{border:3px solid #16849a;background:#082434;padding:10px 12px;box-shadow:4px 4px 0 #02070d;clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px)}
+.staffroom-chat-shell .chat-message.mine .chat-bubble{border-color:#ff9a14;background:#39240d}
+.staffroom-chat-shell .chat-meta{font-family:var(--pixel);font-size:.57rem;color:#79c8ce}.staffroom-chat-shell .chat-message.mine .chat-meta{color:#ffc16a}
+.staffroom-chat-shell .chat-text{font-weight:700;color:#fff4dc;font-size:.9rem}
+.staffroom-chat-shell .chat-compose{margin-top:14px;border-top:3px solid #0d6f84;padding-top:12px}
+.staffroom-compose-label{display:block;color:#20e9ed;font-family:var(--pixel);font-size:.65rem;margin-bottom:7px;text-transform:uppercase}
+.staffroom-chat-shell textarea{min-height:90px;border:3px solid #11859c;background:#03131e;color:#fff4dc;font-weight:700}
+.staffroom-chat-shell .emoji-row{display:grid;grid-template-columns:repeat(12,minmax(34px,1fr));gap:5px;margin:8px 0 10px}
+.staffroom-chat-shell .emoji-btn{min-width:0;width:100%;height:40px;border:2px solid #146a7c;background:#082331;box-shadow:2px 2px 0 #02070d}
+.staffroom-send-row{display:grid;grid-template-columns:minmax(190px,.45fr) minmax(0,1fr);gap:10px;align-items:center}
+.staffroom-send{min-height:58px!important;border-width:4px!important;font-family:var(--pixel);font-size:.8rem!important}
+.staffroom-send-hint{color:#779ba2;font-size:.68rem;line-height:1.4}
+.staffroom-side-panel{padding:14px;display:grid;gap:13px}
+.staffroom-side-section{padding-bottom:13px;border-bottom:2px dashed #155a6b}.staffroom-side-section:last-child{padding-bottom:0;border-bottom:0}
+.staffroom-notify-row{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:center;color:#fff4dc;font-weight:800;margin-top:9px}
+.staffroom-notify-row input{width:28px;height:28px;min-height:28px;accent-color:#ff9d18}
+.staffroom-notification-state{margin-top:8px;padding:9px;border:2px solid #155e70;background:#04131d;color:#8db0b7;font-size:.68rem;line-height:1.45}
+.staffroom-offline-note{padding:10px;border:2px solid #8a5e19;background:#281c0b;color:#f2d5a4;font-size:.68rem;line-height:1.5}
+.staffroom-rules{display:grid;gap:7px;margin-top:9px}.staffroom-rule{padding:9px 10px;border:2px solid #145e70;background:#061821}.staffroom-rule strong{display:block;color:#1fe1e6;font-size:.78rem;margin-bottom:3px}.staffroom-rule span{color:#8eb1b8;font-size:.68rem;line-height:1.4}
+
+.settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.settings-card{padding:16px;min-width:0}.settings-card.wide{grid-column:1/-1}
+.settings-card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-bottom:10px;margin-bottom:12px;border-bottom:2px dashed #176175}
+.settings-card-icon{width:46px;height:46px;display:grid;place-items:center;border:3px solid #1ce3e8;background:#092637;color:#1ce3e8;font-family:var(--pixel);font-size:1rem;box-shadow:3px 3px 0 #02070d}
+.settings-profile-layout{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:center}
+.settings-profile-copy strong{display:block;color:#fff4dc;font-family:var(--pixel);font-size:.9rem}.settings-profile-copy p{margin:6px 0 0;color:#8fb1b8;font-size:.7rem;line-height:1.45}
+.settings-screen .avatar-picker{grid-template-columns:repeat(6,minmax(66px,1fr));gap:7px;margin-top:14px}.settings-screen .avatar-preset{min-height:92px;padding:6px;border:2px solid #126c80}.settings-screen .avatar-preset.active{border-color:#ff9b15;background:#39240d}
+.settings-upload{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}.settings-upload input{flex:1 1 250px}
+.settings-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.settings-fields label{color:#9fc1c6;font-weight:800}.settings-fields input{border:2px solid #126b7f;background:#04131d}
+.settings-options{display:grid;gap:8px}.settings-option{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:center;min-height:52px;padding:9px 10px;border:2px solid #125d6f;background:#061823;color:#fff4dc;font-weight:800}.settings-option input{width:25px;height:25px;min-height:25px;accent-color:#ff9c17}.settings-option small{display:block;margin-top:3px;color:#81a6ad;font-weight:400;font-size:.65rem;line-height:1.35}
+.settings-tool-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.settings-tool-grid .btn{min-height:58px;font-family:var(--pixel);font-size:.7rem}
+.settings-admin-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.settings-admin-grid .btn{min-height:58px;font-size:.66rem}
+.settings-danger-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.settings-danger-grid .btn{min-height:55px}
+.settings-save-bar{margin-top:14px;padding:12px;border:4px solid #ff9b13;background:#2d1d0a;box-shadow:5px 5px 0 #02070d}.settings-save-bar .btn{width:100%;min-height:70px;border:4px solid #fff2d4;background:#ff8c0b;color:#130b02;font-family:var(--pixel);font-size:.9rem;box-shadow:inset 0 0 0 3px #c95200}
+.settings-note{margin-top:8px;color:#739da5;font-size:.67rem;line-height:1.45}
+
+@media(max-width:900px){.staffroom-layout{grid-template-columns:1fr}.staffroom-side-panel{grid-template-columns:repeat(2,minmax(0,1fr))}.staffroom-side-section{border-bottom:0;padding-bottom:0}.settings-screen .avatar-picker{grid-template-columns:repeat(3,minmax(75px,1fr))}}
+@media(max-width:680px){
+  .staffroom-hero,.settings-hero{grid-template-columns:1fr;padding:14px}.staffroom-hero-badge,.settings-hero-badge{justify-self:start;min-height:55px}
+  .staffroom-stats,.settings-stats{grid-template-columns:1fr 1fr}.staffroom-stat:last-child,.settings-stat:last-child{grid-column:1/-1}
+  .staffroom-side-panel{grid-template-columns:1fr}.staffroom-send-row{grid-template-columns:1fr}.staffroom-chat-shell .emoji-row{grid-template-columns:repeat(6,1fr)}
+  .settings-grid{grid-template-columns:1fr}.settings-card.wide{grid-column:auto}.settings-fields{grid-template-columns:1fr}.settings-admin-grid{grid-template-columns:1fr}.settings-profile-layout{grid-template-columns:1fr;text-align:center}.settings-profile-layout .teacher-avatar-wrap{margin:auto}.settings-danger-grid{grid-template-columns:1fr}
+}
+@media(max-width:430px){.staffroom-stats,.settings-stats{grid-template-columns:1fr}.staffroom-stat:last-child,.settings-stat:last-child{grid-column:auto}.settings-screen .avatar-picker{grid-template-columns:repeat(2,minmax(75px,1fr))}.settings-tool-grid{grid-template-columns:1fr}}
+
 </style>
   <title>Zkouškomat ZZ-01</title>
 </head>
@@ -4635,74 +4719,85 @@ body{
     const teachers=(state.school.teachers||[]).filter(t=>t.active!==false && t.approved!==false);
     const messages=room.messages.slice().sort((a,b)=>Number(a.at||0)-Number(b.at||0));
     const emoji=['😀','👍','😂','❤️','🎉','☕','👏','🤔','😅','🙌','✅','📚'];
+    const notifyOn=staffroomNotificationEnabled();
 
-    const content=`<div class="section-title">
-      <div><div class="tiny muted">${teachers.length} členů školy</div><h1 class="pixel-title">Sborovna</h1></div>
-      <span class="badge">CHAT UČITELŮ</span>
-    </div>
+    const content=`<section class="staffroom-screen fidelity-h12">
+      <div class="staffroom-hero">
+        <div>
+          <div class="staffroom-kicker">Školní místnost učitelů</div>
+          <h1 class="staffroom-title">Sborovna</h1>
+          <p class="staffroom-subtitle">Rychlé zprávy mezi učiteli bez zbytečných funkcí navíc.</p>
+        </div>
+        <div class="staffroom-hero-badge">CHAT<br>${esc(state.school?.name||'ŠKOLY')}</div>
+      </div>
 
-    <div class="staffroom-wrap">
-      <section class="pixel-frame card chat-panel">
-        <div class="chat-head">
-          <div>
-            <strong>Společná sborovna</strong>
-            <div class="tiny muted">Jednoduchý školní chat mezi učiteli.</div>
+      <div class="staffroom-stats">
+        <div class="staffroom-stat"><span>Učitelé</span><strong>${teachers.length}</strong></div>
+        <div class="staffroom-stat"><span>Zprávy v historii</span><strong>${messages.length}</strong></div>
+        <div class="staffroom-stat accent"><span>Upozornění</span><strong>${notifyOn?'Zapnuta':'Vypnuta'}</strong></div>
+      </div>
+
+      <div class="staffroom-layout">
+        <section class="staffroom-chat-shell">
+          <div class="staffroom-chat-head">
+            <div><h2>Společná sborovna</h2><p>Jedna školní místnost pro schválené učitele.</p></div>
+            <div class="staffroom-status-chip"><span class="status-dot ${state.online?'':'offline'}"></span>${state.online?'ONLINE':'OFFLINE'}</div>
           </div>
-          <div class="chat-status"><span class="status-dot ${state.online?'':'offline'}"></span><span class="tiny muted">${state.online?'online':'offline režim'}</span></div>
-        </div>
 
-        <div class="chat-messages" id="staffroom-messages">
-          ${messages.length?messages.map(m=>{
-            const t=staffroomTeacher(m.senderId);
-            const mine=m.senderId===state.user.id;
-            return `<div class="chat-message ${mine?'mine':''}">
-              ${avatarMarkup(m.senderAvatar||t?.avatar||'px:cyan','sm')}
-              <div class="chat-bubble">
-                <div class="chat-meta"><strong>${esc(m.senderName||t?.nickname||t?.name||'Učitel')}</strong><span>${esc(staffroomTime(m.at))}</span></div>
-                <div class="chat-text">${esc(m.text||'')}</div>
-              </div>
-            </div>`;
-          }).join(''):'<div class="chat-empty"><strong>Ve Sborovně je zatím ticho.</strong><br><span class="tiny">Napiš první zprávu.</span></div>'}
-        </div>
+          <div class="chat-messages" id="staffroom-messages">
+            ${messages.length?messages.map(m=>{
+              const t=staffroomTeacher(m.senderId);
+              const mine=m.senderId===state.user.id;
+              return `<div class="chat-message ${mine?'mine':''}">
+                ${avatarMarkup(m.senderAvatar||t?.avatar||'px:cyan','sm')}
+                <div class="chat-bubble">
+                  <div class="chat-meta"><strong>${esc(m.senderName||t?.nickname||t?.name||'Učitel')}</strong><span>${esc(staffroomTime(m.at))}</span></div>
+                  <div class="chat-text">${esc(m.text||'')}</div>
+                </div>
+              </div>`;
+            }).join(''):'<div class="chat-empty"><strong>Ve Sborovně je zatím ticho.</strong><br><span class="tiny">Napiš první zprávu.</span></div>'}
+          </div>
 
-        <div class="chat-compose">
-          <label>Zpráva
+          <div class="chat-compose">
+            <span class="staffroom-compose-label">Nová zpráva</span>
             <textarea id="staffroom-input" maxlength="1000" placeholder="Napiš zprávu do sborovny…"></textarea>
-          </label>
-          <div class="emoji-row">
-            ${emoji.map(x=>`<button class="emoji-btn" type="button" data-action="staffroom-emoji" data-emoji="${x}" title="Vložit ${x}">${x}</button>`).join('')}
+            <div class="emoji-row">
+              ${emoji.map(x=>`<button class="emoji-btn" type="button" data-action="staffroom-emoji" data-emoji="${x}" title="Vložit ${x}">${x}</button>`).join('')}
+            </div>
+            <div class="staffroom-send-row">
+              <button class="btn primary staffroom-send" data-action="staffroom-send">Odeslat zprávu</button>
+              <span class="staffroom-send-hint">Enter = odeslat · Shift+Enter = nový řádek</span>
+            </div>
           </div>
-          <div class="row">
-            <button class="btn primary" data-action="staffroom-send">Odeslat</button>
-            <span class="tiny muted">Enter = odeslat · Shift+Enter = nový řádek</span>
+        </section>
+
+        <aside class="staffroom-side-panel">
+          <div class="staffroom-side-section">
+            <h2>Upozornění</h2>
+            <label class="staffroom-notify-row">
+              <input id="staffroom-notify-toggle" type="checkbox" ${notifyOn?'checked':''}>
+              <span>Mobilní upozornění na nové zprávy</span>
+            </label>
+            <div class="staffroom-notification-state">${esc(staffroomNotificationStatusText())}</div>
           </div>
-        </div>
-      </section>
 
-      <aside class="pixel-frame card staffroom-side">
-        <h2>Upozornění</h2>
-        <label class="check-row">
-          <input id="staffroom-notify-toggle" type="checkbox" ${staffroomNotificationEnabled()?'checked':''}>
-          Mobilní upozornění na nové zprávy
-        </label>
-        <div class="notification-state tiny muted">${esc(staffroomNotificationStatusText())}</div>
+          <div class="staffroom-side-section">
+            <h2>Offline verze</h2>
+            <div class="staffroom-offline-note">V této testovací verzi se zprávy ukládají pouze v tomto prohlížeči. Společný chat mezi zařízeními a push při zavřené aplikaci bude vyžadovat online server/PWA.</div>
+          </div>
 
-        <div class="game-note" style="margin-top:12px">
-          V této offline testovací verzi se zprávy ukládají pouze v tomto prohlížeči.
-          Skutečný společný chat mezi různými telefony/počítači a push notifikace při zavřené aplikaci
-          budou vyžadovat online server, databázi a PWA/Service Worker.
-        </div>
-
-        <hr class="pixel">
-        <h3>Jednoduchá pravidla</h3>
-        <div class="list">
-          <div class="list-item"><div><strong>Text + emoji</strong><div class="tiny muted">Bez příloh, vláken a dalších složitostí.</div></div></div>
-          <div class="list-item"><div><strong>Jedna školní místnost</strong><div class="tiny muted">Chat je společný pro schválené učitele aktuální školy.</div></div></div>
-          <div class="list-item"><div><strong>Historie</strong><div class="tiny muted">Zprávy zůstávají v historii Sborovny.</div></div></div>
-          <div class="list-item"><div><strong>Soukromí</strong><div class="tiny muted">Do chatu nepatří citlivé osobní nebo zdravotní údaje žáků.</div></div></div>
-        </div>
-      </aside>
-    </div>`;
+          <div class="staffroom-side-section">
+            <h2>Pravidla místnosti</h2>
+            <div class="staffroom-rules">
+              <div class="staffroom-rule"><strong>Text + emoji</strong><span>Bez příloh, vláken a dalších složitostí.</span></div>
+              <div class="staffroom-rule"><strong>Jedna školní místnost</strong><span>Společná pro schválené učitele aktuální školy.</span></div>
+              <div class="staffroom-rule"><strong>Historie</strong><span>Zprávy zůstávají v historii Sborovny.</span></div>
+              <div class="staffroom-rule"><strong>Soukromí</strong><span>Do chatu nepatří citlivé osobní ani zdravotní údaje žáků.</span></div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>`;
 
     app.innerHTML=layout(content,'Sborovna');
     const scroller=document.getElementById('staffroom-messages');
@@ -6519,31 +6614,85 @@ body{
   }
 
   function renderSettings(){
-    const content=`<div class="section-title"><h1 class="pixel-title">Nastavení</h1></div>
-      <section class="pixel-frame card stack"><h2>Můj profil</h2>
-      <div class="avatar-profile-panel">
-        ${avatarMarkup(state.user.avatar,'xl')}
+    const notifyOn=staffroomNotificationEnabled();
+    const content=`<section class="settings-screen fidelity-h13">
+      <div class="settings-hero">
         <div>
-          <strong>${esc(state.user.nickname||state.user.name)}</strong>
-          <div class="tiny muted" style="margin-top:4px">Avatar je osobní nastavení učitele. Admin ho ostatním učitelům nemění.</div>
-          <div class="tiny muted" style="margin-top:4px">Vyber pixelovou postavičku nebo nahraj vlastní obrázek.</div>
+          <div class="settings-kicker">Osobní a pracovní nastavení</div>
+          <h1 class="settings-title">Nastavení</h1>
+          <p class="settings-subtitle">Profil učitele, průběh zkoušení, pravidla a účet na jednom místě.</p>
         </div>
+        <div class="settings-hero-badge">ZZ-01<br>NASTAVENÍ</div>
       </div>
-      <div class="avatar-picker">
-        ${avatarPresets.map(p=>`<button class="avatar-preset ${state.user.avatar===p.id?'active':''}" data-action="avatar-preset" data-avatar="${p.id}">${avatarMarkup(p.id,'md')}<span>${esc(p.label)}</span></button>`).join('')}
+
+      <div class="settings-stats">
+        <div class="settings-stat"><span>Délka zkoušení</span><strong>${Number(state.settings.timerMinutes)||0} min</strong></div>
+        <div class="settings-stat"><span>Ochranný interval</span><strong>${Number(state.settings.protectionHours)||0} h</strong></div>
+        <div class="settings-stat accent"><span>Skříňka</span><strong>${state.settings.lockersEnabled?`${Number(state.settings.lockerProbability)||0} %`:'Vypnuta'}</strong></div>
       </div>
-      <div class="avatar-upload-row">
-        <input id="profile-avatar-upload" type="file" accept="image/*">
-        ${String(state.user.avatar||'').startsWith('data:image/')?'<button class="btn secondary" data-action="avatar-reset">Vrátit pixelový avatar</button>':''}
+
+      <div class="settings-grid">
+        <section class="settings-card wide">
+          <div class="settings-card-head"><h2>Můj profil</h2><span class="settings-card-icon">JA</span></div>
+          <div class="settings-profile-layout">
+            ${avatarMarkup(state.user.avatar,'xl')}
+            <div class="settings-profile-copy">
+              <strong>${esc(state.user.nickname||state.user.name)}</strong>
+              <p>Avatar je osobní nastavení učitele. Vyber pixelovou postavičku nebo nahraj vlastní obrázek.</p>
+            </div>
+          </div>
+          <div class="avatar-picker">
+            ${avatarPresets.map(p=>`<button class="avatar-preset ${state.user.avatar===p.id?'active':''}" data-action="avatar-preset" data-avatar="${p.id}">${avatarMarkup(p.id,'md')}<span>${esc(p.label)}</span></button>`).join('')}
+          </div>
+          <div class="settings-upload">
+            <input id="profile-avatar-upload" type="file" accept="image/*">
+            ${String(state.user.avatar||'').startsWith('data:image/')?'<button class="btn secondary" data-action="avatar-reset">Vrátit pixelový avatar</button>':''}
+          </div>
+          <div class="settings-fields"><label>Jméno<input id="profile-name" value="${esc(state.user.name)}"></label><label>Přezdívka<input id="profile-nick" value="${esc(state.user.nickname)}"></label></div>
+          <div class="settings-note">Vlastní obrázek se automaticky ořízne na čtverec a zmenší, aby zbytečně nezabíral místo.</div>
+        </section>
+
+        <section class="settings-card">
+          <div class="settings-card-head"><h2>Zkoušení</h2><span class="settings-card-icon">T</span></div>
+          <div class="settings-fields">
+            <label>Délka zkoušení (min)<input id="timer-min" type="number" min="1" max="60" value="${state.settings.timerMinutes}"></label>
+            <label>Ochranný interval (hod)<input id="protect-hours" type="number" min="0" max="168" value="${state.settings.protectionHours}"></label>
+            <label>Pravděpodobnost skříňky (%)<input id="locker-prob" type="number" min="0" max="100" value="${state.settings.lockerProbability}"></label>
+          </div>
+          <div class="settings-options" style="margin-top:12px">
+            <label class="settings-option"><input id="locker-enabled" type="checkbox" ${state.settings.lockersEnabled?'checked':''}><span>Používat školní skříňky<small>Bonusová událost před zkoušením.</small></span></label>
+            <label class="settings-option"><input id="notify-enabled" type="checkbox" ${state.settings.notifications?'checked':''}><span>Upozornit při vypršení času<small>Lokální upozornění během běžící aplikace.</small></span></label>
+            <label class="settings-option"><input id="staffroom-notify-settings" type="checkbox" ${notifyOn?'checked':''}><span>Upozornění ze Sborovny<small>Plný push při zavřené aplikaci bude vyžadovat online/PWA verzi.</small></span></label>
+          </div>
+        </section>
+
+        <section class="settings-card">
+          <div class="settings-card-head"><h2>Pravidla a nástroje</h2><span class="settings-card-icon">+</span></div>
+          <div class="settings-tool-grid">
+            <button class="btn secondary" data-action="manage-rules">Moje pravidla</button>
+            <button class="btn secondary" data-action="manage-lockers">Moje skříňky</button>
+            ${isBossUser()?'<button class="btn primary" data-action="boss-points-manager">Body učitelů</button>':''}
+          </div>
+          <div class="settings-note">Tady upravíš přednastavená pravidla, jejich body i obsah bonusových skříněk.</div>
+        </section>
+
+        ${state.user.role==='admin'?`<section class="settings-card wide">
+          <div class="settings-card-head"><h2>Administrace školy</h2><span class="settings-card-icon">A</span></div>
+          <div class="settings-admin-grid">
+            <button class="btn primary" data-action="admin-section" data-section="teachers">Učitelé a práva</button>
+            <button class="btn secondary" data-action="admin-section" data-section="school">Profil školy</button>
+            <button class="btn secondary" data-action="admin-section" data-section="scoring">Herní scoring</button>
+          </div>
+        </section>`:''}
+
+        <section class="settings-card wide">
+          <div class="settings-card-head"><h2>Účet a škola</h2><span class="settings-card-icon">!</span></div>
+          <div class="settings-danger-grid"><button class="btn danger" data-action="leave-school">Odejít ze školy</button><button class="btn danger" data-action="logout">Odhlásit se</button></div>
+        </section>
       </div>
-      <div class="tiny muted">Vlastní obrázek se automaticky ořízne na čtverec a zmenší, aby zbytečně nezabíral místo.</div>
-      <div class="form-grid" style="margin-top:12px"><label>Jméno<input id="profile-name" value="${esc(state.user.name)}"></label><label>Přezdívka<input id="profile-nick" value="${esc(state.user.nickname)}"></label></div>
-      <hr class="pixel"><h2>Nastavení zkoušení</h2><div class="form-grid"><label>Délka zkoušení (min)<input id="timer-min" type="number" min="1" max="60" value="${state.settings.timerMinutes}"></label><label>Ochranný interval (hod)<input id="protect-hours" type="number" min="0" max="168" value="${state.settings.protectionHours}"></label><label>Pravděpodobnost skříňky (%)<input id="locker-prob" type="number" min="0" max="100" value="${state.settings.lockerProbability}"></label><label class="check-row"><input id="locker-enabled" type="checkbox" ${state.settings.lockersEnabled?'checked':''}> Používat školní skříňky</label><label class="check-row"><input id="notify-enabled" type="checkbox" ${state.settings.notifications?'checked':''}> Upozornit při vypršení času</label>
-<label class="check-row"><input id="staffroom-notify-settings" type="checkbox" ${staffroomNotificationEnabled()?'checked':''}> Upozornění na nové zprávy ve Sborovně</label></div>
-<div class="tiny muted" style="margin-top:8px">Skutečný push do mobilu při zavřené aplikaci bude dostupný v online/PWA verzi se serverem.</div>
-      <hr class="pixel"><div class="row"><button class="btn secondary" data-action="manage-rules">Moje pravidla</button><button class="btn secondary" data-action="manage-lockers">Moje skříňky</button>${isBossUser()?'<button class="btn primary" data-action="boss-points-manager">Body učitelů</button>':''}</div>
-      ${state.user.role==='admin'?`<hr class="pixel"><h2>Administrace školy</h2><p class="tiny muted">Účty učitelů, jejich práva, role Šéfová a školní pravidla.</p><div class="row"><button class="btn primary" data-action="admin-section" data-section="teachers">Učitelé a práva</button><button class="btn secondary" data-action="admin-section" data-section="school">Profil školy</button><button class="btn secondary" data-action="admin-section" data-section="scoring">Herní scoring</button></div>`:''}
-      <hr class="pixel"><div class="row"><button class="btn danger" data-action="leave-school">Odejít ze školy</button><button class="btn danger" data-action="logout">Odhlásit se</button></div><div class="sticky-actions"><button class="btn primary" data-action="save-settings">Uložit nastavení</button></div></section>`;
+
+      <div class="settings-save-bar"><button class="btn primary" data-action="save-settings">Uložit všechna nastavení</button></div>
+    </section>`;
     app.innerHTML=layout(content,'Nastavení');
     const avatarUpload=document.getElementById('profile-avatar-upload');
     if(avatarUpload){

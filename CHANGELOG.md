@@ -142,3 +142,10 @@
 - Scoring má nové tři velké režimy Žáci – moje třídy / Žáci – celá škola / Učitelé a sjednocené tabulky a panely.
 - Dlouhé klasifikační a scoringové tabulky zůstávají na mobilu scrollovací uvnitř vlastního rámu.
 - Původní datová logika, filtry, exporty, gamifikace, témata a všechny akce zůstávají zachovány.
+
+## 2026-09-22 — Visual Pack B — H12/H13 + závěrečný audit
+- Sborovna byla převedena do stejného pixelového vizuálu jako hlavní části aplikace: velký chat, výrazné vlastní/cizí zprávy, stav online/offline, rychlé emoji a oddělený panel upozornění a pravidel místnosti.
+- Nastavení bylo rozděleno do přehledných bloků Profil / Zkoušení / Pravidla a nástroje / Administrace / Účet a škola.
+- Zachovány byly všechny původní identifikátory formulářů a akce, takže ukládání nastavení, avatary, pravidla, skříňky, notifikace i administrace fungují beze změny.
+- Mobilní rozložení Sborovny i Nastavení bylo přepracováno tak, aby se panely skládaly pod sebe a ovládací prvky zůstaly dostatečně velké.
+- V rámci závěrečného auditu byly zkontrolovány akce hlavních obrazovek, routy a syntaxe JavaScriptu.
