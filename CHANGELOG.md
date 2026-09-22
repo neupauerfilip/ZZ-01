@@ -245,3 +245,8 @@
 - přepracována samostatná stránka Kolo štěstí do přehlednějšího panelového rozložení
 - sjednoceny akční tlačítka pro losování témat, vlastní téma i potvrzovací akce
 
+## 2026-09-22 — H1.16 Kolo štěstí: stejné kolo jako ve zkoušení
+- samostatná obrazovka Kolo štěstí nově používá stejné grafické kolo jako krok Výběr tématu při zkoušení
+- samostatné losování tématu zobrazuje stejné ikonky témat, ukazatel a animaci otáčení
+- tlačítko Roztočit kolo bylo nahrazeno stejným stylem akčního tlačítka jako ve zkoušení
+

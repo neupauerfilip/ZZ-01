@@ -3990,6 +3990,16 @@ body::after{
 }
 </style>
 
+
+<style>
+/* H1.16 — standalone Kolo štěstí používá stejné kolo a tlačítko jako ve zkoušení */
+.wheel-shell-fidelity .wheel-stage{padding:4px 0 6px;}
+.standalone-topic-wheel-wrap{width:min(350px,92%);margin:6px auto 12px;}
+.wheel-shell-fidelity .topic-wheel{box-shadow:0 0 0 4px #06131c,7px 7px 0 var(--shadow) !important;}
+.wheel-shell-fidelity .topic-spin{display:block;width:min(360px,94%);margin:0 auto;min-height:54px;}
+.wheel-shell-fidelity .wheel-result-box{margin-top:10px;}
+</style>
+
 </head>
 <body>
   <div class="crt-overlay" aria-hidden="true"></div>
@@ -6824,26 +6834,35 @@ body::after{
       : (subjects[0]||'');
     state.ui.wheelSubject=selected;
     const items=questionSetForSubject(selected,false)?.items||[];
+    const wheelTopics=(items.length?items:['Materiály','Obrábění','Tepelné zpracování','Měření','Technologie výroby']).slice(0,5);
+    while(wheelTopics.length<5) wheelTopics.push(wheelTopics[wheelTopics.length%Math.max(1,wheelTopics.length)]||'Téma');
+    const wheelLabels=wheelTopics.map((topic,index)=>`<span class="topic-wheel-label label-${index+1}"><img src="assets/ui/${topicAsset(topic,index)}" alt=""></span>`).join('');
 
     const subjectSelect=subjects.length
       ? `<label class="wheel-select-label">Předmět<select id="wheel-subject">${subjects.map(s=>`<option ${s===selected?'selected':''}>${esc(s)}</option>`).join('')}</select></label>`
       : '<div class="wheel-select-label muted">Zatím nemáš vytvořený žádný předmět.</div>';
 
     const wheelContent=items.length
-      ? `<div class="wheel-shell">
+      ? `<div class="wheel-shell wheel-shell-fidelity">
             <div class="wheel-shell-head">
               <h2>Náhodný výběr tématu</h2>
               <div class="wheel-shell-sub">Roztoč kolo a nech vybrat téma za sebe.</div>
             </div>
             <div class="wheel-stage">
-              <div class="wheel" id="standalone-wheel"><div class="wheel-center">TÉMATA</div></div>
+              <div class="topic-wheel-wrap standalone-topic-wheel-wrap">
+                <div class="topic-wheel-pointer" aria-hidden="true"></div>
+                <div class="topic-wheel" id="standalone-wheel" aria-label="Kolo štěstí pro losování tématu">
+                  ${wheelLabels}
+                  <div class="topic-wheel-center" aria-hidden="true"></div>
+                </div>
+              </div>
             </div>
             <div class="wheel-result-box">
               <div class="wheel-result-label">Aktuální výsledek</div>
               <div id="wheel-result" class="wheel-result-value">${esc(state.ui.wheelResult||'Připraveno k losování')}</div>
             </div>
             <div class="wheel-action-bar">
-              <button class="btn primary full" data-action="spin-standalone">Roztočit kolo</button>
+              <button type="button" class="topic-spin" data-action="spin-standalone">Roztočit kolo</button>
             </div>
          </div>`
       : `<div class="wheel-empty-box empty">${selected
@@ -7672,6 +7691,16 @@ body::after{
 @media (max-width:780px){
   .wheel-toolbar{grid-template-columns:1fr;}
 }
+</style>
+
+
+<style>
+/* H1.16 — standalone Kolo štěstí používá stejné kolo a tlačítko jako ve zkoušení */
+.wheel-shell-fidelity .wheel-stage{padding:4px 0 6px;}
+.standalone-topic-wheel-wrap{width:min(350px,92%);margin:6px auto 12px;}
+.wheel-shell-fidelity .topic-wheel{box-shadow:0 0 0 4px #06131c,7px 7px 0 var(--shadow) !important;}
+.wheel-shell-fidelity .topic-spin{display:block;width:min(360px,94%);margin:0 auto;min-height:54px;}
+.wheel-shell-fidelity .wheel-result-box{margin-top:10px;}
 </style>
 
 </head><body><h1>${esc(state.school.name)} – klasifikační přehled</h1><div class="meta">${esc(c.displayName)} · ${esc(subject)} · ${semester}. pololetí · ${esc(c.schoolYear)} · učitel: ${esc(state.user.name)}</div><table><thead><tr><th>Žák</th>${dates.map(d=>`<th>${esc(d.split('-').reverse().join('. '))}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table><script>window.onload=()=>setTimeout(()=>window.print(),150)<\/script></body></html>`);
@@ -8569,7 +8598,11 @@ body::after{
       if(!items.length)return toast('Pro tento předmět nejsou vytvořená žádná témata.','error');
       gameEvent('wheel_spin',{subject,source:'standalone'});
       const wheel=document.getElementById('standalone-wheel');
-      if(wheel) wheel.style.transform=`rotate(${720+Math.floor(Math.random()*900)}deg)`;
+      if(wheel){
+        wheel.classList.remove('is-spinning');
+        void wheel.offsetWidth;
+        wheel.classList.add('is-spinning');
+      }
       btn.disabled=true;
       setTimeout(()=>{state.ui.wheelResult=items[Math.floor(Math.random()*items.length)];saveState();render();},2100);
     }
