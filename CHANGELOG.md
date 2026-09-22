@@ -14,3 +14,4 @@
 - odstraněn výrazný světlý dojem; doplněna pouze jemná tmavá kontura pro čitelnost
 - hlavní oranžová akce používá mírně tmavší odstín stejného barevného směru
 - rozměry, ikony, rozmístění a funkce hlavního menu zůstávají beze změny
+- texty v dlaždicích hlavního menu nově zobrazeny VELKÝMI PÍSMENY
