@@ -239,3 +239,9 @@
 - malé technické štítky, kroky a stavové údaje zůstávají monospace/pixelové kvůli přehlednosti
 - formulářové a běžné texty nebyly zbytečně stylizovány, aby zůstaly dobře čitelné
 
+## 2026-09-22 — H1.15 Sjednocení designu Kola štěstí
+- sjednocen vzhled obrazovky Výběr tématu a samostatného Kola štěstí se zbytkem aplikace
+- okna, panely a tlačítka používají stejné rámy, barvy a stíny jako ostatní části ZZ-01
+- přepracována samostatná stránka Kolo štěstí do přehlednějšího panelového rozložení
+- sjednoceny akční tlačítka pro losování témat, vlastní téma i potvrzovací akce
+

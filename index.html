@@ -3937,6 +3937,59 @@ body::after{
 }
 </style>
 
+
+<style>
+/* H1.15 — sjednocení designu pro Kolo štěstí */
+.topic-mode{border-width:2px !important;background:#0a2230 !important;color:var(--cream) !important;box-shadow:4px 4px 0 var(--shadow) !important;}
+.topic-mode.active{border-color:var(--orange) !important;background:#4c2d12 !important;color:#fff3df !important;box-shadow:4px 4px 0 var(--shadow) !important;}
+.topic-list-panel,.topic-wheel-panel,.topic-manual-panel{
+  border:3px solid var(--cyan) !important;background:#05192a !important;box-shadow:5px 5px 0 var(--shadow) !important;clip-path:none !important;
+}
+.topic-list-panel h2,.topic-wheel-panel h2,.wheel-shell-head h2{
+  font-family:var(--pixel) !important;letter-spacing:.03em !important;color:var(--cream) !important;text-transform:uppercase;
+}
+.topic-wheel-sub,.wheel-shell-sub,.wheel-page-intro{color:#bfeaf0 !important;}
+.topic-search-wrap,.topic-result,.wheel-result-box{border:2px solid #1a6f82 !important;background:#082336 !important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.03);}
+.topic-list-row{border:2px solid #1a6f82 !important;background:#082336 !important;box-shadow:2px 2px 0 var(--shadow) !important;}
+.topic-list-row.is-selected{border-color:var(--orange) !important;background:#2e2215 !important;box-shadow:inset 0 0 0 2px #6d4b11,2px 2px 0 var(--shadow) !important;}
+.topic-spin,.topic-use-manual,.topic-final-confirm,.topic-back,.topic-wheel-actions button,.topic-list-pick{
+  text-transform:uppercase !important;letter-spacing:.04em !important;border-radius:0 !important;
+}
+.topic-list-pick,.topic-wheel-actions button,.topic-back{
+  border:2px solid var(--cyan) !important;background:#0a2230 !important;color:var(--cream) !important;box-shadow:4px 4px 0 var(--shadow) !important;
+}
+.topic-spin,.topic-use-manual,.topic-final-confirm,.topic-confirm-small{
+  border:3px solid var(--orange) !important;background:#4c2d12 !important;color:#fff3df !important;box-shadow:4px 4px 0 var(--shadow) !important;
+}
+.topic-spin{width:min(360px,94%) !important;margin:0 auto 12px !important;}
+.topic-result-label{font-family:var(--pixel) !important;font-size:.66rem !important;letter-spacing:.04em !important;color:#a8dce6 !important;text-transform:uppercase;}
+.topic-result-value{color:#ffd36f !important;font-family:var(--ui-heading, var(--sans)) !important;}
+.topic-manual-label{font-family:var(--pixel) !important;text-transform:uppercase;color:var(--cream) !important;font-size:.84rem !important;}
+.topic-manual-panel>input,.wheel-toolbar select{border:2px solid #1aaec7 !important;background:#08283c !important;color:#e7fbff !important;box-shadow:none !important;}
+.topic-save-check{color:#a9d4dc !important;}
+.topic-bottom-actions{align-items:stretch;}
+/* standalone wheel */
+.wheel-page-card{padding:16px !important;}
+.wheel-page-intro{margin:0 0 12px;font-size:.95rem;}
+.wheel-toolbar{display:grid;grid-template-columns:minmax(220px,320px);gap:10px;margin-bottom:14px;}
+.wheel-select-label{display:grid;gap:7px;font-family:var(--pixel);font-size:.72rem;color:#dffaff;text-transform:uppercase;letter-spacing:.04em;}
+.wheel-shell{border:3px solid var(--cyan);background:#05192a;box-shadow:5px 5px 0 var(--shadow);padding:14px;}
+.wheel-shell-head{text-align:center;margin-bottom:10px;}
+.wheel-shell-head h2{margin:0 0 6px;font-size:1rem;}
+.wheel-shell-sub{font-size:.92rem;}
+.wheel-stage{padding:4px 0 2px;}
+.wheel{border:8px solid #72ecff;box-shadow:0 0 0 4px #06131c,7px 7px 0 var(--shadow);}
+.wheel-result-box{margin:14px auto 0;max-width:420px;padding:12px 14px;text-align:center;}
+.wheel-result-label{font-family:var(--pixel);font-size:.66rem;letter-spacing:.04em;text-transform:uppercase;color:#a8dce6;}
+.wheel-result-value{margin-top:6px;color:#ffd36f;font-size:1.1rem;font-weight:900;overflow-wrap:anywhere;}
+.wheel-action-bar{margin-top:12px;display:flex;justify-content:center;}
+.wheel-action-bar .btn{min-width:min(360px,100%);}
+.wheel-empty-box{margin-top:14px;border:2px dashed #286072;padding:18px;text-align:center;background:#082336;}
+@media (max-width:780px){
+  .wheel-toolbar{grid-template-columns:1fr;}
+}
+</style>
+
 </head>
 <body>
   <div class="crt-overlay" aria-hidden="true"></div>
@@ -6773,21 +6826,34 @@ body::after{
     const items=questionSetForSubject(selected,false)?.items||[];
 
     const subjectSelect=subjects.length
-      ? `<label>Předmět<select id="wheel-subject">${subjects.map(s=>`<option ${s===selected?'selected':''}>${esc(s)}</option>`).join('')}</select></label>`
-      : '';
+      ? `<label class="wheel-select-label">Předmět<select id="wheel-subject">${subjects.map(s=>`<option ${s===selected?'selected':''}>${esc(s)}</option>`).join('')}</select></label>`
+      : '<div class="wheel-select-label muted">Zatím nemáš vytvořený žádný předmět.</div>';
 
     const wheelContent=items.length
-      ? `<div class="wheel" id="standalone-wheel"><div class="wheel-center">TÉMATA</div></div>
-         <div style="text-align:center" id="wheel-result" class="accent">${esc(state.ui.wheelResult||'Připraveno k losování')}</div>
-         <div class="sticky-actions"><button class="btn primary" data-action="spin-standalone">Roztočit kolo</button></div>`
-      : `<div class="empty" style="margin-top:14px">${selected
+      ? `<div class="wheel-shell">
+            <div class="wheel-shell-head">
+              <h2>Náhodný výběr tématu</h2>
+              <div class="wheel-shell-sub">Roztoč kolo a nech vybrat téma za sebe.</div>
+            </div>
+            <div class="wheel-stage">
+              <div class="wheel" id="standalone-wheel"><div class="wheel-center">TÉMATA</div></div>
+            </div>
+            <div class="wheel-result-box">
+              <div class="wheel-result-label">Aktuální výsledek</div>
+              <div id="wheel-result" class="wheel-result-value">${esc(state.ui.wheelResult||'Připraveno k losování')}</div>
+            </div>
+            <div class="wheel-action-bar">
+              <button class="btn primary full" data-action="spin-standalone">Roztočit kolo</button>
+            </div>
+         </div>`
+      : `<div class="wheel-empty-box empty">${selected
           ? `Pro předmět <strong>${esc(selected)}</strong> zatím nejsou vytvořená žádná témata. Přidej je v Moje předměty.`
           : 'Nejdřív vytvoř předmět v sekci Moje předměty.'}</div>`;
 
     const content=`<div class="section-title"><h1 class="pixel-title">Kolo štěstí</h1></div>
-      <section class="pixel-frame card">
-        <p class="muted">Kolo používá přímo témata uložená u vybraného předmětu.</p>
-        ${subjectSelect}
+      <section class="pixel-frame card wheel-page-card">
+        <div class="wheel-page-intro">Kolo používá přímo témata uložená u vybraného předmětu.</div>
+        <div class="wheel-toolbar">${subjectSelect}</div>
         ${wheelContent}
       </section>`;
     app.innerHTML=layout(content,'Kolo štěstí');
@@ -7552,6 +7618,59 @@ body::after{
   :where(.btn,.tab,.admin-tab,.h8-tab,.subject-choice,.candidate-select-pill){
     letter-spacing:.01em !important;
   }
+}
+</style>
+
+
+<style>
+/* H1.15 — sjednocení designu pro Kolo štěstí */
+.topic-mode{border-width:2px !important;background:#0a2230 !important;color:var(--cream) !important;box-shadow:4px 4px 0 var(--shadow) !important;}
+.topic-mode.active{border-color:var(--orange) !important;background:#4c2d12 !important;color:#fff3df !important;box-shadow:4px 4px 0 var(--shadow) !important;}
+.topic-list-panel,.topic-wheel-panel,.topic-manual-panel{
+  border:3px solid var(--cyan) !important;background:#05192a !important;box-shadow:5px 5px 0 var(--shadow) !important;clip-path:none !important;
+}
+.topic-list-panel h2,.topic-wheel-panel h2,.wheel-shell-head h2{
+  font-family:var(--pixel) !important;letter-spacing:.03em !important;color:var(--cream) !important;text-transform:uppercase;
+}
+.topic-wheel-sub,.wheel-shell-sub,.wheel-page-intro{color:#bfeaf0 !important;}
+.topic-search-wrap,.topic-result,.wheel-result-box{border:2px solid #1a6f82 !important;background:#082336 !important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.03);}
+.topic-list-row{border:2px solid #1a6f82 !important;background:#082336 !important;box-shadow:2px 2px 0 var(--shadow) !important;}
+.topic-list-row.is-selected{border-color:var(--orange) !important;background:#2e2215 !important;box-shadow:inset 0 0 0 2px #6d4b11,2px 2px 0 var(--shadow) !important;}
+.topic-spin,.topic-use-manual,.topic-final-confirm,.topic-back,.topic-wheel-actions button,.topic-list-pick{
+  text-transform:uppercase !important;letter-spacing:.04em !important;border-radius:0 !important;
+}
+.topic-list-pick,.topic-wheel-actions button,.topic-back{
+  border:2px solid var(--cyan) !important;background:#0a2230 !important;color:var(--cream) !important;box-shadow:4px 4px 0 var(--shadow) !important;
+}
+.topic-spin,.topic-use-manual,.topic-final-confirm,.topic-confirm-small{
+  border:3px solid var(--orange) !important;background:#4c2d12 !important;color:#fff3df !important;box-shadow:4px 4px 0 var(--shadow) !important;
+}
+.topic-spin{width:min(360px,94%) !important;margin:0 auto 12px !important;}
+.topic-result-label{font-family:var(--pixel) !important;font-size:.66rem !important;letter-spacing:.04em !important;color:#a8dce6 !important;text-transform:uppercase;}
+.topic-result-value{color:#ffd36f !important;font-family:var(--ui-heading, var(--sans)) !important;}
+.topic-manual-label{font-family:var(--pixel) !important;text-transform:uppercase;color:var(--cream) !important;font-size:.84rem !important;}
+.topic-manual-panel>input,.wheel-toolbar select{border:2px solid #1aaec7 !important;background:#08283c !important;color:#e7fbff !important;box-shadow:none !important;}
+.topic-save-check{color:#a9d4dc !important;}
+.topic-bottom-actions{align-items:stretch;}
+/* standalone wheel */
+.wheel-page-card{padding:16px !important;}
+.wheel-page-intro{margin:0 0 12px;font-size:.95rem;}
+.wheel-toolbar{display:grid;grid-template-columns:minmax(220px,320px);gap:10px;margin-bottom:14px;}
+.wheel-select-label{display:grid;gap:7px;font-family:var(--pixel);font-size:.72rem;color:#dffaff;text-transform:uppercase;letter-spacing:.04em;}
+.wheel-shell{border:3px solid var(--cyan);background:#05192a;box-shadow:5px 5px 0 var(--shadow);padding:14px;}
+.wheel-shell-head{text-align:center;margin-bottom:10px;}
+.wheel-shell-head h2{margin:0 0 6px;font-size:1rem;}
+.wheel-shell-sub{font-size:.92rem;}
+.wheel-stage{padding:4px 0 2px;}
+.wheel{border:8px solid #72ecff;box-shadow:0 0 0 4px #06131c,7px 7px 0 var(--shadow);}
+.wheel-result-box{margin:14px auto 0;max-width:420px;padding:12px 14px;text-align:center;}
+.wheel-result-label{font-family:var(--pixel);font-size:.66rem;letter-spacing:.04em;text-transform:uppercase;color:#a8dce6;}
+.wheel-result-value{margin-top:6px;color:#ffd36f;font-size:1.1rem;font-weight:900;overflow-wrap:anywhere;}
+.wheel-action-bar{margin-top:12px;display:flex;justify-content:center;}
+.wheel-action-bar .btn{min-width:min(360px,100%);}
+.wheel-empty-box{margin-top:14px;border:2px dashed #286072;padding:18px;text-align:center;background:#082336;}
+@media (max-width:780px){
+  .wheel-toolbar{grid-template-columns:1fr;}
 }
 </style>
 
