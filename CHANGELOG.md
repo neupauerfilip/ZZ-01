@@ -10,3 +10,10 @@
 
 ## Instalace
 Rozbal ZIP do kořene projektu a přepiš `index.html` a `CHANGELOG.md`.
+
+
+## Header correction
+- obnoven původní obrázkový nápis ZKOUŠKOMAT uprostřed hlavního menu
+- vlastní ZZ-01 Headline CZ se nyní používá na malý nápis ZKOUŠKOMAT v horní hlavičce
+- hlavička dostala sjednocené sražené rohy, cyanový dvojitý rám a kompaktnější herní vzhled
+- funkce, ikony, hudba, zvuky, profil a odhlášení zůstávají beze změny

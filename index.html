@@ -4779,8 +4779,8 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 .zz01-heading-rendered .zz01-accent.v1{left:28%;top:-.02em}.zz01-heading-rendered .zz01-accent.v2{left:47%;top:.055em}.zz01-heading-rendered .zz01-accent.v3{left:66%;top:-.02em}
 .zz01-heading-rendered .zz01-accent.r1{left:30%;top:.01em}.zz01-heading-rendered .zz01-accent.r2{left:62%;top:.01em}.zz01-heading-rendered .zz01-accent.r3{left:46%;top:-.08em}.zz01-heading-rendered .zz01-accent.r4{left:46%;top:.10em}
 
-/* All screen titles use the same Czech lettering. The main menu is the one intentional exception to sizing only. */
-#app h1.zz01-heading-rendered:not(.zz01-home-title){
+/* All screen titles use the same Czech lettering. */
+#app h1.zz01-heading-rendered{
   font-size:clamp(1.55rem,4.2vw,2.65rem)!important;
   font-weight:400!important;
 }
@@ -4883,7 +4883,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     });
   }
   function applyZZ01Headings(root=document){
-    const selector='#app h1, #app .grade-screen-head h2';
+    const selector='#app h1, #app .grade-screen-head h2, #app .brand-main';
     if(root.matches?.(selector))renderZZ01Heading(root);
     root.querySelectorAll?.(selector).forEach(renderZZ01Heading);
   }
@@ -6608,7 +6608,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     syncCurrentTeacherStats();
     const content=`
       <section class="arcade-home-head">
-        <h1 class="zz01-home-title" aria-label="Zkouškomat">Zkouškomat</h1>
+        <img class="home-title-art" src="assets/ui/home-title-main-menu.png" alt="Hlavní menu">
         <div class="arcade-home-slogan">Proč zkoušet jednoduše, když to lze složitě?</div>
       </section>
       <div class="home-grid">
@@ -8840,6 +8840,75 @@ body::after{
 }
 </style>
 
+
+<style>
+/* ==========================================================
+   ZZ-01 HEADER CORRECTION
+   - restores original home title artwork
+   - uses ZZ-01 Headline CZ only for the small brand in topbar
+   - unifies topbar with chamfered Pro Arcade frame language
+   ========================================================== */
+#app .brand-main.zz01-heading-rendered{
+  --zz-cell:.102em;
+  --zz-gap:.024em;
+  width:auto!important;
+  max-width:none!important;
+  flex-wrap:nowrap!important;
+  column-gap:.22em!important;
+  row-gap:0!important;
+  justify-content:flex-start!important;
+  align-items:flex-end!important;
+  color:#fff1d8!important;
+  font-size:clamp(1.02rem,2.15vw,1.42rem)!important;
+  filter:drop-shadow(2px 2px 0 #07101a);
+  overflow:visible!important;
+}
+#app .brand-main.zz01-heading-rendered .zz01-word{gap:.035em!important}
+#app .brand-main.zz01-heading-rendered .zz01-glyph{padding-top:.20em!important}
+#app .brand-main.zz01-heading-rendered .zz01-accent{background:#ff9e1a!important}
+
+/* Cleaner, consistent header frame. */
+#app .topbar{
+  clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px),0 10px)!important;
+  border:3px solid #0d8fa2!important;
+  border-bottom-color:#16dbe1!important;
+  background:linear-gradient(180deg,rgba(7,27,42,.97),rgba(4,18,29,.97))!important;
+  box-shadow:inset 0 0 0 2px #063b4c,4px 4px 0 #010913!important;
+}
+#app .topbar .brand-lockup{gap:11px!important}
+#app .topbar .brand-mark{
+  border:2px solid #12899b!important;
+  clip-path:polygon(6px 0,calc(100% - 6px) 0,100% 6px,100% calc(100% - 6px),calc(100% - 6px) 100%,6px 100%,0 calc(100% - 6px),0 6px)!important;
+  background:#071b29!important;
+}
+#app .topbar .brand-code{
+  margin-top:5px!important;
+  color:#20e7ef!important;
+  font-family:Bahnschrift,"Segoe UI",Arial,sans-serif!important;
+  font-weight:600!important;
+  letter-spacing:.16em!important;
+}
+#app .topbar .session-chip{
+  clip-path:polygon(6px 0,calc(100% - 6px) 0,100% 6px,100% calc(100% - 6px),calc(100% - 6px) 100%,6px 100%,0 calc(100% - 6px),0 6px)!important;
+  border:2px solid #0c8295!important;
+  background:#061c29!important;
+}
+#app .topbar .icon-btn{
+  clip-path:polygon(6px 0,calc(100% - 6px) 0,100% 6px,100% calc(100% - 6px),calc(100% - 6px) 100%,6px 100%,0 calc(100% - 6px),0 6px)!important;
+  border-left:2px solid var(--cyan)!important;
+}
+#app .topbar .nav-logout-btn{border-color:var(--orange)!important}
+
+/* Home: keep the approved original artwork as the large title. */
+#app .home-container .home-title-art{
+  display:block!important;
+}
+
+@media(max-width:760px){
+  #app .brand-main.zz01-heading-rendered{font-size:.94rem!important;--zz-cell:.098em;--zz-gap:.023em}
+  #app .topbar{clip-path:polygon(8px 0,calc(100% - 8px) 0,100% 8px,100% calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,0 calc(100% - 8px),0 8px)!important}
+}
+</style>
 </head><body><h1>${esc(state.school.name)} – klasifikační přehled</h1><div class="meta">${esc(c.displayName)} · ${esc(subject)} · ${semester}. pololetí · ${esc(c.schoolYear)} · učitel: ${esc(state.user.name)}</div><table><thead><tr><th>Žák</th>${dates.map(d=>`<th>${esc(d.split('-').reverse().join('. '))}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table><script>window.onload=()=>setTimeout(()=>window.print(),150)<\/script></body></html>`);
     w.document.close();
   }
