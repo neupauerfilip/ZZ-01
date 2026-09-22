@@ -4000,6 +4000,24 @@ body::after{
 .wheel-shell-fidelity .wheel-result-box{margin-top:10px;}
 </style>
 
+
+<style>
+/* AUDIO PACK — globální přepínače hudby a systémových zvuků */
+.audio-toggle-btn{position:relative !important;border-color:#20e8f3 !important;background:#0a2230 !important;}
+.audio-toggle-btn img{width:24px !important;height:24px !important;image-rendering:pixelated !important;}
+.audio-toggle-btn.is-off{opacity:.58 !important;filter:saturate(.45) !important;}
+.audio-toggle-btn.is-off::after{
+  content:"";position:absolute;left:7px;right:7px;top:50%;height:3px;background:#ff9d36;
+  transform:rotate(-45deg);transform-origin:center;box-shadow:1px 1px 0 #4e1d05;pointer-events:none;
+}
+.home-topbar .audio-toggle-btn{border-color:#20e8f3 !important;background:rgba(4,24,42,.94) !important;}
+.home-topbar .audio-toggle-btn.is-off{background:#151b22 !important;}
+@media(max-width:760px){
+  .audio-toggle-btn img{width:20px !important;height:20px !important;}
+  .audio-toggle-btn.is-off::after{left:6px;right:6px;height:2px;}
+}
+</style>
+
 </head>
 <body>
   <div class="crt-overlay" aria-hidden="true"></div>
@@ -4208,7 +4226,7 @@ body::after{
         id:'qs_1',subject:'Technické kreslení',name:'Témata ke zkoušení',items:['Tolerance','Závity','Drsnost povrchu','Kótování','Řezy a průřezy']
       }],
       history:[],
-      settings:{timerMinutes:5,protectionHours:2,lockersEnabled:true,lockerProbability:25,lockerItems:defaultLockerItems(),notifications:false},
+      settings:{timerMinutes:5,protectionHours:2,lockersEnabled:true,lockerProbability:25,lockerItems:defaultLockerItems(),notifications:false,musicEnabled:true,sfxEnabled:true},
       staffroom:{messages:[],lastReadBy:{},notificationsBy:{}},
       gamification:defaultGamification(),
       examFlow:null,
@@ -4266,6 +4284,51 @@ body::after{
   appDataReady=true;
   let timerTick=null;
 
+  /* AUDIO SYSTEM — hudba a systémové zvuky */
+  const bgMusic=new Audio('assets/audio/zz01-theme.mp3');
+  bgMusic.loop=true;
+  bgMusic.preload='auto';
+  bgMusic.volume=.26;
+  const sfxSources={
+    click:'assets/audio/sfx-click.wav',
+    confirm:'assets/audio/sfx-confirm.wav',
+    warning:'assets/audio/sfx-warning.wav',
+    draw:'assets/audio/sfx-draw.wav',
+    result:'assets/audio/sfx-result.wav'
+  };
+  const sfxBank=Object.fromEntries(Object.entries(sfxSources).map(([key,src])=>{
+    const a=new Audio(src); a.preload='auto'; a.volume=.42; return [key,a];
+  }));
+
+  function musicShouldPlay(){
+    return !!state.splashSeen && !!state.authenticated && !!state.onboardingDone && state.route==='home' && state.settings.musicEnabled!==false && !document.hidden;
+  }
+  function syncBackgroundMusic(){
+    if(musicShouldPlay()){
+      const p=bgMusic.play();
+      if(p && typeof p.catch==='function') p.catch(()=>{});
+    }else{
+      bgMusic.pause();
+    }
+  }
+  function playSfx(name='click'){
+    if(state.settings.sfxEnabled===false || document.hidden) return;
+    const base=sfxBank[name]||sfxBank.click;
+    if(!base) return;
+    try{
+      const a=base.cloneNode(true);
+      a.volume=base.volume;
+      const p=a.play();
+      if(p && typeof p.catch==='function') p.catch(()=>{});
+    }catch(_){ }
+  }
+  function actionSfx(action=''){
+    if(/(?:draw-candidates|spin-wheel|spin-standalone|choose-other)/.test(action)) return 'draw';
+    if(/(?:delete|remove|logout|leave-school)/.test(action)) return 'warning';
+    if(/(?:confirm|save|finish|end-exam|exam-next|result-next-exam|join-selected-school|create-school-onboarding)/.test(action)) return 'confirm';
+    return 'click';
+  }
+
   function saveState(){
     try{ localStorage.setItem(STORAGE_KEY,JSON.stringify({...state,splashSeen:true})); }
     catch(e){ toast('Data se nepodařilo uložit do zařízení.','error'); }
@@ -4319,6 +4382,7 @@ body::after{
       </section></div>`;
     modalRoot.querySelectorAll('[data-modal-index]').forEach(btn=>btn.addEventListener('click',()=>{
       const a=actions[Number(btn.dataset.modalIndex)];
+      playSfx(a?.className==='danger'?'warning':'click');
       modalRoot.innerHTML='';
       if(a && a.onClick) a.onClick();
     }));
@@ -5116,6 +5180,8 @@ body::after{
         <div class="nav-actions">
           ${backButton}
           <div class="session-chip" title="Aktuálně přihlášený uživatel"><span class="session-label">Přihlášen:</span><span class="session-role">${esc(userRoleLabel())}</span><span class="session-name">(${esc(currentUserName)})</span></div>
+          <button class="icon-btn audio-toggle-btn nav-music-btn ${state.settings.musicEnabled===false?'is-off':''}" data-action="toggle-music" aria-pressed="${state.settings.musicEnabled!==false}" aria-label="${state.settings.musicEnabled===false?'Zapnout hudbu':'Vypnout hudbu'}" title="Hudba: ${state.settings.musicEnabled===false?'vypnuta':'zapnuta'}"><img src="assets/ui/nav-music-note.png" alt="" aria-hidden="true"></button>
+          <button class="icon-btn audio-toggle-btn nav-sfx-btn ${state.settings.sfxEnabled===false?'is-off':''}" data-action="toggle-sfx" aria-pressed="${state.settings.sfxEnabled!==false}" aria-label="${state.settings.sfxEnabled===false?'Zapnout systémové zvuky':'Vypnout systémové zvuky'}" title="Systémové zvuky: ${state.settings.sfxEnabled===false?'vypnuty':'zapnuty'}"><img src="assets/ui/nav-sfx-speaker.png" alt="" aria-hidden="true"></button>
           <button class="icon-btn nav-home-btn" data-action="go-home" aria-label="Domů" title="Domů"><img src="assets/ui/nav-home.png" alt="" aria-hidden="true"></button>
           <button class="icon-btn nav-profile-btn" data-action="settings" aria-label="Můj profil a nastavení" title="Můj profil a nastavení"><img src="assets/ui/nav-profile.png" alt="" aria-hidden="true"></button>
           <button class="icon-btn account-exit nav-logout-btn" data-action="logout" aria-label="Odhlásit se" title="Odhlásit se"><img src="assets/ui/nav-logout-door.png" alt="" aria-hidden="true"></button>
@@ -6736,10 +6802,12 @@ body::after{
     </div>`;
 
     modalRoot.querySelectorAll('[data-grade]').forEach(b=>b.addEventListener('click',()=>{
+      playSfx('result');
       finalizeExam(Number(b.dataset.grade),false);
     }));
-    document.getElementById('no-grade-btn').onclick=()=>finalizeExam(null,true);
+    document.getElementById('no-grade-btn').onclick=()=>{playSfx('warning');finalizeExam(null,true);};
     document.getElementById('cancel-grade').onclick=()=>{
+      playSfx('click');
       const current=state.activeExam;
       if(current?.gradingStartedAt){
         if(current.gradingWasPaused!==true){
@@ -7711,6 +7779,24 @@ body::after{
 .wheel-shell-fidelity .wheel-result-box{margin-top:10px;}
 </style>
 
+
+<style>
+/* AUDIO PACK — globální přepínače hudby a systémových zvuků */
+.audio-toggle-btn{position:relative !important;border-color:#20e8f3 !important;background:#0a2230 !important;}
+.audio-toggle-btn img{width:24px !important;height:24px !important;image-rendering:pixelated !important;}
+.audio-toggle-btn.is-off{opacity:.58 !important;filter:saturate(.45) !important;}
+.audio-toggle-btn.is-off::after{
+  content:"";position:absolute;left:7px;right:7px;top:50%;height:3px;background:#ff9d36;
+  transform:rotate(-45deg);transform-origin:center;box-shadow:1px 1px 0 #4e1d05;pointer-events:none;
+}
+.home-topbar .audio-toggle-btn{border-color:#20e8f3 !important;background:rgba(4,24,42,.94) !important;}
+.home-topbar .audio-toggle-btn.is-off{background:#151b22 !important;}
+@media(max-width:760px){
+  .audio-toggle-btn img{width:20px !important;height:20px !important;}
+  .audio-toggle-btn.is-off::after{left:6px;right:6px;height:2px;}
+}
+</style>
+
 </head><body><h1>${esc(state.school.name)} – klasifikační přehled</h1><div class="meta">${esc(c.displayName)} · ${esc(subject)} · ${semester}. pololetí · ${esc(c.schoolYear)} · učitel: ${esc(state.user.name)}</div><table><thead><tr><th>Žák</th>${dates.map(d=>`<th>${esc(d.split('-').reverse().join('. '))}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table><script>window.onload=()=>setTimeout(()=>window.print(),150)<\/script></body></html>`);
     w.document.close();
   }
@@ -7947,6 +8033,8 @@ body::after{
             <label class="settings-option"><input id="locker-enabled" type="checkbox" ${state.settings.lockersEnabled?'checked':''}><span>Používat školní skříňky<small>Bonusová událost před zkoušením.</small></span></label>
             <label class="settings-option"><input id="notify-enabled" type="checkbox" ${state.settings.notifications?'checked':''}><span>Upozornit při vypršení času<small>Lokální upozornění během běžící aplikace.</small></span></label>
             <label class="settings-option"><input id="staffroom-notify-settings" type="checkbox" ${notifyOn?'checked':''}><span>Upozornění ze Sborovny<small>Plný push při zavřené aplikaci bude vyžadovat online/PWA verzi.</small></span></label>
+            <label class="settings-option"><input id="music-enabled-settings" type="checkbox" ${state.settings.musicEnabled!==false?'checked':''}><span>Hudba hlavního menu<small>Gaudeamus motiv se přehrává ve smyčce pouze na hlavním menu.</small></span></label>
+            <label class="settings-option"><input id="sfx-enabled-settings" type="checkbox" ${state.settings.sfxEnabled!==false?'checked':''}><span>Systémové zvuky<small>Kliknutí, potvrzení, varování, losování a uložení výsledku.</small></span></label>
           </div>
         </section>
 
@@ -8103,6 +8191,7 @@ body::after{
 
   function render(){
     clearInterval(timerTick);
+    queueMicrotask(syncBackgroundMusic);
     if(!state.splashSeen) return renderSplash();
     if(!state.authenticated) return renderLogin();
     if(!state.onboardingDone) return renderOnboarding();
@@ -8388,9 +8477,26 @@ body::after{
     };
     const requiredPermission=permissionByAction[action];
     if(requiredPermission && !can(requiredPermission)){
+      playSfx('warning');
       return toast('Pro tuto akci nemáš přidělené oprávnění.','error');
     }
-    if(action==='login'){state.authenticated=true;state.authProvider=btn.dataset.provider;saveState();render();}
+    if(action==='toggle-music'){
+      state.settings.musicEnabled=state.settings.musicEnabled===false;
+      saveState();
+      if(state.settings.musicEnabled) playSfx('confirm'); else bgMusic.pause();
+      render();
+    }
+    else if(action==='toggle-sfx'){
+      const wasOn=state.settings.sfxEnabled!==false;
+      if(wasOn) playSfx('click');
+      state.settings.sfxEnabled=!wasOn;
+      saveState();
+      if(state.settings.sfxEnabled) playSfx('confirm');
+      render();
+    }
+    else {
+      playSfx(actionSfx(action));
+      if(action==='login'){state.authenticated=true;state.authProvider=btn.dataset.provider;saveState();render();}
     else if(action==='onboard-mode'){state.ui.onboardingMode=btn.dataset.mode;state.ui.selectedSchoolId=null;saveState();render();}
     else if(action==='select-school'){state.ui.selectedSchoolId=btn.dataset.id;saveState();render();}
     else if(action==='join-selected-school'){
@@ -8622,7 +8728,9 @@ body::after{
       const staffroomNotify=!!document.getElementById('staffroom-notify-settings')?.checked;
       staffroomEnsure().notificationsBy[state.user.id]=staffroomNotify;
       if(staffroomNotify)setStaffroomNotifications(true);
-      saveState();toast('Nastavení uloženo.');render();
+      state.settings.musicEnabled=!!document.getElementById('music-enabled-settings')?.checked;
+      state.settings.sfxEnabled=!!document.getElementById('sfx-enabled-settings')?.checked;
+      saveState();syncBackgroundMusic();toast('Nastavení uloženo.');render();
     }
     else if(action==='logout') requestLogout();
     else if(action==='toggle-game-scoring'){state.gamification.enabled=!state.gamification.enabled;saveState();toast(state.gamification.enabled?'Herní scoring zapnut.':'Herní scoring vypnut.');render();}
@@ -8698,6 +8806,7 @@ body::after{
       modal({title:'Odebrat učitele ze školy?',body:`<p><strong>${esc(t.name)}</strong> ztratí přístup k této škole. Historie jeho předchozích zkoušení zůstane zachována.</p>`,actions:[{label:'Ne',className:'secondary'},{label:'Ano, odebrat',className:'danger',onClick:()=>{t.active=false;t.approved=false;t.removedAt=now();if(state.school.bossTeacherId===t.id)state.school.bossTeacherId=null;saveState();toast('Učitel odebrán ze školy.');render();}}]});
     }
     else if(action==='save-school'){state.school.name=document.getElementById('admin-school-name').value.trim()||state.school.name;state.school.avatar=document.getElementById('school-avatar').value;saveState();toast('Profil školy uložen.');render();}
+    }
   });
 
 
@@ -8709,7 +8818,11 @@ body::after{
 
   window.addEventListener('online',()=>{state.online=true;saveState();toast('Připojení obnoveno.');render();});
   window.addEventListener('offline',()=>{state.online=false;saveState();toast('Bez připojení – pracuji lokálně.','warn');render();});
-  document.addEventListener('visibilitychange',()=>{ if(!document.hidden && state.activeExam){render();} });
+  document.addEventListener('visibilitychange',()=>{
+    if(document.hidden) bgMusic.pause(); else syncBackgroundMusic();
+    if(!document.hidden && state.activeExam){render();}
+  });
+  document.addEventListener('pointerdown',()=>syncBackgroundMusic(),{once:true,capture:true});
 
   if('serviceWorker' in navigator && location.protocol.startsWith('http')){
     navigator.serviceWorker.register('./sw.js').catch(()=>{});

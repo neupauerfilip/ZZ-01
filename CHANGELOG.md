@@ -255,3 +255,12 @@
 - odstraněno zaseknutí na loading obrazovce při obnovení aplikace, pokud byla poslední otevřená stránka Kolo štěstí
 - přidána bezpečnostní pojistka startu: při neočekávané chybě obnovené stránky se aplikace vrátí do hlavního menu místo trvalého loadingu
 
+## 2026-09-22 — Audio Pack A: hudba + systémové zvuky
+- přidána uživatelská skladba `zz01-theme.mp3` jako hudební smyčka hlavního menu
+- do horní lišty celé aplikace přidán samostatný přepínač hudby s ikonou noty
+- přidán samostatný přepínač systémových zvuků s ikonou reproduktoru
+- stav hudby i systémových zvuků se ukládá do nastavení a zachová po opětovném spuštění
+- přidány retro systémové zvuky pro kliknutí, potvrzení, varování, losování a uložení výsledku
+- hudba se automaticky pozastaví mimo hlavní menu a při skrytí aplikace
+- stejné volby jsou dostupné také na obrazovce Nastavení
+
