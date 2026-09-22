@@ -6106,19 +6106,47 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     const currentUserName=state.user.nickname?.trim()||state.user.name||'Uživatel';
     const schoolName=state.school?.name||'Moje škola';
     const backButton=state.route!=='home' ? `<button class="icon-btn nav-back-top-btn" data-action="nav-back" aria-label="Zpět" title="Zpět"><img src="assets/ui/nav-back-white.png" alt="" aria-hidden="true"></button>` : '';
-    const sessionChip=`<div class="session-chip" title="Aktuálně přihlášený uživatel a škola"><span class="session-user-line"><span class="session-label">Přihlášen:</span><span class="session-role">${esc(userRoleLabel())}</span><span class="session-name">(${esc(currentUserName)})</span></span><span class="session-school-line"><span class="session-school-label">Škola:</span><span class="session-school-name">${esc(schoolName)}</span></span></div>`;
-    const defaultActions=`<div class="nav-actions">${backButton}${sessionChip}<button class="icon-btn audio-toggle-btn nav-music-btn ${state.settings.musicEnabled===false?'is-off':''}" data-action="toggle-music" aria-pressed="${state.settings.musicEnabled!==false}" aria-label="${state.settings.musicEnabled===false?'Zapnout hudbu':'Vypnout hudbu'}" title="Hudba: ${state.settings.musicEnabled===false?'vypnuta':'zapnuta'}"><img src="assets/ui/nav-music-note.png" alt="" aria-hidden="true"></button><button class="icon-btn audio-toggle-btn nav-sfx-btn ${state.settings.sfxEnabled===false?'is-off':''}" data-action="toggle-sfx" aria-pressed="${state.settings.sfxEnabled!==false}" aria-label="${state.settings.sfxEnabled===false?'Zapnout systémové zvuky':'Vypnout systémové zvuky'}" title="Systémové zvuky: ${state.settings.sfxEnabled===false?'vypnuty':'zapnuty'}"><img src="assets/ui/nav-sfx-speaker.png" alt="" aria-hidden="true"></button><button class="icon-btn nav-home-btn" data-action="go-home" aria-label="Domů" title="Domů"><img src="assets/ui/nav-home.png" alt="" aria-hidden="true"></button><button class="icon-btn nav-profile-btn" data-action="settings" aria-label="Můj profil a nastavení" title="Můj profil a nastavení"><img src="assets/ui/nav-profile.png" alt="" aria-hidden="true"></button><button class="icon-btn account-exit nav-logout-btn" data-action="logout" aria-label="Odhlásit se" title="Odhlásit se"><img src="assets/ui/nav-logout-door.png" alt="" aria-hidden="true"></button></div>`;
-    const homeActions=`<div class="nav-actions home-actions-stack"><div class="home-actions-row">${backButton}<button class="icon-btn audio-toggle-btn nav-music-btn ${state.settings.musicEnabled===false?'is-off':''}" data-action="toggle-music" aria-pressed="${state.settings.musicEnabled!==false}" aria-label="${state.settings.musicEnabled===false?'Zapnout hudbu':'Vypnout hudbu'}" title="Hudba: ${state.settings.musicEnabled===false?'vypnuta':'zapnuta'}"><img src="assets/ui/nav-music-note.png" alt="" aria-hidden="true"></button><button class="icon-btn audio-toggle-btn nav-sfx-btn ${state.settings.sfxEnabled===false?'is-off':''}" data-action="toggle-sfx" aria-pressed="${state.settings.sfxEnabled!==false}" aria-label="${state.settings.sfxEnabled===false?'Zapnout systémové zvuky':'Vypnout systémové zvuky'}" title="Systémové zvuky: ${state.settings.sfxEnabled===false?'vypnuty':'zapnuty'}"><img src="assets/ui/nav-sfx-speaker.png" alt="" aria-hidden="true"></button><button class="icon-btn nav-home-btn" data-action="go-home" aria-label="Domů" title="Domů"><img src="assets/ui/nav-home.png" alt="" aria-hidden="true"></button><button class="icon-btn nav-profile-btn" data-action="settings" aria-label="Můj profil a nastavení" title="Můj profil a nastavení"><img src="assets/ui/nav-profile.png" alt="" aria-hidden="true"></button><button class="icon-btn account-exit nav-logout-btn" data-action="logout" aria-label="Odhlásit se" title="Odhlásit se"><img src="assets/ui/nav-logout-door.png" alt="" aria-hidden="true"></button></div>${sessionChip}</div>`;
+    const musicButton=`<button class="icon-btn audio-toggle-btn nav-music-btn ${state.settings.musicEnabled===false?'is-off':''}" data-action="toggle-music" aria-pressed="${state.settings.musicEnabled!==false}" aria-label="${state.settings.musicEnabled===false?'Zapnout hudbu':'Vypnout hudbu'}" title="Hudba: ${state.settings.musicEnabled===false?'vypnuta':'zapnuta'}"><img src="assets/ui/nav-music-note.png" alt="" aria-hidden="true"></button>`;
+    const sfxButton=`<button class="icon-btn audio-toggle-btn nav-sfx-btn ${state.settings.sfxEnabled===false?'is-off':''}" data-action="toggle-sfx" aria-pressed="${state.settings.sfxEnabled!==false}" aria-label="${state.settings.sfxEnabled===false?'Zapnout systémové zvuky':'Vypnout systémové zvuky'}" title="Systémové zvuky: ${state.settings.sfxEnabled===false?'vypnuty':'zapnuty'}"><img src="assets/ui/nav-sfx-speaker.png" alt="" aria-hidden="true"></button>`;
+    const homeButton=`<button class="icon-btn nav-home-btn" data-action="go-home" aria-label="Domů" title="Domů"><img src="assets/ui/nav-home.png" alt="" aria-hidden="true"></button>`;
+    const profileButton=`<button class="icon-btn nav-profile-btn" data-action="settings" aria-label="Můj profil a nastavení" title="Můj profil a nastavení"><img src="assets/ui/nav-profile.png" alt="" aria-hidden="true"></button>`;
+    const logoutButton=`<button class="icon-btn account-exit nav-logout-btn" data-action="logout" aria-label="Odhlásit se" title="Odhlásit se"><img src="assets/ui/nav-logout-door.png" alt="" aria-hidden="true"></button>`;
+
+    if(state.route==='home'){
+      return `${!state.online?'<div class="offline-banner">Bez připojení – změny zůstávají v tomto zařízení.</div>':''}
+        <header class="topbar home-topbar home-topbar-clean">
+          <div class="home-brand-zone">
+            <div class="brand-main">ZKOUŠKOMAT</div>
+          </div>
+          <div class="home-control-zone">
+            <div class="home-icon-row">${musicButton}${sfxButton}${homeButton}${profileButton}${logoutButton}</div>
+            <div class="home-session-strip" title="${esc(currentUserName)} · ${esc(schoolName)}">
+              <span class="home-session-user"><span class="home-session-label">Uživatel</span><strong>${esc(currentUserName)}</strong></span>
+              <span class="home-session-sep">•</span>
+              <span class="home-session-school"><span class="home-session-label">Škola</span><strong>${esc(schoolName)}</strong></span>
+            </div>
+          </div>
+        </header>
+        <main class="container home-container">${content}</main>`;
+    }
+
     return `${!state.online?'<div class="offline-banner">Bez připojení – změny zůstávají v tomto zařízení.</div>':''}
-      <header class="topbar ${state.route==='home'?'home-topbar':''}">
+      <header class="topbar">
         <div class="brand-lockup">
           <img class="brand-mark" src="assets/ui/brand-teacher-logo.png" alt="" aria-hidden="true">
           <div class="brand-copy"><div class="brand-main">ZKOUŠKOMAT</div><div class="brand-code">ZZ-01</div></div>
           <div class="context-strip"><span class="status-dot ${state.online?'':'offline'}"></span><span>${esc(state.school.name)}</span><span>•</span><span>${esc(title)}</span></div>
         </div>
-        ${state.route==='home' ? homeActions : defaultActions}
+        <div class="nav-actions">
+          ${backButton}
+          <div class="session-chip" title="${esc(currentUserName)} · ${esc(schoolName)}">
+            <span class="session-user-line"><span class="session-label">Přihlášen</span><span class="session-role">${esc(userRoleLabel())}</span><span class="session-name">${esc(currentUserName)}</span></span>
+            <span class="session-school-line"><span class="session-school-label">ŠKOLA</span><span class="session-school-name">${esc(schoolName)}</span></span>
+          </div>
+          ${musicButton}${sfxButton}${homeButton}${profileButton}${logoutButton}
+        </div>
       </header>
-      <main class="container ${state.route==='home'?'home-container':'pro-arcade-ui'}">${content}</main>`;
+      <main class="container pro-arcade-ui">${content}</main>`;
   }
 
   function clonePlain(value){
@@ -8904,114 +8932,268 @@ body::after{
   #app .brand-main.zz01-heading-rendered{font-size:.94rem!important;--zz-cell:.098em;--zz-gap:.023em}
   #app .topbar{clip-path:polygon(8px 0,calc(100% - 8px) 0,100% 8px,100% calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,0 calc(100% - 8px),0 8px)!important}
 }
+</style>
 
-/* HOME HEADER PRO REFINEMENT — compact pro layout */
+<style>
+/* ==========================================================
+   ZZ-01 HEADER SCHOOL INFO + HOME HEADER UNIFICATION
+   - home uses the same compact topbar geometry as other screens
+   - user + school share one compact info panel
+   - no increase of desktop header height
+   ========================================================== */
 #app .topbar.home-topbar{
-  display:flex !important;
-  align-items:center !important;
-  justify-content:space-between !important;
-  gap:18px !important;
-  min-height:94px !important;
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+  min-height:78px!important;
+  padding:10px 14px!important;
+  box-shadow:inset 0 0 0 2px #063b4c,4px 4px 0 #010913!important;
 }
-#app .topbar.home-topbar .brand-lockup{
-  flex:0 1 auto !important;
-  min-width:0 !important;
-  display:flex !important;
+#app .home-topbar .brand-lockup{gap:11px!important}
+#app .home-topbar .brand-mark{width:56px!important;height:56px!important}
+#app .home-topbar .brand-main{font-size:clamp(1.02rem,2.15vw,1.42rem)!important;line-height:.92!important}
+#app .home-topbar .brand-code{font-size:clamp(.8rem,1.8vw,1rem)!important;margin-top:4px!important}
+#app .home-topbar .nav-actions{gap:8px!important}
+#app .home-topbar .icon-btn{width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important}
+#app .home-topbar .icon-btn img{width:22px!important;height:22px!important}
+
+#app .session-chip,
+#app .home-topbar .session-chip{
+  min-width:220px!important;
+  max-width:310px!important;
+  min-height:42px!important;
+  padding:5px 10px!important;
+  display:grid!important;
+  grid-template-rows:auto auto!important;
+  align-content:center!important;
+  gap:3px!important;
+  white-space:normal!important;
+  text-align:left!important;
+  font-family:Bahnschrift,"Segoe UI",Arial,sans-serif!important;
+  line-height:1!important;
+}
+#app .session-user-line,
+#app .session-school-line{
+  min-width:0!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:6px!important;
+  overflow:hidden!important;
+}
+#app .session-user-line{font-size:.66rem!important;font-weight:600!important}
+#app .session-school-line{font-size:.61rem!important;font-weight:500!important;color:#c9e1df!important}
+#app .session-label{
+  color:#78b8c0!important;
+  font-size:.55rem!important;
+  text-transform:uppercase!important;
+  letter-spacing:.08em!important;
+  flex:0 0 auto!important;
+}
+#app .session-role{
+  color:#22edf7!important;
+  text-transform:uppercase!important;
+  font-size:.58rem!important;
+  letter-spacing:.045em!important;
+  flex:0 0 auto!important;
+}
+#app .session-name{
+  color:#fff3db!important;
+  min-width:0!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+#app .session-school-label{
+  flex:0 0 auto!important;
+  padding:2px 4px!important;
+  border:1px solid #0f8395!important;
+  color:#25eaf3!important;
+  background:#082330!important;
+  font-size:.52rem!important;
+  font-weight:700!important;
+  letter-spacing:.08em!important;
+  clip-path:polygon(3px 0,100% 0,100% calc(100% - 3px),calc(100% - 3px) 100%,0 100%,0 3px)!important;
+}
+#app .session-school-name{
+  min-width:0!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+  color:#b8d8d7!important;
+}
+@media(max-width:980px){
+  #app .session-chip,#app .home-topbar .session-chip{
+    order:0!important;
+    flex:0 1 260px!important;
+    min-width:190px!important;
+    max-width:260px!important;
+  }
+  #app .topbar,#app .home-topbar{align-items:center!important}
+}
+@media(max-width:760px){
+  #app .topbar.home-topbar{min-height:72px!important;padding:8px 10px!important}
+  #app .home-topbar .brand-mark{width:48px!important;height:48px!important}
+  #app .home-topbar .brand-main{font-size:.94rem!important}
+  #app .home-topbar .brand-code{font-size:.76rem!important}
+  #app .home-topbar .icon-btn{width:38px!important;height:38px!important;min-width:38px!important;min-height:38px!important}
+  #app .home-topbar .icon-btn img{width:20px!important;height:20px!important}
+  #app .session-chip,#app .home-topbar .session-chip{
+    min-width:170px!important;
+    max-width:220px!important;
+    min-height:38px!important;
+    padding:4px 7px!important;
+    gap:2px!important;
+  }
+  #app .session-user-line{font-size:.59rem!important}
+  #app .session-school-line{font-size:.55rem!important}
+  #app .session-label{display:none!important}
+}
+@media(max-width:560px){
+  #app .session-chip,#app .home-topbar .session-chip{
+    order:3!important;
+    flex:1 1 100%!important;
+    max-width:none!important;
+    width:100%!important;
+  }
+}
+</style>
+
+
+<style id="zz01-home-header-clean-fix">
+/* MAIN MENU HEADER — clean fixed-height layout only. */
+#app .home-topbar-clean{
+  box-sizing:border-box !important;
+  width:min(790px,calc(100% - 30px)) !important;
+  max-width:790px !important;
+  min-height:0 !important;
+  height:80px !important;
+  margin:14px auto 0 !important;
+  padding:7px 10px !important;
+  display:grid !important;
+  grid-template-columns:minmax(250px,1fr) minmax(360px,auto) !important;
   align-items:center !important;
   gap:14px !important;
+  overflow:hidden !important;
 }
-#app .topbar.home-topbar .brand-copy{
-  justify-content:center !important;
-  align-items:flex-start !important;
-}
-#app .topbar.home-topbar .brand-main.zz01-heading-rendered,
-#app .topbar.home-topbar .brand-main{
-  font-size:1.3rem !important;
-  line-height:.92 !important;
-}
-#app .topbar.home-topbar .nav-actions.home-actions-stack{
-  margin-left:auto !important;
-  flex:0 0 auto !important;
+#app .home-topbar-clean .home-brand-zone{
+  height:100% !important;
   display:flex !important;
-  flex-direction:column !important;
-  align-items:flex-end !important;
+  align-items:center !important;
   justify-content:center !important;
-  gap:8px !important;
-  min-width:420px !important;
+  min-width:0 !important;
 }
-#app .topbar.home-topbar .home-actions-row{
+#app .home-topbar-clean .brand-main{
+  margin:0 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:100% !important;
+  min-width:0 !important;
+  text-align:center !important;
+  line-height:1 !important;
+}
+#app .home-topbar-clean .home-control-zone{
+  height:100% !important;
+  min-width:0 !important;
+  display:grid !important;
+  grid-template-rows:38px 25px !important;
+  align-content:center !important;
+  gap:4px !important;
+}
+#app .home-topbar-clean .home-icon-row{
   display:flex !important;
   align-items:center !important;
   justify-content:flex-end !important;
-  gap:8px !important;
-}
-#app .topbar.home-topbar .session-chip{
-  width:100% !important;
-  min-width:420px !important;
-  max-width:520px !important;
-  padding:7px 12px !important;
-  min-height:0 !important;
-  display:flex !important;
-  flex-direction:column !important;
-  align-items:flex-start !important;
-  justify-content:center !important;
-  gap:3px !important;
-  font-size:.68rem !important;
-  line-height:1.1 !important;
-  white-space:normal !important;
-  text-align:left !important;
-}
-#app .topbar.home-topbar .session-user-line,
-#app .topbar.home-topbar .session-school-line{
-  display:flex !important;
   gap:7px !important;
+  min-width:0 !important;
+}
+#app .home-topbar-clean .icon-btn{
+  box-sizing:border-box !important;
+  width:38px !important;
+  height:38px !important;
+  min-width:38px !important;
+  min-height:38px !important;
+  padding:0 !important;
+  display:grid !important;
+  place-items:center !important;
+  clip-path:polygon(6px 0,calc(100% - 6px) 0,100% 6px,100% calc(100% - 6px),calc(100% - 6px) 100%,6px 100%,0 calc(100% - 6px),0 6px) !important;
+}
+#app .home-topbar-clean .icon-btn img{
+  width:20px !important;
+  height:20px !important;
+  display:block !important;
+}
+#app .home-topbar-clean .nav-logout-btn{
+  border-color:#ff9b2f !important;
+  background:#24170b !important;
+}
+#app .home-topbar-clean .home-session-strip{
+  box-sizing:border-box !important;
+  height:25px !important;
+  min-width:0 !important;
+  padding:3px 8px !important;
+  display:flex !important;
   align-items:center !important;
-  width:100% !important;
+  justify-content:flex-end !important;
+  gap:7px !important;
+  overflow:hidden !important;
+  border:2px solid #0b7d93 !important;
+  background:#071a2c !important;
+  color:#fff4dc !important;
+  box-shadow:none !important;
+  clip-path:polygon(5px 0,calc(100% - 5px) 0,100% 5px,100% calc(100% - 5px),calc(100% - 5px) 100%,5px 100%,0 calc(100% - 5px),0 5px) !important;
+  font-family:Bahnschrift,"Segoe UI",Arial,sans-serif !important;
+  font-size:11px !important;
+  line-height:1 !important;
+  white-space:nowrap !important;
+}
+#app .home-topbar-clean .home-session-user,
+#app .home-topbar-clean .home-session-school{
+  min-width:0 !important;
+  display:flex !important;
+  align-items:center !important;
+  gap:4px !important;
   overflow:hidden !important;
 }
-#app .topbar.home-topbar .session-label,
-#app .topbar.home-topbar .session-school-label{
-  color:#8cdde3 !important;
+#app .home-topbar-clean .home-session-user{flex:0 0 auto !important;}
+#app .home-topbar-clean .home-session-school{flex:1 1 auto !important;}
+#app .home-topbar-clean .home-session-label{
   flex:0 0 auto !important;
+  color:#78d5dc !important;
+  font-weight:500 !important;
 }
-#app .topbar.home-topbar .session-role{color:#22edf7 !important;}
-#app .topbar.home-topbar .session-name,
-#app .topbar.home-topbar .session-school-name{
+#app .home-topbar-clean .home-session-strip strong{
+  min-width:0 !important;
   overflow:hidden !important;
   text-overflow:ellipsis !important;
   white-space:nowrap !important;
+  font-weight:600 !important;
 }
-#app .topbar.home-topbar .icon-btn{
-  width:42px !important;
-  height:42px !important;
-  min-width:42px !important;
-  min-height:42px !important;
-}
-#app .topbar.home-topbar .icon-btn img{width:21px !important;height:21px !important;}
-#app .topbar.home-topbar .nav-back-top-btn{order:-1 !important;}
-@media (max-width: 980px){
-  #app .topbar.home-topbar{
-    flex-wrap:wrap !important;
-    align-items:flex-start !important;
+#app .home-topbar-clean .home-session-sep{color:#ff9e1a !important;flex:0 0 auto !important;}
+@media(max-width:760px){
+  #app .home-topbar-clean{
+    width:calc(100% - 20px) !important;
+    height:74px !important;
+    grid-template-columns:minmax(145px,1fr) minmax(280px,1.35fr) !important;
+    gap:8px !important;
+    padding:6px 8px !important;
   }
-  #app .topbar.home-topbar .brand-lockup{flex:1 1 100% !important;}
-  #app .topbar.home-topbar .nav-actions.home-actions-stack{
-    min-width:100% !important;
-    width:100% !important;
-    align-items:stretch !important;
+  #app .home-topbar-clean .home-control-zone{grid-template-rows:34px 23px !important;gap:3px !important;}
+  #app .home-topbar-clean .icon-btn{width:34px !important;height:34px !important;min-width:34px !important;min-height:34px !important;}
+  #app .home-topbar-clean .icon-btn img{width:18px !important;height:18px !important;}
+  #app .home-topbar-clean .home-session-strip{height:23px !important;font-size:9px !important;padding:2px 6px !important;gap:5px !important;}
+}
+@media(max-width:520px){
+  #app .home-topbar-clean{
+    height:72px !important;
+    grid-template-columns:minmax(110px,.85fr) minmax(230px,1.5fr) !important;
   }
-  #app .topbar.home-topbar .home-actions-row{justify-content:flex-end !important;}
-  #app .topbar.home-topbar .session-chip{min-width:100% !important;max-width:none !important;}
+  #app .home-topbar-clean .home-session-label{display:none !important;}
+  #app .home-topbar-clean .home-icon-row{gap:4px !important;}
+  #app .home-topbar-clean .icon-btn{width:32px !important;height:32px !important;min-width:32px !important;min-height:32px !important;}
 }
-@media (max-width: 640px){
-  #app .topbar.home-topbar .home-actions-row{gap:6px !important;flex-wrap:wrap !important;}
-  #app .topbar.home-topbar .icon-btn{width:38px !important;height:38px !important;min-width:38px !important;min-height:38px !important;}
-  #app .topbar.home-topbar .brand-main.zz01-heading-rendered,
-  #app .topbar.home-topbar .brand-main{font-size:1.08rem !important;}
-  #app .topbar.home-topbar .session-chip{font-size:.60rem !important;padding:6px 8px !important;}
-}
-
 </style>
+
 </head><body><h1>${esc(state.school.name)} – klasifikační přehled</h1><div class="meta">${esc(c.displayName)} · ${esc(subject)} · ${semester}. pololetí · ${esc(c.schoolYear)} · učitel: ${esc(state.user.name)}</div><table><thead><tr><th>Žák</th>${dates.map(d=>`<th>${esc(d.split('-').reverse().join('. '))}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table><script>window.onload=()=>setTimeout(()=>window.print(),150)<\/script></body></html>`);
     w.document.close();
   }

@@ -1,18 +1,13 @@
-# ZZ-01 Header Menu Pro Refinement
+# ZZ-01 – oprava hlavičky hlavního menu
 
-## Co patch upravuje
-- vrací hlavní význam logotypu **ZKOUŠKOMAT** do levé části hlavičky a vycentruje jej vizuálně v rámci levého bloku,
-- na **hlavním menu** přesouvá informační okno s uživatelem a školou **pod řadu ovládacích ikon**,
-- sjednocuje hlavičku hlavního menu s ostatními obrazovkami čistším profesionálnějším rozvržením,
-- zachovává kompaktní výšku hlavičky bez zbytečného zvětšování,
-- ponechává ostatní obrazovky funkčně beze změny, mění pouze rozložení home headeru.
+Tento patch nahrazuje předchozí chybný pokus o rozložení home headeru.
 
-## Technicky
-- upraven renderer `layout(...)` v `index.html`,
-- přidán dvouřádkový `session-chip` s údaji:
-  - Přihlášen: role + jméno,
-  - Škola: název školy,
-- přidány CSS override styly pro `home-topbar`, `home-actions-stack` a kompaktní zarovnání ikon.
+- hlavní menu má pevnou kompaktní hlavičku vysokou 80 px,
+- vlevo je pouze vycentrovaný titul ZKOUŠKOMAT,
+- vpravo je nahoře řada 5 ovládacích ikon,
+- přímo pod ikonami je jediný nízký informační proužek Uživatel • Škola,
+- informační proužek neroztahuje výšku hlavičky,
+- ostatní obrazovky zůstávají beze změny.
 
-## Doporučený commit
-`Refine home header layout and move session panel below icons`
+Doporučený commit:
+Fix home header layout without increasing height
