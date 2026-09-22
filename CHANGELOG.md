@@ -227,3 +227,9 @@
 - tlačítko Zpět je nyní vizuálně sjednocené s ostatními ikonami horní lišty
 - chování návratu napříč aplikací zůstává beze změny
 
+## 2026-09-22 — H1.13 Arkádové názvy všech obrazovek
+- sjednoceny hlavní názvy obrazovek do hranatého bezpatkového arcade stylu podle vizuálu „HLAVNÍ MENU“
+- odstraněn patkový vzhled nadpisů v hlavním toku zkoušení, třídách, předmětech, známkování, scoringu, sborovně, nastavení, nápovědě, historii a správě školy
+- přidán krémový text, oranžový 3D stín a tmavá pixelová hrana
+- nadpisy zůstávají živý text a responzivně se přizpůsobují desktopu i mobilu
+
