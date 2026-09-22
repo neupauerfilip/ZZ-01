@@ -3526,6 +3526,80 @@ body{background:#031120 !important;}
 }
 </style>
 
+
+<style>
+/* H1.6 — adaptivní pozadí přes celou obrazovku */
+html,body{min-height:100%;}
+body{background:#031120 !important;overflow-x:hidden;}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:-3;
+  background-image:url("assets/ui/home-classroom-bg.png");
+  background-size:cover;
+  background-position:center top;
+  background-repeat:no-repeat;
+  opacity:.42;
+  transform:scale(1.03);
+  filter:saturate(1.05) brightness(.72);
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;
+  background:
+    radial-gradient(circle at 50% 8%, rgba(8,38,60,.14), transparent 30%),
+    linear-gradient(180deg, rgba(1,10,19,.10), rgba(1,10,19,.22));
+}
+.home-container{width:min(790px,100%) !important;padding:0 18px 26px !important;position:relative;isolation:isolate;z-index:1;}
+.topbar.home-topbar{width:min(790px,calc(100% - 30px)) !important;max-width:790px !important;}
+.home-container::before{
+  content:"";position:fixed;top:0;left:50%;transform:translateX(-50%);
+  width:min(96vw, calc(100vh * 1.3333333)) !important;
+  height:min(100vh, calc(96vw / 1.3333333)) !important;
+  background-image:url("assets/ui/home-classroom-bg.png") !important;
+  background-size:contain !important;
+  background-position:center top !important;
+  background-repeat:no-repeat !important;
+  image-rendering:pixelated;pointer-events:none;z-index:0;opacity:.98 !important;
+}
+.home-container::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:linear-gradient(180deg,rgba(1,10,19,.02),rgba(1,10,19,.10)) !important;
+}
+.home-container>*{position:relative;z-index:1;}
+.arcade-home-head{margin:22px 0 10px !important;}
+.home-title-art{width:min(700px,86vw) !important;max-width:100% !important;}
+.arcade-home-slogan{margin-top:6px !important;font-size:clamp(.75rem,2vw,1rem) !important;}
+.home-grid{margin-top:12px !important;gap:12px !important;}
+.home-card{min-height:118px !important;grid-template-columns:88px minmax(0,1fr) !important;gap:8px !important;padding:10px 12px !important;}
+.home-card .home-icon{width:88px !important;height:88px !important;overflow:visible !important;}
+.home-card .home-icon img{width:84px !important;height:84px !important;object-fit:contain !important;}
+.home-card h2{font-size:clamp(1rem,2.6vw,1.55rem) !important;line-height:.95 !important;}
+.home-reference-footer{margin-top:18px !important;}
+@media (max-width:900px){
+  .home-container{width:min(760px,100%) !important;}
+  .topbar.home-topbar{width:min(760px,calc(100% - 24px)) !important;}
+  .home-container::before{width:min(100vw, calc(100vh * 1.3333333)) !important;height:min(100vh, calc(100vw / 1.3333333)) !important;}
+  body::before{opacity:.46;background-position:center top;}
+}
+@media (max-width:760px){
+  .home-container{padding:0 12px 22px !important;}
+  .topbar.home-topbar{width:calc(100% - 20px) !important;min-height:78px !important;}
+  .arcade-home-head{margin:18px 0 8px !important;}
+  .home-title-art{width:min(96vw,660px) !important;}
+  .home-grid{gap:9px !important;}
+  .home-card{min-height:104px !important;grid-template-columns:78px 1fr !important;padding:8px 10px !important;}
+  .home-card .home-icon{width:76px !important;height:76px !important;}
+  .home-card .home-icon img{width:72px !important;height:72px !important;}
+  .home-card h2{font-size:clamp(.9rem,4.1vw,1.25rem) !important;}
+  .home-container::before{width:100vw !important;height:min(100vh, calc(100vw / 1.3333333)) !important;opacity:.96 !important;}
+  body::before{opacity:.56;background-position:center center;}
+}
+@media (max-width:480px){
+  .home-container::before{width:100vw !important;height:calc(100vw / 1.3333333) !important;max-height:70vh !important;}
+  .home-grid{grid-template-columns:1fr !important;}
+  .home-card{min-height:98px !important;grid-template-columns:72px 1fr !important;}
+  body::before{opacity:.62;background-position:center center;}
+}
+</style>
+
 </head>
 <body>
   <div class="crt-overlay" aria-hidden="true"></div>
@@ -6791,6 +6865,80 @@ body{background:#031120 !important;}
   .home-container::before{width:100vw !important;height:calc(100vw / 1.3333333) !important;max-height:70vh !important;}
   .home-grid{grid-template-columns:1fr !important;}
   .home-card{min-height:98px !important;grid-template-columns:72px 1fr !important;}
+}
+</style>
+
+
+<style>
+/* H1.6 — adaptivní pozadí přes celou obrazovku */
+html,body{min-height:100%;}
+body{background:#031120 !important;overflow-x:hidden;}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:-3;
+  background-image:url("assets/ui/home-classroom-bg.png");
+  background-size:cover;
+  background-position:center top;
+  background-repeat:no-repeat;
+  opacity:.42;
+  transform:scale(1.03);
+  filter:saturate(1.05) brightness(.72);
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;
+  background:
+    radial-gradient(circle at 50% 8%, rgba(8,38,60,.14), transparent 30%),
+    linear-gradient(180deg, rgba(1,10,19,.10), rgba(1,10,19,.22));
+}
+.home-container{width:min(790px,100%) !important;padding:0 18px 26px !important;position:relative;isolation:isolate;z-index:1;}
+.topbar.home-topbar{width:min(790px,calc(100% - 30px)) !important;max-width:790px !important;}
+.home-container::before{
+  content:"";position:fixed;top:0;left:50%;transform:translateX(-50%);
+  width:min(96vw, calc(100vh * 1.3333333)) !important;
+  height:min(100vh, calc(96vw / 1.3333333)) !important;
+  background-image:url("assets/ui/home-classroom-bg.png") !important;
+  background-size:contain !important;
+  background-position:center top !important;
+  background-repeat:no-repeat !important;
+  image-rendering:pixelated;pointer-events:none;z-index:0;opacity:.98 !important;
+}
+.home-container::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:linear-gradient(180deg,rgba(1,10,19,.02),rgba(1,10,19,.10)) !important;
+}
+.home-container>*{position:relative;z-index:1;}
+.arcade-home-head{margin:22px 0 10px !important;}
+.home-title-art{width:min(700px,86vw) !important;max-width:100% !important;}
+.arcade-home-slogan{margin-top:6px !important;font-size:clamp(.75rem,2vw,1rem) !important;}
+.home-grid{margin-top:12px !important;gap:12px !important;}
+.home-card{min-height:118px !important;grid-template-columns:88px minmax(0,1fr) !important;gap:8px !important;padding:10px 12px !important;}
+.home-card .home-icon{width:88px !important;height:88px !important;overflow:visible !important;}
+.home-card .home-icon img{width:84px !important;height:84px !important;object-fit:contain !important;}
+.home-card h2{font-size:clamp(1rem,2.6vw,1.55rem) !important;line-height:.95 !important;}
+.home-reference-footer{margin-top:18px !important;}
+@media (max-width:900px){
+  .home-container{width:min(760px,100%) !important;}
+  .topbar.home-topbar{width:min(760px,calc(100% - 24px)) !important;}
+  .home-container::before{width:min(100vw, calc(100vh * 1.3333333)) !important;height:min(100vh, calc(100vw / 1.3333333)) !important;}
+  body::before{opacity:.46;background-position:center top;}
+}
+@media (max-width:760px){
+  .home-container{padding:0 12px 22px !important;}
+  .topbar.home-topbar{width:calc(100% - 20px) !important;min-height:78px !important;}
+  .arcade-home-head{margin:18px 0 8px !important;}
+  .home-title-art{width:min(96vw,660px) !important;}
+  .home-grid{gap:9px !important;}
+  .home-card{min-height:104px !important;grid-template-columns:78px 1fr !important;padding:8px 10px !important;}
+  .home-card .home-icon{width:76px !important;height:76px !important;}
+  .home-card .home-icon img{width:72px !important;height:72px !important;}
+  .home-card h2{font-size:clamp(.9rem,4.1vw,1.25rem) !important;}
+  .home-container::before{width:100vw !important;height:min(100vh, calc(100vw / 1.3333333)) !important;opacity:.96 !important;}
+  body::before{opacity:.56;background-position:center center;}
+}
+@media (max-width:480px){
+  .home-container::before{width:100vw !important;height:calc(100vw / 1.3333333) !important;max-height:70vh !important;}
+  .home-grid{grid-template-columns:1fr !important;}
+  .home-card{min-height:98px !important;grid-template-columns:72px 1fr !important;}
+  body::before{opacity:.62;background-position:center center;}
 }
 </style>
 

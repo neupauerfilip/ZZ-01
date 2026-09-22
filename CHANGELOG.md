@@ -184,3 +184,9 @@
 - upravena šířka hlavního sloupce, horní lišty, nadpisu a karet menu
 - zachován obrázkový nadpis i klikací funkce všech tlačítek
 
+## 2026-09-22 — H1.6 Adaptivní pozadí přes celý viewport
+- doplněna adaptivní fullscreen vrstva pozadí, která se přizpůsobuje šířce i výšce obrazovky
+- zachována ostrá hlavní školní scéna za menu a přidána širší krycí vrstva pro okraje monitoru i mobilu
+- vyladěny opacity a pozice pozadí pro desktop i mobil
+- menu zůstává živé, klikací a beze změny funkce
+
