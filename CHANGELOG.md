@@ -1,6 +1,6 @@
-# ZZ-01_HEADER_ROLLBACK_STABLE + footer school name
+# ZZ-01_HEADER_SLOGAN_UPDATE
 
-- zachován poslední stabilní vzhled hlavičky bez názvu školy
-- název školy přesunut do patičky obrazovek
-- patička nově zobrazuje: levý text · název školy · ZZ-01
-- rozložení patičky sjednoceno bez zvětšení hlavičky
+- v horní hlavičce nahrazen text `ZZ-01` sloganem „Proč zkoušet jednoduše, když to lze složitě.“
+- odstraněn duplicitní slogan „Proč zkoušet jednoduše, když to lze složitě?“ pod obrázkem Hlavní menu
+- slogan na úvodní/loading obrazovce zůstává zachován
+- ostatní funkce a rozložení aplikace zůstávají beze změny
