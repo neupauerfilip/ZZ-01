@@ -1,29 +1,18 @@
-# ZZ-01 HEADLINE CZ – GLOBAL SCREEN TITLES
+# ZZ-01 Header Menu Pro Refinement
 
-## Změny
-- nový vlastní titulkový systém ZZ-01 Headline CZ je použit na hlavní nadpisy všech obrazovek
-- české znaky jsou vykreslované nativně: Á Č Ď É Ě Í Ň Ó Ř Š Ť Ú Ů Ý Ž
-- nadpisy jsou složené z jednoduchých sražených 5×7 modulů, takže vzhled je stejný na každém zařízení
-- hlavní menu jinak zůstává beze změny, ale původní obrázkový titul byl nahrazen textem ZKOUŠKOMAT v novém fontu
-- běžné texty, popisky, tabulky a podnadpisy nejsou novým titulkovým rendererem ovlivněny
-- zachované responzivní velikosti nadpisů
+## Co patch upravuje
+- vrací hlavní význam logotypu **ZKOUŠKOMAT** do levé části hlavičky a vycentruje jej vizuálně v rámci levého bloku,
+- na **hlavním menu** přesouvá informační okno s uživatelem a školou **pod řadu ovládacích ikon**,
+- sjednocuje hlavičku hlavního menu s ostatními obrazovkami čistším profesionálnějším rozvržením,
+- zachovává kompaktní výšku hlavičky bez zbytečného zvětšování,
+- ponechává ostatní obrazovky funkčně beze změny, mění pouze rozložení home headeru.
 
-## Instalace
-Rozbal ZIP do kořene projektu a přepiš `index.html` a `CHANGELOG.md`.
+## Technicky
+- upraven renderer `layout(...)` v `index.html`,
+- přidán dvouřádkový `session-chip` s údaji:
+  - Přihlášen: role + jméno,
+  - Škola: název školy,
+- přidány CSS override styly pro `home-topbar`, `home-actions-stack` a kompaktní zarovnání ikon.
 
-
-## Header correction
-- obnoven původní obrázkový nápis ZKOUŠKOMAT uprostřed hlavního menu
-- vlastní ZZ-01 Headline CZ se nyní používá na malý nápis ZKOUŠKOMAT v horní hlavičce
-- hlavička dostala sjednocené sražené rohy, cyanový dvojitý rám a kompaktnější herní vzhled
-- funkce, ikony, hudba, zvuky, profil a odhlášení zůstávají beze změny
-
-
-## Header school-info correction
-- hlavní menu používá stejnou kompaktní hlavičku jako ostatní obrazovky
-- výška desktopové hlavičky se nezvětšuje
-- uživatel a škola jsou společně v jednom kompaktním informačním panelu
-- první řádek: role + jméno uživatele
-- druhý řádek: ŠKOLA + aktuální název školy
-- dlouhé názvy školy se zkrátí uvnitř panelu, plný název je dostupný v title
-- původní velký obrázkový nápis ZKOUŠKOMAT v hlavním menu zůstává zachovaný
+## Doporučený commit
+`Refine home header layout and move session panel below icons`
