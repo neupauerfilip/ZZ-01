@@ -149,3 +149,11 @@
 - Zachovány byly všechny původní identifikátory formulářů a akce, takže ukládání nastavení, avatary, pravidla, skříňky, notifikace i administrace fungují beze změny.
 - Mobilní rozložení Sborovny i Nastavení bylo přepracováno tak, aby se panely skládaly pod sebe a ovládací prvky zůstaly dostatečně velké.
 - V rámci závěrečného auditu byly zkontrolovány akce hlavních obrazovek, routy a syntaxe JavaScriptu.
+
+## H1.1 — Hlavní menu: arkádovější nadpis, nové logo a retro pozadí
+- vyměněna levá značka v horní liště za učitelskou pixel ikonu (`assets/ui/brand-teacher-logo.png`)
+- přepracován nadpis `HLAVNÍ MENU` do výraznějšího arkádového stylu
+- upraveno tmavé retro pozadí s jemnou mřížkou a silnější neonovou hloubkou
+- doladěna horní lišta, značka aplikace a spodní dekorace domovské obrazovky
+- beze změn logiky navigace a funkcí dlaždic
+

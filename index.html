@@ -1478,6 +1478,12 @@ button.topic-mode{width:100%;cursor:pointer}
   .topic-use-manual{width:100%}
 }
 
+
+@media (max-width:720px){
+  .home-bottom-decor{grid-template-columns:1fr;justify-items:center}
+  .home-lockers-decor,.home-books-decor{display:none}
+  .arcade-home-title::before,.arcade-home-title::after{display:none}
+}
 @media print{
   body{background:#fff!important;color:#000!important}
   .topbar,.grade-actions,.tabs,.offline-banner,.toast-root,.modal-root{display:none!important}
@@ -1508,31 +1514,34 @@ button.topic-mode{width:100%;cursor:pointer}
 }
 body{
   background:
-    radial-gradient(circle at 50% -15%,rgba(20,102,136,.22),transparent 40%),
-    linear-gradient(180deg,#04182b 0%,#031426 52%,#02101e 100%);
+    radial-gradient(circle at 50% -12%,rgba(18,146,194,.22),transparent 32%),
+    radial-gradient(circle at 10% 20%,rgba(8,85,123,.12),transparent 24%),
+    linear-gradient(180deg,#021225 0%,#03172a 52%,#020d19 100%);
+  background-attachment:fixed;
 }
-.crt-overlay{opacity:.22}
+.crt-overlay{opacity:.24}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background:repeating-linear-gradient(90deg,rgba(28,139,181,.06) 0 2px,transparent 2px 42px),repeating-linear-gradient(0deg,rgba(28,139,181,.045) 0 2px,transparent 2px 42px);opacity:.38}
 .container{width:min(940px,100%);padding:18px 22px 38px}
 .topbar{
   position:sticky;top:8px;
-  width:min(900px,calc(100% - 28px));
-  margin:12px auto 0;
-  padding:10px 14px;
-  border:3px solid var(--arcade-cyan);
-  border-bottom-width:5px;
-  background:rgba(3,20,38,.97);
-  box-shadow:0 0 0 2px #063c52,0 8px 0 #010913;
+  width:min(940px,calc(100% - 28px));
+  margin:10px auto 0;
+  padding:11px 16px;
+  border:4px solid var(--arcade-cyan);
+  border-bottom-width:7px;
+  background:linear-gradient(180deg,rgba(2,18,36,.98),rgba(4,26,47,.98));
+  box-shadow:0 0 0 4px #01101d,0 0 0 7px #063c52,0 10px 0 #010913;
   backdrop-filter:none;
 }
 .brand-lockup{display:flex;align-items:center;gap:12px;min-width:0}
-.brand-mark{width:58px;height:52px;object-fit:cover;image-rendering:pixelated;flex:0 0 auto}
+.brand-mark{width:64px;height:64px;object-fit:cover;image-rendering:pixelated;flex:0 0 auto}
 .brand-copy{min-width:0;line-height:1}
 .brand-main{
-  font-family:var(--pixel);font-weight:900;font-size:clamp(1.05rem,3.7vw,1.7rem);
-  letter-spacing:.035em;color:var(--arcade-cream);white-space:nowrap;
-  text-shadow:2px 0 var(--arcade-orange),0 2px var(--arcade-orange),2px 2px #8e2d08;
+  font-family:var(--pixel);font-weight:900;font-size:clamp(1.14rem,3.7vw,1.9rem);
+  letter-spacing:.045em;color:#fff3d8;white-space:nowrap;text-transform:uppercase;
+  text-shadow:0 3px 0 #ff8a12,0 6px 0 #9d3206,3px 6px 0 #011019;
 }
-.brand-code{margin-top:4px;font-family:var(--pixel);font-weight:900;letter-spacing:.15em;color:var(--arcade-cyan);font-size:.84rem}
+.brand-code{margin-top:6px;font-family:var(--pixel);font-weight:900;letter-spacing:.18em;color:#39ecff;font-size:.84rem}
 .context-strip{display:none}
 .nav-actions{gap:7px}
 .topbar .icon-btn{
@@ -1554,20 +1563,21 @@ body{
 .screen-nav .back-arrow{font-size:1.35em;margin-right:5px}
 
 /* Hlavní menu */
-.arcade-home-head{text-align:center;margin:24px 0 20px}
+.arcade-home-head{text-align:center;margin:26px 0 22px;padding:10px 0 0}
 .arcade-home-title{
-  margin:0;font-family:var(--pixel);font-weight:900;letter-spacing:.025em;text-transform:uppercase;
-  font-size:clamp(2rem,8vw,4.9rem);line-height:.94;color:var(--arcade-cream);
-  text-shadow:0 3px 0 var(--arcade-orange),0 7px 0 #a92c08,4px 7px 0 #010913;
+  margin:0;font-family:var(--pixel);font-weight:900;letter-spacing:.04em;text-transform:uppercase;
+  font-size:clamp(2.2rem,8.4vw,5.4rem);line-height:.88;color:#fff3d9;
+  text-shadow:0 4px 0 #ff9717,0 8px 0 #a83505,4px 8px 0 #010913,-4px 0 0 rgba(24,220,237,.18),4px 0 0 rgba(24,220,237,.18);
 }
-.arcade-home-title::before,.arcade-home-title::after{content:"—";color:var(--arcade-cyan);font-size:.42em;vertical-align:middle;text-shadow:none;margin:0 .28em}
-.arcade-home-slogan{margin-top:16px;color:var(--arcade-cyan);font-family:var(--pixel);font-weight:700;font-size:clamp(.8rem,2.7vw,1.15rem);letter-spacing:.015em}
-.home-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:22px}
+.arcade-home-title::before,.arcade-home-title::after{content:"▣";color:var(--arcade-cyan);font-size:.26em;vertical-align:middle;text-shadow:none;margin:0 .38em .08em}
+.arcade-home-slogan{margin-top:18px;color:#3cf3ff;font-family:var(--pixel);font-weight:700;font-size:clamp(.84rem,2.7vw,1.15rem);letter-spacing:.03em}
+.home-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:24px}
 .home-card{
-  min-height:132px;padding:13px 16px;display:grid;grid-template-columns:112px minmax(0,1fr);align-items:center;gap:10px;
-  text-align:left;overflow:hidden;border:4px solid var(--arcade-cyan);border-radius:0;
+  min-height:136px;padding:14px 16px;display:grid;grid-template-columns:112px minmax(0,1fr);align-items:center;gap:10px;
+  text-align:left;overflow:hidden;border:4px solid var(--arcade-cyan);border-radius:0;position:relative;
   background:linear-gradient(180deg,#08233a,#04182a);box-shadow:inset 0 0 0 3px #073a50,6px 6px 0 #010913;
 }
+.home-card::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.06),transparent 25%,transparent 78%,rgba(0,0,0,.16));pointer-events:none}
 .home-card::after{display:none}
 .home-card[data-action="exam"]{
   border-color:var(--arcade-orange-hi);background:linear-gradient(180deg,#ff9e1e,#ff7411);
@@ -1590,9 +1600,16 @@ body{
 .home-overview-label{margin:0 0 9px;color:var(--arcade-cyan);font-family:var(--pixel);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase}
 .home-summary-grid{margin-top:0}
 .arcade-footer{
-  margin-top:24px;padding-top:13px;border-top:3px solid var(--arcade-cyan);display:flex;justify-content:space-between;gap:12px;
+  margin-top:26px;padding-top:13px;border-top:3px solid var(--arcade-cyan);display:flex;justify-content:space-between;gap:12px;
   color:var(--arcade-cyan);font-family:var(--pixel);font-size:.7rem;letter-spacing:.05em
 }
+.home-bottom-decor{margin-top:18px;display:grid;grid-template-columns:110px 1fr 110px;align-items:end;gap:12px}
+.home-books-decor,.home-lockers-decor{height:74px;display:flex;align-items:flex-end}
+.home-books-decor img{width:100%;height:100%;object-fit:contain;image-rendering:pixelated;opacity:.95}
+.home-lockers-decor{justify-content:flex-end;gap:8px}
+.home-lockers-decor span{display:block;width:40px;height:72px;border:4px solid var(--arcade-cyan);background:linear-gradient(180deg,#08233a,#04182a);box-shadow:inset 0 0 0 3px #073a50}
+.home-lockers-decor span::before{content:"";display:block;width:8px;height:8px;margin:12px auto 0;background:var(--arcade-orange-hi);box-shadow:0 14px 0 var(--arcade-cyan-dim),0 28px 0 var(--arcade-cyan-dim)}
+.home-motto{text-align:center;color:var(--arcade-cyan);font-family:var(--pixel);font-size:.72rem;letter-spacing:.08em;align-self:center}
 
 /* Zahájení zkoušení — krok 1 */
 .exam-start{max-width:860px;margin:0 auto}
@@ -4336,7 +4353,7 @@ body{
     return `${!state.online?'<div class="offline-banner">Bez připojení – změny zůstávají v tomto zařízení.</div>':''}
       <header class="topbar ${state.route==='home'?'home-topbar':''}">
         <div class="brand-lockup">
-          <img class="brand-mark" src="assets/ui/header-mark.png" alt="" aria-hidden="true">
+          <img class="brand-mark" src="assets/ui/brand-teacher-logo.png" alt="" aria-hidden="true">
           <div class="brand-copy"><div class="brand-main">ZKOUŠKOMAT</div><div class="brand-code">ZZ-01</div></div>
           <div class="context-strip"><span class="status-dot ${state.online?'':'offline'}"></span><span>${esc(state.school.name)}</span><span>•</span><span>${esc(title)}</span></div>
         </div>
@@ -4832,7 +4849,7 @@ body{
     syncCurrentTeacherStats();
     const content=`
       <section class="arcade-home-head">
-        <h1 class="arcade-home-title">Hlavní menu</h1>
+        <h1 class="arcade-home-title">HLAVNÍ MENU</h1>
         <div class="arcade-home-slogan">Proč zkoušet jednoduše, když to jde složitě?</div>
       </section>
       <div class="home-grid">
