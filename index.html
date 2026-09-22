@@ -8218,15 +8218,12 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     ].filter(Boolean))].sort((a,b)=>a.localeCompare(b,'cs'));
   }
 
-  // „Moje předměty“ jsou hlavní katalog učitele.
-  // Při zahájení zkoušení se nabídnou všechny moje předměty.
-  // Předměty už přiřazené třídě jsou nahoře, ostatní pod nimi.
+  // Při zahájení zkoušení se nabízejí pouze předměty
+  // přiřazené právě vybrané třídě.
   function subjectsForExamClass(classId){
     const c=classById(classId);
     const linked=[...new Set((c?.subjects||[]).filter(Boolean))];
-    const all=subjectNames();
-    const rest=all.filter(s=>!linked.includes(s));
-    return {linked,rest,all:[...linked,...rest]};
+    return {linked,rest:[],all:linked};
   }
 
   function linkSubjectToClass(subject,classId){
