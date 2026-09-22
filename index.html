@@ -4722,6 +4722,92 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 }
 </style>
 
+
+<style>
+/* ==========================================================
+   ZZ-01 HEADLINE CZ — native heading renderer
+   Custom chamfered 5x7 Czech display lettering.
+   ========================================================== */
+.zz01-heading-rendered{
+  --zz-cell:.118em;
+  --zz-gap:.028em;
+  --zz-chamfer:.020em;
+  display:flex!important;
+  align-items:flex-end;
+  flex-wrap:wrap;
+  column-gap:.34em;
+  row-gap:.18em;
+  width:100%;
+  line-height:1!important;
+  letter-spacing:0!important;
+  text-transform:none!important;
+  text-shadow:none!important;
+  font-family:Arial,sans-serif!important;
+}
+.zz01-heading-rendered .zz01-word{
+  display:inline-flex;
+  align-items:flex-end;
+  gap:.055em;
+  white-space:nowrap;
+}
+.zz01-heading-rendered .zz01-break{flex-basis:100%;height:0;width:100%}
+.zz01-heading-rendered .zz01-glyph{
+  position:relative;
+  display:inline-grid;
+  grid-template-columns:repeat(5,var(--zz-cell));
+  grid-template-rows:repeat(7,var(--zz-cell));
+  gap:var(--zz-gap);
+  flex:0 0 auto;
+  padding-top:.23em;
+  box-sizing:content-box;
+}
+.zz01-heading-rendered .zz01-px{
+  width:var(--zz-cell);height:var(--zz-cell);
+  background:currentColor;
+  clip-path:polygon(22% 0,78% 0,100% 22%,100% 78%,78% 100%,22% 100%,0 78%,0 22%);
+}
+.zz01-heading-rendered .zz01-px.off{visibility:hidden}
+.zz01-heading-rendered .zz01-accent{
+  position:absolute;
+  width:calc(var(--zz-cell) * .68);
+  height:calc(var(--zz-cell) * .68);
+  background:#ff9e1a;
+  clip-path:polygon(22% 0,78% 0,100% 22%,100% 78%,78% 100%,22% 100%,0 78%,0 22%);
+  top:.015em;
+}
+.zz01-heading-rendered .zz01-accent.a1{left:45%}.zz01-heading-rendered .zz01-accent.a2{left:61%;top:-.075em}
+.zz01-heading-rendered .zz01-accent.v1{left:28%;top:-.02em}.zz01-heading-rendered .zz01-accent.v2{left:47%;top:.055em}.zz01-heading-rendered .zz01-accent.v3{left:66%;top:-.02em}
+.zz01-heading-rendered .zz01-accent.r1{left:30%;top:.01em}.zz01-heading-rendered .zz01-accent.r2{left:62%;top:.01em}.zz01-heading-rendered .zz01-accent.r3{left:46%;top:-.08em}.zz01-heading-rendered .zz01-accent.r4{left:46%;top:.10em}
+
+/* All screen titles use the same Czech lettering. The main menu is the one intentional exception to sizing only. */
+#app h1.zz01-heading-rendered:not(.zz01-home-title){
+  font-size:clamp(1.55rem,4.2vw,2.65rem)!important;
+  font-weight:400!important;
+}
+#app .grade-screen-head h2.zz01-heading-rendered{
+  font-size:clamp(1.4rem,3.7vw,2.25rem)!important;
+  font-weight:400!important;
+}
+#app .zz01-home-title{
+  margin:0 auto 10px!important;
+  justify-content:center;
+  width:min(940px,96vw)!important;
+  color:#fff1d5!important;
+  font-size:clamp(2.7rem,8vw,5.1rem)!important;
+  filter:drop-shadow(4px 4px 0 #d9550c) drop-shadow(7px 7px 0 #03131d);
+}
+#app .zz01-home-title .zz01-accent{background:#20e6ef}
+#app .loading-title.zz01-heading-rendered{justify-content:center;color:#fff3dc!important}
+#app .rules-title.zz01-heading-rendered,
+#app .candidates-title.zz01-heading-rendered{row-gap:.05em}
+
+@media(max-width:760px){
+  #app h1.zz01-heading-rendered:not(.zz01-home-title){font-size:clamp(1.25rem,6.8vw,2rem)!important}
+  #app .zz01-home-title{font-size:clamp(2rem,10vw,3.6rem)!important}
+  .zz01-heading-rendered{column-gap:.25em;row-gap:.12em}
+}
+</style>
+
 </head>
 <body>
   <div class="crt-overlay" aria-hidden="true"></div>
@@ -4737,6 +4823,72 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   const app = document.getElementById('app');
   const toastRoot = document.getElementById('toast-root');
   const modalRoot = document.getElementById('modal-root');
+
+  /* ZZ-01 Headline CZ: custom Czech 5x7 heading renderer. */
+  const ZZ01_HEADLINE_PATTERNS={
+    A:['01110','10001','10001','11111','10001','10001','10001'],B:['11110','10001','10001','11110','10001','10001','11110'],
+    C:['01111','10000','10000','10000','10000','10000','01111'],D:['11110','10001','10001','10001','10001','10001','11110'],
+    E:['11111','10000','10000','11110','10000','10000','11111'],F:['11111','10000','10000','11110','10000','10000','10000'],
+    G:['01111','10000','10000','10111','10001','10001','01111'],H:['10001','10001','10001','11111','10001','10001','10001'],
+    I:['11111','00100','00100','00100','00100','00100','11111'],J:['00111','00010','00010','00010','00010','10010','01100'],
+    K:['10001','10010','10100','11000','10100','10010','10001'],L:['10000','10000','10000','10000','10000','10000','11111'],
+    M:['10001','11011','10101','10101','10001','10001','10001'],N:['10001','11001','10101','10011','10001','10001','10001'],
+    O:['01110','10001','10001','10001','10001','10001','01110'],P:['11110','10001','10001','11110','10000','10000','10000'],
+    Q:['01110','10001','10001','10001','10101','10010','01101'],R:['11110','10001','10001','11110','10100','10010','10001'],
+    S:['01111','10000','10000','01110','00001','00001','11110'],T:['11111','00100','00100','00100','00100','00100','00100'],
+    U:['10001','10001','10001','10001','10001','10001','01110'],V:['10001','10001','10001','10001','10001','01010','00100'],
+    W:['10001','10001','10001','10101','10101','10101','01010'],X:['10001','10001','01010','00100','01010','10001','10001'],
+    Y:['10001','10001','01010','00100','00100','00100','00100'],Z:['11111','00001','00010','00100','01000','10000','11111'],
+    '0':['01110','10001','10011','10101','11001','10001','01110'],'1':['00100','01100','00100','00100','00100','00100','01110'],
+    '2':['01110','10001','00001','00010','00100','01000','11111'],'3':['11110','00001','00001','01110','00001','00001','11110'],
+    '4':['00010','00110','01010','10010','11111','00010','00010'],'5':['11111','10000','10000','11110','00001','00001','11110'],
+    '6':['01110','10000','10000','11110','10001','10001','01110'],'7':['11111','00001','00010','00100','01000','01000','01000'],
+    '8':['01110','10001','10001','01110','10001','10001','01110'],'9':['01110','10001','10001','01111','00001','00001','01110'],
+    '-':['00000','00000','00000','11111','00000','00000','00000'],'!':['00100','00100','00100','00100','00100','00000','00100'],
+    '?':['01110','10001','00001','00010','00100','00000','00100'],'.':['00000','00000','00000','00000','00000','00110','00110'],
+    ':':['00000','00110','00110','00000','00110','00110','00000'],'/':['00001','00010','00010','00100','01000','01000','10000'],
+    '+':['00000','00100','00100','11111','00100','00100','00000']
+  };
+  const ZZ01_HEADLINE_BASE={
+    'Á':'A','Č':'C','Ď':'D','É':'E','Ě':'E','Í':'I','Ň':'N','Ó':'O','Ř':'R','Š':'S','Ť':'T','Ú':'U','Ů':'U','Ý':'Y','Ž':'Z'
+  };
+  const ZZ01_ACUTE=new Set(['Á','É','Í','Ó','Ú','Ý']);
+  const ZZ01_CARON=new Set(['Č','Ď','Ě','Ň','Ř','Š','Ť','Ž']);
+  const ZZ01_RING=new Set(['Ů']);
+  function zz01Glyph(ch){
+    const upper=String(ch||'').toLocaleUpperCase('cs-CZ');
+    const base=ZZ01_HEADLINE_BASE[upper]||upper;
+    const pattern=ZZ01_HEADLINE_PATTERNS[base]||ZZ01_HEADLINE_PATTERNS['?'];
+    const glyph=document.createElement('span'); glyph.className='zz01-glyph'; glyph.setAttribute('aria-hidden','true');
+    pattern.join('').split('').forEach(bit=>{const px=document.createElement('i');px.className='zz01-px'+(bit==='1'?'':' off');glyph.appendChild(px);});
+    const accent=(cls)=>{const a=document.createElement('i');a.className='zz01-accent '+cls;glyph.appendChild(a);};
+    if(ZZ01_ACUTE.has(upper)){accent('a1');accent('a2');}
+    else if(ZZ01_CARON.has(upper)){accent('v1');accent('v2');accent('v3');}
+    else if(ZZ01_RING.has(upper)){accent('r1');accent('r2');accent('r3');accent('r4');}
+    return glyph;
+  }
+  function zz01Word(word){
+    const w=document.createElement('span');w.className='zz01-word';
+    [...word].forEach(ch=>w.appendChild(zz01Glyph(ch)));
+    return w;
+  }
+  function renderZZ01Heading(el){
+    if(!el||el.dataset.zz01Rendered==='1')return;
+    const original=el.innerText.trim(); if(!original)return;
+    el.dataset.zz01Rendered='1'; el.setAttribute('aria-label',original); el.classList.add('zz01-heading-rendered');
+    const lines=original.split(/\n+/); el.textContent='';
+    lines.forEach((line,li)=>{
+      line.trim().split(/\s+/).filter(Boolean).forEach(word=>el.appendChild(zz01Word(word)));
+      if(li<lines.length-1){const br=document.createElement('span');br.className='zz01-break';el.appendChild(br);}
+    });
+  }
+  function applyZZ01Headings(root=document){
+    const selector='#app h1, #app .grade-screen-head h2';
+    if(root.matches?.(selector))renderZZ01Heading(root);
+    root.querySelectorAll?.(selector).forEach(renderZZ01Heading);
+  }
+  const zz01HeadingObserver=new MutationObserver(records=>records.forEach(r=>r.addedNodes.forEach(n=>{if(n.nodeType===1)applyZZ01Headings(n);}))); 
+  zz01HeadingObserver.observe(app,{childList:true,subtree:true});
 
   const now = () => Date.now();
   const uid = (p='id') => `${p}_${Math.random().toString(36).slice(2,8)}${Date.now().toString(36).slice(-4)}`;
@@ -6456,7 +6608,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     syncCurrentTeacherStats();
     const content=`
       <section class="arcade-home-head">
-        <img class="home-title-art" src="assets/ui/home-title-main-menu.png" alt="Hlavní menu">
+        <h1 class="zz01-home-title" aria-label="Zkouškomat">Zkouškomat</h1>
         <div class="arcade-home-slogan">Proč zkoušet jednoduše, když to lze složitě?</div>
       </section>
       <div class="home-grid">
