@@ -4999,7 +4999,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     {id:'wheel',icon:'✹',name:'Kolo osudu',desc:'Kolo štěstí použito alespoň 5×.'},
     {id:'goldpass',icon:'▣',name:'Zlatá propustka',desc:'Skříňka se objevila alespoň 3×.'},
     {id:'classbook',icon:'▤',name:'Třídnice veterána',desc:'20 dokončených zkoušení a 8 různých témat.'},
-    {id:'cup',icon:'♛',name:'Tajný pohár',desc:'Tajný achievement.'}
+    {id:'cup',icon:'♛',name:'Tajný pohár',desc:'Tajná trofej.'}
   ];
 
   const achievementDefs = [
@@ -5010,7 +5010,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     {id:'five_wheels',name:'Kolo rozhodlo',desc:'Použij Kolo štěstí alespoň 5×.',rewardId:'wheel',rarity:'rare',hidden:false,test:s=>s.wheelSpins>=5},
     {id:'locker_luck',name:'Šatnář štěstěny',desc:'Zažij alespoň 3 výskyty školní skříňky.',rewardId:'goldpass',rarity:'rare',hidden:false,test:s=>s.lockerAppearances>=3},
     {id:'veteran',name:'Veterán ZZ-01',desc:'20 zkoušení a alespoň 8 různých témat.',rewardId:'classbook',rarity:'epic',hidden:false,test:s=>s.completedExams>=20 && s.uniqueTopics>=8},
-    {id:'secret_clean',name:'???',desc:'Skrytý achievement.',rewardId:'cup',rarity:'secret',hidden:true,test:s=>s.completedExams>=15 && s.passesUsed===0}
+    {id:'secret_clean',name:'???',desc:'Skrytá trofej.',rewardId:'cup',rarity:'secret',hidden:true,test:s=>s.completedExams>=15 && s.passesUsed===0}
   ];
 
   const trophyTierDefs=[
@@ -5911,7 +5911,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     {id:'uncommon',label:'NEOBVYKLÉ',hint:'Vyžadují pravidelnější používání aplikace.'},
     {id:'rare',label:'VZÁCNÉ',hint:'Vyžadují konkrétní aktivitu nebo více používání.'},
     {id:'epic',label:'EPICKÉ',hint:'Dlouhodobější nebo kombinované milníky.'},
-    {id:'legendary',label:'LEGENDÁRNÍ',hint:'Nejvzácnější veřejné achievementy.'}
+    {id:'legendary',label:'LEGENDÁRNÍ',hint:'Nejvzácnější veřejné trofeje.'}
   ];
 
   function rarityInfo(id){
@@ -8182,7 +8182,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         </div>
         <h2>Školní výzvy</h2>
         ${seasonChallengeCards(state.user.id)}
-        <h2 style="margin-top:18px">Achievementy</h2>
+        <h2 style="margin-top:18px">Trofeje</h2>
         ${renderTrophyCabinet(state.user.id)}`;
       }
 

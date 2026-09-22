@@ -16,3 +16,18 @@
 - rozměry, ikony, rozmístění a funkce hlavního menu zůstávají beze změny
 - texty v dlaždicích hlavního menu nově zobrazeny VELKÝMI PÍSMENY
 - typografie hlavního menu dále upravena do hranatějšího bitmapového arcade stylu (Fixedsys/Terminal), s mírně vyšší vahou a hrubší pixelovou kresbou bez měkkého světelného efektu
+
+## PATCH — filtrování předmětů podle třídy
+
+- v obrazovce Zahájení zkoušky se po výběru třídy zobrazují pouze předměty přiřazené této konkrétní třídě
+- předměty z ostatních tříd se už do nabídky nemíchají
+- při změně třídy se dříve vybraný předmět nadále správně vynuluje
+- ostatní průchod zkoušením zůstává beze změny
+
+## PATCH — sjednocení terminologie na Trofeje
+
+- v celé uživatelské části aplikace se nepoužívá označení Achievementy / achievement
+- ve scoringu je sekce přejmenována z „Achievementy“ na „Trofeje“
+- texty „Tajný achievement“ a „Skrytý achievement“ jsou změněny na „Tajná trofej“ a „Skrytá trofej“
+- popis rarity nově používá formulaci „Nejvzácnější veřejné trofeje“
+- interní technické názvy funkcí, CSS tříd a datových klíčů zůstávají beze změny kvůli kompatibilitě
