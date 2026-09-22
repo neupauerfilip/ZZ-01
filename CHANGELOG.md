@@ -1,13 +1,15 @@
-# ZZ-01 – oprava hlavičky hlavního menu
+# ZZ-01 — Home Header Visual Match
 
-Tento patch nahrazuje předchozí chybný pokus o rozložení home headeru.
+Opravný patch hlavičky hlavního menu podle schválené vizualizace.
 
-- hlavní menu má pevnou kompaktní hlavičku vysokou 80 px,
-- vlevo je pouze vycentrovaný titul ZKOUŠKOMAT,
-- vpravo je nahoře řada 5 ovládacích ikon,
-- přímo pod ikonami je jediný nízký informační proužek Uživatel • Škola,
-- informační proužek neroztahuje výšku hlavičky,
-- ostatní obrazovky zůstávají beze změny.
+- vlevo je původní ikona aplikace Zkouškomat,
+- vedle ní titul `ZKOUŠKOMAT` v ZZ-01 Headline CZ,
+- pod titulem je dynamický název aktuální školy místo `ZZ-01`, bez rámečku,
+- vpravo je kompaktní štítek přihlášeného uživatele,
+- za ním je jediná řada ikon: hudba, zvuky, domů, profil/nastavení a odhlášení,
+- žádný druhý řádek hlavičky, žádný další informační panel,
+- desktopová hlavička má pevnou výšku 88 px,
+- ostatní obrazovky aplikace se tímto patchem nemění.
 
 Doporučený commit:
-Fix home header layout without increasing height
+`Match home header to approved visualization`

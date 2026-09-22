@@ -6114,17 +6114,20 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 
     if(state.route==='home'){
       return `${!state.online?'<div class="offline-banner">Bez připojení – změny zůstávají v tomto zařízení.</div>':''}
-        <header class="topbar home-topbar home-topbar-clean">
-          <div class="home-brand-zone">
-            <div class="brand-main">ZKOUŠKOMAT</div>
-          </div>
-          <div class="home-control-zone">
-            <div class="home-icon-row">${musicButton}${sfxButton}${homeButton}${profileButton}${logoutButton}</div>
-            <div class="home-session-strip" title="${esc(currentUserName)} · ${esc(schoolName)}">
-              <span class="home-session-user"><span class="home-session-label">Uživatel</span><strong>${esc(currentUserName)}</strong></span>
-              <span class="home-session-sep">•</span>
-              <span class="home-session-school"><span class="home-session-label">Škola</span><strong>${esc(schoolName)}</strong></span>
+        <header class="topbar home-topbar home-topbar-visual">
+          <div class="home-brand-lockup">
+            <img class="home-app-icon" src="assets/ui/zkouskomat-app-icon.png" alt="" aria-hidden="true">
+            <div class="home-brand-copy">
+              <div class="brand-main">ZKOUŠKOMAT</div>
+              <div class="home-school-name" title="${esc(schoolName)}">${esc(schoolName)}</div>
             </div>
+          </div>
+          <div class="home-header-actions">
+            <div class="home-user-chip" title="Aktuálně přihlášený uživatel">
+              <span class="home-user-role">${esc(userRoleLabel())}</span>
+              <strong class="home-user-name">${esc(currentUserName)}</strong>
+            </div>
+            <div class="home-icon-row">${musicButton}${sfxButton}${homeButton}${profileButton}${logoutButton}</div>
           </div>
         </header>
         <main class="container home-container">${content}</main>`;
@@ -9192,6 +9195,205 @@ body::after{
   #app .home-topbar-clean .home-icon-row{gap:4px !important;}
   #app .home-topbar-clean .icon-btn{width:32px !important;height:32px !important;min-width:32px !important;min-height:32px !important;}
 }
+
+/* ================================================================
+   HOME HEADER — VISUALIZATION-LOCKED FINAL LAYOUT
+   One compact row: app icon + ZKOUŠKOMAT + school / user + controls.
+   This block intentionally overrides all older home-header experiments.
+   ================================================================ */
+#app .topbar.home-topbar.home-topbar-visual{
+  box-sizing:border-box !important;
+  width:min(1180px,calc(100% - 28px)) !important;
+  max-width:1180px !important;
+  min-height:88px !important;
+  height:88px !important;
+  margin:14px auto 0 !important;
+  padding:9px 14px !important;
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) auto !important;
+  align-items:center !important;
+  gap:20px !important;
+  flex-wrap:nowrap !important;
+  overflow:visible !important;
+  background:rgba(4,19,33,.97) !important;
+  border:3px solid #1fe9ed !important;
+  border-bottom:3px solid #1fe9ed !important;
+  box-shadow:inset 0 0 0 3px #083d53,4px 4px 0 #010913 !important;
+  clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px),0 10px) !important;
+  backdrop-filter:none !important;
+}
+#app .home-topbar-visual::before,
+#app .home-topbar-visual::after{display:none !important;content:none !important;}
+
+#app .home-topbar-visual .home-brand-lockup{
+  min-width:0 !important;
+  height:100% !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  gap:13px !important;
+}
+#app .home-topbar-visual .home-app-icon{
+  flex:0 0 64px !important;
+  width:64px !important;
+  height:64px !important;
+  display:block !important;
+  object-fit:cover !important;
+  image-rendering:pixelated !important;
+  border:2px solid #1fe9ed !important;
+  background:#061925 !important;
+  box-shadow:inset 0 0 0 2px #083d53,3px 3px 0 #010913 !important;
+  clip-path:polygon(7px 0,calc(100% - 7px) 0,100% 7px,100% calc(100% - 7px),calc(100% - 7px) 100%,7px 100%,0 calc(100% - 7px),0 7px) !important;
+}
+#app .home-topbar-visual .home-brand-copy{
+  min-width:0 !important;
+  height:64px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:flex-start !important;
+  justify-content:center !important;
+  gap:6px !important;
+  line-height:1 !important;
+}
+#app .home-topbar-visual .brand-main,
+#app .home-topbar-visual .brand-main.zz01-heading-rendered{
+  margin:0 !important;
+  padding:0 !important;
+  min-width:0 !important;
+  font-size:clamp(1.05rem,2.25vw,1.48rem) !important;
+  line-height:.92 !important;
+  color:#fff7e6 !important;
+  text-shadow:2px 2px 0 #07121f !important;
+}
+#app .home-topbar-visual .brand-main.zz01-heading-rendered .zz01-word{gap:.035em !important;}
+#app .home-topbar-visual .brand-main.zz01-heading-rendered .zz01-glyph{padding-top:.18em !important;}
+#app .home-topbar-visual .home-school-name{
+  max-width:min(46vw,520px) !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+  font-family:Bahnschrift,"Segoe UI",Arial,sans-serif !important;
+  font-size:clamp(.67rem,1.18vw,.86rem) !important;
+  font-weight:600 !important;
+  letter-spacing:.055em !important;
+  text-transform:uppercase !important;
+  color:#ff9e1a !important;
+  text-shadow:1px 1px 0 #07121f !important;
+}
+
+#app .home-topbar-visual .home-header-actions{
+  min-width:0 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-end !important;
+  gap:12px !important;
+}
+#app .home-topbar-visual .home-user-chip{
+  box-sizing:border-box !important;
+  max-width:220px !important;
+  min-width:135px !important;
+  min-height:42px !important;
+  padding:6px 10px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:flex-start !important;
+  justify-content:center !important;
+  gap:2px !important;
+  border:2px solid #1fe9ed !important;
+  background:#071a2c !important;
+  box-shadow:inset 0 0 0 2px #083d53,3px 3px 0 #010913 !important;
+  clip-path:polygon(6px 0,calc(100% - 6px) 0,100% 6px,100% calc(100% - 6px),calc(100% - 6px) 100%,6px 100%,0 calc(100% - 6px),0 6px) !important;
+  font-family:Bahnschrift,"Segoe UI",Arial,sans-serif !important;
+  line-height:1.05 !important;
+}
+#app .home-topbar-visual .home-user-role{
+  color:#7ecfd7 !important;
+  font-size:.57rem !important;
+  font-weight:600 !important;
+  letter-spacing:.05em !important;
+  text-transform:uppercase !important;
+}
+#app .home-topbar-visual .home-user-name{
+  display:block !important;
+  max-width:100% !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+  color:#fff6df !important;
+  font-size:.75rem !important;
+  font-weight:700 !important;
+}
+#app .home-topbar-visual .home-icon-row{
+  display:flex !important;
+  flex-wrap:nowrap !important;
+  align-items:center !important;
+  justify-content:flex-end !important;
+  gap:7px !important;
+}
+#app .home-topbar-visual .icon-btn,
+#app .home-topbar-visual .home-icon-row .icon-btn{
+  box-sizing:border-box !important;
+  width:42px !important;
+  height:42px !important;
+  min-width:42px !important;
+  min-height:42px !important;
+  margin:0 !important;
+  padding:0 !important;
+  display:grid !important;
+  place-items:center !important;
+  border:2px solid #1fe9ed !important;
+  background:#071a2c !important;
+  box-shadow:inset 0 0 0 2px #083d53,3px 3px 0 #010913 !important;
+  clip-path:polygon(5px 0,calc(100% - 5px) 0,100% 5px,100% calc(100% - 5px),calc(100% - 5px) 100%,5px 100%,0 calc(100% - 5px),0 5px) !important;
+  font-size:0 !important;
+}
+#app .home-topbar-visual .icon-btn img{
+  display:block !important;
+  width:21px !important;
+  height:21px !important;
+  object-fit:contain !important;
+  image-rendering:pixelated !important;
+}
+#app .home-topbar-visual .nav-logout-btn{
+  border-color:#ff9e1a !important;
+  background:#24170b !important;
+  box-shadow:inset 0 0 0 2px #6a3d0f,3px 3px 0 #010913 !important;
+}
+#app .home-topbar-visual .icon-btn:first-child::before{display:none !important;content:none !important;}
+#app .home-topbar-visual .icon-btn:first-child .avatar-chip{display:none !important;}
+#app .home-topbar-visual .context-strip,
+#app .home-topbar-visual .brand-code,
+#app .home-topbar-visual .session-chip,
+#app .home-topbar-visual .home-session-strip{display:none !important;}
+
+@media(max-width:860px){
+  #app .topbar.home-topbar.home-topbar-visual{
+    width:calc(100% - 20px) !important;
+    height:auto !important;
+    min-height:82px !important;
+    padding:8px 10px !important;
+    gap:10px !important;
+    grid-template-columns:minmax(0,1fr) auto !important;
+  }
+  #app .home-topbar-visual .home-app-icon{width:54px !important;height:54px !important;flex-basis:54px !important;}
+  #app .home-topbar-visual .home-brand-copy{height:54px !important;gap:4px !important;}
+  #app .home-topbar-visual .home-user-chip{display:none !important;}
+  #app .home-topbar-visual .icon-btn,
+  #app .home-topbar-visual .home-icon-row .icon-btn{width:38px !important;height:38px !important;min-width:38px !important;min-height:38px !important;}
+  #app .home-topbar-visual .icon-btn img{width:19px !important;height:19px !important;}
+}
+@media(max-width:590px){
+  #app .topbar.home-topbar.home-topbar-visual{
+    grid-template-columns:minmax(0,1fr) !important;
+    height:auto !important;
+    min-height:0 !important;
+    align-items:center !important;
+  }
+  #app .home-topbar-visual .home-header-actions{justify-content:flex-end !important;}
+  #app .home-topbar-visual .home-icon-row{width:100% !important;justify-content:flex-end !important;}
+  #app .home-topbar-visual .home-school-name{max-width:72vw !important;font-size:.60rem !important;}
+}
+
 </style>
 
 </head><body><h1>${esc(state.school.name)} – klasifikační přehled</h1><div class="meta">${esc(c.displayName)} · ${esc(subject)} · ${semester}. pololetí · ${esc(c.schoolYear)} · učitel: ${esc(state.user.name)}</div><table><thead><tr><th>Žák</th>${dates.map(d=>`<th>${esc(d.split('-').reverse().join('. '))}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table><script>window.onload=()=>setTimeout(()=>window.print(),150)<\/script></body></html>`);
