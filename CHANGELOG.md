@@ -177,3 +177,10 @@
 - pozadí nyní zachovává původní poměr stran a neřeže se přes `cover`
 - na různých šířkách obrazovky se celý školní motiv zobrazuje jako jedna scéna
 - centrální menu zůstává živé a vykresluje se nad obrázkovým pozadím
+
+## 2026-09-22 — H1.5 Pozadí viditelnější a menu menší
+- zmenšeno hlavní menu, aby nezakrývalo tolik školní scény v pozadí
+- pozadí hlavní obrazovky nyní používá `contain` a lépe se přizpůsobuje viewportu
+- upravena šířka hlavního sloupce, horní lišty, nadpisu a karet menu
+- zachován obrázkový nadpis i klikací funkce všech tlačítek
+
