@@ -3257,6 +3257,117 @@ body{
 }
 @media(max-width:430px){.staffroom-stats,.settings-stats{grid-template-columns:1fr}.staffroom-stat:last-child,.settings-stat:last-child{grid-column:auto}.settings-screen .avatar-picker{grid-template-columns:repeat(2,minmax(75px,1fr))}.settings-tool-grid{grid-template-columns:1fr}}
 
+
+
+/* H1.2 FORCE OVERRIDE — hlavní menu podle nové arkádové reference */
+body{
+  background:
+    radial-gradient(circle at 50% -18%,rgba(20,126,170,.27),transparent 32%),
+    radial-gradient(circle at 16% 30%,rgba(4,70,110,.20),transparent 27%),
+    linear-gradient(180deg,#021126 0%,#031a30 48%,#020d18 100%) !important;
+  background-attachment:fixed !important;
+}
+body::after{
+  content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background:
+    repeating-linear-gradient(90deg,rgba(16,121,162,.08) 0 2px,transparent 2px 44px),
+    repeating-linear-gradient(0deg,rgba(16,121,162,.055) 0 2px,transparent 2px 44px),
+    radial-gradient(circle at 50% 115%,rgba(0,225,240,.10),transparent 45%);
+}
+
+.topbar.home-topbar{
+  width:min(980px,calc(100% - 28px)) !important;
+  min-height:112px !important;
+  padding:12px 20px !important;
+  border:5px solid #20ebf4 !important;
+  border-bottom-width:8px !important;
+  background:linear-gradient(180deg,#03172c,#041d34) !important;
+  box-shadow:0 0 0 4px #010b13,0 0 0 7px #07556d,0 11px 0 #010913 !important;
+}
+.home-topbar .brand-lockup{gap:18px !important}
+.home-topbar .brand-mark{width:88px !important;height:88px !important;object-fit:cover !important}
+.home-topbar .brand-main{
+  font-family:Impact,"Arial Black","Trebuchet MS",sans-serif !important;
+  font-weight:900 !important;font-size:clamp(1.9rem,4.7vw,2.9rem) !important;
+  letter-spacing:.02em !important;line-height:.9 !important;color:#fff1bd !important;
+  text-shadow:0 4px 0 #ff8a13,0 7px 0 #a83207,4px 8px 0 #00101b !important;
+}
+.home-topbar .brand-code{font-size:clamp(.9rem,2.2vw,1.2rem) !important;color:#2debf4 !important;letter-spacing:.18em !important}
+
+.arcade-home-head{margin:48px 0 30px !important}
+.arcade-home-title{
+  font-family:Impact,"Arial Black","Trebuchet MS",sans-serif !important;
+  font-weight:900 !important;
+  font-size:clamp(3.2rem,10vw,6.2rem) !important;
+  line-height:.84 !important;
+  letter-spacing:.015em !important;
+  color:#fff0b7 !important;
+  text-transform:uppercase !important;
+  text-shadow:0 6px 0 #ff9c19,0 11px 0 #e84708,5px 12px 0 #00101e !important;
+}
+.arcade-home-title::before,.arcade-home-title::after{
+  content:"—" !important;color:#26edf5 !important;font-family:Impact,"Arial Black",sans-serif !important;
+  font-size:.26em !important;margin:0 .28em !important;vertical-align:.18em !important;text-shadow:none !important;
+}
+.arcade-home-slogan{
+  margin-top:22px !important;color:#35eff6 !important;font-size:clamp(1rem,3vw,1.55rem) !important;
+  font-weight:900 !important;letter-spacing:.025em !important;text-shadow:0 2px 0 #06384b !important;
+}
+
+.home-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  gap:14px !important;margin-top:30px !important;
+}
+.home-card{
+  min-height:170px !important;
+  padding:14px 18px !important;
+  grid-template-columns:150px minmax(0,1fr) !important;
+  gap:16px !important;
+  border:5px solid #20eaf3 !important;
+  background:linear-gradient(180deg,#062641 0%,#03182c 100%) !important;
+  box-shadow:inset 0 0 0 4px #07566f,inset 0 0 0 8px #02101d,7px 7px 0 #010913 !important;
+  clip-path:polygon(12px 0,calc(100% - 12px) 0,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,0 calc(100% - 12px),0 12px) !important;
+}
+.home-card::before{
+  content:"" !important;display:block !important;position:absolute !important;inset:9px !important;
+  border:2px solid rgba(35,235,245,.22) !important;pointer-events:none !important;
+}
+.home-card::after{display:none !important}
+.home-card[data-action="exam"]{
+  border-color:#fff0a3 !important;
+  background:linear-gradient(180deg,#ffad20 0%,#ff7610 100%) !important;
+  box-shadow:inset 0 0 0 5px #ffd94a,inset 0 0 0 10px #d94b08,7px 7px 0 #010913 !important;
+}
+.home-card[data-action="exam"]::before{border-color:rgba(99,39,0,.32) !important}
+.home-card .home-icon{height:130px !important;width:138px !important;overflow:visible !important}
+.home-card .home-icon img{width:130px !important;height:130px !important;object-fit:contain !important;image-rendering:pixelated !important}
+.home-card h2{
+  font-family:Impact,"Arial Black","Trebuchet MS",sans-serif !important;
+  font-size:clamp(1.45rem,3.7vw,2.25rem) !important;
+  line-height:1 !important;letter-spacing:.01em !important;color:#fff2cb !important;text-shadow:2px 2px 0 #02121e !important;
+}
+.home-card[data-action="exam"] h2{color:#111722 !important;text-shadow:none !important}
+
+.home-bottom-decor{margin-top:28px !important}
+.home-motto{color:#27e9f2 !important}
+.home-reference-footer{border-top-color:#25eaf3 !important;color:#25eaf3 !important}
+
+@media(max-width:760px){
+  .topbar.home-topbar{min-height:82px !important;padding:8px 10px !important}
+  .home-topbar .brand-mark{width:58px !important;height:58px !important}
+  .home-topbar .brand-main{font-size:1.45rem !important}
+  .arcade-home-head{margin:30px 0 20px !important}
+  .arcade-home-title{font-size:clamp(2.6rem,12vw,4.5rem) !important}
+  .home-grid{gap:10px !important;margin-top:20px !important}
+  .home-card{min-height:128px !important;grid-template-columns:94px minmax(0,1fr) !important;gap:8px !important;padding:9px !important;border-width:4px !important}
+  .home-card .home-icon{width:90px !important;height:96px !important}.home-card .home-icon img{width:88px !important;height:88px !important}
+  .home-card h2{font-size:clamp(1rem,4.6vw,1.45rem) !important}
+}
+@media(max-width:480px){
+  .home-grid{grid-template-columns:1fr !important}
+  .home-card{min-height:112px !important;grid-template-columns:92px 1fr !important}
+  .arcade-home-title::before,.arcade-home-title::after{display:none !important}
+}
 </style>
   <title>Zkouškomat ZZ-01</title>
 </head>

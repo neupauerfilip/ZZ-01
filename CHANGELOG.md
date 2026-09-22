@@ -157,3 +157,11 @@
 - doladěna horní lišta, značka aplikace a spodní dekorace domovské obrazovky
 - beze změn logiky navigace a funkcí dlaždic
 
+## 2026-09-22 — H1.2 Home style override fix
+- Opraveno přepisování nového vzhledu hlavního menu starším CSS blokem.
+- Finální styl je vložen na konec CSS, takže má přednost před staršími pravidly.
+- Hlavní nadpis používá hranatější bezpatkový arcade vzhled.
+- Dlaždice menu dostaly výraznější neonové pixelové rámy a oranžovou primární kartu.
+- Pozadí bylo převedeno na hlubší tmavě modré retro pozadí s jemnou mřížkou.
+- Zachována nová učitelská ikona vlevo nahoře.
+
