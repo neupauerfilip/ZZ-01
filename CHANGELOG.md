@@ -190,3 +190,9 @@
 - vyladěny opacity a pozice pozadí pro desktop i mobil
 - menu zůstává živé, klikací a beze změny funkce
 
+## 2026-09-22 — H1.7 Pozadí hlavního menu přes celý viewport
+- hlavní školní scéna nyní vyplňuje celý viewport pomocí `background-size: cover`
+- pokud rozměr obrázku přesáhne zařízení, výřez se automaticky přizpůsobí obrazovce
+- zachována i druhá širší vrstva pozadí pro okraje, ale hlavní vrstva je nyní skutečně fullscreen
+- menu, nadpis a tlačítka zůstávají beze změny funkce
+
