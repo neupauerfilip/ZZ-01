@@ -3368,6 +3368,79 @@ body::after{
   .home-card{min-height:112px !important;grid-template-columns:92px 1fr !important}
   .arcade-home-title::before,.arcade-home-title::after{display:none !important}
 }
+
+/* H1.3 — obrazový nadpis + pozadí z referenčního obrázku */
+.home-container{position:relative;isolation:isolate;z-index:1}
+.home-container::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background-image:url("assets/ui/home-classroom-bg.png");
+  background-size:cover;
+  background-position:center top;
+  background-repeat:no-repeat;
+  image-rendering:pixelated;
+}
+.home-container::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:linear-gradient(180deg,rgba(1,10,19,.06),rgba(1,10,19,.16));
+}
+.home-container>*{position:relative;z-index:1}
+.home-topbar{z-index:45 !important}
+.arcade-home-head{margin:34px 0 18px !important}
+.home-title-art{
+  display:block;
+  width:min(880px,94vw);
+  max-width:100%;
+  height:auto;
+  margin:0 auto;
+  object-fit:contain;
+  image-rendering:pixelated;
+  filter:drop-shadow(0 6px 0 #5f1a04) drop-shadow(0 10px 0 #00101d);
+}
+.arcade-home-title{display:none !important}
+.arcade-home-slogan{
+  margin-top:10px !important;
+  padding:4px 12px;
+  display:inline-block;
+  background:rgba(2,18,33,.72);
+  border-left:3px solid rgba(31,232,241,.62);
+  border-right:3px solid rgba(31,232,241,.62);
+  text-shadow:0 2px 0 #031827 !important;
+}
+.home-grid{margin-top:18px !important}
+.home-card{
+  background:linear-gradient(180deg,rgba(5,31,51,.94),rgba(2,18,33,.95)) !important;
+  backdrop-filter:none !important;
+}
+.home-card[data-action="exam"]{
+  background:linear-gradient(180deg,#ff9d18,#ff7410) !important;
+}
+.home-bottom-decor{display:none !important}
+.home-reference-footer{
+  margin-top:28px !important;
+  background:rgba(2,18,33,.72);
+  padding-left:8px !important;
+  padding-right:8px !important;
+}
+@media(max-width:760px){
+  .home-container::before{background-position:center top;background-size:auto 100%;}
+  .home-title-art{width:min(720px,98vw)}
+  .arcade-home-head{margin:24px 0 15px !important}
+  .arcade-home-slogan{font-size:.78rem !important}
+}
+@media(max-width:480px){
+  .home-container::before{background-position:center top;background-size:auto 100%;opacity:.72}
+  .home-title-art{width:100%}
+  .arcade-home-slogan{display:block;margin:8px auto 0 !important;max-width:94%}
+}
+
 </style>
   <title>Zkouškomat ZZ-01</title>
 </head>
@@ -4960,7 +5033,7 @@ body::after{
     syncCurrentTeacherStats();
     const content=`
       <section class="arcade-home-head">
-        <h1 class="arcade-home-title">HLAVNÍ MENU</h1>
+        <img class="home-title-art" src="assets/ui/home-title-main-menu.png" alt="Hlavní menu">
         <div class="arcade-home-slogan">Proč zkoušet jednoduše, když to jde složitě?</div>
       </section>
       <div class="home-grid">

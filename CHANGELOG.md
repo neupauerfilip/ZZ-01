@@ -165,3 +165,10 @@
 - Pozadí bylo převedeno na hlubší tmavě modré retro pozadí s jemnou mřížkou.
 - Zachována nová učitelská ikona vlevo nahoře.
 
+## 2026-09-22 — H1.3 Obrazový nadpis a školní pozadí
+- Nadpis „HLAVNÍ MENU“ už není programovaný fontem; používá samostatný PNG výřez přímo ze schváleného pixelového návrhu.
+- Domovská obrazovka používá samostatný obrázkový background odvozený ze stejného schváleného návrhu, se zachovanými bočními školními dekoracemi.
+- Střed pozadí je záměrně zklidněný pro skutečná interaktivní tlačítka aplikace; tlačítka zůstávají živá HTML/CSS, nejsou součástí obrázku.
+- Původní spodní programovaná dekorace byla na hlavním menu skryta, aby se nedublovala s obrázkovým pozadím.
+- Funkce a navigace hlavního menu zůstávají beze změny.
+
