@@ -4296,7 +4296,11 @@ body::after{
     confirm:'assets/audio/sfx-confirm.wav',
     warning:'assets/audio/sfx-warning.wav',
     draw:'assets/audio/sfx-draw.wav',
-    result:'assets/audio/sfx-result.wav'
+    result:'assets/audio/sfx-result.wav',
+    locker:'assets/audio/sfx-locker-magic.wav',
+    wheelTick:'assets/audio/sfx-wheel-tick.wav',
+    wheelLand:'assets/audio/sfx-wheel-land.wav',
+    trophy:'assets/audio/sfx-trophy-fanfare.wav'
   };
   const sfxBank=Object.fromEntries(Object.entries(sfxSources).map(([key,src])=>{
     const a=new Audio(src); a.preload='auto'; a.volume=.28; return [key,a];
@@ -4316,7 +4320,7 @@ body::after{
     }
   }
   function playSfx(name='click'){
-    if(state.settings.sfxEnabled===false || document.hidden) return;
+    if(!name || name==='none' || state.settings.sfxEnabled===false || document.hidden) return;
     const base=sfxBank[name]||sfxBank.click;
     if(!base) return;
     try{
@@ -4327,10 +4331,32 @@ body::after{
     }catch(_){ }
   }
   function actionSfx(action=''){
-    if(/(?:draw-candidates|spin-wheel|spin-standalone|choose-other)/.test(action)) return 'draw';
+    if(/(?:spin-wheel|spin-standalone)/.test(action)) return 'none';
+    if(/(?:draw-candidates|choose-other)/.test(action)) return 'draw';
     if(/(?:delete|remove|logout|leave-school)/.test(action)) return 'warning';
     if(/(?:confirm|save|finish|end-exam|exam-next|result-next-exam|join-selected-school|create-school-onboarding)/.test(action)) return 'confirm';
     return 'click';
+  }
+
+
+  let wheelSfxTimers=[];
+  function stopWheelSfx(){
+    wheelSfxTimers.forEach(clearTimeout);
+    wheelSfxTimers=[];
+  }
+  function playWheelSpinSfx(duration=2100){
+    if(state.settings.sfxEnabled===false || document.hidden) return;
+    stopWheelSfx();
+    // Jemné cvakání s postupně delšími rozestupy — odpovídá zpomalování kola.
+    let elapsed=0;
+    let interval=58;
+    while(elapsed < duration-170){
+      const at=elapsed;
+      wheelSfxTimers.push(setTimeout(()=>playSfx('wheelTick'),at));
+      elapsed += interval;
+      interval=Math.min(235,interval*1.105+2.5);
+    }
+    wheelSfxTimers.push(setTimeout(()=>playSfx('wheelLand'),Math.max(0,duration-70)));
   }
 
   function saveState(){
@@ -4688,6 +4714,7 @@ body::after{
   function showTrophyUnlocked(item){
     const def=item?.trophy; const tier=item?.tier||trophyTierDefs[0];
     if(!def)return;
+    playSfx('trophy');
     modal({
       title:'NOVÁ TROFEJ!',
       body:`<div class="achievement-pop" style="text-align:center">
@@ -6483,6 +6510,7 @@ body::after{
     }
 
     saveState();
+    playSfx('locker');
     modal({
       title:'Školní skříňka',
       body:`${lockerVisualHtml(item,effectText)}${item.kind==='pass'?'<p>Novou propustku lze použít hned nebo si ji nechat na později.</p>':''}`,
@@ -8674,6 +8702,7 @@ body::after{
       const items=questionSetForSubject(state.examFlow.subject,false)?.items||[];
       if(!items.length)return toast('Pro tento předmět nejsou vytvořená žádná témata.','error');
       gameEvent('wheel_spin',{subject:state.examFlow.subject,source:'exam'});
+      playWheelSpinSfx(2100);
       const wheel=document.getElementById('question-wheel');
       if(wheel){
         wheel.classList.remove('is-spinning');
@@ -8715,6 +8744,7 @@ body::after{
       const items=questionSetForSubject(subject,false)?.items||[];
       if(!items.length)return toast('Pro tento předmět nejsou vytvořená žádná témata.','error');
       gameEvent('wheel_spin',{subject,source:'standalone'});
+      playWheelSpinSfx(2100);
       const wheel=document.getElementById('standalone-wheel');
       if(wheel){
         wheel.classList.remove('is-spinning');

@@ -281,3 +281,16 @@
 - výsledek: krátký křídový tah a lehké školní razítko
 - hudba a její automatický start z Audio Pack B zůstávají beze změny
 
+## 2026-09-22 — Audio Pack D: jemný melodický zvukový styl
+- systémové zvuky přepracovány do jednotnějšího, měkčího melodického stylu bez ostrých arkádových pípnutí a hlubokého dunění
+- běžné kliknutí používá jemné mechanické ťuknutí s teplým tónem
+- potvrzení, varování a výsledek používají krátké příjemné dvou- až třínotové motivy
+- přidán samostatný magický zvuk při objevení Školní skříňky
+- Kolo štěstí nově používá jemné cvakání, které se během otáčení postupně zpomaluje, a na konci zazní měkké melodické potvrzení
+- hudba hlavního menu zůstává beze změny
+
+## 2026-09-22 — Audio Pack D.1: fanfára za trofej
+- přidána krátká melodická vítězná fanfára `sfx-trophy-fanfare.wav`
+- fanfára zazní pouze při skutečném odemčení nové trofeje nebo jejího nového stupně
+- zvuk je sladěný s jemnějším melodickým stylem Audio Packu D a nepoužívá ostré 8bitové pípání
+
