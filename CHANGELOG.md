@@ -17,3 +17,13 @@ Rozbal ZIP do kořene projektu a přepiš `index.html` a `CHANGELOG.md`.
 - vlastní ZZ-01 Headline CZ se nyní používá na malý nápis ZKOUŠKOMAT v horní hlavičce
 - hlavička dostala sjednocené sražené rohy, cyanový dvojitý rám a kompaktnější herní vzhled
 - funkce, ikony, hudba, zvuky, profil a odhlášení zůstávají beze změny
+
+
+## Header school-info correction
+- hlavní menu používá stejnou kompaktní hlavičku jako ostatní obrazovky
+- výška desktopové hlavičky se nezvětšuje
+- uživatel a škola jsou společně v jednom kompaktním informačním panelu
+- první řádek: role + jméno uživatele
+- druhý řádek: ŠKOLA + aktuální název školy
+- dlouhé názvy školy se zkrátí uvnitř panelu, plný název je dostupný v title
+- původní velký obrázkový nápis ZKOUŠKOMAT v hlavním menu zůstává zachovaný
