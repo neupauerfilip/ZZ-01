@@ -134,3 +134,11 @@
 - Detail třídy byl sjednocen do stejného stylu; karty žáků mají přehledné jméno, body a oddělené akce Upravit / Odebrat.
 - Záložky Žáci / Témata / Nastavení byly zvětšeny a optimalizovány pro dotykové ovládání.
 - Funkce přidání třídy, otevření třídy, správy žáků, témat, nastavení, historie a převodu školního roku zůstaly zachovány.
+
+## 2026-09-22 — Visual Pack A — H9/H10/H11
+- Větší společný patch sjednocuje sekce „Moje předměty“, „Známkování“ a „Scoring / Přehledy“, aby nebylo nutné instalovat tři samostatné balíčky.
+- Moje předměty dostaly velké pixelové karty, souhrn předmětů/témat/přiřazení a přepracovaný detail předmětu s přehlednými tématy a třídami.
+- Známkování má nový výrazný panel filtrů, souhrn žáků/záznamů/průměru, jasné přepnutí Tabulka/Seznam a oddělené akce Tisk/PDF a Export Excel.
+- Scoring má nové tři velké režimy Žáci – moje třídy / Žáci – celá škola / Učitelé a sjednocené tabulky a panely.
+- Dlouhé klasifikační a scoringové tabulky zůstávají na mobilu scrollovací uvnitř vlastního rámu.
+- Původní datová logika, filtry, exporty, gamifikace, témata a všechny akce zůstávají zachovány.

@@ -3131,6 +3131,31 @@ body{
   .fidelity-h7-grade{padding:9px!important}
 }
 
+
+
+/* =========================================================
+   VISUAL PACK A — H9/H10/H11: Subjects + Grades + Scoring
+   ========================================================= */
+.pack-a-screen{width:min(980px,100%);margin:0 auto;padding:4px 0 16px}
+.pack-a-hero,.pack-a-detail-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:end;margin:4px 0 16px;padding:18px 20px;border:4px solid #22e9ee;background:linear-gradient(180deg,#0a2d40,#061b29);box-shadow:inset 0 0 0 3px #0b6075,6px 6px 0 #02070d;clip-path:polygon(12px 0,calc(100% - 12px) 0,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,0 calc(100% - 12px),0 12px)}
+.pack-a-detail-head{grid-template-columns:auto minmax(0,1fr) auto;align-items:center}
+.pack-a-kicker{font-family:var(--pixel);color:#20edf0;font-size:.72rem;letter-spacing:.08em;margin-bottom:5px}
+.pack-a-hero h1,.pack-a-detail-head h1{margin:0;color:#fff8e6;font-family:var(--pixel);font-size:clamp(2rem,6.5vw,3.5rem);line-height:1;text-transform:uppercase;text-shadow:3px 3px 0 #ff6f23,6px 6px 0 #02070d}
+.pack-a-hero p,.pack-a-detail-head p{margin:10px 0 0;color:#b8d9dc;line-height:1.45;font-weight:700}
+.pack-a-primary,.pack-a-secondary,.pack-a-back,.pack-a-mini,.pack-a-danger-wide{min-height:52px;border:4px solid #fff3d8;font-family:var(--pixel);font-weight:900;box-shadow:4px 4px 0 #02070d;clip-path:polygon(8px 0,calc(100% - 8px) 0,100% 8px,100% calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,0 calc(100% - 8px),0 8px)}
+.pack-a-primary{background:#ff8b0b;color:#111018;padding:10px 15px}.pack-a-primary.small{min-height:44px;padding:7px 12px}
+.pack-a-secondary,.pack-a-back{border-color:#1fe8ec;background:#09283a;color:#20f0f2;padding:10px 14px}.pack-a-back{white-space:nowrap}
+.pack-a-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 15px}.pack-a-kpis.two{grid-template-columns:repeat(2,minmax(0,1fr))}.pack-a-kpis.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.pack-a-kpis>div{min-height:88px;border:3px solid #117e96;background:#061a27;padding:12px 14px;display:flex;flex-direction:column;justify-content:center;box-shadow:3px 3px 0 #02070d}.pack-a-kpis strong{font-family:var(--pixel);font-size:1.5rem;color:#ffb316}.pack-a-kpis span{margin-top:5px;color:#9ec7cb;font-size:.78rem;font-weight:800}
+.pack-a-subject-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.pack-a-subject-card{width:100%;min-height:145px;display:grid;grid-template-columns:58px minmax(0,1fr) auto;gap:14px;align-items:center;text-align:left;padding:15px;border:4px solid #1fe9ed;background:linear-gradient(180deg,#0a2d40,#061c2a);color:#fff7e5;box-shadow:inset 0 0 0 3px #0a6075,5px 5px 0 #02070d;clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px),0 10px)}
+.pack-a-subject-card:hover{filter:brightness(1.08)}.pack-a-subject-number{font-family:var(--pixel);font-size:1.15rem;color:#ffb315;border:3px solid #ff9a13;background:#2d1d09;width:52px;height:52px;display:grid;place-items:center}.pack-a-subject-copy{display:flex;flex-direction:column;min-width:0}.pack-a-subject-copy strong{font-family:var(--pixel);font-size:clamp(1rem,2.6vw,1.25rem);overflow-wrap:anywhere}.pack-a-subject-copy>span{margin-top:7px;color:#8fd6db;font-size:.78rem}.pack-a-subject-copy .pack-a-subject-classes{color:#9bb7bd;line-height:1.4}.pack-a-subject-open{align-self:stretch;min-width:104px;border-left:2px dashed #177a91;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;color:#20eef0;font-family:var(--pixel);font-size:.67rem}.pack-a-subject-open b{color:#ffac13;font-size:1.35rem}
+.pack-a-panel{border:4px solid #1bced5;background:linear-gradient(180deg,#082538,#061925);padding:14px;box-shadow:inset 0 0 0 3px #07485e,5px 5px 0 #02070d;min-width:0}.pack-a-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.pack-a-panel-head h2{margin:0;font-family:var(--pixel);font-size:1rem;color:#fff3dc}.pack-a-detail-grid{display:grid;grid-template-columns:minmax(260px,.75fr) minmax(0,1.25fr);gap:14px}.pack-a-class-list,.pack-a-topic-list{display:grid;gap:8px;max-height:55vh;overflow:auto;padding-right:4px}.pack-a-class-chip{border:3px solid #0c7b93;background:#071b28;padding:11px 13px;display:flex;justify-content:space-between;gap:10px;align-items:center}.pack-a-class-chip strong{color:#fff2dd}.pack-a-class-chip span{color:#20e9ec;font-family:var(--pixel);font-size:.7rem}.pack-a-topic-row{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:10px;align-items:center;border:3px solid #0e7890;background:#061924;padding:9px}.pack-a-topic-index{width:42px;height:42px;display:grid;place-items:center;border:2px solid #ff9c13;color:#ffb316;background:#2b1c09;font-family:var(--pixel);font-size:.72rem}.pack-a-topic-name{font-weight:900;color:#fff6e5;overflow-wrap:anywhere}.pack-a-topic-actions{display:flex;gap:6px}.pack-a-mini{min-height:38px;border-width:2px;clip-path:none;background:#092938;color:#20eaee;border-color:#1bd7df;padding:6px 9px;font-size:.68rem}.pack-a-mini.danger{color:#ffb09f;border-color:#ff6d5f;background:#321817}.pack-a-note{margin-top:12px;padding:10px 12px;border-left:4px solid #ff9c13;background:#151d22;color:#a9c4c8;font-size:.78rem}.pack-a-danger-wide{width:100%;margin-top:14px;background:#3d1817;color:#ffd9d0;border-color:#ff6d5f;padding:10px}
+.pack-a-empty{border:3px dashed #277083;background:#071925;padding:28px;text-align:center;color:#9dbcc0;font-weight:700}.pack-a-empty.compact{padding:16px}
+.pack-a-grade-filter{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:14px;border:4px solid #158fa4;background:#061a28;box-shadow:inset 0 0 0 3px #063a50,4px 4px 0 #02070d;margin-bottom:12px}.pack-a-grade-filter label{font-weight:900;color:#20e9ed}.pack-a-grade-filter input,.pack-a-grade-filter select{margin-top:5px;border:3px solid #197f92;background:#04141f;color:#fff2df;font-weight:900}.pack-a-grade-actions{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:12px 0}.pack-a-view-toggle,.pack-a-export-actions{display:flex;gap:8px;flex-wrap:wrap}.pack-a-grade-actions button{min-height:48px;border:3px solid #20dce2;background:#082634;color:#20edf0;padding:9px 13px;font-weight:900;box-shadow:3px 3px 0 #02070d}.pack-a-grade-actions button.active{border-color:#fff2d8;background:#ff8b0d;color:#14100a}.grade-panel{padding:10px}.pack-a-table-shell{border:3px solid #176e82!important;background:#04141f;max-height:58vh;overflow:auto!important}.pack-a-table-shell table{min-width:760px}.grades-fidelity .grade-pill{display:inline-grid;place-items:center;min-width:32px;min-height:32px;padding:3px 7px;border:2px solid #20dae0;background:#092735;color:#fff;font-family:var(--pixel);font-weight:900}.grades-fidelity .grade-pill.grade-1{border-color:#60e98a;color:#8affaa}.grades-fidelity .grade-pill.grade-2{border-color:#a4e866;color:#c8ff84}.grades-fidelity .grade-pill.grade-3{border-color:#ffd34d;color:#ffe16c}.grades-fidelity .grade-pill.grade-4{border-color:#ff9b35;color:#ffb565}.grades-fidelity .grade-pill.grade-5,.grades-fidelity .grade-pill.no-grade{border-color:#ff6558;color:#ff998e}
+.pack-a-score-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-bottom:13px}.pack-a-score-tabs button{min-height:66px;display:flex;align-items:center;justify-content:center;gap:9px;border:3px solid #167d91;background:#071e2b;color:#9bc5c9;font-weight:900;box-shadow:3px 3px 0 #02070d}.pack-a-score-tabs button span{font-family:var(--pixel);color:#20e9ed}.pack-a-score-tabs button.active{border-color:#fff3da;background:#ff8c0d;color:#111}.pack-a-score-tabs button.active span{color:#111}.scoring-panel{overflow:hidden}.scoring-fidelity .score-filter{padding:12px!important;border:3px solid #167c90!important;box-shadow:none!important}.scoring-fidelity .tabs{gap:6px}.scoring-fidelity .table-wrap{border:3px solid #176d80;max-height:58vh}.scoring-fidelity table{background:#051824}.scoring-fidelity th{background:#0a3040;color:#ffb416}.scoring-fidelity td{border-bottom-color:#174958}.scoring-fidelity .season-banner{border-width:3px;background:#171d22}.scoring-fidelity .podium-box{box-shadow:4px 4px 0 #02070d}.scoring-fidelity .game-toolbar{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.scoring-fidelity .game-toolbar .btn{min-width:0;padding:8px 9px}.scoring-fidelity .boss-panel{box-shadow:4px 4px 0 #02070d}
+@media(max-width:760px){.pack-a-hero,.pack-a-detail-head{grid-template-columns:1fr;align-items:stretch}.pack-a-detail-head .pack-a-back{order:-1}.pack-a-subject-grid{grid-template-columns:1fr}.pack-a-detail-grid{grid-template-columns:1fr}.pack-a-grade-filter{grid-template-columns:repeat(2,minmax(0,1fr))}.pack-a-score-tabs{grid-template-columns:1fr}.scoring-fidelity .game-toolbar{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.pack-a-kpis,.pack-a-kpis.two,.pack-a-kpis.three{grid-template-columns:1fr 1fr}.pack-a-kpis>div:last-child:nth-child(odd){grid-column:1/-1}.pack-a-subject-card{grid-template-columns:48px minmax(0,1fr);min-height:130px}.pack-a-subject-open{grid-column:1/-1;border-left:0;border-top:2px dashed #177a91;min-height:42px;flex-direction:row}.pack-a-grade-filter{grid-template-columns:1fr}.pack-a-grade-actions{display:grid}.pack-a-view-toggle,.pack-a-export-actions{display:grid;grid-template-columns:1fr 1fr}.pack-a-topic-row{grid-template-columns:42px minmax(0,1fr)}.pack-a-topic-actions{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr}.scoring-fidelity .game-toolbar{grid-template-columns:1fr}.pack-a-hero h1,.pack-a-detail-head h1{font-size:clamp(1.8rem,10vw,2.8rem)}}
+
 </style>
   <title>Zkouškomat ZZ-01</title>
 </head>
@@ -6123,7 +6148,13 @@ body{
         </section>
         <div class="game-note">Scoring je herní prvek Zkouškomatu. Neslouží k hodnocení pracovního výkonu učitelů.</div>`;
     }
-    const content=`<div class="section-title"><h1 class="pixel-title">Scoring / Přehledy</h1></div><div class="tabs"><button class="tab ${tab==='my'?'active':''}" data-action="score-tab" data-tab="my">Žáci – moje třídy</button><button class="tab ${tab==='school'?'active':''}" data-action="score-tab" data-tab="school">Žáci – celá škola</button><button class="tab ${tab==='teachers'?'active':''}" data-action="score-tab" data-tab="teachers">Učitelé</button></div><section class="pixel-frame card" style="margin-top:12px">${body}</section>`;
+    const tabTitle=tab==='my'?'Žáci – moje třídy':tab==='school'?'Žáci – celá škola':'Učitelé';
+    const content=`<section class="pack-a-screen scoring-fidelity">
+      <div class="pack-a-hero"><div><div class="pack-a-kicker">PŘEHLEDY A HERNÍ SCORING</div><h1>Scoring</h1><p>${esc(tabTitle)} · body, aktivita a dlouhodobý přehled.</p></div></div>
+      <div class="pack-a-score-tabs"><button class="${tab==='my'?'active':''}" data-action="score-tab" data-tab="my"><span>01</span>Žáci – moje třídy</button><button class="${tab==='school'?'active':''}" data-action="score-tab" data-tab="school"><span>02</span>Žáci – celá škola</button><button class="${tab==='teachers'?'active':''}" data-action="score-tab" data-tab="teachers"><span>03</span>Učitelé</button></div>
+      <section class="pack-a-panel scoring-panel">${body}</section>
+      <div class="arcade-footer"><span>SCORING / PŘEHLEDY</span><span>ZZ-01</span></div>
+    </section>`;
     app.innerHTML=layout(content,'Scoring');
   }
 
@@ -6177,7 +6208,7 @@ body{
 
   function renderGrades(){
     if(!state.classes.length){
-      app.innerHTML=layout(`<div class="section-title"><h1 class="pixel-title">Známkování</h1></div><section class="pixel-frame card"><div class="empty">Nejdřív založ alespoň jednu třídu.</div></section>`,'Známkování');
+      app.innerHTML=layout(`<section class="pack-a-screen grades-fidelity"><div class="pack-a-hero"><div><div class="pack-a-kicker">KLASIFIKACE</div><h1>Známkování</h1></div></div><div class="pack-a-empty">Nejdřív založ alespoň jednu třídu.</div></section>`,'Známkování');
       return;
     }
     let classId=state.ui.gradeClassId;
@@ -6193,46 +6224,73 @@ body{
     const entries=state.history.filter(h=>h.completed && h.classId===classId && (!subject || h.subject===subject) && String(h.semester||'1')===String(semester)).slice().sort((a,b)=>a.at-b.at);
     const dates=[...new Set(entries.map(h=>dateKey(h.at)))];
     const students=studentsForClass(classId);
+    const graded=entries.filter(h=>!h.noGradeStatus && Number.isFinite(Number(h.grade)));
+    const avg=graded.length?(graded.reduce((n,h)=>n+Number(h.grade),0)/graded.length).toFixed(2):'—';
     const tableRows=students.map(s=>{
       const cells=dates.map(d=>{
         const same=entries.filter(h=>h.studentId===s.id && dateKey(h.at)===d);
         if(!same.length) return '<td class="grade-cell">—</td>';
-        return `<td class="grade-cell">${same.map(h=>h.noGradeStatus?`<span class="grade-pill no-grade" title="${esc(h.topic||'')}">bez známky</span>`:`<span class="grade-pill" title="${esc(h.topic||'')}">${esc(String(h.grade??'—'))}</span>`).join(' ')}</td>`;
+        return `<td class="grade-cell">${same.map(h=>h.noGradeStatus?`<span class="grade-pill no-grade" title="${esc(h.topic||'')}">bez známky</span>`:`<span class="grade-pill grade-${Number(h.grade)||0}" title="${esc(h.topic||'')}">${esc(String(h.grade??'—'))}</span>`).join(' ')}</td>`;
       }).join('');
       return `<tr><td><strong>${esc(s.name)}</strong></td>${cells}</tr>`;
     }).join('');
-    const listRows=entries.map(h=>{const s=studentById(h.studentId);return `<tr><td>${fmtDate(h.at)}</td><td>${esc(s?.name||'—')}</td><td>${h.noGradeStatus?'bez známky':esc(String(h.grade??'—'))}</td><td>${esc(h.topic||'—')}</td><td>${esc(h.note||'')}</td></tr>`}).join('');
-    const table=`<div class="gradebook-scroll"><table class="gradebook-table"><thead><tr><th>Žák</th>${dates.map(d=>`<th>${esc(d.split('-').reverse().join('. '))}</th>`).join('')}</tr></thead><tbody>${tableRows||'<tr><td>Žádní žáci.</td></tr>'}</tbody></table></div>`;
-    const list=`<div class="table-wrap"><table><thead><tr><th>Datum</th><th>Žák</th><th>Známka / stav</th><th>Téma</th><th>Poznámka</th></tr></thead><tbody>${listRows||'<tr><td colspan="5">Zatím nejsou žádné známky pro zvolený filtr.</td></tr>'}</tbody></table></div>`;
-    const content=`<div class="section-title"><div><h1 class="pixel-title">Známkování</h1><div class="muted">Klasifikační přehled pro tisk a export</div></div></div>
-      <section class="pixel-frame card">
-        <div class="grade-toolbar">
-          <label>Školní rok<input value="${esc(c.schoolYear)}" disabled></label>
-          <label>Pololetí<select id="grade-semester"><option value="1" ${semester==='1'?'selected':''}>1. pololetí</option><option value="2" ${semester==='2'?'selected':''}>2. pololetí</option></select></label>
-          <label>Třída<select id="grade-class">${state.classes.map(x=>`<option value="${x.id}" ${x.id===classId?'selected':''}>${esc(x.displayName)} — ${esc(x.schoolYear)}</option>`).join('')}</select></label>
-          <label>Předmět<select id="grade-subject">${subjects.length?subjects.map(s=>`<option ${s===subject?'selected':''}>${esc(s)}</option>`).join(''):'<option value="">Bez předmětu</option>'}</select></label>
-        </div>
-        <div class="grade-actions">
-          <button class="btn ${view==='table'?'primary':'secondary'}" data-action="grade-view" data-view="table">▦ Tabulka</button>
-          <button class="btn ${view==='list'?'primary':'secondary'}" data-action="grade-view" data-view="list">☷ Seznam</button>
-          <button class="btn secondary" data-action="grade-print">▣ Tisk / PDF</button>
-          <button class="btn secondary" data-action="grade-export-excel">▤ Export Excel</button>
-        </div>
-        <div style="margin-top:14px">${view==='table'?table:list}</div>
-        ${!subject?'<div class="empty" style="margin-top:12px">Třída nemá přiřazený žádný předmět. Přidej ho v Moje předměty.</div>':''}
-      </section>`;
+    const listRows=entries.map(h=>{const s=studentById(h.studentId);return `<tr><td>${fmtDate(h.at)}</td><td><strong>${esc(s?.name||'—')}</strong></td><td>${h.noGradeStatus?'<span class="grade-pill no-grade">bez známky</span>':`<span class="grade-pill grade-${Number(h.grade)||0}">${esc(String(h.grade??'—'))}</span>`}</td><td>${esc(h.topic||'—')}</td><td>${esc(h.note||'')}</td></tr>`}).join('');
+    const table=`<div class="gradebook-scroll pack-a-table-shell"><table class="gradebook-table"><thead><tr><th>Žák</th>${dates.map(d=>`<th>${esc(d.split('-').reverse().join('. '))}</th>`).join('')}</tr></thead><tbody>${tableRows||'<tr><td>Žádní žáci.</td></tr>'}</tbody></table></div>`;
+    const list=`<div class="table-wrap pack-a-table-shell"><table><thead><tr><th>Datum</th><th>Žák</th><th>Známka / stav</th><th>Téma</th><th>Poznámka</th></tr></thead><tbody>${listRows||'<tr><td colspan="5">Zatím nejsou žádné známky pro zvolený filtr.</td></tr>'}</tbody></table></div>`;
+    const content=`<section class="pack-a-screen grades-fidelity">
+      <div class="pack-a-hero"><div><div class="pack-a-kicker">KLASIFIKAČNÍ PŘEHLED</div><h1>Známkování</h1><p>Známky podle třídy, předmětu, školního roku a pololetí.</p></div></div>
+      <div class="pack-a-grade-filter">
+        <label>Školní rok<input value="${esc(c.schoolYear)}" disabled></label>
+        <label>Pololetí<select id="grade-semester"><option value="1" ${semester==='1'?'selected':''}>1. pololetí</option><option value="2" ${semester==='2'?'selected':''}>2. pololetí</option></select></label>
+        <label>Třída<select id="grade-class">${state.classes.map(x=>`<option value="${x.id}" ${x.id===classId?'selected':''}>${esc(x.displayName)} — ${esc(x.schoolYear)}</option>`).join('')}</select></label>
+        <label>Předmět<select id="grade-subject">${subjects.length?subjects.map(s=>`<option ${s===subject?'selected':''}>${esc(s)}</option>`).join(''):'<option value="">Bez předmětu</option>'}</select></label>
+      </div>
+      <div class="pack-a-kpis three">
+        <div><strong>${students.length}</strong><span>Žáků ve třídě</span></div>
+        <div><strong>${entries.length}</strong><span>Záznamů</span></div>
+        <div><strong>${avg}</strong><span>Průměr známek</span></div>
+      </div>
+      <div class="pack-a-grade-actions">
+        <div class="pack-a-view-toggle"><button class="${view==='table'?'active':''}" data-action="grade-view" data-view="table">▦ Tabulka</button><button class="${view==='list'?'active':''}" data-action="grade-view" data-view="list">☷ Seznam</button></div>
+        <div class="pack-a-export-actions"><button data-action="grade-print">▣ Tisk / PDF</button><button data-action="grade-export-excel">▤ Export Excel</button></div>
+      </div>
+      <section class="pack-a-panel grade-panel">${view==='table'?table:list}${!subject?'<div class="pack-a-empty compact">Třída nemá přiřazený žádný předmět. Přidej ho v Moje předměty.</div>':''}</section>
+      <div class="arcade-footer"><span>ZNÁMKOVÁNÍ</span><span>ZZ-01</span></div>
+    </section>`;
     app.innerHTML=layout(content,'Známkování');
   }
 
   function renderSubjects(){
     const subjects=subjectNames();
-    const cards=subjects.map(subject=>{
+    const totalTopics=subjects.reduce((n,subject)=>n+(questionSetForSubject(subject,false)?.items?.length||0),0);
+    const assignments=subjects.reduce((n,subject)=>n+state.classes.filter(c=>(c.subjects||[]).includes(subject)).length,0);
+    const cards=subjects.map((subject,index)=>{
       const classes=state.classes.filter(c=>(c.subjects||[]).includes(subject));
       const q=questionSetForSubject(subject,false);
-      return `<button class="subject-card pixel-frame" data-action="open-subject" data-subject="${esc(subject)}"><div><div class="student-name">${esc(subject)}</div><div class="meta">${classes.length} tříd · ${q?.items?.length||0} témat ke zkoušení</div></div><div class="subject-icon">▤</div></button>`;
+      const topicCount=q?.items?.length||0;
+      return `<button class="subject-card pack-a-subject-card" data-action="open-subject" data-subject="${esc(subject)}">
+        <span class="pack-a-subject-number">${String(index+1).padStart(2,'0')}</span>
+        <span class="pack-a-subject-copy">
+          <strong>${esc(subject)}</strong>
+          <span>${classes.length} ${classes.length===1?'třída':'tříd'} · ${topicCount} ${topicCount===1?'téma':'témat'}</span>
+          <span class="pack-a-subject-classes">${classes.length?classes.map(c=>esc(`${c.displayName} · ${c.schoolYear}`)).join(' / '):'Zatím bez přiřazené třídy'}</span>
+        </span>
+        <span class="pack-a-subject-open">Otevřít <b>▶</b></span>
+      </button>`;
     }).join('');
-    const content=`<div class="section-title"><div><h1 class="pixel-title">Moje předměty</h1><div class="muted">Předměty, které se nabízejí při zkoušení</div></div><button class="btn primary" data-action="add-subject">+ Předmět</button></div>
-      <div class="subject-grid">${cards||'<div class="pixel-frame card empty">Zatím nemáš žádný předmět. Přidej první.</div>'}</div>`;
+    const content=`<section class="pack-a-screen subjects-fidelity">
+      <div class="pack-a-hero">
+        <div><div class="pack-a-kicker">SPRÁVA VÝUKY</div><h1>Moje předměty</h1><p>Předměty a témata, která se nabízejí při zkoušení a v Kole štěstí.</p></div>
+        <button class="pack-a-primary" data-action="add-subject">＋ Přidat předmět</button>
+      </div>
+      <div class="pack-a-kpis">
+        <div><strong>${subjects.length}</strong><span>Předmětů</span></div>
+        <div><strong>${totalTopics}</strong><span>Témat</span></div>
+        <div><strong>${assignments}</strong><span>Přiřazení ke třídám</span></div>
+      </div>
+      <div class="pack-a-subject-grid">${cards||'<div class="pack-a-empty">Zatím nemáš žádný předmět. Přidej první.</div>'}</div>
+      <div class="arcade-footer"><span>MOJE PŘEDMĚTY</span><span>ZZ-01</span></div>
+    </section>`;
     app.innerHTML=layout(content,'Moje předměty');
   }
 
@@ -6241,13 +6299,29 @@ body{
     if(!subject || !subjectNames().includes(subject)){state.route='subjects';return renderSubjects();}
     const q=questionSetForSubject(subject,true);
     const assigned=state.classes.filter(c=>(c.subjects||[]).includes(subject));
-    const topics=(q.items||[]).map((topic,index)=>`<div class="list-item topic-row"><div><div class="student-name">${esc(topic)}</div><div class="meta">Téma ${index+1}</div></div><div class="topic-actions"><button class="btn ghost" data-action="edit-topic" data-index="${index}">Upravit</button><button class="btn danger" data-action="delete-topic" data-index="${index}">Odebrat</button></div></div>`).join('');
-    const content=`<div class="section-title"><div><h1 class="pixel-title">${esc(subject)}</h1><div class="muted">Předmět a témata ke zkoušení</div></div><button class="btn secondary" data-action="edit-subject">Upravit předmět</button></div>
-      <div class="grid grid-2">
-        <section class="pixel-frame card"><h2>Přiřazené třídy</h2><div class="list">${assigned.map(c=>`<div class="list-item"><div><strong>${esc(c.displayName)}</strong><div class="meta">${esc(c.schoolYear)}</div></div></div>`).join('')||'<div class="empty">Předmět zatím není přiřazen žádné třídě.</div>'}</div></section>
-        <section class="pixel-frame card"><div class="section-title"><h2>Témata ke zkoušení</h2><button class="btn primary" data-action="add-topic">+ Téma</button></div><div class="list">${topics||'<div class="empty">Zatím nejsou žádná témata.</div>'}</div><p class="tiny muted">Tato témata se používají i v Kole štěstí během zkoušení.</p></section>
+    const topics=(q.items||[]).map((topic,index)=>`<div class="pack-a-topic-row">
+      <div class="pack-a-topic-index">${String(index+1).padStart(2,'0')}</div>
+      <div class="pack-a-topic-name">${esc(topic)}</div>
+      <div class="pack-a-topic-actions"><button class="pack-a-mini" data-action="edit-topic" data-index="${index}">Upravit</button><button class="pack-a-mini danger" data-action="delete-topic" data-index="${index}">Odebrat</button></div>
+    </div>`).join('');
+    const classes=assigned.map(c=>`<div class="pack-a-class-chip"><strong>${esc(c.displayName)}</strong><span>${esc(c.schoolYear)}</span></div>`).join('');
+    const content=`<section class="pack-a-screen subject-detail-fidelity">
+      <div class="pack-a-detail-head">
+        <button class="pack-a-back" data-action="subjects">← Moje předměty</button>
+        <div><div class="pack-a-kicker">DETAIL PŘEDMĚTU</div><h1>${esc(subject)}</h1><p>Třídy a témata používaná při zkoušení.</p></div>
+        <button class="pack-a-secondary" data-action="edit-subject">✎ Upravit předmět</button>
       </div>
-      <div class="row" style="margin-top:14px"><button class="btn ghost" data-action="subjects">← Moje předměty</button><button class="btn danger" data-action="delete-subject">Odebrat předmět</button></div>`;
+      <div class="pack-a-kpis two">
+        <div><strong>${assigned.length}</strong><span>Přiřazených tříd</span></div>
+        <div><strong>${q.items?.length||0}</strong><span>Témat ke zkoušení</span></div>
+      </div>
+      <div class="pack-a-detail-grid">
+        <section class="pack-a-panel"><div class="pack-a-panel-head"><h2>Přiřazené třídy</h2></div><div class="pack-a-class-list">${classes||'<div class="pack-a-empty compact">Předmět zatím není přiřazen žádné třídě.</div>'}</div></section>
+        <section class="pack-a-panel"><div class="pack-a-panel-head"><h2>Témata ke zkoušení</h2><button class="pack-a-primary small" data-action="add-topic">＋ Téma</button></div><div class="pack-a-topic-list">${topics||'<div class="pack-a-empty compact">Zatím nejsou žádná témata.</div>'}</div><div class="pack-a-note">Tato témata používá i Kolo štěstí během zkoušení.</div></section>
+      </div>
+      <button class="pack-a-danger-wide" data-action="delete-subject">Odebrat předmět z aktuální nabídky</button>
+      <div class="arcade-footer"><span>${esc(subject)}</span><span>ZZ-01</span></div>
+    </section>`;
     app.innerHTML=layout(content,subject);
   }
 
