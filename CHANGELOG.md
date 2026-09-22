@@ -4,3 +4,13 @@
 - odstraněn duplicitní slogan „Proč zkoušet jednoduše, když to lze složitě?“ pod obrázkem Hlavní menu
 - slogan na úvodní/loading obrazovce zůstává zachován
 - ostatní funkce a rozložení aplikace zůstávají beze změny
+
+## PATCH — písmo hlavního menu
+
+- upraveny pouze textové popisky dlaždic hlavního menu
+- nahrazen velmi tučný vzhled (`font-weight: 900`) jemnějším `font-weight: 600`
+- nové bezpatkové arkádové písmo: Bahnschrift / Trebuchet MS / Segoe UI / Arial
+- barva běžných položek změněna na tlumenou slunečnicově žlutou
+- odstraněn výrazný světlý dojem; doplněna pouze jemná tmavá kontura pro čitelnost
+- hlavní oranžová akce používá mírně tmavší odstín stejného barevného směru
+- rozměry, ikony, rozmístění a funkce hlavního menu zůstávají beze změny

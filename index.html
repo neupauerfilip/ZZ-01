@@ -4811,6 +4811,35 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 }
 </style>
 
+
+<style>
+/* ZZ-01 PATCH — MAIN MENU TYPOGRAPHY SOFT SUNFLOWER
+   Pouze popisky dlaždic hlavního menu. Ostatní typografie aplikace zůstává beze změny. */
+.home-container .home-card h2{
+  font-family:Bahnschrift,"Trebuchet MS","Segoe UI",Arial,sans-serif !important;
+  font-weight:600 !important;
+  color:#d4a52c !important;
+  letter-spacing:.025em !important;
+  line-height:1.02 !important;
+  text-shadow:
+    -1px 0 rgba(0,0,0,.72),
+     1px 0 rgba(0,0,0,.72),
+     0 -1px rgba(0,0,0,.72),
+     0 1px rgba(0,0,0,.72) !important;
+}
+
+/* Na oranžové hlavní akci je odstín lehce tmavší kvůli čitelnosti. */
+.home-container .home-card[data-action="exam"] h2{
+  color:#9a690f !important;
+  font-weight:600 !important;
+  text-shadow:
+    -1px 0 rgba(0,0,0,.52),
+     1px 0 rgba(0,0,0,.52),
+     0 -1px rgba(0,0,0,.52),
+     0 1px rgba(0,0,0,.52) !important;
+}
+</style>
+
 </head>
 <body>
   <div class="crt-overlay" aria-hidden="true"></div>
