@@ -264,3 +264,10 @@
 - hudba se automaticky pozastaví mimo hlavní menu a při skrytí aplikace
 - stejné volby jsou dostupné také na obrazovce Nastavení
 
+## 2026-09-22 — Audio Pack B: tlumené křídové SFX + časnější start hudby
+- původní pískavé systémové zvuky nahrazeny tlumenými samply inspirovanými psaním a škrtnutím křídy
+- zachován jemný arkádový charakter pomocí nízkých 8bitových tónů bez ostrých výšek
+- snížena hlasitost systémových zvuků
+- hudba hlavního menu se nově zkouší spustit už během úvodního loadingu
+- doplněny další bezpečné pokusy o spuštění hudby při načtení stránky a při prvním uživatelském gestu pro prohlížeče blokující autoplay
+

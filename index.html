@@ -4288,6 +4288,8 @@ body::after{
   const bgMusic=new Audio('assets/audio/zz01-theme.mp3');
   bgMusic.loop=true;
   bgMusic.preload='auto';
+  bgMusic.autoplay=true;
+  bgMusic.playsInline=true;
   bgMusic.volume=.26;
   const sfxSources={
     click:'assets/audio/sfx-click.wav',
@@ -4297,11 +4299,13 @@ body::after{
     result:'assets/audio/sfx-result.wav'
   };
   const sfxBank=Object.fromEntries(Object.entries(sfxSources).map(([key,src])=>{
-    const a=new Audio(src); a.preload='auto'; a.volume=.42; return [key,a];
+    const a=new Audio(src); a.preload='auto'; a.volume=.28; return [key,a];
   }));
 
   function musicShouldPlay(){
-    return !!state.splashSeen && !!state.authenticated && !!state.onboardingDone && state.route==='home' && state.settings.musicEnabled!==false && !document.hidden;
+    // Zkoušíme hudbu spustit už během loadingu, pokud po startu míříme na hlavní menu.
+    // Některé prohlížeče přesto blokují neztlumený autoplay do prvního uživatelského gesta.
+    return !!state.authenticated && !!state.onboardingDone && state.route==='home' && state.settings.musicEnabled!==false && !document.hidden;
   }
   function syncBackgroundMusic(){
     if(musicShouldPlay()){
@@ -8822,7 +8826,17 @@ body::after{
     if(document.hidden) bgMusic.pause(); else syncBackgroundMusic();
     if(!document.hidden && state.activeExam){render();}
   });
-  document.addEventListener('pointerdown',()=>syncBackgroundMusic(),{once:true,capture:true});
+
+  // Nejčasnější možný pokus o autoplay. Pokud ho prohlížeč zablokuje,
+  // první kliknutí / dotyk / klávesa hudbu okamžitě odemkne a spustí.
+  const unlockBackgroundMusic=()=>syncBackgroundMusic();
+  window.addEventListener('load',unlockBackgroundMusic,{once:true});
+  window.addEventListener('pageshow',unlockBackgroundMusic);
+  bgMusic.addEventListener('canplay',unlockBackgroundMusic,{once:true});
+  document.addEventListener('pointerdown',unlockBackgroundMusic,{once:true,capture:true});
+  document.addEventListener('touchstart',unlockBackgroundMusic,{once:true,capture:true,passive:true});
+  document.addEventListener('keydown',unlockBackgroundMusic,{once:true,capture:true});
+  syncBackgroundMusic();
 
   if('serviceWorker' in navigator && location.protocol.startsWith('http')){
     navigator.serviceWorker.register('./sw.js').catch(()=>{});
