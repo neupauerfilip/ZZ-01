@@ -42,3 +42,15 @@ Zrychlit zahájení zkoušení během reálné vyučovací hodiny a snížit po�
 - arkádový pixelový font a světlý text ve všech stavech
 - vybraný předmět používá oranžový accent, ale zůstává dobře čitelný
 - jasnější indikátor výběru a lepší hover/focus stav
+
+
+# PRO ARCADE UI PACK – GLOBAL NON-HOME THEME
+
+- sjednocuje vizuální jazyk všech pracovních obrazovek podle schváleného profesionálního výběru předmětu
+- hlavní menu zůstává záměrně beze změny
+- sjednocené tmavé panely, cyanové linky a oranžové selected/primary stavy
+- kompaktnější nadpisy a menší vertikální plýtvání místem
+- jednotná tlačítka, formuláře, záložky, tabulky, badge a modalní okna
+- tabulky už nemají vlastní vertikální scroll limit; stránka roste s obsahem
+- speciální herní vizuály (kolo, učebna během zkoušení, trofeje) se nepřekreslují
+- funkční logika aplikace nebyla změněna

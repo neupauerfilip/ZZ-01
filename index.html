@@ -4387,6 +4387,225 @@ body::after{
 }
 </style>
 
+
+<style>
+/* ============================================================
+   PRO ARCADE UI PACK — GLOBAL NON-HOME THEME
+   The home screen is intentionally excluded.
+   ============================================================ */
+.pro-arcade-ui{
+  --pro-bg:#061522;
+  --pro-panel:#071c2d;
+  --pro-panel-2:#0a2436;
+  --pro-panel-3:#0c2d40;
+  --pro-cyan:#20e7ec;
+  --pro-cyan-dim:#087d91;
+  --pro-cyan-dark:#06485c;
+  --pro-orange:#ff8b18;
+  --pro-orange-hi:#ffc33a;
+  --pro-cream:#fff6e4;
+  --pro-muted:#91b9c1;
+  --pro-shadow:#02070d;
+  --pro-danger:#ff5c61;
+  --pro-ok:#56d37a;
+  width:min(1180px,calc(100% - 22px));
+  margin-inline:auto;
+  padding-top:18px;
+  color:var(--pro-cream);
+}
+.pro-arcade-ui :where(h1,h2,h3,.pixel-title){
+  font-family:var(--pixel)!important;
+  color:var(--pro-cream)!important;
+  text-shadow:3px 3px 0 #02101a;
+  letter-spacing:-.025em;
+}
+.pro-arcade-ui h1{font-size:clamp(1.55rem,3.5vw,2.45rem)!important;line-height:1.08!important;margin-block:.2em .55em!important}
+.pro-arcade-ui h2{font-size:clamp(1.05rem,2.7vw,1.55rem)!important;line-height:1.15!important}
+.pro-arcade-ui h3{font-size:clamp(.85rem,2vw,1.14rem)!important;line-height:1.2!important}
+.pro-arcade-ui :where(.muted,.tiny,.meta,.subtle){color:var(--pro-muted)!important}
+
+/* Compact screen headers — strong hierarchy, less wasted vertical space. */
+.pro-arcade-ui :where(.section-title,.pack-a-hero,.exam-start-head,.rules-head,.candidates-head,.topic-head,.settings-head,.staffroom-head,.h8-head){
+  margin-top:0!important;
+}
+.pro-arcade-ui :where(.section-title,.pack-a-hero){
+  border:0!important;
+  border-bottom:3px solid var(--pro-cyan-dim)!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  padding:8px 2px 13px!important;
+}
+
+/* Core panels/cards. This intentionally favors clean dark surfaces over nested neon boxes. */
+.pro-arcade-ui :where(
+  .card,.panel,.box,.game-card,.school-card,.challenge-card,.teacher-card,
+  .pack-a-kpis>div,.pack-a-detail-card,.pack-a-side-card,.pack-a-empty,
+  .h8-card,.h8-panel,.settings-card,.settings-section,.staffroom-card,
+  .exam-roster-head,.exam-roster-table,.exam-student-panel,.exam-timer-panel,
+  .rules-card,.candidate-choice,.topic-list-row,.gradebook-panel
+){
+  border-color:var(--pro-cyan-dim)!important;
+  background:linear-gradient(180deg,var(--pro-panel-2),var(--pro-panel))!important;
+  color:var(--pro-cream)!important;
+  box-shadow:inset 0 0 0 2px rgba(32,231,236,.07),4px 4px 0 var(--pro-shadow)!important;
+  border-radius:0!important;
+}
+
+/* Buttons: consistent size and intent colors. */
+.pro-arcade-ui .btn{
+  min-height:44px!important;
+  padding:8px 13px!important;
+  border:3px solid var(--pro-cyan-dim)!important;
+  background:var(--pro-panel-2)!important;
+  color:var(--pro-cream)!important;
+  box-shadow:3px 3px 0 var(--pro-shadow)!important;
+  font-family:var(--pixel)!important;
+  font-size:clamp(.66rem,1.35vw,.82rem)!important;
+  line-height:1.15!important;
+  letter-spacing:0!important;
+  text-transform:none!important;
+}
+.pro-arcade-ui .btn:hover{border-color:var(--pro-cyan)!important;background:var(--pro-panel-3)!important;filter:none!important}
+.pro-arcade-ui .btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--pro-shadow)!important}
+.pro-arcade-ui .btn.primary,
+.pro-arcade-ui .exam-continue{
+  border-color:var(--pro-orange-hi)!important;
+  background:linear-gradient(180deg,#ff9c1a,#e9650a)!important;
+  color:#fff9ec!important;
+  text-shadow:2px 2px 0 #7f2700;
+  box-shadow:inset 0 0 0 3px #d94d05,4px 4px 0 var(--pro-shadow)!important;
+}
+.pro-arcade-ui .btn.success{border-color:var(--pro-ok)!important;background:#123624!important}
+.pro-arcade-ui .btn.danger{border-color:var(--pro-danger)!important;background:#441b25!important}
+.pro-arcade-ui .btn.ghost{border-color:#3b6975!important;background:transparent!important;color:var(--pro-muted)!important}
+.pro-arcade-ui .btn:disabled{opacity:.42!important;filter:grayscale(.35)}
+
+/* Tabs behave like a compact game menu, not browser tabs. */
+.pro-arcade-ui :where(.tabs,.game-toolbar,.pack-a-score-tabs,.admin-tabs){gap:7px!important}
+.pro-arcade-ui :where(.tab,.admin-tab,.h8-tab){
+  min-height:42px!important;
+  padding:7px 11px!important;
+  border:3px solid var(--pro-cyan-dim)!important;
+  background:var(--pro-panel)!important;
+  color:var(--pro-muted)!important;
+  box-shadow:2px 2px 0 var(--pro-shadow)!important;
+  font-family:var(--pixel)!important;
+  font-size:.68rem!important;
+  text-transform:none!important;
+}
+.pro-arcade-ui :where(.tab.active,.admin-tab.active,.h8-tab.active){
+  border-color:var(--pro-orange-hi)!important;
+  background:linear-gradient(180deg,#ff9618,#e8670b)!important;
+  color:#fff9ed!important;
+  text-shadow:2px 2px 0 #842b00;
+}
+
+/* Inputs: large enough for fast classroom use, but visually quiet. */
+.pro-arcade-ui :where(input:not([type=checkbox]):not([type=radio]),select,textarea){
+  min-height:44px!important;
+  padding:8px 11px!important;
+  border:3px solid var(--pro-cyan-dim)!important;
+  background:#041523!important;
+  color:var(--pro-cream)!important;
+  box-shadow:inset 0 0 0 2px #082c3d!important;
+  border-radius:0!important;
+}
+.pro-arcade-ui :where(input,select,textarea):focus{
+  border-color:var(--pro-cyan)!important;
+  box-shadow:inset 0 0 0 2px #0a5364,0 0 0 2px rgba(32,231,236,.18)!important;
+  outline:0!important;
+}
+.pro-arcade-ui label{color:var(--pro-cream);font-weight:800}
+.pro-arcade-ui input[type=checkbox]{accent-color:var(--pro-orange)}
+
+/* Tables: readable roster/gradebook style, no internal vertical scrolling. */
+.pro-arcade-ui .table-wrap{
+  max-height:none!important;
+  overflow-y:visible!important;
+  overflow-x:auto!important;
+  border:3px solid var(--pro-cyan-dim)!important;
+  background:var(--pro-panel)!important;
+  box-shadow:4px 4px 0 var(--pro-shadow)!important;
+}
+.pro-arcade-ui table{background:var(--pro-panel)!important;color:var(--pro-cream)!important}
+.pro-arcade-ui th{
+  background:#0b3041!important;
+  color:#dffcff!important;
+  border-color:#155b6b!important;
+  font-family:var(--pixel)!important;
+  font-size:.68rem!important;
+  text-transform:none!important;
+  letter-spacing:0!important;
+}
+.pro-arcade-ui td{border-color:#16424e!important;color:var(--pro-cream)!important}
+.pro-arcade-ui tbody tr:nth-child(even) td{background:rgba(10,38,53,.42)}
+.pro-arcade-ui tbody tr:hover td{background:rgba(15,65,80,.46)!important}
+.pro-arcade-ui .gradebook-table th:first-child{background:#0b3041!important}
+.pro-arcade-ui .gradebook-table td:first-child{background:#08222f!important}
+
+/* Reusable chips / badges / scoring pills. */
+.pro-arcade-ui :where(.badge,.score-pill,.pill,.chip,.h8-subject-chip){
+  border-color:var(--pro-cyan-dim)!important;
+  background:#082535!important;
+  color:var(--pro-cream)!important;
+  box-shadow:2px 2px 0 var(--pro-shadow)!important;
+  border-radius:0!important;
+}
+
+/* Selected items use one consistent orange treatment throughout the app. */
+.pro-arcade-ui :where(
+  .arcade-subject-choice.selected,.class-picker-option.is-selected,.candidate-choice.is-selected,
+  .topic-list-row.is-selected,.grade-choice.is-selected,.school-card.selected
+){
+  border-color:var(--pro-orange-hi)!important;
+  background:linear-gradient(180deg,#ff9618,#e8650a)!important;
+  color:#fff9ed!important;
+  box-shadow:inset 0 0 0 3px #d64b05,4px 4px 0 var(--pro-shadow)!important;
+}
+.pro-arcade-ui :where(
+  .arcade-subject-choice.selected,.class-picker-option.is-selected,.candidate-choice.is-selected,
+  .topic-list-row.is-selected,.grade-choice.is-selected,.school-card.selected
+) :where(strong,b,span){color:inherit}
+
+/* Lists are flatter and faster to scan. */
+.pro-arcade-ui :where(.list,.challenge-list,.teacher-list,.h8-student-list,.subject-choice-list){gap:7px!important}
+.pro-arcade-ui :where(.rule-row,.student-row,.h8-subject-row,.topic-row){
+  border-color:var(--pro-cyan-dark)!important;
+  background:#071b29!important;
+}
+
+/* Primary content spacing: denser, classroom-friendly. */
+.pro-arcade-ui :where(.row,.form-grid,.settings-grid,.pack-a-detail-grid){gap:9px!important}
+.pro-arcade-ui :where(.sticky-actions,.grade-actions,.student-actions,.teacher-actions){gap:7px!important}
+.pro-arcade-ui .arcade-footer{margin-top:26px!important;padding-top:14px!important;color:#719aa4!important}
+
+/* Keep special game visuals (wheel / active exam artwork / trophy art) intact. */
+.pro-arcade-ui :where(.topic-wheel,.standalone-wheel,.exam-classroom-stage,.trophy-cabinet,.pixel-student){
+  --pro-preserve:1;
+}
+
+/* Modal theme follows the current route; home modals stay untouched. */
+body:not([data-route="home"]) .modal-backdrop{background:rgba(1,7,14,.86)!important}
+body:not([data-route="home"]) .modal{
+  border:4px solid var(--cyan)!important;
+  background:linear-gradient(180deg,#09273a,#061725)!important;
+  color:#fff6e4!important;
+  box-shadow:8px 8px 0 #02070d!important;
+}
+body:not([data-route="home"]) .modal h2{font-family:var(--pixel)!important;color:#fff6e4!important;text-shadow:3px 3px 0 #02101a}
+
+/* Non-home top bar gets only a subtle matching separator; home bar is unchanged. */
+body:not([data-route="home"]) .topbar{border-bottom-color:#0b7184!important;box-shadow:0 4px 0 #02070d!important}
+
+@media(max-width:760px){
+  .pro-arcade-ui{width:min(100% - 12px,1180px);padding-top:10px}
+  .pro-arcade-ui h1{font-size:clamp(1.28rem,7.2vw,1.9rem)!important}
+  .pro-arcade-ui .btn{min-height:46px!important;font-size:.72rem!important;padding:8px 9px!important}
+  .pro-arcade-ui :where(.tab,.admin-tab,.h8-tab){font-size:.62rem!important;padding:7px 8px!important}
+  .pro-arcade-ui th{font-size:.62rem!important}
+}
+</style>
+
 </head>
 <body>
   <div class="crt-overlay" aria-hidden="true"></div>
@@ -5635,7 +5854,7 @@ body::after{
           <button class="icon-btn account-exit nav-logout-btn" data-action="logout" aria-label="Odhlásit se" title="Odhlásit se"><img src="assets/ui/nav-logout-door.png" alt="" aria-hidden="true"></button>
         </div>
       </header>
-      <main class="container ${state.route==='home'?'home-container':''}">${content}</main>`;
+      <main class="container ${state.route==='home'?'home-container':'pro-arcade-ui'}">${content}</main>`;
   }
 
   function clonePlain(value){
@@ -8747,6 +8966,7 @@ body::after{
 
   function render(){
     clearInterval(timerTick);
+    document.body.dataset.route=state.route||'home';
     queueMicrotask(syncBackgroundMusic);
     if(!state.splashSeen) return renderSplash();
     if(!state.authenticated) return renderLogin();
