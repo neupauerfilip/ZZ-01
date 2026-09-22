@@ -126,3 +126,11 @@
 - Stav se mění automaticky během běžícího časovače bez obnovení obrazovky.
 - Při pozastavení zkoušení se animace zastaví a po pokračování naváže podle aktuálního zbývajícího času.
 
+
+## 2026-09-22 — Visual fidelity H8 — Moje třídy
+- Sekce „Moje třídy“ byla převedena do stejného pixelového vizuálu jako hlavní zkoušecí tok.
+- Třídy se zobrazují jako samostatné velké karty se školním rokem, počtem žáků, počtem předmětů a přehledem přiřazených předmětů.
+- Přidán horní souhrn počtu tříd, unikátních žáků a přiřazených předmětů.
+- Detail třídy byl sjednocen do stejného stylu; karty žáků mají přehledné jméno, body a oddělené akce Upravit / Odebrat.
+- Záložky Žáci / Témata / Nastavení byly zvětšeny a optimalizovány pro dotykové ovládání.
+- Funkce přidání třídy, otevření třídy, správy žáků, témat, nastavení, historie a převodu školního roku zůstaly zachovány.

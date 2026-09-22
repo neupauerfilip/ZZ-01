@@ -243,6 +243,205 @@ textarea{min-height:90px;resize:vertical}
 .candidate .avatar{font-size:2.3rem}
 .candidate .name{font-weight:700;font-size:1.08rem}
 
+
+
+/* VISUAL FIDELITY H8 – Moje třídy + detail třídy */
+.classes-screen.fidelity-h8,
+.class-detail-screen.fidelity-h8{
+  width:min(940px,100%);
+  margin:0 auto;
+  padding:2px 0 18px;
+}
+.h8-head{
+  position:relative;
+  text-align:center;
+  padding:4px 160px 16px;
+  margin-bottom:14px;
+}
+.h8-title{
+  margin:0;
+  color:#fff7e6;
+  font-family:var(--pixel);
+  font-size:clamp(2rem,7vw,4rem);
+  line-height:1.02;
+  text-transform:uppercase;
+  letter-spacing:.015em;
+  text-shadow:4px 4px 0 #ff7a18,7px 7px 0 #06121d;
+}
+.h8-subtitle{
+  margin-top:8px;
+  color:#20eef2;
+  font-family:var(--pixel);
+  font-size:clamp(.74rem,2.5vw,1rem);
+  line-height:1.45;
+}
+.h8-head-action{
+  position:absolute;
+  right:0;
+  top:10px;
+  min-height:58px;
+  padding:8px 17px;
+  border:4px solid #fff4d6;
+  background:linear-gradient(180deg,#ff9d12,#ff7800);
+  color:#120b03;
+  font-family:var(--pixel);
+  font-size:.76rem;
+  box-shadow:inset 0 0 0 3px #ffc52a,5px 5px 0 #02070d;
+  clip-path:polygon(9px 0,calc(100% - 9px) 0,100% 9px,100% calc(100% - 9px),calc(100% - 9px) 100%,9px 100%,0 calc(100% - 9px),0 9px)
+}
+.h8-overview{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin:0 0 16px;
+}
+.h8-kpi{
+  min-height:76px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  border:3px solid #16e7ed;
+  background:linear-gradient(180deg,#092b3c,#061b29);
+  box-shadow:inset 0 0 0 2px #07566d,4px 4px 0 #02070d;
+  clip-path:polygon(8px 0,calc(100% - 8px) 0,100% 8px,100% calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,0 calc(100% - 8px),0 8px)
+}
+.h8-kpi strong{color:#ffb316;font-family:var(--pixel);font-size:1.2rem}
+.h8-kpi span{color:#c8f7f5;font-size:.74rem;font-weight:800;text-align:center}
+.h8-class-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+.h8-class-card{
+  min-width:0;
+  border:4px solid #18e7ed;
+  background:linear-gradient(180deg,#0a3143,#061d2b);
+  box-shadow:inset 0 0 0 3px #07566f,6px 6px 0 #02070d;
+  clip-path:polygon(12px 0,calc(100% - 12px) 0,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,0 calc(100% - 12px),0 12px);
+  overflow:hidden;
+}
+.h8-class-card-main{
+  display:grid;
+  grid-template-columns:78px minmax(0,1fr);
+  gap:14px;
+  align-items:center;
+  padding:15px 16px 11px;
+}
+.h8-class-icon{
+  width:66px;height:66px;position:relative;margin:auto;
+  border:4px solid #1cecf0;background:#071722;
+  box-shadow:inset 0 0 0 3px #0a5f73,4px 4px 0 #02070d;
+}
+.h8-class-icon::before{
+  content:'';position:absolute;left:10px;top:10px;width:12px;height:12px;background:#ffb316;
+  box-shadow:20px 0 0 #20eef2,0 20px 0 #20eef2,20px 20px 0 #ffb316;
+}
+.h8-class-icon::after{
+  content:'';position:absolute;left:7px;right:7px;bottom:8px;height:6px;background:#fff1d2;
+  box-shadow:0 -38px 0 #fff1d2;
+}
+.h8-class-name{font-family:var(--pixel);font-size:clamp(1.05rem,3.4vw,1.45rem);color:#fff8e6;line-height:1.2;overflow-wrap:anywhere;text-shadow:2px 2px 0 #06121d}
+.h8-class-year{margin-top:5px;color:#1fe9ed;font-family:var(--pixel);font-size:.7rem}
+.h8-class-meta{margin-top:8px;color:#c6d9d9;font-size:.78rem;line-height:1.45}
+.h8-subject-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.h8-subject-chip{display:inline-flex;min-height:28px;align-items:center;padding:4px 7px;border:2px solid #0b8296;background:#071a26;color:#fff3df;font-size:.66rem;font-weight:800}
+.h8-no-subject{color:#9cb8bd;font-size:.7rem;margin-top:8px}
+.h8-open-class{
+  width:100%;min-height:56px;border:0;border-top:3px solid #17dfe6;background:#071722;color:#20eef2;
+  font-family:var(--pixel);font-size:.76rem;text-transform:none;box-shadow:none
+}
+.h8-open-class:hover{background:#0b2a38;color:#fff6df}
+.h8-empty{
+  padding:32px 20px;text-align:center;border:4px dashed #0d788c;background:#061722;color:#a9c4c6;
+  font-weight:800;line-height:1.55
+}
+.h8-utilities{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:17px
+}
+.h8-utility-btn{
+  min-height:54px;border:3px solid #11cfd7;background:#071d2a;color:#dffefd;font-weight:900;box-shadow:4px 4px 0 #02070d
+}
+.h8-utility-btn.danger{border-color:#ff6657;background:#2c1718;color:#ffd8d3}
+
+/* detail třídy */
+.h8-class-detail-head{
+  border:4px solid #18e7ed;background:linear-gradient(180deg,#0a3143,#061d2b);
+  box-shadow:inset 0 0 0 3px #07566f,6px 6px 0 #02070d;
+  padding:16px 18px;margin-bottom:13px;
+  clip-path:polygon(12px 0,calc(100% - 12px) 0,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,0 calc(100% - 12px),0 12px)
+}
+.h8-class-detail-top{display:grid;grid-template-columns:74px minmax(0,1fr);gap:15px;align-items:center}
+.h8-class-detail-name{margin:0;font-family:var(--pixel);font-size:clamp(1.55rem,5vw,2.7rem);color:#fff7e6;text-shadow:3px 3px 0 #ff7a18,5px 5px 0 #06121d}
+.h8-class-detail-year{margin-top:7px;color:#20eef2;font-family:var(--pixel);font-size:.76rem}
+.h8-class-stats{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}
+.h8-stat-chip{border:2px solid #0d8296;background:#061722;color:#fff3df;padding:5px 8px;font-size:.7rem;font-weight:800}
+.h8-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:12px 0}
+.h8-tab{
+  min-height:54px;border:3px solid #0b8296;background:#071a26;color:#8fd6d8;font-family:var(--pixel);font-size:.7rem;box-shadow:3px 3px 0 #02070d
+}
+.h8-tab.active{border-color:#fff2d7;background:#ff8610;color:#120b03;box-shadow:inset 0 0 0 3px #ffbd21,4px 4px 0 #02070d}
+.h8-detail-panel{
+  border:4px solid #14dce4;background:linear-gradient(180deg,#082838,#051923);
+  box-shadow:inset 0 0 0 3px #064f65,6px 6px 0 #02070d;
+  padding:13px;
+  clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px),0 10px)
+}
+.h8-panel-help{margin:0 0 11px;color:#acd0d1;font-size:.76rem;line-height:1.5}
+.h8-student-list{display:flex;flex-direction:column;gap:8px;max-height:min(56vh,590px);overflow-y:auto;padding-right:5px;scrollbar-color:#20e7eb #061722}
+.h8-student-row{
+  display:grid;grid-template-columns:48px minmax(0,1fr) auto auto;gap:10px;align-items:center;
+  min-height:72px;padding:9px 10px;border:3px solid #0b7d93;background:#061925;
+  box-shadow:inset 0 0 0 2px #073246,3px 3px 0 #02070d
+}
+.h8-student-avatar{width:38px;height:43px;position:relative;margin:auto}
+.h8-student-avatar::before{content:'';position:absolute;width:16px;height:16px;left:11px;top:2px;background:#ffd6a5;box-shadow:-3px -3px 0 #3f291e,3px -3px 0 #3f291e}
+.h8-student-avatar::after{content:'';position:absolute;width:28px;height:20px;left:5px;top:22px;background:#20e5e8;box-shadow:-5px 7px 0 #06121d,5px 7px 0 #06121d}
+.h8-student-copy{min-width:0}
+.h8-student-name{font-weight:1000;color:#fff7e6;font-size:1rem;overflow-wrap:anywhere}
+.h8-student-meta{margin-top:4px;color:#9fc3c5;font-size:.68rem;line-height:1.4}
+.h8-points-badge{min-width:62px;min-height:40px;display:grid;place-items:center;border:3px solid #ffb316;background:#2d2108;color:#fff3d4;font-family:var(--pixel);font-size:.7rem;white-space:nowrap}
+.h8-student-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.h8-mini-btn{min-height:38px;padding:6px 9px;border:2px solid #18cfd7;background:#08232e;color:#dffefd;font-size:.66rem;font-weight:900}
+.h8-mini-btn.danger{border-color:#f05b50;background:#2b1718;color:#ffd8d3}
+.h8-add-student,.h8-subjects-link,.h8-save-class{
+  width:100%;min-height:62px;margin-top:12px;border:4px solid #fff3d6;background:linear-gradient(180deg,#ff9b10,#ff7800);color:#130c03;
+  font-family:var(--pixel);font-size:.8rem;box-shadow:inset 0 0 0 3px #ffc323,5px 5px 0 #02070d
+}
+.h8-subject-list{display:grid;gap:9px}
+.h8-subject-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:12px;border:3px solid #0b7d93;background:#061925}
+.h8-subject-name{font-family:var(--pixel);color:#fff6e4;font-size:.82rem}
+.h8-subject-meta{margin-top:5px;color:#9fc3c5;font-size:.7rem}
+.h8-open-subject{min-height:42px;border:3px solid #13d5dc;background:#08232e;color:#dffefd;font-weight:900;padding:7px 10px}
+.h8-settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.h8-settings-grid label,.h8-settings-subjects{color:#b6d2d3;font-weight:800}
+.h8-settings-grid input,.h8-settings-subjects input{border:3px solid #0b7d93;background:#06131d;color:#fff6e4;min-height:50px}
+.h8-settings-subjects{display:flex;flex-direction:column;gap:7px;margin-top:11px}
+.h8-settings-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+.h8-promote-class{min-height:62px;border:4px solid #16dce3;background:#08232e;color:#e7ffff;font-weight:900;box-shadow:4px 4px 0 #02070d}
+
+@media(max-width:760px){
+  .h8-head{padding:4px 0 86px}
+  .h8-head-action{top:auto;bottom:12px;left:0;right:0;width:100%}
+  .h8-class-grid{grid-template-columns:1fr}
+  .h8-overview{grid-template-columns:repeat(3,1fr)}
+  .h8-student-row{grid-template-columns:42px minmax(0,1fr) auto}
+  .h8-student-actions{grid-column:2/-1;justify-content:stretch}
+  .h8-student-actions .h8-mini-btn{flex:1 1 120px}
+}
+@media(max-width:520px){
+  .h8-overview{grid-template-columns:1fr 1fr}.h8-overview .h8-kpi:last-child{grid-column:1/-1}
+  .h8-utilities{grid-template-columns:1fr}
+  .h8-class-card-main{grid-template-columns:58px minmax(0,1fr);padding:12px 10px}.h8-class-icon{width:52px;height:52px;transform:scale(.88)}
+  .h8-tabs{gap:4px}.h8-tab{font-size:.61rem;padding:5px}
+  .h8-class-detail-top{grid-template-columns:56px minmax(0,1fr)}
+  .h8-student-row{grid-template-columns:34px minmax(0,1fr) auto;gap:7px;padding:8px 7px}.h8-student-avatar{transform:scale(.82)}
+  .h8-points-badge{min-width:50px;font-size:.6rem}
+  .h8-settings-grid,.h8-settings-actions{grid-template-columns:1fr}
+  .h8-subject-row{grid-template-columns:1fr}.h8-open-subject{width:100%}
+}
+
 /* VISUAL FIDELITY H5 – kandidáti ke zkoušení */
 .candidates-screen{max-width:760px;margin:0 auto;padding:2px 0 6px}
 .candidates-head{position:relative;text-align:center;padding:0 4px 13px}
@@ -4840,10 +5039,47 @@ body{
   }
 
   function renderClasses(){
-    const cards=state.classes.map(c=>`<div class="list-item clickable-row class-row" data-action="open-class" data-id="${c.id}" role="button" tabindex="0"><div><div class="student-name">${esc(c.displayName)} — ${esc(c.schoolYear)}</div><div class="meta">${c.studentIds.length} žáků · ${c.subjects.length?c.subjects.map(esc).join(', '):'bez přiřazeného předmětu'}</div></div><span class="btn secondary fake-btn">Otevřít</span></div>`).join('');
-    const content=`<div class="section-title"><h1 class="pixel-title">Moje třídy</h1><button class="btn primary" data-action="add-class">+ Třída</button></div>
-      <div class="pixel-frame card"><div class="list">${cards||'<div class="empty">Zatím tu nejsou žádné třídy.</div>'}</div></div>
-      <div style="margin-top:14px" class="row"><button class="btn secondary" data-action="history">Historie</button>${state.user.role==='admin'?'<button class="btn secondary" data-action="admin">Správa školy</button>':''}<button class="btn danger" data-action="clean-slate">Čistý štít</button></div>`;
+    const totalStudents=new Set(state.classes.flatMap(c=>c.studentIds||[])).size;
+    const totalSubjects=new Set(state.classes.flatMap(c=>c.subjects||[])).size;
+    const cards=state.classes.map(c=>{
+      const subjects=(c.subjects||[]);
+      const chips=subjects.slice(0,3).map(s=>`<span class="h8-subject-chip">${esc(s)}</span>`).join('');
+      const more=subjects.length>3?`<span class="h8-subject-chip">+${subjects.length-3}</span>`:'';
+      return `<article class="h8-class-card">
+        <div class="h8-class-card-main">
+          <div class="h8-class-icon" aria-hidden="true"></div>
+          <div>
+            <div class="h8-class-name">${esc(c.displayName)}</div>
+            <div class="h8-class-year">ŠKOLNÍ ROK ${esc(c.schoolYear)}</div>
+            <div class="h8-class-meta">${c.studentIds.length} ${c.studentIds.length===1?'žák':'žáků'} · ${subjects.length} ${subjects.length===1?'předmět':'předmětů'}</div>
+            ${subjects.length?`<div class="h8-subject-chips">${chips}${more}</div>`:'<div class="h8-no-subject">Bez přiřazeného předmětu</div>'}
+          </div>
+        </div>
+        <button type="button" class="h8-open-class" data-action="open-class" data-id="${c.id}">Otevřít třídu ▶</button>
+      </article>`;
+    }).join('');
+    const content=`<section class="classes-screen fidelity-h8">
+      <div class="h8-head">
+        <h1 class="h8-title">Moje třídy</h1>
+        <div class="h8-subtitle">Správa tříd, žáků a jejich přiřazení.</div>
+        <button type="button" class="h8-head-action" data-action="add-class">+ Nová třída</button>
+      </div>
+
+      <div class="h8-overview">
+        <div class="h8-kpi"><strong>${state.classes.length}</strong><span>Třídy</span></div>
+        <div class="h8-kpi"><strong>${totalStudents}</strong><span>Žáků v mých třídách</span></div>
+        <div class="h8-kpi"><strong>${totalSubjects}</strong><span>Přiřazených předmětů</span></div>
+      </div>
+
+      ${cards?`<div class="h8-class-grid">${cards}</div>`:'<div class="h8-empty">Zatím tu nejsou žádné třídy.<br>Začni tlačítkem „Nová třída“.</div>'}
+
+      <div class="h8-utilities">
+        <button class="h8-utility-btn" data-action="history">Historie</button>
+        ${state.user.role==='admin'?'<button class="h8-utility-btn" data-action="admin">Správa školy</button>':'<span></span>'}
+        <button class="h8-utility-btn danger" data-action="clean-slate">Čistý štít</button>
+      </div>
+      <div class="arcade-footer"><span>Správa tříd</span><span>ZZ-01</span></div>
+    </section>`;
     app.innerHTML=layout(content,'Moje třídy');
   }
 
@@ -4851,16 +5087,70 @@ body{
     const c=classById(state.ui.openClassId)||state.classes[0];
     if(!c){ state.route='classes'; return render(); }
     const tab=state.ui.classTab||'students';
+    const students=studentsForClass(c.id);
+    const subjects=(c.subjects||[]);
     let body='';
+
     if(tab==='students'){
-      body=`<p class="tiny muted">Klepni na žáka pro úpravu. Tlačítkem <strong>+ Žák</strong> můžeš přidat existujícího žáka školy nebo založit nového.</p><div class="list">${studentsForClass(c.id).map(s=>`<div class="list-item student-row clickable-row" data-action="student-detail" data-id="${s.id}" data-class="${c.id}" role="button" tabindex="0"><div><div class="student-name">${esc(s.name)}</div><div class="meta">Aktuálně ${currentPoints(s)} b. · nasbíráno ${s.collectedPoints} b. · zkoušen ${s.examsCountPeriod}×</div></div><span class="score-pill">${currentPoints(s)}</span><div class="student-actions"><button class="btn ghost" data-action="rename-student" data-id="${s.id}">Upravit</button><button class="btn danger" data-action="remove-student" data-id="${s.id}" data-class="${c.id}">Odebrat</button></div></div>`).join('')||'<div class="empty">V této třídě zatím nejsou žádní žáci.</div>'}</div><div class="sticky-actions"><button class="btn primary" data-action="add-student" data-class="${c.id}">+ Žák</button></div>`;
+      const rows=students.map(s=>`<div class="h8-student-row">
+        <div class="h8-student-avatar" aria-hidden="true"></div>
+        <div class="h8-student-copy clickable-row" data-action="student-detail" data-id="${s.id}" data-class="${c.id}" role="button" tabindex="0">
+          <div class="h8-student-name">${esc(s.name)}</div>
+          <div class="h8-student-meta">Nasbíráno ${s.collectedPoints} b. · zkoušen ${s.examsCountPeriod}×</div>
+        </div>
+        <div class="h8-points-badge">${currentPoints(s)} b.</div>
+        <div class="h8-student-actions">
+          <button class="h8-mini-btn" data-action="rename-student" data-id="${s.id}">Upravit</button>
+          <button class="h8-mini-btn danger" data-action="remove-student" data-id="${s.id}" data-class="${c.id}">Odebrat</button>
+        </div>
+      </div>`).join('');
+      body=`<p class="h8-panel-help">Žáci v pracovní třídě. Kliknutím na jméno otevřeš detail žáka.</p>
+        ${rows?`<div class="h8-student-list">${rows}</div>`:'<div class="h8-empty">V této třídě zatím nejsou žádní žáci.</div>'}
+        <button class="h8-add-student" data-action="add-student" data-class="${c.id}">+ Přidat žáka</button>`;
     }else if(tab==='questions'){
-      const subjects=(c.subjects||[]);
-      body=`<p class="tiny muted">Témata se spravují u jednotlivých předmětů v sekci „Moje předměty“.</p><div class="list">${subjects.map(subject=>{const q=questionSetForSubject(subject,false);return `<div class="list-item"><div><div class="student-name">${esc(subject)}</div><div class="meta">${q?.items?.length||0} témat ke zkoušení</div></div><button class="btn secondary" data-action="open-subject-from-class" data-subject="${esc(subject)}">Otevřít témata</button></div>`}).join('')||'<div class="empty">Třída zatím nemá přiřazený žádný předmět.</div>'}</div><div class="sticky-actions"><button class="btn secondary" data-action="subjects">Moje předměty</button></div>`;
+      const rows=subjects.map(subject=>{const q=questionSetForSubject(subject,false);return `<div class="h8-subject-row">
+        <div><div class="h8-subject-name">${esc(subject)}</div><div class="h8-subject-meta">${q?.items?.length||0} témat ke zkoušení</div></div>
+        <button class="h8-open-subject" data-action="open-subject-from-class" data-subject="${esc(subject)}">Otevřít témata</button>
+      </div>`}).join('');
+      body=`<p class="h8-panel-help">Témata se spravují u jednotlivých předmětů. Zde vidíš předměty přiřazené k této třídě.</p>
+        ${rows?`<div class="h8-subject-list">${rows}</div>`:'<div class="h8-empty">Třída zatím nemá přiřazený žádný předmět.</div>'}
+        <button class="h8-subjects-link" data-action="subjects">Moje předměty</button>`;
     }else{
-      body=`<div class="form-grid"><label>Název třídy<input id="class-name" value="${esc(c.displayName)}"></label><label>Školní rok<input id="class-year" value="${esc(c.schoolYear)}"></label></div><label style="margin-top:12px">Předměty (oddělit čárkou)<input id="class-subjects" value="${esc(c.subjects.join(', '))}"></label><div class="sticky-actions"><button class="btn primary" data-action="save-class" data-id="${c.id}">Uložit</button><button class="btn secondary" data-action="promote-class" data-id="${c.id}">Převést do nového školního roku</button></div>`;
+      body=`<div class="h8-settings-grid">
+          <label>Název třídy<input id="class-name" value="${esc(c.displayName)}"></label>
+          <label>Školní rok<input id="class-year" value="${esc(c.schoolYear)}"></label>
+        </div>
+        <label class="h8-settings-subjects">Předměty (oddělit čárkou)<input id="class-subjects" value="${esc(subjects.join(', '))}"></label>
+        <div class="h8-settings-actions">
+          <button class="h8-save-class" data-action="save-class" data-id="${c.id}">Uložit změny</button>
+          <button class="h8-promote-class" data-action="promote-class" data-id="${c.id}">Převést do nového školního roku</button>
+        </div>`;
     }
-    const content=`<div class="section-title"><div><h1 class="pixel-title">${esc(c.displayName)}</h1><div class="muted">Školní rok ${esc(c.schoolYear)}</div></div></div><div class="tabs"><button class="tab ${tab==='students'?'active':''}" data-action="class-tab" data-tab="students">Žáci</button><button class="tab ${tab==='questions'?'active':''}" data-action="class-tab" data-tab="questions">Témata</button><button class="tab ${tab==='settings'?'active':''}" data-action="class-tab" data-tab="settings">Nastavení</button></div><div class="pixel-frame card" style="margin-top:12px">${body}</div>`;
+
+    const content=`<section class="class-detail-screen fidelity-h8">
+      <div class="h8-class-detail-head">
+        <div class="h8-class-detail-top">
+          <div class="h8-class-icon" aria-hidden="true"></div>
+          <div>
+            <h1 class="h8-class-detail-name">${esc(c.displayName)}</h1>
+            <div class="h8-class-detail-year">ŠKOLNÍ ROK ${esc(c.schoolYear)}</div>
+            <div class="h8-class-stats">
+              <span class="h8-stat-chip">${students.length} ${students.length===1?'žák':'žáků'}</span>
+              <span class="h8-stat-chip">${subjects.length} ${subjects.length===1?'předmět':'předmětů'}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="h8-tabs">
+        <button class="h8-tab ${tab==='students'?'active':''}" data-action="class-tab" data-tab="students">Žáci</button>
+        <button class="h8-tab ${tab==='questions'?'active':''}" data-action="class-tab" data-tab="questions">Témata</button>
+        <button class="h8-tab ${tab==='settings'?'active':''}" data-action="class-tab" data-tab="settings">Nastavení</button>
+      </div>
+
+      <div class="h8-detail-panel">${body}</div>
+      <div class="arcade-footer"><span>${esc(c.displayName)}</span><span>ZZ-01</span></div>
+    </section>`;
     app.innerHTML=layout(content,`${c.displayName} — ${c.schoolYear}`);
   }
 
