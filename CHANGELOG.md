@@ -1,23 +1,22 @@
-# ZZ-01_EXAM_SCENE_D_ANCHOR_LAYER_TIMER_REBUILD
+# ZZ-01_EXAM_SCENE_E_VIDEO_BASED_SCENE_REBUILD
 
-## Co patch opravuje
-- opravuje kotvení postav ve scéně zkoušení
-- učitel sedí skutečně za levou katedrou v úvodní klidové fázi
-- žák je ukotvený před tabulí a píše do reálné oblasti tabule
-- opravuje masku katedry tak, aby spodní část učitele byla schovaná za katedrou
-- nahrazuje problematické sprite assety čistšími výřezy z jednotné sprite sady
-- zvětšuje a stabilizuje velkou časomíru, aby se neořezávala
-- dolaďuje průběh animace tak, aby učitel na začátku více seděl / sledoval a až později chodil kontrolovat tabuli
+## Proč vznikl tento patch
+Video z reálného běhu ukázalo, že samostatné CSS-positioned postavy se při vykreslení neposazují spolehlivě k nábytku v pozadí. Tento patch proto mění princip scény.
 
-## Instalace
-1. Rozbal ZIP do kopie projektu.
-2. Přepiš soubor `index.html`.
-3. Přepiš složku `assets/ui/` soubory z tohoto patche.
-4. Otestuj průchod: loading -> zahájit zkoušení -> countdown -> samotné zkoušení.
+## Co se mění
+- učitel a žák už nejsou během zkoušení samostatné absolutně pozicované obrázky
+- aplikace přepíná celé připravené 16:9 scénické snímky
+- každá scéna má postavy už pevně umístěné vůči katedře, tabuli a dveřím
+- klid: učitel za katedrou, žák u tabule
+- kontrola: učitel u tabule
+- nervozita / závěr: samostatné celé scénické snímky
+- konec času a přesčas: samostatné celé scénické snímky
+- velká časomíra je znovu postavená jako samostatný HUD panel s nulovým záporným letter-spacingem a bez ořezu
 
-## Test po instalaci
-- po spuštění zkoušení musí učitel sedět vlevo za katedrou
-- žák musí stát před tabulí na pravé straně
-- velká časomíra musí být čitelná a nesmí být uříznutá
-- po blížícím se konci času musí žák přejít do nervóznějšího stavu
-- po vypršení času musí učitel ukázat směrem ke dveřím
+## Test
+1. zahájit zkoušení
+2. projít countdown 3-2-1-FIGHT
+3. ověřit klidovou scénu
+4. nechat doběhnout čas do nervózní fáze
+5. ověřit 0:00 a přesčas
+6. změnit velikost okna – postavy musí zůstat na stejném místě vůči učebně
