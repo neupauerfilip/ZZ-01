@@ -172,3 +172,8 @@
 - Původní spodní programovaná dekorace byla na hlavním menu skryta, aby se nedublovala s obrázkovým pozadím.
 - Funkce a navigace hlavního menu zůstávají beze změny.
 
+## 2026-09-22 — H1.4 Responsive fix pro obrázkové pozadí
+- opraveno roztažení obrázkového pozadí hlavního menu
+- pozadí nyní zachovává původní poměr stran a neřeže se přes `cover`
+- na různých šířkách obrazovky se celý školní motiv zobrazuje jako jedna scéna
+- centrální menu zůstává živé a vykresluje se nad obrázkovým pozadím

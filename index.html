@@ -3441,6 +3441,39 @@ body::after{
   .arcade-home-slogan{display:block;margin:8px auto 0 !important;max-width:94%}
 }
 
+
+/* H1.4 — responsive fix pro obrázkové pozadí hlavního menu */
+.home-container{position:relative;isolation:isolate;z-index:1}
+.home-container::before{
+  inset:auto !important;
+  top:0 !important;
+  left:50% !important;
+  width:min(100vw, calc(100vh * 1.3333333)) !important;
+  height:min(100vh, calc(100vw / 1.3333333)) !important;
+  transform:translateX(-50%) !important;
+  background-size:100% 100% !important;
+  background-position:center top !important;
+  background-repeat:no-repeat !important;
+  opacity:1 !important;
+}
+.home-container::after{
+  background:linear-gradient(180deg,rgba(1,10,19,.04),rgba(1,10,19,.14)) !important;
+}
+body{background:#031120 !important;}
+@media (max-width:760px){
+  .home-container::before{
+    width:100vw !important;
+    height:min(100vh, calc(100vw / 1.3333333)) !important;
+  }
+}
+@media (max-width:480px){
+  .home-container::before{
+    width:100vw !important;
+    height:calc(100vw / 1.3333333) !important;
+    max-height:74vh !important;
+  }
+}
+
 </style>
   <title>Zkouškomat ZZ-01</title>
 </head>
@@ -6628,7 +6661,40 @@ body::after{
     const dates=[...new Set(entries.map(h=>dateKey(h.at)))];
     const rows=studentsForClass(classId).map(s=>`<tr><td>${esc(s.name)}</td>${dates.map(d=>{const same=entries.filter(h=>h.studentId===s.id&&dateKey(h.at)===d);return `<td>${same.map(h=>h.noGradeStatus?'bez známky':esc(String(h.grade??'—'))).join(', ')||'—'}</td>`}).join('')}</tr>`).join('');
     const w=window.open('','_blank'); if(!w)return toast('Prohlížeč zablokoval tiskové okno.','error');
-    w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Známky ${esc(c.displayName)} ${esc(subject)}</title><style>@page{size:A4 landscape;margin:12mm}body{font-family:Arial,sans-serif;color:#111}h1{font-size:18px;margin:0 0 4px}.meta{margin-bottom:14px;font-size:12px}table{width:100%;border-collapse:collapse;font-size:11px}th,td{border:1px solid #555;padding:5px;text-align:center}th:first-child,td:first-child{text-align:left;font-weight:bold}</style></head><body><h1>${esc(state.school.name)} – klasifikační přehled</h1><div class="meta">${esc(c.displayName)} · ${esc(subject)} · ${semester}. pololetí · ${esc(c.schoolYear)} · učitel: ${esc(state.user.name)}</div><table><thead><tr><th>Žák</th>${dates.map(d=>`<th>${esc(d.split('-').reverse().join('. '))}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table><script>window.onload=()=>setTimeout(()=>window.print(),150)<\/script></body></html>`);
+    w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Známky ${esc(c.displayName)} ${esc(subject)}</title><style>@page{size:A4 landscape;margin:12mm}body{font-family:Arial,sans-serif;color:#111}h1{font-size:18px;margin:0 0 4px}.meta{margin-bottom:14px;font-size:12px}table{width:100%;border-collapse:collapse;font-size:11px}th,td{border:1px solid #555;padding:5px;text-align:center}th:first-child,td:first-child{text-align:left;font-weight:bold}
+/* H1.4 — responsive fix pro obrázkové pozadí hlavního menu */
+.home-container{position:relative;isolation:isolate;z-index:1}
+.home-container::before{
+  inset:auto !important;
+  top:0 !important;
+  left:50% !important;
+  width:min(100vw, calc(100vh * 1.3333333)) !important;
+  height:min(100vh, calc(100vw / 1.3333333)) !important;
+  transform:translateX(-50%) !important;
+  background-size:100% 100% !important;
+  background-position:center top !important;
+  background-repeat:no-repeat !important;
+  opacity:1 !important;
+}
+.home-container::after{
+  background:linear-gradient(180deg,rgba(1,10,19,.04),rgba(1,10,19,.14)) !important;
+}
+body{background:#031120 !important;}
+@media (max-width:760px){
+  .home-container::before{
+    width:100vw !important;
+    height:min(100vh, calc(100vw / 1.3333333)) !important;
+  }
+}
+@media (max-width:480px){
+  .home-container::before{
+    width:100vw !important;
+    height:calc(100vw / 1.3333333) !important;
+    max-height:74vh !important;
+  }
+}
+
+</style></head><body><h1>${esc(state.school.name)} – klasifikační přehled</h1><div class="meta">${esc(c.displayName)} · ${esc(subject)} · ${semester}. pololetí · ${esc(c.schoolYear)} · učitel: ${esc(state.user.name)}</div><table><thead><tr><th>Žák</th>${dates.map(d=>`<th>${esc(d.split('-').reverse().join('. '))}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table><script>window.onload=()=>setTimeout(()=>window.print(),150)<\/script></body></html>`);
     w.document.close();
   }
 
