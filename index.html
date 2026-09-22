@@ -4288,11 +4288,13 @@ body::after{
   const musicTracks={
     menu:new Audio('assets/audio/zz01-theme.mp3'),
     preExam:new Audio('assets/audio/zz01-preexam-tension.mp3'),
-    exam:new Audio('assets/audio/zz01-exam-heartbeat.mp3')
+    exam:new Audio('assets/audio/zz01-exam-heartbeat.mp3'),
+    scoring:new Audio('assets/audio/zz01-scoring-victory.mp3')
   };
   musicTracks.menu.volume=.26;
   musicTracks.preExam.volume=.16;
   musicTracks.exam.volume=.105;
+  musicTracks.scoring.volume=.18;
   Object.values(musicTracks).forEach(track=>{
     track.loop=true;
     track.preload='auto';
@@ -4332,6 +4334,7 @@ body::after{
       }
       return 'preExam';
     }
+    if(state.route==='scoring') return 'scoring';
     return null;
   }
   function stopAllBackgroundMusic(reset=false){
@@ -8904,6 +8907,7 @@ body::after{
   musicTracks.menu.addEventListener('canplay',unlockBackgroundMusic,{once:true});
   musicTracks.preExam.addEventListener('canplay',unlockBackgroundMusic,{once:true});
   musicTracks.exam.addEventListener('canplay',unlockBackgroundMusic,{once:true});
+  musicTracks.scoring.addEventListener('canplay',unlockBackgroundMusic,{once:true});
   document.addEventListener('pointerdown',unlockBackgroundMusic,{once:true,capture:true});
   document.addEventListener('touchstart',unlockBackgroundMusic,{once:true,capture:true,passive:true});
   document.addEventListener('keydown',unlockBackgroundMusic,{once:true,capture:true});

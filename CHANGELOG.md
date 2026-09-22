@@ -302,3 +302,10 @@
 - známka 1: veselé Juchů!, známka 2: střídmější Juchů., známka 3: OK., známka 4: smutnější Ach…, známka 5: zklamané Nooo…
 - horní přepínač hudby nyní ovládá všechny hudební režimy aplikace
 
+## 2026-09-22 — Audio Pack F: Scoring Victory Music
+- přidána samostatná hudební smyčka pro celý Scoring
+- po vstupu do Scoringu se automaticky spustí Victory Fanfare v8 ve smyčce
+- po opuštění Scoringu se hudba automaticky přepne nebo zastaví podle aktuální obrazovky
+- globální přepínač hudby v horní liště dál ovládá i hudbu Scoringu
+- ostatní hudební režimy a systémové zvuky zůstávají beze změny
+
