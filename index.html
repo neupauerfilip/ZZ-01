@@ -1600,9 +1600,12 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;ba
 .home-overview-label{margin:0 0 9px;color:var(--arcade-cyan);font-family:var(--pixel);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase}
 .home-summary-grid{margin-top:0}
 .arcade-footer{
-  margin-top:26px;padding-top:13px;border-top:3px solid var(--arcade-cyan);display:flex;justify-content:space-between;gap:12px;
+  margin-top:26px;padding-top:13px;border-top:3px solid var(--arcade-cyan);display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:12px;
   color:var(--arcade-cyan);font-family:var(--pixel);font-size:.7rem;letter-spacing:.05em
 }
+.arcade-footer > :first-child{text-align:left}
+.arcade-footer > :last-child{text-align:right}
+.arcade-footer .footer-school{text-align:center;opacity:.92;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .home-bottom-decor{margin-top:18px;display:grid;grid-template-columns:110px 1fr 110px;align-items:end;gap:12px}
 .home-books-decor,.home-lockers-decor{height:74px;display:flex;align-items:flex-end}
 .home-books-decor img{width:100%;height:100%;object-fit:contain;image-rendering:pixelated;opacity:.95}
@@ -6125,6 +6128,19 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       <main class="container ${state.route==='home'?'home-container':'pro-arcade-ui'}">${content}</main>`;
   }
 
+  function syncFooterSchool(){
+    const schoolName=(state.school&&state.school.name)||"";
+    if(!schoolName) return;
+    document.querySelectorAll(".arcade-footer").forEach(footer=>{
+      if(footer.querySelector(".footer-school")) return;
+      const span=document.createElement("span");
+      span.className="footer-school";
+      span.textContent=schoolName;
+      if(footer.children.length>=2) footer.insertBefore(span, footer.lastElementChild);
+      else footer.appendChild(span);
+    });
+  }
+
   function clonePlain(value){
     return JSON.parse(JSON.stringify(value));
   }
@@ -9305,6 +9321,7 @@ body::after{
     clearInterval(timerTick);
     document.body.dataset.route=state.route||'home';
     queueMicrotask(syncBackgroundMusic);
+    queueMicrotask(syncFooterSchool);
     if(!state.splashSeen) return renderSplash();
     if(!state.authenticated) return renderLogin();
     if(!state.onboardingDone) return renderOnboarding();

@@ -1,13 +1,6 @@
-# ZZ-01 Header Rollback — Stable
+# ZZ-01_HEADER_ROLLBACK_STABLE + footer school name
 
-Vrací hlavičku aplikace na poslední stabilní stav před úpravami s názvem školy.
-
-- bez názvu školy v hlavičce
-- bez dodatečných informačních panelů
-- bez změny výšky hlavičky
-- zachován ZKOUŠKOMAT + ZZ-01 vlevo
-- zachován uživatel a ovládací ikony vpravo
-- hlavní menu a ostatní obsah aplikace beze změny
-
-Doporučený commit:
-`Rollback header to stable layout`
+- zachován poslední stabilní vzhled hlavičky bez názvu školy
+- název školy přesunut do patičky obrazovek
+- patička nově zobrazuje: levý text · název školy · ZZ-01
+- rozložení patičky sjednoceno bez zvětšení hlavičky
