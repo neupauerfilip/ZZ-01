@@ -221,3 +221,9 @@
 - spodní textový pruh se zpětnou navigací byl odstraněn, aby byla aplikace čistší a jednotnější
 - sjednoceno chování návratu v celém průchodu aplikací přes jednu horní lištu
 
+## 2026-09-22 — H1.12 Finální ikona Zpět
+- nahrazena provizorní oranžová šipka novou schválenou bílou pixelovou ikonou s cyan zvýrazněním
+- nový asset `assets/ui/nav-back-white.png` má průhledné pozadí
+- tlačítko Zpět je nyní vizuálně sjednocené s ostatními ikonami horní lišty
+- chování návratu napříč aplikací zůstává beze změny
+

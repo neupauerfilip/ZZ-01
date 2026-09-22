@@ -3779,6 +3779,28 @@ body::after{
 }
 </style>
 
+
+<style>
+/* H1.12 — finální bílá pixelová šipka Zpět */
+.nav-back-top-btn, .home-topbar .nav-back-top-btn{
+  border-color:#20e8f3 !important;
+  background:#0a2230 !important;
+}
+.nav-back-top-btn img, .home-topbar .nav-back-top-btn img{
+  width:28px !important;
+  height:28px !important;
+  object-fit:contain !important;
+  image-rendering:pixelated !important;
+}
+.nav-back-top-btn:hover, .home-topbar .nav-back-top-btn:hover{
+  background:#103147 !important;
+  filter:brightness(1.08) !important;
+}
+@media (max-width:760px){
+  .nav-back-top-btn img,.home-topbar .nav-back-top-btn img{width:24px !important;height:24px !important;}
+}
+</style>
+
 </head>
 <body>
   <div class="crt-overlay" aria-hidden="true"></div>
@@ -4876,7 +4898,7 @@ body::after{
 
   function layout(content,title='Zkouškomat'){
     const currentUserName=state.user.nickname?.trim()||state.user.name||'Uživatel';
-    const backButton=state.route!=='home' ? `<button class="icon-btn nav-back-top-btn" data-action="nav-back" aria-label="Zpět" title="Zpět"><img src="assets/ui/nav-back-orange.png" alt="" aria-hidden="true"></button>` : '';
+    const backButton=state.route!=='home' ? `<button class="icon-btn nav-back-top-btn" data-action="nav-back" aria-label="Zpět" title="Zpět"><img src="assets/ui/nav-back-white.png" alt="" aria-hidden="true"></button>` : '';
     return `${!state.online?'<div class="offline-banner">Bez připojení – změny zůstávají v tomto zařízení.</div>':''}
       <header class="topbar ${state.route==='home'?'home-topbar':''}">
         <div class="brand-lockup">
@@ -7306,6 +7328,28 @@ body::after{
 .home-topbar .nav-back-top-btn{border-color:#ff9b2f !important;background:#24170b !important;}
 @media (max-width:980px){
   .nav-back-top-btn{order:0 !important;}
+}
+</style>
+
+
+<style>
+/* H1.12 — finální bílá pixelová šipka Zpět */
+.nav-back-top-btn, .home-topbar .nav-back-top-btn{
+  border-color:#20e8f3 !important;
+  background:#0a2230 !important;
+}
+.nav-back-top-btn img, .home-topbar .nav-back-top-btn img{
+  width:28px !important;
+  height:28px !important;
+  object-fit:contain !important;
+  image-rendering:pixelated !important;
+}
+.nav-back-top-btn:hover, .home-topbar .nav-back-top-btn:hover{
+  background:#103147 !important;
+  filter:brightness(1.08) !important;
+}
+@media (max-width:760px){
+  .nav-back-top-btn img,.home-topbar .nav-back-top-btn img{width:24px !important;height:24px !important;}
 }
 </style>
 
