@@ -4604,6 +4604,122 @@ body:not([data-route="home"]) .topbar{border-bottom-color:#0b7184!important;box-
   .pro-arcade-ui :where(.tab,.admin-tab,.h8-tab){font-size:.62rem!important;padding:7px 8px!important}
   .pro-arcade-ui th{font-size:.62rem!important}
 }
+
+/* ============================================================
+   PRO ARCADE UI V2 — CHAMFERED FRAME + LIGHT HEADING SYSTEM
+   Applies only inside .pro-arcade-ui; the home screen is untouched.
+   ============================================================ */
+.pro-arcade-ui{
+  --pro-heading-font:Bahnschrift,"Arial Narrow","Segoe UI",Arial,sans-serif;
+  --pro-cut-lg:12px;
+  --pro-cut-md:9px;
+  --pro-cut-sm:7px;
+}
+
+/* One heading language across every non-home screen. */
+.pro-arcade-ui :where(h1,h2,h3,.pixel-title,.h8-title,.candidates-title,.rules-title,.topic-title,.settings-title,.staffroom-title){
+  font-family:var(--pro-heading-font)!important;
+  font-style:normal!important;
+  text-transform:none!important;
+  letter-spacing:.015em!important;
+  color:var(--pro-cream)!important;
+  text-shadow:2px 2px 0 #02101a!important;
+}
+.pro-arcade-ui h1,
+.pro-arcade-ui :where(.h8-title,.candidates-title,.rules-title,.topic-title,.settings-title,.staffroom-title){
+  font-weight:600!important;
+  line-height:1.03!important;
+}
+.pro-arcade-ui h2{font-weight:550!important;line-height:1.12!important}
+.pro-arcade-ui h3{font-weight:500!important;line-height:1.16!important}
+.pro-arcade-ui :where(.section-title h1,.pack-a-hero h1,.pack-a-detail-head h1,.exam-start-head h1){
+  font-family:var(--pro-heading-font)!important;
+  font-weight:600!important;
+  letter-spacing:.015em!important;
+}
+
+/* Main panels/cards inherit the same chamfered frame used by "Moje třídy". */
+.pro-arcade-ui :where(
+  .pixel-frame,.card,.panel,.box,.game-card,.school-card,.challenge-card,.teacher-card,
+  .pack-a-hero,.pack-a-detail-head,.pack-a-panel,.pack-a-kpis>div,.pack-a-detail-card,.pack-a-side-card,.pack-a-empty,
+  .h8-card,.h8-panel,.h8-class-card,.h8-kpi,.settings-card,.settings-section,.staffroom-card,
+  .exam-roster-head,.exam-roster-table,.exam-student-panel,.exam-timer-panel,.rules-card,.candidate-choice,
+  .topic-list-row,.gradebook-panel,.exam-selection-summary,.class-picker-summary,.table-wrap
+){
+  clip-path:polygon(
+    var(--pro-cut-lg) 0,calc(100% - var(--pro-cut-lg)) 0,
+    100% var(--pro-cut-lg),100% calc(100% - var(--pro-cut-lg)),
+    calc(100% - var(--pro-cut-lg)) 100%,var(--pro-cut-lg) 100%,
+    0 calc(100% - var(--pro-cut-lg)),0 var(--pro-cut-lg)
+  )!important;
+  border-radius:0!important;
+}
+
+/* Lists / selectable rows get a slightly smaller cut so dense screens remain readable. */
+.pro-arcade-ui :where(
+  .list-item,.arcade-subject-choice,.class-picker-option,.candidate-select-pill,.rule-row,.student-row,
+  .h8-subject-row,.pack-a-class-chip,.pack-a-topic-row,.topic-row,.grade-choice,.school-row
+){
+  clip-path:polygon(
+    var(--pro-cut-md) 0,calc(100% - var(--pro-cut-md)) 0,
+    100% var(--pro-cut-md),100% calc(100% - var(--pro-cut-md)),
+    calc(100% - var(--pro-cut-md)) 100%,var(--pro-cut-md) 100%,
+    0 calc(100% - var(--pro-cut-md)),0 var(--pro-cut-md)
+  )!important;
+  border-radius:0!important;
+}
+
+/* Buttons and tabs use the same geometry, but with a restrained 7 px cut. */
+.pro-arcade-ui :where(
+  .btn,.tab,.admin-tab,.h8-tab,.h8-head-action,.h8-open-class,.h8-open-subject,.h8-mini-btn,
+  .pack-a-primary,.pack-a-secondary,.pack-a-back,.pack-a-mini,.pack-a-danger-wide,.exam-continue,
+  .exam-roster-rules-btn,.exam-pause-button,.exam-end-button
+){
+  clip-path:polygon(
+    var(--pro-cut-sm) 0,calc(100% - var(--pro-cut-sm)) 0,
+    100% var(--pro-cut-sm),100% calc(100% - var(--pro-cut-sm)),
+    calc(100% - var(--pro-cut-sm)) 100%,var(--pro-cut-sm) 100%,
+    0 calc(100% - var(--pro-cut-sm)),0 var(--pro-cut-sm)
+  )!important;
+  border-radius:0!important;
+}
+
+/* Recreate the double cyan frame feel from My Classes on generic surfaces. */
+.pro-arcade-ui :where(
+  .card,.panel,.game-card,.school-card,.challenge-card,.teacher-card,.pack-a-panel,.pack-a-kpis>div,
+  .h8-card,.h8-panel,.settings-card,.settings-section,.staffroom-card,.exam-roster-head,.exam-roster-table,
+  .exam-student-panel,.exam-timer-panel,.rules-card,.candidate-choice,.topic-list-row,.gradebook-panel
+){
+  border-width:3px!important;
+  border-style:solid!important;
+  border-color:var(--pro-cyan-dim)!important;
+  box-shadow:inset 0 0 0 2px rgba(32,231,236,.16),4px 4px 0 var(--pro-shadow)!important;
+}
+
+/* Form controls stay rectangular inside, but their outer silhouette now matches the UI. */
+.pro-arcade-ui :where(input:not([type=checkbox]):not([type=radio]),select,textarea){
+  clip-path:polygon(
+    6px 0,calc(100% - 6px) 0,100% 6px,100% calc(100% - 6px),
+    calc(100% - 6px) 100%,6px 100%,0 calc(100% - 6px),0 6px
+  )!important;
+}
+
+/* Non-home modal gets the same frame and heading system. */
+body:not([data-route="home"]) .modal{
+  clip-path:polygon(12px 0,calc(100% - 12px) 0,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,0 calc(100% - 12px),0 12px)!important;
+}
+body:not([data-route="home"]) .modal :where(h1,h2,h3){
+  font-family:Bahnschrift,"Arial Narrow","Segoe UI",Arial,sans-serif!important;
+  font-weight:600!important;
+  letter-spacing:.015em!important;
+  text-transform:none!important;
+}
+
+@media(max-width:760px){
+  .pro-arcade-ui{--pro-cut-lg:9px;--pro-cut-md:7px;--pro-cut-sm:6px}
+  .pro-arcade-ui h1{font-size:clamp(1.42rem,7.2vw,2rem)!important}
+  .pro-arcade-ui h2{font-size:clamp(1.02rem,4.9vw,1.42rem)!important}
+}
 </style>
 
 </head>

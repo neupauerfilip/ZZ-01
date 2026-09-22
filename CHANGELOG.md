@@ -54,3 +54,13 @@ Zrychlit zahájení zkoušení během reálné vyučovací hodiny a snížit po�
 - tabulky už nemají vlastní vertikální scroll limit; stránka roste s obsahem
 - speciální herní vizuály (kolo, učebna během zkoušení, trofeje) se nepřekreslují
 - funkční logika aplikace nebyla změněna
+
+## Pro Arcade UI V2 — chamfered frames + lighter headings
+- hlavní menu zůstává beze změny
+- sjednocen tvar hlavních karet a panelů podle obrazovky „Moje třídy“
+- globálně přidány sražené rohy na karty, panely, tabulkové kontejnery, výběrové řádky, tlačítka a dialogy mimo hlavní menu
+- generické panely dostaly jemný dvojitý cyanový rám a pixelový stín
+- všechny hlavní nadpisy mimo hlavní menu používají lehčí technický bezpatkový font (Bahnschrift / Segoe UI fallback)
+- nadpisy už nejsou přehnaně tučné; váhy jsou zhruba 500–600
+- zůstává lehký retro/arcade charakter díky drobnému spacingu a stínu
+- funkce a obsah obrazovek se nemění
