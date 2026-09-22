@@ -208,3 +208,16 @@
 - přepracováno tlačítko profilu / nastavení novou pixelovou ikonou
 - tlačítko odhlášení má nově samostatnou dveřní ikonu místo vzhledu ozubeného kolečka
 
+## 2026-09-22 — H1.10 Zjednodušená horní lišta
+- přepracována horní lišta celé aplikace do jednodušší a učesanější podoby
+- odstraněn rušivý kontextový řádek v hlavičce
+- sjednocena velikost a vzhled ikon Domů, Profil a Odhlášení
+- zmenšena a vizuálně uklizena informace o přihlášeném uživateli
+- upraveny rozestupy, výšky a chování lišty na desktopu i mobilu
+
+## 2026-09-22 — H1.11 Šipka Zpět v horní liště
+- textová navigace Zpět byla nahrazena oranžovou ikonou šipky v horní liště
+- nová šipka Zpět se zobrazuje napříč aplikací na všech obrazovkách kromě hlavního menu
+- spodní textový pruh se zpětnou navigací byl odstraněn, aby byla aplikace čistší a jednotnější
+- sjednoceno chování návratu v celém průchodu aplikací přes jednu horní lištu
+

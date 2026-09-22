@@ -3705,6 +3705,80 @@ body::after{
 }
 </style>
 
+
+<style>
+/* H1.10 — zjednodušená a učesanější horní lišta v celé aplikaci */
+.topbar{
+  display:flex !important;align-items:center !important;justify-content:space-between !important;gap:14px !important;
+  min-height:78px !important;padding:10px 14px !important;
+  border-width:3px !important;box-shadow:4px 4px 0 #010913 !important;
+}
+.brand-lockup{gap:12px !important;align-items:center !important;}
+.brand-mark{width:56px !important;height:56px !important;object-fit:cover !important;image-rendering:pixelated !important;}
+.brand-copy{display:flex;flex-direction:column;justify-content:center;min-width:0;}
+.brand-main{font-size:clamp(1.2rem,3.1vw,2rem) !important;line-height:.92 !important;letter-spacing:.04em !important;}
+.brand-code{font-size:clamp(.8rem,1.8vw,1rem) !important;margin-top:4px !important;letter-spacing:.16em !important;}
+.context-strip{display:none !important;}
+.nav-actions{margin-left:auto !important;display:flex !important;align-items:center !important;justify-content:flex-end !important;gap:8px !important;flex-wrap:wrap !important;}
+.session-chip{
+  display:flex !important;align-items:center !important;gap:6px !important;
+  min-height:40px !important;padding:7px 10px !important;
+  border:2px solid var(--cyan) !important;background:rgba(7,26,44,.92) !important;color:var(--cream) !important;
+  box-shadow:none !important;font-family:var(--pixel) !important;font-size:.68rem !important;line-height:1.1 !important;white-space:nowrap !important;
+}
+.session-label{color:#9bdce3 !important;}
+.session-role{color:#24eaf4 !important;text-transform:uppercase !important;}
+.session-name{color:#fff3db !important;}
+.topbar .icon-btn, .home-topbar .icon-btn{
+  width:42px !important;height:42px !important;min-width:42px !important;min-height:42px !important;
+  padding:0 !important;display:flex !important;align-items:center !important;justify-content:center !important;
+  font-size:0 !important;box-shadow:none !important;border-width:2px !important;border-left:none !important;
+}
+.topbar .icon-btn img, .home-topbar .icon-btn img{width:22px !important;height:22px !important;image-rendering:pixelated !important;display:block;}
+.nav-home-btn{border-color:var(--cyan) !important;background:#0a2230 !important;}
+.nav-profile-btn{border-color:var(--cyan) !important;background:#0a2230 !important;}
+.nav-logout-btn, .topbar .icon-btn.account-exit, .home-topbar .icon-btn.account-exit{border-color:var(--orange) !important;background:#24170b !important;color:var(--orange) !important;}
+.home-topbar{padding:10px 14px !important;min-height:86px !important;box-shadow:0 0 0 2px #063c52,4px 4px 0 #010913 !important;}
+.home-topbar .brand-lockup{gap:14px !important;}
+.home-topbar .brand-mark{width:62px !important;height:62px !important;}
+.home-topbar .brand-main{font-size:clamp(1.35rem,3.6vw,2.2rem) !important;line-height:.92 !important;}
+.home-topbar .brand-code{font-size:clamp(.86rem,1.8vw,1rem) !important;color:#2debf4 !important;margin-top:5px !important;}
+.home-topbar .nav-actions{gap:8px !important;}
+.home-topbar .session-chip{
+  min-height:42px !important;padding:8px 12px !important;font-size:.7rem !important;
+  border:2px solid #20e8f3 !important;background:rgba(4,24,42,.93) !important;box-shadow:none !important;
+}
+.home-topbar .icon-btn:first-child::before{display:none !important;}
+.home-topbar .icon-btn:first-child .avatar-chip{display:none !important;}
+.topbar .icon-btn:hover,.home-topbar .icon-btn:hover{filter:brightness(1.08) !important;background:#103147 !important;}
+.nav-logout-btn:hover,.topbar .icon-btn.account-exit:hover,.home-topbar .icon-btn.account-exit:hover{background:#35200d !important;}
+@media (max-width:980px){
+  .session-chip{order:3 !important;flex:1 1 100% !important;justify-content:center !important;text-align:center !important;}
+  .topbar,.home-topbar{align-items:flex-start !important;}
+}
+@media (max-width:760px){
+  .topbar,.home-topbar{padding:8px 10px !important;gap:10px !important;min-height:72px !important;}
+  .brand-mark,.home-topbar .brand-mark{width:48px !important;height:48px !important;}
+  .brand-main,.home-topbar .brand-main{font-size:1.25rem !important;}
+  .brand-code,.home-topbar .brand-code{font-size:.76rem !important;letter-spacing:.12em !important;}
+  .session-chip,.home-topbar .session-chip{font-size:.6rem !important;padding:6px 8px !important;min-height:36px !important;white-space:normal !important;}
+  .topbar .icon-btn,.home-topbar .icon-btn{width:38px !important;height:38px !important;min-width:38px !important;min-height:38px !important;}
+  .topbar .icon-btn img,.home-topbar .icon-btn img{width:20px !important;height:20px !important;}
+}
+</style>
+
+
+<style>
+/* H1.11 — oranžová šipka Zpět v horní liště napříč aplikací */
+.nav-back-top-btn{border-color:var(--orange) !important;background:#24170b !important;order:-1;}
+.nav-back-top-btn img{width:24px !important;height:24px !important;}
+.nav-back-top-btn:hover{background:#35200d !important;filter:brightness(1.06) !important;}
+.home-topbar .nav-back-top-btn{border-color:#ff9b2f !important;background:#24170b !important;}
+@media (max-width:980px){
+  .nav-back-top-btn{order:0 !important;}
+}
+</style>
+
 </head>
 <body>
   <div class="crt-overlay" aria-hidden="true"></div>
@@ -4802,6 +4876,7 @@ body::after{
 
   function layout(content,title='Zkouškomat'){
     const currentUserName=state.user.nickname?.trim()||state.user.name||'Uživatel';
+    const backButton=state.route!=='home' ? `<button class="icon-btn nav-back-top-btn" data-action="nav-back" aria-label="Zpět" title="Zpět"><img src="assets/ui/nav-back-orange.png" alt="" aria-hidden="true"></button>` : '';
     return `${!state.online?'<div class="offline-banner">Bez připojení – změny zůstávají v tomto zařízení.</div>':''}
       <header class="topbar ${state.route==='home'?'home-topbar':''}">
         <div class="brand-lockup">
@@ -4810,13 +4885,13 @@ body::after{
           <div class="context-strip"><span class="status-dot ${state.online?'':'offline'}"></span><span>${esc(state.school.name)}</span><span>•</span><span>${esc(title)}</span></div>
         </div>
         <div class="nav-actions">
+          ${backButton}
           <div class="session-chip" title="Aktuálně přihlášený uživatel"><span class="session-label">Přihlášen:</span><span class="session-role">${esc(userRoleLabel())}</span><span class="session-name">(${esc(currentUserName)})</span></div>
           <button class="icon-btn nav-home-btn" data-action="go-home" aria-label="Domů" title="Domů"><img src="assets/ui/nav-home.png" alt="" aria-hidden="true"></button>
           <button class="icon-btn nav-profile-btn" data-action="settings" aria-label="Můj profil a nastavení" title="Můj profil a nastavení"><img src="assets/ui/nav-profile.png" alt="" aria-hidden="true"></button>
           <button class="icon-btn account-exit nav-logout-btn" data-action="logout" aria-label="Odhlásit se" title="Odhlásit se"><img src="assets/ui/nav-logout-door.png" alt="" aria-hidden="true"></button>
         </div>
       </header>
-      ${state.route!=='home'?`<div class="screen-nav"><button class="back-nav-btn" data-action="nav-back" aria-label="Zpět"><span class="back-arrow">←</span>Zpět</button>${state.route==='exam'?'':`<button class="home-nav-btn" data-action="go-home" aria-label="Hlavní menu">⌂ Hlavní menu</button>`}</div>`:''}
       <main class="container ${state.route==='home'?'home-container':''}">${content}</main>`;
   }
 
@@ -7157,6 +7232,80 @@ body::after{
 @media (max-width:560px){
   .nav-actions{width:100%;justify-content:space-between;}
   .session-chip{width:100%;order:3;}
+}
+</style>
+
+
+<style>
+/* H1.10 — zjednodušená a učesanější horní lišta v celé aplikaci */
+.topbar{
+  display:flex !important;align-items:center !important;justify-content:space-between !important;gap:14px !important;
+  min-height:78px !important;padding:10px 14px !important;
+  border-width:3px !important;box-shadow:4px 4px 0 #010913 !important;
+}
+.brand-lockup{gap:12px !important;align-items:center !important;}
+.brand-mark{width:56px !important;height:56px !important;object-fit:cover !important;image-rendering:pixelated !important;}
+.brand-copy{display:flex;flex-direction:column;justify-content:center;min-width:0;}
+.brand-main{font-size:clamp(1.2rem,3.1vw,2rem) !important;line-height:.92 !important;letter-spacing:.04em !important;}
+.brand-code{font-size:clamp(.8rem,1.8vw,1rem) !important;margin-top:4px !important;letter-spacing:.16em !important;}
+.context-strip{display:none !important;}
+.nav-actions{margin-left:auto !important;display:flex !important;align-items:center !important;justify-content:flex-end !important;gap:8px !important;flex-wrap:wrap !important;}
+.session-chip{
+  display:flex !important;align-items:center !important;gap:6px !important;
+  min-height:40px !important;padding:7px 10px !important;
+  border:2px solid var(--cyan) !important;background:rgba(7,26,44,.92) !important;color:var(--cream) !important;
+  box-shadow:none !important;font-family:var(--pixel) !important;font-size:.68rem !important;line-height:1.1 !important;white-space:nowrap !important;
+}
+.session-label{color:#9bdce3 !important;}
+.session-role{color:#24eaf4 !important;text-transform:uppercase !important;}
+.session-name{color:#fff3db !important;}
+.topbar .icon-btn, .home-topbar .icon-btn{
+  width:42px !important;height:42px !important;min-width:42px !important;min-height:42px !important;
+  padding:0 !important;display:flex !important;align-items:center !important;justify-content:center !important;
+  font-size:0 !important;box-shadow:none !important;border-width:2px !important;border-left:none !important;
+}
+.topbar .icon-btn img, .home-topbar .icon-btn img{width:22px !important;height:22px !important;image-rendering:pixelated !important;display:block;}
+.nav-home-btn{border-color:var(--cyan) !important;background:#0a2230 !important;}
+.nav-profile-btn{border-color:var(--cyan) !important;background:#0a2230 !important;}
+.nav-logout-btn, .topbar .icon-btn.account-exit, .home-topbar .icon-btn.account-exit{border-color:var(--orange) !important;background:#24170b !important;color:var(--orange) !important;}
+.home-topbar{padding:10px 14px !important;min-height:86px !important;box-shadow:0 0 0 2px #063c52,4px 4px 0 #010913 !important;}
+.home-topbar .brand-lockup{gap:14px !important;}
+.home-topbar .brand-mark{width:62px !important;height:62px !important;}
+.home-topbar .brand-main{font-size:clamp(1.35rem,3.6vw,2.2rem) !important;line-height:.92 !important;}
+.home-topbar .brand-code{font-size:clamp(.86rem,1.8vw,1rem) !important;color:#2debf4 !important;margin-top:5px !important;}
+.home-topbar .nav-actions{gap:8px !important;}
+.home-topbar .session-chip{
+  min-height:42px !important;padding:8px 12px !important;font-size:.7rem !important;
+  border:2px solid #20e8f3 !important;background:rgba(4,24,42,.93) !important;box-shadow:none !important;
+}
+.home-topbar .icon-btn:first-child::before{display:none !important;}
+.home-topbar .icon-btn:first-child .avatar-chip{display:none !important;}
+.topbar .icon-btn:hover,.home-topbar .icon-btn:hover{filter:brightness(1.08) !important;background:#103147 !important;}
+.nav-logout-btn:hover,.topbar .icon-btn.account-exit:hover,.home-topbar .icon-btn.account-exit:hover{background:#35200d !important;}
+@media (max-width:980px){
+  .session-chip{order:3 !important;flex:1 1 100% !important;justify-content:center !important;text-align:center !important;}
+  .topbar,.home-topbar{align-items:flex-start !important;}
+}
+@media (max-width:760px){
+  .topbar,.home-topbar{padding:8px 10px !important;gap:10px !important;min-height:72px !important;}
+  .brand-mark,.home-topbar .brand-mark{width:48px !important;height:48px !important;}
+  .brand-main,.home-topbar .brand-main{font-size:1.25rem !important;}
+  .brand-code,.home-topbar .brand-code{font-size:.76rem !important;letter-spacing:.12em !important;}
+  .session-chip,.home-topbar .session-chip{font-size:.6rem !important;padding:6px 8px !important;min-height:36px !important;white-space:normal !important;}
+  .topbar .icon-btn,.home-topbar .icon-btn{width:38px !important;height:38px !important;min-width:38px !important;min-height:38px !important;}
+  .topbar .icon-btn img,.home-topbar .icon-btn img{width:20px !important;height:20px !important;}
+}
+</style>
+
+
+<style>
+/* H1.11 — oranžová šipka Zpět v horní liště napříč aplikací */
+.nav-back-top-btn{border-color:var(--orange) !important;background:#24170b !important;order:-1;}
+.nav-back-top-btn img{width:24px !important;height:24px !important;}
+.nav-back-top-btn:hover{background:#35200d !important;filter:brightness(1.06) !important;}
+.home-topbar .nav-back-top-btn{border-color:#ff9b2f !important;background:#24170b !important;}
+@media (max-width:980px){
+  .nav-back-top-btn{order:0 !important;}
 }
 </style>
 
