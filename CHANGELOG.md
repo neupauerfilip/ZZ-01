@@ -233,3 +233,9 @@
 - přidán krémový text, oranžový 3D stín a tmavá pixelová hrana
 - nadpisy zůstávají živý text a responzivně se přizpůsobují desktopu i mobilu
 
+## 2026-09-22 — H1.14 Sjednocená typografie ovládání
+- sekundární nadpisy, karty a názvy položek byly převedeny na hranatý bezpatkový arcade styl
+- hlavní tlačítka, záložky a volby napříč aplikací používají jednotný výrazný sans-serif font
+- malé technické štítky, kroky a stavové údaje zůstávají monospace/pixelové kvůli přehlednosti
+- formulářové a běžné texty nebyly zbytečně stylizovány, aby zůstaly dobře čitelné
+

@@ -3871,6 +3871,72 @@ body::after{
 }
 </style>
 
+
+<style>
+/* H1.14 — sjednocená arkádová typografie sekundárních nadpisů a ovládání */
+:root{
+  --arcade-ui-font:"Arial Black","Trebuchet MS",Arial,sans-serif;
+}
+
+/* sekundární nadpisy a důležité popisky */
+:where(
+  .card h2,.card h3,
+  .arcade-section-label h2,
+  .topic-list-panel h2,.topic-wheel-panel h2,
+  .pack-a-panel-head h2,
+  .staffroom-chat-head h2,.staffroom-side-panel h2,.settings-card h2,
+  .cabinet-title,.trophy-tree-title,.rarity-title h3,
+  .home-card h2,
+  .h8-class-name,.h8-subject-name,
+  .candidate-name,
+  .rules-student-name,
+  .attendance-student-name
+){
+  font-family:var(--arcade-ui-font) !important;
+  font-weight:900 !important;
+  font-style:normal !important;
+  letter-spacing:.015em !important;
+}
+
+/* hlavní akční tlačítka, záložky a volby */
+:where(
+  .btn,.icon-btn,
+  .tab,.admin-tab,.h8-tab,
+  .subject-choice,.class-option,
+  .candidate-select-pill,.candidates-redraw,.candidates-other,.candidates-confirm,
+  .exam-continue,.exam-primary,.exam-secondary,
+  .h8-open-class,.h8-mini-btn,.h8-add-student,.h8-subjects-link,.h8-save-class,.h8-open-subject,.h8-promote-class,
+  .pack-a-mini,.pack-a-grade-actions button,.pack-a-score-tabs button,
+  .staffroom-send,.settings-tool-grid .btn,.settings-save-bar .btn
+){
+  font-family:var(--arcade-ui-font) !important;
+  font-weight:900 !important;
+  font-style:normal !important;
+  letter-spacing:.025em !important;
+}
+
+/* malé herní technické štítky zůstanou monospace/pixelové */
+:where(
+  .brand-code,.exam-step,.attendance-step,.rules-step,.candidates-step,.topic-step,
+  .session-chip,.badge,.tiny,.small,
+  .h8-class-year,.h8-class-detail-year,.candidate-kicker,.candidate-points,
+  .selection-kicker,.selection-class
+){
+  font-family:"Courier New",monospace !important;
+}
+
+/* jemně čistší tlačítka bez serifního dojmu */
+.btn,.tab,.admin-tab{
+  text-rendering:geometricPrecision;
+}
+
+@media(max-width:760px){
+  :where(.btn,.tab,.admin-tab,.h8-tab,.subject-choice,.candidate-select-pill){
+    letter-spacing:.01em !important;
+  }
+}
+</style>
+
 </head>
 <body>
   <div class="crt-overlay" aria-hidden="true"></div>
@@ -7420,6 +7486,72 @@ body::after{
 }
 @media (max-width:760px){
   .nav-back-top-btn img,.home-topbar .nav-back-top-btn img{width:24px !important;height:24px !important;}
+}
+</style>
+
+
+<style>
+/* H1.14 — sjednocená arkádová typografie sekundárních nadpisů a ovládání */
+:root{
+  --arcade-ui-font:"Arial Black","Trebuchet MS",Arial,sans-serif;
+}
+
+/* sekundární nadpisy a důležité popisky */
+:where(
+  .card h2,.card h3,
+  .arcade-section-label h2,
+  .topic-list-panel h2,.topic-wheel-panel h2,
+  .pack-a-panel-head h2,
+  .staffroom-chat-head h2,.staffroom-side-panel h2,.settings-card h2,
+  .cabinet-title,.trophy-tree-title,.rarity-title h3,
+  .home-card h2,
+  .h8-class-name,.h8-subject-name,
+  .candidate-name,
+  .rules-student-name,
+  .attendance-student-name
+){
+  font-family:var(--arcade-ui-font) !important;
+  font-weight:900 !important;
+  font-style:normal !important;
+  letter-spacing:.015em !important;
+}
+
+/* hlavní akční tlačítka, záložky a volby */
+:where(
+  .btn,.icon-btn,
+  .tab,.admin-tab,.h8-tab,
+  .subject-choice,.class-option,
+  .candidate-select-pill,.candidates-redraw,.candidates-other,.candidates-confirm,
+  .exam-continue,.exam-primary,.exam-secondary,
+  .h8-open-class,.h8-mini-btn,.h8-add-student,.h8-subjects-link,.h8-save-class,.h8-open-subject,.h8-promote-class,
+  .pack-a-mini,.pack-a-grade-actions button,.pack-a-score-tabs button,
+  .staffroom-send,.settings-tool-grid .btn,.settings-save-bar .btn
+){
+  font-family:var(--arcade-ui-font) !important;
+  font-weight:900 !important;
+  font-style:normal !important;
+  letter-spacing:.025em !important;
+}
+
+/* malé herní technické štítky zůstanou monospace/pixelové */
+:where(
+  .brand-code,.exam-step,.attendance-step,.rules-step,.candidates-step,.topic-step,
+  .session-chip,.badge,.tiny,.small,
+  .h8-class-year,.h8-class-detail-year,.candidate-kicker,.candidate-points,
+  .selection-kicker,.selection-class
+){
+  font-family:"Courier New",monospace !important;
+}
+
+/* jemně čistší tlačítka bez serifního dojmu */
+.btn,.tab,.admin-tab{
+  text-rendering:geometricPrecision;
+}
+
+@media(max-width:760px){
+  :where(.btn,.tab,.admin-tab,.h8-tab,.subject-choice,.candidate-select-pill){
+    letter-spacing:.01em !important;
+  }
 }
 </style>
 
