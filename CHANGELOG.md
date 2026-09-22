@@ -32,3 +32,13 @@ Zrychlit zahájení zkoušení během reálné vyučovací hodiny a snížit po�
 - text je nově centrovanější a nevejde-li se, zkrátí se korektně uvnitř tlačítka
 - rozložení předmětů je přehlednější: 2 sloupce na desktopu, 1 sloupec na mobilu
 - tlačítka mají větší vnitřní prostor a lépe sedí s checkboxem
+
+
+## Hotfix A2 – profesionální arcade výběr předmětu
+- úplně přepracovaný výběr předmětu na obrazovce Zahájit zkoušení
+- jeden přehledný sloupec místo natlačené mřížky
+- celý řádek je velká klikací plocha
+- dlouhé názvy se správně zalamují a nikdy neleží přes okraj tlačítka
+- arkádový pixelový font a světlý text ve všech stavech
+- vybraný předmět používá oranžový accent, ale zůstává dobře čitelný
+- jasnější indikátor výběru a lepší hover/focus stav
