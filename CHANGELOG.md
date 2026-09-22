@@ -201,3 +201,10 @@
 - zachováno chování fullscreen `cover`, takže se nové pozadí automaticky přizpůsobuje monitoru i mobilu
 - beze změny logiky hlavního menu, tlačítek a obrázkového nadpisu
 
+## 2026-09-22 — H1.9 Úprava hlavičky a navigačních ikon
+- změněn slogan na „Proč zkoušet jednoduše, když to lze složitě.“ na hlavním menu i úvodní obrazovce
+- do hlavičky celé aplikace přidána trvale viditelná informace o přihlášení: role a jméno uživatele
+- doplněna ikona Domů pro rychlý návrat na hlavní obrazovku
+- přepracováno tlačítko profilu / nastavení novou pixelovou ikonou
+- tlačítko odhlášení má nově samostatnou dveřní ikonu místo vzhledu ozubeného kolečka
+

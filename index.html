@@ -3664,6 +3664,47 @@ body::after{
 }
 </style>
 
+
+<style>
+/* H1.9 — hlavička aplikace: přihlášený uživatel + domů + profil + odhlášení */
+.nav-actions{gap:10px !important;flex-wrap:wrap;justify-content:flex-end;}
+.session-chip{display:flex;align-items:center;gap:6px;min-height:44px;padding:8px 12px;border:2px solid var(--cyan);background:#071a2c;color:var(--cream);box-shadow:4px 4px 0 var(--shadow);font-family:var(--pixel);font-size:.72rem;line-height:1.15;white-space:nowrap;}
+.session-label{color:var(--muted);}
+.session-role{color:var(--cyan);text-transform:uppercase;}
+.session-name{color:var(--cream);}
+.topbar .icon-btn img{width:28px;height:28px;image-rendering:pixelated;display:block;}
+.topbar .icon-btn{display:flex;align-items:center;justify-content:center;}
+.topbar .icon-btn.account-exit{border-color:var(--orange);background:#20170f;color:var(--orange);}
+.topbar .icon-btn.account-exit img{width:30px;height:30px;}
+.home-topbar .nav-actions{gap:10px !important;}
+.home-topbar .session-chip{border:3px solid #20e8f3;background:rgba(4,24,42,.96);box-shadow:0 0 0 2px #063c52,4px 4px 0 #010913;color:#fff3db;font-size:.78rem;padding:10px 14px;}
+.home-topbar .session-label{color:#8cdde3;}
+.home-topbar .session-role{color:#22edf7;}
+.home-topbar .topbar .icon-btn img{}
+.home-topbar .icon-btn{width:56px !important;height:56px !important;min-width:56px !important;min-height:56px !important;padding:0 !important;font-size:0 !important;}
+.home-topbar .icon-btn img{width:32px;height:32px;}
+.home-topbar .icon-btn.account-exit{width:56px !important;border-left:none !important;padding-left:0 !important;}
+.home-topbar .nav-home-btn{border-color:#20e8f3 !important;background:rgba(4,24,42,.96) !important;}
+.home-topbar .nav-profile-btn{border-color:#20e8f3 !important;background:rgba(4,24,42,.96) !important;}
+.home-topbar .nav-logout-btn{border-color:#ff9b2f !important;background:#24170b !important;}
+@media (max-width:980px){
+  .session-chip{order:2;flex:1 1 auto;justify-content:center;}
+  .nav-actions{justify-content:flex-end;}
+}
+@media (max-width:760px){
+  .session-chip{font-size:.62rem;padding:6px 8px;min-height:38px;gap:4px;white-space:normal;text-align:center;justify-content:center;}
+  .home-topbar .session-chip{font-size:.64rem;padding:7px 9px;}
+  .topbar .icon-btn img{width:22px;height:22px;}
+  .topbar .icon-btn.account-exit img{width:24px;height:24px;}
+  .home-topbar .icon-btn{width:44px !important;height:44px !important;min-width:44px !important;min-height:44px !important;}
+  .home-topbar .icon-btn img{width:24px;height:24px;}
+}
+@media (max-width:560px){
+  .nav-actions{width:100%;justify-content:space-between;}
+  .session-chip{width:100%;order:3;}
+}
+</style>
+
 </head>
 <body>
   <div class="crt-overlay" aria-hidden="true"></div>
@@ -4754,7 +4795,13 @@ body::after{
     reader.readAsDataURL(file);
   }
 
+
+  function userRoleLabel(){
+    return state.user.role==='admin' ? 'administrátor' : 'učitel';
+  }
+
   function layout(content,title='Zkouškomat'){
+    const currentUserName=state.user.nickname?.trim()||state.user.name||'Uživatel';
     return `${!state.online?'<div class="offline-banner">Bez připojení – změny zůstávají v tomto zařízení.</div>':''}
       <header class="topbar ${state.route==='home'?'home-topbar':''}">
         <div class="brand-lockup">
@@ -4763,8 +4810,10 @@ body::after{
           <div class="context-strip"><span class="status-dot ${state.online?'':'offline'}"></span><span>${esc(state.school.name)}</span><span>•</span><span>${esc(title)}</span></div>
         </div>
         <div class="nav-actions">
-          <button class="icon-btn" data-action="settings" aria-label="Můj profil a nastavení" title="Můj profil">${avatarMarkup(state.user.avatar,'sm')}</button>
-          <button class="icon-btn account-exit" data-action="account-menu" aria-label="Účet, škola a odhlášení" title="Nastavení účtu / školy">⚙</button>
+          <div class="session-chip" title="Aktuálně přihlášený uživatel"><span class="session-label">Přihlášen:</span><span class="session-role">${esc(userRoleLabel())}</span><span class="session-name">(${esc(currentUserName)})</span></div>
+          <button class="icon-btn nav-home-btn" data-action="go-home" aria-label="Domů" title="Domů"><img src="assets/ui/nav-home.png" alt="" aria-hidden="true"></button>
+          <button class="icon-btn nav-profile-btn" data-action="settings" aria-label="Můj profil a nastavení" title="Můj profil a nastavení"><img src="assets/ui/nav-profile.png" alt="" aria-hidden="true"></button>
+          <button class="icon-btn account-exit nav-logout-btn" data-action="logout" aria-label="Odhlásit se" title="Odhlásit se"><img src="assets/ui/nav-logout-door.png" alt="" aria-hidden="true"></button>
         </div>
       </header>
       ${state.route!=='home'?`<div class="screen-nav"><button class="back-nav-btn" data-action="nav-back" aria-label="Zpět"><span class="back-arrow">←</span>Zpět</button>${state.route==='exam'?'':`<button class="home-nav-btn" data-action="go-home" aria-label="Hlavní menu">⌂ Hlavní menu</button>`}</div>`:''}
@@ -4977,7 +5026,7 @@ body::after{
     app.innerHTML=`<section class="loading-screen">
       <div class="loading-box pixel-frame">
         <div class="loading-top">
-          <div><h1 class="loading-title">ZKOUŠKOMAT</h1><p class="loading-slogan">Proč zkoušet jednoduše, když to jde složitě?</p></div>
+          <div><h1 class="loading-title">ZKOUŠKOMAT</h1><p class="loading-slogan">Proč zkoušet jednoduše, když to lze složitě?</p></div>
           <div class="discipline">DISCIPLÍNA<br>ZNALOSTI<br>VÝSLEDKY</div>
         </div>
         <div class="scene" aria-label="Animace: učitel čeká u tabule a žák přichází k tabuli">
@@ -5255,7 +5304,7 @@ body::after{
     const content=`
       <section class="arcade-home-head">
         <img class="home-title-art" src="assets/ui/home-title-main-menu.png" alt="Hlavní menu">
-        <div class="arcade-home-slogan">Proč zkoušet jednoduše, když to jde složitě?</div>
+        <div class="arcade-home-slogan">Proč zkoušet jednoduše, když to lze složitě?</div>
       </section>
       <div class="home-grid">
         ${homeCard('exam','▣','Zahájit zkoušení','Přítomnost → pravidla → vážený los → téma → známka')}
@@ -7067,6 +7116,47 @@ body::after{
 @media (max-width:480px){
   .home-grid{grid-template-columns:1fr !important;}
   .home-card{min-height:98px !important;grid-template-columns:72px 1fr !important;}
+}
+</style>
+
+
+<style>
+/* H1.9 — hlavička aplikace: přihlášený uživatel + domů + profil + odhlášení */
+.nav-actions{gap:10px !important;flex-wrap:wrap;justify-content:flex-end;}
+.session-chip{display:flex;align-items:center;gap:6px;min-height:44px;padding:8px 12px;border:2px solid var(--cyan);background:#071a2c;color:var(--cream);box-shadow:4px 4px 0 var(--shadow);font-family:var(--pixel);font-size:.72rem;line-height:1.15;white-space:nowrap;}
+.session-label{color:var(--muted);}
+.session-role{color:var(--cyan);text-transform:uppercase;}
+.session-name{color:var(--cream);}
+.topbar .icon-btn img{width:28px;height:28px;image-rendering:pixelated;display:block;}
+.topbar .icon-btn{display:flex;align-items:center;justify-content:center;}
+.topbar .icon-btn.account-exit{border-color:var(--orange);background:#20170f;color:var(--orange);}
+.topbar .icon-btn.account-exit img{width:30px;height:30px;}
+.home-topbar .nav-actions{gap:10px !important;}
+.home-topbar .session-chip{border:3px solid #20e8f3;background:rgba(4,24,42,.96);box-shadow:0 0 0 2px #063c52,4px 4px 0 #010913;color:#fff3db;font-size:.78rem;padding:10px 14px;}
+.home-topbar .session-label{color:#8cdde3;}
+.home-topbar .session-role{color:#22edf7;}
+.home-topbar .topbar .icon-btn img{}
+.home-topbar .icon-btn{width:56px !important;height:56px !important;min-width:56px !important;min-height:56px !important;padding:0 !important;font-size:0 !important;}
+.home-topbar .icon-btn img{width:32px;height:32px;}
+.home-topbar .icon-btn.account-exit{width:56px !important;border-left:none !important;padding-left:0 !important;}
+.home-topbar .nav-home-btn{border-color:#20e8f3 !important;background:rgba(4,24,42,.96) !important;}
+.home-topbar .nav-profile-btn{border-color:#20e8f3 !important;background:rgba(4,24,42,.96) !important;}
+.home-topbar .nav-logout-btn{border-color:#ff9b2f !important;background:#24170b !important;}
+@media (max-width:980px){
+  .session-chip{order:2;flex:1 1 auto;justify-content:center;}
+  .nav-actions{justify-content:flex-end;}
+}
+@media (max-width:760px){
+  .session-chip{font-size:.62rem;padding:6px 8px;min-height:38px;gap:4px;white-space:normal;text-align:center;justify-content:center;}
+  .home-topbar .session-chip{font-size:.64rem;padding:7px 9px;}
+  .topbar .icon-btn img{width:22px;height:22px;}
+  .topbar .icon-btn.account-exit img{width:24px;height:24px;}
+  .home-topbar .icon-btn{width:44px !important;height:44px !important;min-width:44px !important;min-height:44px !important;}
+  .home-topbar .icon-btn img{width:24px;height:24px;}
+}
+@media (max-width:560px){
+  .nav-actions{width:100%;justify-content:space-between;}
+  .session-chip{width:100%;order:3;}
 }
 </style>
 
