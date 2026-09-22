@@ -271,3 +271,13 @@
 - hudba hlavního menu se nově zkouší spustit už během úvodního loadingu
 - doplněny další bezpečné pokusy o spuštění hudby při načtení stránky a při prvním uživatelském gestu pro prohlížeče blokující autoplay
 
+## 2026-09-22 — Audio Pack C: křída + školní mechanika
+- kompletně nahrazeny systémové zvuky po zpětné vazbě na příliš hluboké Audio Pack B
+- odstraněny hluboké tónové efekty; nové samply jsou soustředěné do příjemnějšího středního pásma
+- běžné kliknutí: krátké suché mechanické ťuknutí s jemným dotekem křídy
+- potvrzení: dvojitý křídový tah připomínající fajfku
+- varování: dvě krátká mechanická klepnutí bez dunění
+- losování: zpomalující série křídových doteků
+- výsledek: krátký křídový tah a lehké školní razítko
+- hudba a její automatický start z Audio Pack B zůstávají beze změny
+
