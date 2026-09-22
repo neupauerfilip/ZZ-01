@@ -1,3 +1,12 @@
+# Exam Scene C — Alignment Fix
+
+- Učitel je ukotvený za katedrou; přední část stolu tvoří samostatnou překryvnou vrstvu.
+- Při vstávání a kontrole tabule se učitel přesune před katedru.
+- Žák je ukotvený přímo k tabuli a během psaní používá boční sprite.
+- Křídový text se při psaní postupně vykresluje na ploše tabule.
+- Obnovena a zpevněna velká časomíra v pravém panelu.
+- Zachována malá časomíra ve scéně, countdown, hudba i ostatní logika zkoušení.
+
 # Exam Scene B — Fidelity classroom
 
 - nahrazen původní zjednodušený vizuál zkoušení novou denní retro pixel-art scénou podle schválené předlohy

@@ -4115,7 +4115,7 @@ body::after{
 .exam-classroom-stage[data-teacher="door"] .exam-scene-teacher{left:53%;bottom:3%;width:22%;}
 .exam-classroom-stage[data-teacher="drag"] .exam-scene-teacher{left:55%;bottom:3%;width:24%;animation:examDragTeacher 1.05s steps(5,end) infinite alternate;}
 
-.exam-classroom-stage[data-student="write1"] .exam-scene-student,
+.exam-classroom-stage[data-student="write2"] .exam-scene-student,
 .exam-classroom-stage[data-student="write2"] .exam-scene-student{animation:examWrite .62s steps(2,end) infinite alternate;}
 .exam-classroom-stage[data-student="nervous"] .exam-scene-student{animation:examNervous .27s steps(2,end) infinite;}
 .exam-classroom-stage[data-student="sweat"] .exam-scene-student{animation:examNervous .15s steps(2,end) infinite;}
@@ -4165,6 +4165,95 @@ body::after{
 }
 @media(prefers-reduced-motion:reduce){
   .exam-countdown-value,.exam-scene-character,.exam-thought-bubble,.exam-classroom-stage{animation:none!important;transition:none!important;}
+}
+</style>
+
+
+<style>
+/* EXAM SCENE C — alignment + writing + big timer recovery */
+.exam-desk-foreground{
+  position:absolute;inset:0;z-index:5;pointer-events:none;
+  background:url('assets/ui/exam-classroom-fidelity.png') center/100% 100% no-repeat;
+  clip-path:polygon(41.8% 60.5%,76.6% 60.5%,77.6% 94%,42.2% 94%);
+  image-rendering:pixelated;
+}
+/* Seated teacher is physically behind the desk in this specific background. */
+.exam-scene-teacher{left:44%!important;bottom:18%!important;width:18%!important;z-index:4!important;}
+.exam-classroom-stage[data-teacher="coffee"] .exam-scene-teacher,
+.exam-classroom-stage[data-teacher="nod"] .exam-scene-teacher{
+  left:44%!important;bottom:18%!important;width:18%!important;z-index:4!important;
+}
+/* Once teacher stands up, he moves in front of desk toward the board. */
+.exam-classroom-stage[data-teacher="stand"] .exam-scene-teacher{
+  left:44%!important;bottom:5.5%!important;width:17%!important;z-index:7!important;
+}
+.exam-classroom-stage[data-teacher="inspect"] .exam-scene-teacher{
+  left:49%!important;bottom:5.5%!important;width:17%!important;z-index:7!important;
+}
+.exam-classroom-stage[data-teacher="pointer"] .exam-scene-teacher{
+  left:51.5%!important;bottom:5.5%!important;width:17%!important;z-index:7!important;
+}
+.exam-classroom-stage[data-teacher="door"] .exam-scene-teacher{
+  left:68%!important;bottom:4%!important;width:17%!important;z-index:8!important;
+}
+.exam-classroom-stage[data-teacher="drag"] .exam-scene-teacher{
+  left:67%!important;bottom:4%!important;width:18.5%!important;z-index:8!important;
+}
+/* Student is anchored directly to the right-hand side of the blackboard. */
+.exam-scene-student{left:58.5%!important;bottom:6.5%!important;width:12.5%!important;z-index:7!important;}
+.exam-classroom-stage[data-student="write1"] .exam-scene-student,
+.exam-classroom-stage[data-student="write2"] .exam-scene-student{
+  left:58.5%!important;bottom:6.5%!important;width:12.5%!important;
+  animation:examBoardWrite .72s steps(2,end) infinite alternate!important;
+}
+.exam-classroom-stage[data-student="think"] .exam-scene-student,
+.exam-classroom-stage[data-student="nervous"] .exam-scene-student,
+.exam-classroom-stage[data-student="sweat"] .exam-scene-student{
+  left:59%!important;bottom:6.5%!important;width:12.5%!important;
+}
+.exam-classroom-stage[data-student="leave"] .exam-scene-student{left:78%!important;bottom:5%!important;width:12.5%!important;}
+.exam-classroom-stage[data-student="dragged"] .exam-scene-student{left:74%!important;bottom:5%!important;width:14.5%!important;}
+@keyframes examBoardWrite{from{transform:translate(0,0) rotate(0deg)}to{transform:translate(-2px,-1px) rotate(-1deg)}}
+
+/* Chalk content now lives strictly inside the blackboard area. */
+.exam-board-writing{left:35%!important;top:22%!important;width:31%!important;height:34%!important;z-index:3!important;}
+.exam-board-writing .chalk-a{left:4%!important;top:6%!important}
+.exam-board-writing .chalk-b{left:43%!important;top:40%!important}
+.exam-board-writing .chalk-c{left:22%!important;top:72%!important}
+.exam-classroom-stage[data-student="write1"] .chalk-c,
+.exam-classroom-stage[data-student="write2"] .chalk-c{
+  opacity:.92!important;
+  animation:examChalkWrite 2.2s steps(8,end) infinite;
+  white-space:nowrap;
+}
+@keyframes examChalkWrite{
+  0%{clip-path:inset(0 100% 0 0)}
+  72%,100%{clip-path:inset(0 0 0 0)}
+}
+
+/* Restore and harden the large countdown timer against layout overrides. */
+.fidelity-h7 .exam-timer-panel{min-width:260px!important;overflow:visible!important;}
+.fidelity-h7 .exam-live-timer{
+  display:block!important;min-height:158px!important;overflow:visible!important;
+  padding:18px 12px 12px!important;
+}
+.fidelity-h7 .exam-live-timer .timer{
+  display:block!important;visibility:visible!important;opacity:1!important;
+  width:100%!important;min-height:1.2em!important;margin:0 auto!important;
+  overflow:visible!important;white-space:nowrap!important;text-align:center!important;
+  font-family:var(--pixel)!important;font-size:clamp(3rem,6.3vw,5.15rem)!important;
+  line-height:1.08!important;letter-spacing:-.075em!important;
+  color:#ff9615!important;text-shadow:5px 5px 0 #7f3100!important;
+  font-variant-numeric:tabular-nums;
+}
+.fidelity-h7 .exam-live-timer .timer.over{color:#ff5964!important;text-shadow:5px 5px 0 #64141a!important;}
+.fidelity-h7 .exam-live-timer.is-paused .timer{color:#ffe56d!important;text-shadow:5px 5px 0 #6e5900!important;}
+@media(max-width:900px){
+  .fidelity-h7 .exam-live-timer .timer{font-size:clamp(3rem,14vw,5.15rem)!important;}
+}
+@media(max-width:640px){
+  .exam-scene-teacher{left:44%!important;}
+  .exam-scene-student{left:58%!important;}
 }
 </style>
 
@@ -6932,7 +7021,7 @@ body::after{
     const ratio=Math.max(0,Math.min(1,rem/total));
     const elapsed=Math.max(0,now()-Number(state.activeExam.startedAt||now()));
     const cycle=elapsed%11000;
-    let teacherPose='coffee',studentPose='write1',phase='calm',label='JEŠTĚ JE ČAS';
+    let teacherPose='coffee',studentPose='write2',phase='calm',label='JEŠTĚ JE ČAS';
 
     if(paused){
       teacherPose='coffee'; studentPose='think'; phase='paused'; label='PAUZA';
@@ -6942,14 +7031,14 @@ body::after{
       teacherPose='door'; studentPose='leave'; phase='timeup'; label='ČAS!';
     }else if(ratio>.65){
       phase='calm'; label='JEŠTĚ JE ČAS';
-      if(cycle<2600){ teacherPose='coffee'; studentPose=(Math.floor(elapsed/650)%2?'write1':'write2'); }
+      if(cycle<2600){ teacherPose='coffee'; studentPose='write2'; }
       else if(cycle<4300){ teacherPose='nod'; studentPose='write2'; }
       else if(cycle<6000){ teacherPose='stand'; studentPose='think'; }
-      else if(cycle<8200){ teacherPose='inspect'; studentPose=(Math.floor(elapsed/700)%2?'write1':'write2'); }
-      else { teacherPose='pointer'; studentPose='write1'; }
+      else if(cycle<8200){ teacherPose='inspect'; studentPose='write2'; }
+      else { teacherPose='pointer'; studentPose='write2'; }
     }else if(ratio>.30){
       phase='working'; label='UČITEL KONTROLUJE';
-      if(cycle<3600){ teacherPose='inspect'; studentPose='write1'; }
+      if(cycle<3600){ teacherPose='inspect'; studentPose='write2'; }
       else if(cycle<6500){ teacherPose='pointer'; studentPose='think'; }
       else { teacherPose='stand'; studentPose=(Math.floor(elapsed/750)%2?'write2':'nervous'); }
     }else if(ratio>.10){
@@ -7065,8 +7154,9 @@ body::after{
 
         <div class="exam-live-main">
           <section class="exam-student-panel exam-classroom-panel">
-            <div id="exam-classroom-stage" class="exam-classroom-stage" data-phase="calm" data-teacher="coffee" data-student="write1">
+            <div id="exam-classroom-stage" class="exam-classroom-stage" data-phase="calm" data-teacher="coffee" data-student="write2">
               <img class="exam-classroom-bg" src="assets/ui/exam-classroom-fidelity.png" alt="Retro pixelová učebna během zkoušení">
+              <div class="exam-desk-foreground" aria-hidden="true"></div>
               <div class="exam-scene-banner" aria-hidden="true"><span>TEACHER MODE</span></div>
               <div id="exam-scene-clock" class="exam-scene-clock">${formatDuration(rem)}</div>
               <div class="exam-board-writing" aria-hidden="true">
@@ -7075,7 +7165,7 @@ body::after{
                 <span class="chalk-c">a = Δv / Δt</span>
               </div>
               <img id="exam-scene-teacher" class="exam-scene-character exam-scene-teacher" src="assets/ui/exam-fidelity-teacher-coffee.png" alt="Učitel">
-              <img id="exam-scene-student" class="exam-scene-character exam-scene-student" src="assets/ui/exam-fidelity-student-write1.png" alt="Žák u tabule">
+              <img id="exam-scene-student" class="exam-scene-character exam-scene-student" src="assets/ui/exam-fidelity-student-write2.png" alt="Žák píše na tabuli">
               <div class="exam-thought-bubble" aria-hidden="true">?</div>
               <div id="exam-scene-status" class="exam-scene-status">JEŠTĚ JE ČAS</div>
             </div>
