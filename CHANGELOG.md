@@ -196,3 +196,8 @@
 - zachována i druhá širší vrstva pozadí pro okraje, ale hlavní vrstva je nyní skutečně fullscreen
 - menu, nadpis a tlačítka zůstávají beze změny funkce
 
+## 2026-09-22 — H1.8 Nové hlavní pozadí z finální školní pracovny
+- nahrazen asset `assets/ui/home-classroom-bg.png` novým finálním obrázkem noční pixelové školní pracovny
+- zachováno chování fullscreen `cover`, takže se nové pozadí automaticky přizpůsobuje monitoru i mobilu
+- beze změny logiky hlavního menu, tlačítek a obrázkového nadpisu
+
