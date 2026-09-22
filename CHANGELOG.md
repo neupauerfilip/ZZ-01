@@ -309,3 +309,10 @@
 - globální přepínač hudby v horní liště dál ovládá i hudbu Scoringu
 - ostatní hudební režimy a systémové zvuky zůstávají beze změny
 
+## 2026-09-22 — Audio Pack G: School / Library + Casino Wheel
+- přidána klidná hudba School / Library pro pracovní části aplikace
+- School / Library hraje v Moje třídy, detailu třídy, Moje předměty, detailu předmětu, Známkování, Sborovně, Nápovědě a Nastavení/Profilu
+- samostatné Kolo štěstí z hlavního menu dostalo vlastní Casino / Circus hudební režim
+- zachovány stávající režimy hlavního menu, přípravy zkoušení, časovaného zkoušení a Scoringu
+- globální přepínač hudby v horní liště ovládá i oba nové podkresy
+
