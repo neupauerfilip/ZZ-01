@@ -4816,28 +4816,30 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 /* ZZ-01 PATCH — MAIN MENU TYPOGRAPHY SOFT SUNFLOWER
    Pouze popisky dlaždic hlavního menu. Ostatní typografie aplikace zůstává beze změny. */
 .home-container .home-card h2{
-  font-family:Bahnschrift,"Trebuchet MS","Segoe UI",Arial,sans-serif !important;
-  font-weight:600 !important;
+  font-family:"Fixedsys Excelsior 3.01","Fixedsys","Terminal","Lucida Console",monospace !important;
+  font-weight:700 !important;
   color:#d4a52c !important;
   text-transform:uppercase !important;
-  letter-spacing:.025em !important;
-  line-height:1.02 !important;
+  letter-spacing:.015em !important;
+  line-height:1.0 !important;
+  -webkit-font-smoothing:none;
+  font-smooth:never;
+  -webkit-text-stroke:.35px rgba(0,0,0,.88);
   text-shadow:
-    -1px 0 rgba(0,0,0,.72),
-     1px 0 rgba(0,0,0,.72),
-     0 -1px rgba(0,0,0,.72),
-     0 1px rgba(0,0,0,.72) !important;
+    1px 0 #080704,
+    0 1px #080704,
+    1px 1px #080704 !important;
 }
 
 /* Na oranžové hlavní akci je odstín lehce tmavší kvůli čitelnosti. */
 .home-container .home-card[data-action="exam"] h2{
   color:#9a690f !important;
-  font-weight:600 !important;
+  font-weight:700 !important;
+  -webkit-text-stroke:.35px rgba(0,0,0,.72);
   text-shadow:
-    -1px 0 rgba(0,0,0,.52),
-     1px 0 rgba(0,0,0,.52),
-     0 -1px rgba(0,0,0,.52),
-     0 1px rgba(0,0,0,.52) !important;
+    1px 0 rgba(0,0,0,.68),
+    0 1px rgba(0,0,0,.68),
+    1px 1px rgba(0,0,0,.68) !important;
 }
 </style>
 

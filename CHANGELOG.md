@@ -15,3 +15,4 @@
 - hlavní oranžová akce používá mírně tmavší odstín stejného barevného směru
 - rozměry, ikony, rozmístění a funkce hlavního menu zůstávají beze změny
 - texty v dlaždicích hlavního menu nově zobrazeny VELKÝMI PÍSMENY
+- typografie hlavního menu dále upravena do hranatějšího bitmapového arcade stylu (Fixedsys/Terminal), s mírně vyšší vahou a hrubší pixelovou kresbou bez měkkého světelného efektu
