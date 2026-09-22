@@ -1,15 +1,13 @@
-# ZZ-01 — Home Header Visual Match
+# ZZ-01 Header Rollback — Stable
 
-Opravný patch hlavičky hlavního menu podle schválené vizualizace.
+Vrací hlavičku aplikace na poslední stabilní stav před úpravami s názvem školy.
 
-- vlevo je původní ikona aplikace Zkouškomat,
-- vedle ní titul `ZKOUŠKOMAT` v ZZ-01 Headline CZ,
-- pod titulem je dynamický název aktuální školy místo `ZZ-01`, bez rámečku,
-- vpravo je kompaktní štítek přihlášeného uživatele,
-- za ním je jediná řada ikon: hudba, zvuky, domů, profil/nastavení a odhlášení,
-- žádný druhý řádek hlavičky, žádný další informační panel,
-- desktopová hlavička má pevnou výšku 88 px,
-- ostatní obrazovky aplikace se tímto patchem nemění.
+- bez názvu školy v hlavičce
+- bez dodatečných informačních panelů
+- bez změny výšky hlavičky
+- zachován ZKOUŠKOMAT + ZZ-01 vlevo
+- zachován uživatel a ovládací ikony vpravo
+- hlavní menu a ostatní obsah aplikace beze změny
 
 Doporučený commit:
-`Match home header to approved visualization`
+`Rollback header to stable layout`
