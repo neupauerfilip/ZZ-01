@@ -294,3 +294,11 @@
 - fanfára zazní pouze při skutečném odemčení nové trofeje nebo jejího nového stupně
 - zvuk je sladěný s jemnějším melodickým stylem Audio Packu D a nepoužívá ostré 8bitové pípání
 
+## 2026-09-22 — Audio Pack E: hudební režimy zkoušení a zvuky známek
+- hlavní menu dál používá původní Gaudeamus motiv
+- po volbě Zahájit zkoušení se automaticky spouští nový napínavější hudební podkres pro přípravu zkoušení
+- po spuštění časovaného zkoušení se hudba automaticky přepne na velmi jemnou dramatickou smyčku s tlumeným tepem
+- při otevření známkování se hudební podkres vypne, aby byly dobře slyšet reakce na známku
+- známka 1: veselé Juchů!, známka 2: střídmější Juchů., známka 3: OK., známka 4: smutnější Ach…, známka 5: zklamané Nooo…
+- horní přepínač hudby nyní ovládá všechny hudební režimy aplikace
+

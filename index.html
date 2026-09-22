@@ -4284,13 +4284,23 @@ body::after{
   appDataReady=true;
   let timerTick=null;
 
-  /* AUDIO SYSTEM — hudba a systémové zvuky */
-  const bgMusic=new Audio('assets/audio/zz01-theme.mp3');
-  bgMusic.loop=true;
-  bgMusic.preload='auto';
-  bgMusic.autoplay=true;
-  bgMusic.playsInline=true;
-  bgMusic.volume=.26;
+  /* AUDIO SYSTEM — více hudebních režimů + systémové zvuky */
+  const musicTracks={
+    menu:new Audio('assets/audio/zz01-theme.mp3'),
+    preExam:new Audio('assets/audio/zz01-preexam-tension.mp3'),
+    exam:new Audio('assets/audio/zz01-exam-heartbeat.mp3')
+  };
+  musicTracks.menu.volume=.26;
+  musicTracks.preExam.volume=.16;
+  musicTracks.exam.volume=.105;
+  Object.values(musicTracks).forEach(track=>{
+    track.loop=true;
+    track.preload='auto';
+    track.playsInline=true;
+  });
+  musicTracks.menu.autoplay=true;
+  let activeMusicKey=null;
+
   const sfxSources={
     click:'assets/audio/sfx-click.wav',
     confirm:'assets/audio/sfx-confirm.wav',
@@ -4300,24 +4310,51 @@ body::after{
     locker:'assets/audio/sfx-locker-magic.wav',
     wheelTick:'assets/audio/sfx-wheel-tick.wav',
     wheelLand:'assets/audio/sfx-wheel-land.wav',
-    trophy:'assets/audio/sfx-trophy-fanfare.wav'
+    trophy:'assets/audio/sfx-trophy-fanfare.wav',
+    grade1:'assets/audio/grade-1-juchu.mp3',
+    grade2:'assets/audio/grade-2-juchu.mp3',
+    grade3:'assets/audio/grade-3-ok.mp3',
+    grade4:'assets/audio/grade-4-ach.mp3',
+    grade5:'assets/audio/grade-5-noo.mp3'
   };
   const sfxBank=Object.fromEntries(Object.entries(sfxSources).map(([key,src])=>{
     const a=new Audio(src); a.preload='auto'; a.volume=.28; return [key,a];
   }));
+  ['grade1','grade2','grade3','grade4','grade5'].forEach(key=>{ if(sfxBank[key]) sfxBank[key].volume=.48; });
 
-  function musicShouldPlay(){
-    // Zkoušíme hudbu spustit už během loadingu, pokud po startu míříme na hlavní menu.
-    // Některé prohlížeče přesto blokují neztlumený autoplay do prvního uživatelského gesta.
-    return !!state.authenticated && !!state.onboardingDone && state.route==='home' && state.settings.musicEnabled!==false && !document.hidden;
+  function desiredMusicKey(){
+    if(!state.authenticated || !state.onboardingDone || state.settings.musicEnabled===false || document.hidden) return null;
+    if(state.route==='home') return 'menu';
+    if(state.route==='exam'){
+      if(state.activeExam){
+        if(state.activeExam.gradingStartedAt) return null;
+        return 'exam';
+      }
+      return 'preExam';
+    }
+    return null;
+  }
+  function stopAllBackgroundMusic(reset=false){
+    Object.values(musicTracks).forEach(track=>{
+      track.pause();
+      if(reset){ try{track.currentTime=0}catch(_){ } }
+    });
+    activeMusicKey=null;
   }
   function syncBackgroundMusic(){
-    if(musicShouldPlay()){
-      const p=bgMusic.play();
-      if(p && typeof p.catch==='function') p.catch(()=>{});
-    }else{
-      bgMusic.pause();
+    const wanted=desiredMusicKey();
+    if(!wanted){ stopAllBackgroundMusic(false); return; }
+    Object.entries(musicTracks).forEach(([key,track])=>{
+      if(key!==wanted) track.pause();
+    });
+    const target=musicTracks[wanted];
+    if(!target) return;
+    if(activeMusicKey!==wanted){
+      try{ target.currentTime=0; }catch(_){ }
+      activeMusicKey=wanted;
     }
+    const playPromise=target.play();
+    if(playPromise && typeof playPromise.catch==='function') playPromise.catch(()=>{});
   }
   function playSfx(name='click'){
     if(!name || name==='none' || state.settings.sfxEnabled===false || document.hidden) return;
@@ -6803,6 +6840,7 @@ body::after{
       }
       saveState();
     }
+    syncBackgroundMusic();
     const st=studentById(e.studentId),cls=classById(e.classId);
     modalRoot.innerHTML=`<div class="modal-backdrop grade-backdrop fidelity-h7-grade-backdrop">
       <section class="grade-screen-modal fidelity-h7-grade" role="dialog" aria-modal="true" aria-labelledby="grade-title">
@@ -6834,8 +6872,9 @@ body::after{
     </div>`;
 
     modalRoot.querySelectorAll('[data-grade]').forEach(b=>b.addEventListener('click',()=>{
-      playSfx('result');
-      finalizeExam(Number(b.dataset.grade),false);
+      const grade=Number(b.dataset.grade);
+      playSfx(`grade${grade}`);
+      finalizeExam(grade,false);
     }));
     document.getElementById('no-grade-btn').onclick=()=>{playSfx('warning');finalizeExam(null,true);};
     document.getElementById('cancel-grade').onclick=()=>{
@@ -8065,7 +8104,7 @@ body::after{
             <label class="settings-option"><input id="locker-enabled" type="checkbox" ${state.settings.lockersEnabled?'checked':''}><span>Používat školní skříňky<small>Bonusová událost před zkoušením.</small></span></label>
             <label class="settings-option"><input id="notify-enabled" type="checkbox" ${state.settings.notifications?'checked':''}><span>Upozornit při vypršení času<small>Lokální upozornění během běžící aplikace.</small></span></label>
             <label class="settings-option"><input id="staffroom-notify-settings" type="checkbox" ${notifyOn?'checked':''}><span>Upozornění ze Sborovny<small>Plný push při zavřené aplikaci bude vyžadovat online/PWA verzi.</small></span></label>
-            <label class="settings-option"><input id="music-enabled-settings" type="checkbox" ${state.settings.musicEnabled!==false?'checked':''}><span>Hudba hlavního menu<small>Gaudeamus motiv se přehrává ve smyčce pouze na hlavním menu.</small></span></label>
+            <label class="settings-option"><input id="music-enabled-settings" type="checkbox" ${state.settings.musicEnabled!==false?'checked':''}><span>Hudba v aplikaci<small>Hlavní menu, příprava zkoušení a samotné časované zkoušení mají vlastní hudební podkres.</small></span></label>
             <label class="settings-option"><input id="sfx-enabled-settings" type="checkbox" ${state.settings.sfxEnabled!==false?'checked':''}><span>Systémové zvuky<small>Kliknutí, potvrzení, varování, losování a uložení výsledku.</small></span></label>
           </div>
         </section>
@@ -8515,7 +8554,7 @@ body::after{
     if(action==='toggle-music'){
       state.settings.musicEnabled=state.settings.musicEnabled===false;
       saveState();
-      if(state.settings.musicEnabled) playSfx('confirm'); else bgMusic.pause();
+      if(state.settings.musicEnabled) playSfx('confirm'); else stopAllBackgroundMusic(false);
       render();
     }
     else if(action==='toggle-sfx'){
@@ -8853,7 +8892,7 @@ body::after{
   window.addEventListener('online',()=>{state.online=true;saveState();toast('Připojení obnoveno.');render();});
   window.addEventListener('offline',()=>{state.online=false;saveState();toast('Bez připojení – pracuji lokálně.','warn');render();});
   document.addEventListener('visibilitychange',()=>{
-    if(document.hidden) bgMusic.pause(); else syncBackgroundMusic();
+    if(document.hidden) stopAllBackgroundMusic(false); else syncBackgroundMusic();
     if(!document.hidden && state.activeExam){render();}
   });
 
@@ -8862,7 +8901,9 @@ body::after{
   const unlockBackgroundMusic=()=>syncBackgroundMusic();
   window.addEventListener('load',unlockBackgroundMusic,{once:true});
   window.addEventListener('pageshow',unlockBackgroundMusic);
-  bgMusic.addEventListener('canplay',unlockBackgroundMusic,{once:true});
+  musicTracks.menu.addEventListener('canplay',unlockBackgroundMusic,{once:true});
+  musicTracks.preExam.addEventListener('canplay',unlockBackgroundMusic,{once:true});
+  musicTracks.exam.addEventListener('canplay',unlockBackgroundMusic,{once:true});
   document.addEventListener('pointerdown',unlockBackgroundMusic,{once:true,capture:true});
   document.addEventListener('touchstart',unlockBackgroundMusic,{once:true,capture:true,passive:true});
   document.addEventListener('keydown',unlockBackgroundMusic,{once:true,capture:true});
