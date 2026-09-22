@@ -4186,6 +4186,99 @@ body::after{
 @media(max-width:900px){.exam-live-main{grid-template-columns:1fr!important}.fidelity-h7 .exam-timer-panel{max-width:none!important;min-width:0!important}.fidelity-h7 .exam-live-timer{min-height:170px!important}.fidelity-h7 .exam-live-timer .timer{font-size:clamp(2.7rem,13vw,4.6rem)!important}}
 </style>
 
+
+<style>
+/* ZZ-01 COMPACT EXAM FLOW — fast classroom UX */
+.exam-start.fidelity-h2{max-width:980px!important;margin:0 auto!important}
+.fidelity-h2 .exam-start-head{margin:8px 0 12px!important;padding:0!important;text-align:left!important;display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;align-items:end!important;gap:10px!important}
+.fidelity-h2 .exam-start-title{font-size:clamp(1.5rem,4vw,2.25rem)!important;line-height:1!important;text-align:left!important;margin:0!important}
+.fidelity-h2 .exam-start-title br{display:none!important}
+.fidelity-h2 .exam-start-title::before,.fidelity-h2 .exam-start-title::after{display:none!important}
+.fidelity-h2 .exam-start-subtitle{margin:5px 0 0!important;font-size:clamp(.72rem,1.8vw,.92rem)!important;text-align:left!important}
+.fidelity-h2 .exam-step{position:static!important;margin:0!important;align-self:start!important;font-size:.63rem!important}
+.exam-start-grid{display:grid;grid-template-columns:minmax(260px,.9fr) minmax(320px,1.1fr);gap:14px;align-items:start}
+.fidelity-h2 .exam-start-section{margin:0!important;border:3px solid #0f91a6!important;background:#061725!important;padding:10px!important;box-shadow:4px 4px 0 #02070d!important}
+.fidelity-h2 .arcade-section-label{margin:0 0 8px!important;min-height:28px!important;display:flex!important;align-items:center!important;gap:7px!important}
+.fidelity-h2 .arcade-section-label img{width:30px!important;height:30px!important;object-fit:contain!important}
+.fidelity-h2 .arcade-section-label h2{font-size:.72rem!important;margin:0!important}
+.class-picker-summary{min-height:52px!important;padding:7px 10px!important;border-width:3px!important;grid-template-columns:minmax(0,1fr) auto 28px!important;gap:6px!important}
+.class-picker-summary-name{font-size:clamp(.82rem,2.1vw,1.05rem)!important}
+.class-picker-summary-year{font-size:clamp(.66rem,1.7vw,.84rem)!important}
+.class-picker-arrow{font-size:1.3rem!important}
+.class-picker-menu{border-width:3px!important;padding:3px 5px 5px!important}
+.class-picker-option{min-height:42px!important;padding:5px 8px!important;grid-template-columns:24px minmax(0,1fr) auto!important;gap:5px!important}
+.class-picker-check{font-size:1rem!important}.class-picker-name{font-size:.76rem!important}.class-picker-year{font-size:.68rem!important}
+.fidelity-h2 .subject-choice-list{display:flex!important;flex-wrap:wrap!important;gap:7px!important}
+.fidelity-h2 .arcade-subject-choice{min-height:42px!important;flex:1 1 150px!important;padding:7px 9px!important;border-width:3px!important;grid-template-columns:25px minmax(0,1fr)!important;gap:6px!important}
+.fidelity-h2 .arcade-subject-choice .arcade-check{font-size:1rem!important}
+.fidelity-h2 .subject-choice-copy strong{font-size:.76rem!important;line-height:1.15!important}
+.fidelity-h2 .subject-choice-note{display:none!important}
+.exam-selection-summary{display:none!important}
+.fidelity-h2 .exam-continue{margin-top:14px!important;min-height:54px!important;font-size:.82rem!important}
+
+
+/* H2 subject choice visual hotfix */
+.fidelity-h2 .subject-choice-list{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;align-items:stretch!important}
+.fidelity-h2 .arcade-subject-choice{min-height:58px!important;flex:initial!important;width:100%!important;padding:8px 12px!important;border-width:4px!important;grid-template-columns:30px minmax(0,1fr)!important;gap:10px!important;align-items:center!important}
+.fidelity-h2 .arcade-subject-choice .arcade-check{width:28px!important;height:28px!important;font-size:.95rem!important;border-width:3px!important}
+.fidelity-h2 .subject-choice-copy{display:block;min-width:0}
+.fidelity-h2 .subject-choice-copy strong{display:block!important;font-size:.9rem!important;line-height:1.1!important;color:#fff6e4!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:2px 2px 0 #07121f}
+.fidelity-h2 .arcade-subject-choice.selected{color:#fff6e4!important;border-color:#fff0a0!important;background:linear-gradient(180deg,#ff9d1a,#ff7410)!important;box-shadow:inset 0 0 0 4px #ffd544,inset 0 0 0 8px #d84808,5px 5px 0 #00101d!important}
+.fidelity-h2 .arcade-subject-choice.selected .subject-choice-copy strong{color:#fff9ef!important;text-shadow:2px 2px 0 #8a2f05}
+.fidelity-h2 .arcade-subject-choice.selected .arcade-check{background:#fff7e8!important;color:#111725!important;border-color:#111725!important}
+@media(max-width:760px){
+  .fidelity-h2 .subject-choice-list{grid-template-columns:1fr!important;gap:8px!important}
+  .fidelity-h2 .arcade-subject-choice{min-height:54px!important;padding:8px 10px!important;grid-template-columns:28px minmax(0,1fr)!important;gap:8px!important}
+  .fidelity-h2 .subject-choice-copy strong{font-size:.84rem!important}
+}
+
+/* Unified attendance + rules roster */
+.exam-roster-screen{max-width:1020px;margin:0 auto;padding:0 0 12px}
+.exam-roster-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end;margin:4px 0 10px}
+.exam-roster-title{margin:0;font-family:var(--pixel);font-size:clamp(1.35rem,3.7vw,2rem);line-height:1;color:#fff4da;text-shadow:3px 3px 0 #07121f}
+.exam-roster-subtitle{margin-top:5px;color:#22e7ef;font-weight:800;font-size:.82rem}
+.exam-roster-step{font-family:var(--pixel);font-size:.62rem;color:#21e8ee;white-space:nowrap;align-self:start}
+.exam-roster-context{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;border:3px solid #0e8197;background:#061826;padding:8px 10px;margin-bottom:10px;box-shadow:4px 4px 0 #02070d}
+.exam-roster-context strong{font-family:var(--pixel);font-size:.68rem;color:#fff3d5}.exam-roster-context span{font-size:.74rem;color:#92b9c4}
+.exam-roster-summary{margin-left:auto;display:flex;gap:7px;align-items:center;font-family:var(--pixel);font-size:.58rem}
+.exam-roster-summary b{display:inline-grid;place-items:center;min-width:34px;height:28px;padding:0 6px;border:2px solid #145d70;background:#0b2430;color:#fff}.exam-roster-summary b.present{color:#54f16d}.exam-roster-summary b.absent{color:#ffb23d}
+.exam-roster-table{border:3px solid #0d8197;background:#04131e;box-shadow:5px 5px 0 #02070d;overflow:visible}
+.exam-roster-table-head,.exam-roster-row-main{display:grid;grid-template-columns:minmax(180px,1fr) 150px 92px 132px;gap:8px;align-items:center}
+.exam-roster-table-head{min-height:36px;padding:5px 10px;background:#082435;border-bottom:3px solid #0d8197;color:#23e8ed;font-family:var(--pixel);font-size:.56rem;text-transform:uppercase}
+.exam-roster-item{border-bottom:2px solid #0b5f72}.exam-roster-item:last-child{border-bottom:0}
+.exam-roster-row-main{min-height:48px;padding:6px 10px;background:#061a27}
+.exam-roster-item.is-absent .exam-roster-row-main{opacity:.58;background:#07151f}
+.exam-roster-name{display:flex;align-items:center;gap:8px;min-width:0;font-weight:900;color:#fff5df;font-size:.87rem}.exam-roster-name::before{content:'';width:17px;height:17px;background:#22e7eb;box-shadow:0 12px 0 -2px #22e7eb;flex:0 0 17px}.exam-roster-name span{overflow-wrap:anywhere}
+.exam-roster-presence{display:flex;align-items:center;justify-content:flex-start;gap:7px;font-weight:900;font-size:.74rem;color:#65ed76}.exam-roster-item.is-absent .exam-roster-presence{color:#ffad35}
+.exam-roster-presence .attendance-check{width:28px!important;height:28px!important;min-height:28px!important;border-width:3px!important;margin:0!important}
+.exam-roster-presence .attendance-check::after{width:8px!important;height:14px!important;border-width:0 4px 4px 0!important}
+.exam-roster-points{justify-self:start;min-width:62px;padding:5px 7px;border:2px solid #14596a;background:#07131c;text-align:center;font-family:var(--pixel);font-size:.56rem;color:#a8c1c7}.exam-roster-points.has-points{color:#ffb327;border-color:#a65c12;background:#281805}
+.exam-roster-rules-btn{min-height:32px!important;padding:5px 8px!important;border:2px solid #12a1b5!important;background:#072637!important;color:#20edf0!important;font-family:var(--pixel)!important;font-size:.55rem!important;box-shadow:2px 2px 0 #02070d!important}.exam-roster-rules-btn.is-open{background:#123b48!important;color:#fff2ce!important}.exam-roster-rules-btn:disabled{opacity:.35!important;filter:grayscale(.7)!important}
+.exam-roster-rule-panel{border-top:2px solid #0b7185;background:#04111a;padding:8px 10px 10px 36px}
+.exam-roster-rule-list{display:flex;flex-wrap:wrap;gap:7px}
+.exam-roster-rule-chip{display:grid;grid-template-columns:24px minmax(100px,1fr) auto;gap:6px;align-items:center;flex:1 1 220px;min-height:36px;padding:5px 7px;border:2px solid #135a6b;background:#071d29;color:#fff5df}
+.exam-roster-rule-chip .rules-inline-toggle{width:24px!important;height:24px!important;min-height:24px!important;border-width:2px!important;font-size:.8rem!important;padding:0!important}
+.exam-roster-rule-chip .rules-inline-name{font-size:.7rem!important;line-height:1.15!important}.exam-roster-rule-chip .rules-inline-points{font-size:.55rem!important}
+.exam-roster-footer{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;margin-top:12px}
+.exam-roster-tip{color:#85aeb9;font-size:.68rem;line-height:1.35}.exam-roster-footer .exam-continue{margin:0!important;min-width:255px!important;min-height:50px!important;font-size:.7rem!important}
+
+@media(max-width:800px){
+ .exam-start-grid{grid-template-columns:1fr}
+ .exam-roster-table-head{display:none}
+ .exam-roster-row-main{grid-template-columns:minmax(0,1fr) auto auto;grid-template-areas:'name presence points' 'name rules rules';gap:6px}
+ .exam-roster-name{grid-area:name}.exam-roster-presence{grid-area:presence}.exam-roster-points{grid-area:points}.exam-roster-rules-btn{grid-area:rules;justify-self:end;min-width:130px}
+ .exam-roster-rule-panel{padding-left:10px}
+ .exam-roster-footer{grid-template-columns:1fr}.exam-roster-footer .exam-continue{width:100%!important;min-width:0!important}
+}
+@media(max-width:520px){
+ .exam-roster-head{grid-template-columns:1fr}.exam-roster-step{justify-self:end}
+ .exam-roster-context{gap:5px}.exam-roster-summary{width:100%;margin-left:0}
+ .exam-roster-row-main{grid-template-columns:1fr auto;grid-template-areas:'name points' 'presence rules'}
+ .exam-roster-presence{font-size:.66rem}.exam-roster-name{font-size:.79rem}.exam-roster-rules-btn{min-width:112px}
+ .exam-roster-rule-chip{flex-basis:100%}
+}
+</style>
+
 </head>
 <body>
   <div class="crt-overlay" aria-hidden="true"></div>
@@ -5599,7 +5692,7 @@ body::after{
       const previous={
         attendance:'select',
         rules:'attendance',
-        candidates:'rules',
+        candidates:'attendance',
         question:'candidates'
       }[f.stage];
 
@@ -6395,8 +6488,6 @@ body::after{
         <span class="arcade-check">${f.subject===s?'✓':''}</span>
         <span class="subject-choice-copy"><strong>${esc(s)}</strong>${linkedSet.has(s)?'':`<small class="subject-choice-note">Při prvním použití se přiřadí k této třídě.</small>`}</span>
       </button>`).join('');
-    const selectedClass=c?`${esc(c.displayName)} — ${esc(c.schoolYear)}`:'Nevybrána';
-    const selectedSubject=f.subject?esc(f.subject):'Vyber předmět';
     const classChoices=state.classes.map(item=>`
       <button type="button" class="class-picker-option ${c?.id===item.id?'is-selected':''}" data-action="exam-class-choice" data-id="${item.id}">
         <span class="class-picker-check">${c?.id===item.id?'✓':''}</span>
@@ -6407,39 +6498,35 @@ body::after{
     const body=`
       <section class="exam-start fidelity-h2">
         <div class="exam-start-head">
-          <h1 class="exam-start-title">Zahájit<br>zkoušení</h1>
-          <div class="exam-start-subtitle">Vyberte třídu a předmět</div>
-          <div class="exam-step">KROK 1 / 6</div>
+          <div><h1 class="exam-start-title">Zahájit zkoušení</h1><div class="exam-start-subtitle">Vyber třídu a předmět. Ostatní nastavíš na jedné obrazovce.</div></div>
+          <div class="exam-step">KROK 1 / 5</div>
         </div>
 
-        <div class="exam-start-section class-section">
-          <div class="arcade-section-label"><img src="assets/ui/select-class.png" alt="" aria-hidden="true"><h2>Třída</h2></div>
-          ${state.classes.length?`
-            <details class="class-picker">
-              <summary class="class-picker-summary" aria-label="Vybrat třídu">
-                <span class="class-picker-summary-name">${c?esc(c.displayName):'Vyber třídu'}</span>
-                <span class="class-picker-summary-year">${c?esc(c.schoolYear):''}</span>
-                <span class="class-picker-arrow" aria-hidden="true">⌄</span>
-              </summary>
-              <div class="class-picker-menu">${classChoices}</div>
-            </details>
-          `:'<div class="exam-start-empty">Zatím nemáš žádnou třídu. Vytvoř ji v „Moje třídy“.</div>'}
-          <select id="exam-class" class="sr-only-select" aria-label="Vyber třídu">${classOptions}</select>
+        <div class="exam-start-grid">
+          <div class="exam-start-section class-section">
+            <div class="arcade-section-label"><img src="assets/ui/select-class.png" alt="" aria-hidden="true"><h2>Třída</h2></div>
+            ${state.classes.length?`
+              <details class="class-picker">
+                <summary class="class-picker-summary" aria-label="Vybrat třídu">
+                  <span class="class-picker-summary-name">${c?esc(c.displayName):'Vyber třídu'}</span>
+                  <span class="class-picker-summary-year">${c?esc(c.schoolYear):''}</span>
+                  <span class="class-picker-arrow" aria-hidden="true">⌄</span>
+                </summary>
+                <div class="class-picker-menu">${classChoices}</div>
+              </details>
+            `:'<div class="exam-start-empty">Zatím nemáš žádnou třídu. Vytvoř ji v „Moje třídy“.</div>'}
+            <select id="exam-class" class="sr-only-select" aria-label="Vyber třídu">${classOptions}</select>
+          </div>
+
+          <div class="exam-start-section subject-section">
+            <div class="arcade-section-label"><img src="assets/ui/select-subject.png" alt="" aria-hidden="true"><h2>Předmět</h2></div>
+            ${subjectGroups.all.length?`<div class="subject-choice-list">${choices}</div>`:'<div class="exam-start-empty">Zatím nemáš žádný předmět. Vytvoř ho v „Moje předměty“.</div>'}
+            <select id="exam-subject" class="sr-only-select" aria-label="Vybraný předmět"><option value="">Vyber předmět</option>${subjectOptions}</select>
+          </div>
         </div>
 
-        <div class="exam-start-section subject-section">
-          <div class="arcade-section-label"><img src="assets/ui/select-subject.png" alt="" aria-hidden="true"><h2>Předmět</h2></div>
-          ${subjectGroups.all.length?`<div class="subject-choice-list">${choices}</div>`:'<div class="exam-start-empty">Zatím nemáš žádný předmět. Vytvoř ho v „Moje předměty“.</div>'}
-          <select id="exam-subject" class="sr-only-select" aria-label="Vybraný předmět"><option value="">Vyber předmět</option>${subjectOptions}</select>
-        </div>
-
-        <div class="exam-selection-summary">
-          <img src="assets/ui/select-summary.png" alt="" aria-hidden="true">
-          <div class="selection-copy"><div class="selection-kicker">Vybráno: <span class="selection-class">${selectedClass}</span></div><div class="selection-subject">${selectedSubject}</div></div>
-        </div>
-
-        <button class="exam-continue" data-action="exam-next-attendance" ${!c||!f.subject?'disabled':''}><span>Pokračovat k přítomnosti</span><span class="arrow">▶</span></button>
-        <div class="arcade-footer"><span>Dobrovolný doplněk výuky.</span><span>ZZ-01</span></div>
+        <button class="exam-continue" data-action="exam-next-attendance" ${!c||!f.subject?'disabled':''}><span>Pokračovat na seznam žáků</span><span class="arrow">▶</span></button>
+        <div class="arcade-footer"><span>Rychlý režim pro výuku.</span><span>ZZ-01</span></div>
       </section>`;
     app.innerHTML=layout(body,'Zkoušení');
   }
@@ -6447,54 +6534,64 @@ body::after{
   function renderAttendance(f){
     const list=studentsForClass(f.classId);
     const c=classById(f.classId);
+    const rules=activeRules();
     const presentCount=list.filter(s=>f.attendance[s.id]!==false).length;
     const absentCount=Math.max(0,list.length-presentCount);
     const classLabel=c?`${esc(c.displayName)} · ${esc(c.schoolYear)}`:'Třída';
     const subjectLabel=f.subject?esc(f.subject):'Bez vybraného předmětu';
 
+    if(state.ui.ruleOpenStudentId && !list.some(s=>s.id===state.ui.ruleOpenStudentId)) state.ui.ruleOpenStudentId='';
+
+    const pointText=n=>{
+      n=Number(n)||0;
+      return `${n} ${n===1?'bod':(n>=2&&n<=4?'body':'bodů')}`;
+    };
+
     const rows=list.map(s=>{
       const present=f.attendance[s.id]!==false;
-      return `<label class="attendance-row ${present?'is-present':'is-absent'}">
-        <span class="attendance-person" aria-hidden="true"></span>
-        <span class="attendance-name">${esc(s.name)}</span>
-        <input class="attendance-check" type="checkbox" data-attendance="${s.id}" ${present?'checked':''} aria-label="${present?'Přítomen':'Chybí'} – ${esc(s.name)}">
-        <span class="attendance-status">${present?'Přítomen':'Chybí'}</span>
-      </label>`;
+      const points=currentPoints(s);
+      const open=state.ui.ruleOpenStudentId===s.id && present;
+      const ruleRows=open?rules.map(r=>{
+        const on=!!s.ruleStates[r.id];
+        return `<div class="exam-roster-rule-chip">
+          <button type="button" class="rules-inline-toggle ${on?'on':''}" data-action="exam-inline-rule-toggle" data-student="${s.id}" data-rule="${r.id}" aria-pressed="${on?'true':'false'}" aria-label="${on?'Vypnout':'Zapnout'} ${esc(r.name)}">${on?'✓':''}</button>
+          <div class="rules-inline-name">${esc(r.name)}</div>
+          <div class="rules-inline-points">+${Number(r.points)||0}</div>
+        </div>`;
+      }).join(''):'';
+      return `<article class="exam-roster-item ${present?'is-present':'is-absent'}" data-roster-student="${s.id}">
+        <div class="exam-roster-row-main">
+          <div class="exam-roster-name"><span>${esc(s.name)}</span></div>
+          <label class="exam-roster-presence"><input class="attendance-check" type="checkbox" data-attendance="${s.id}" ${present?'checked':''} aria-label="${present?'Přítomen':'Chybí'} – ${esc(s.name)}"><span class="roster-presence-label">${present?'Přítomen':'Chybí'}</span></label>
+          <div class="exam-roster-points ${points>0?'has-points':''}">${pointText(points)}</div>
+          <button type="button" class="exam-roster-rules-btn ${open?'is-open':''}" data-action="exam-rule-student-toggle" data-id="${s.id}" ${present?'':'disabled'}>${open?'Zavřít':'Pravidla'}</button>
+        </div>
+        ${open?`<div class="exam-roster-rule-panel"><div class="exam-roster-rule-list">${ruleRows||'<div class="rules-empty">Nejsou aktivní žádná pravidla.</div>'}</div></div>`:''}
+      </article>`;
     }).join('');
 
     const body=`
-      <section class="attendance-screen fidelity-h3">
-        <div class="attendance-head">
-          <h1 class="attendance-title">Přítomnost</h1>
-          <div class="attendance-subtitle">Označte, kdo je dnes ve třídě.</div>
-          <div class="attendance-step">KROK 2 / 6</div>
+      <section class="exam-roster-screen">
+        <div class="exam-roster-head">
+          <div><h1 class="exam-roster-title">Třída před zkoušením</h1><div class="exam-roster-subtitle">Přítomnost a pravidla na jednom místě.</div></div>
+          <div class="exam-roster-step">KROK 2 / 5</div>
         </div>
 
-        <div class="attendance-context">
-          <img src="assets/ui/select-class.png" alt="" aria-hidden="true">
-          <div>
-            <div class="attendance-context-class">Třída: ${classLabel}</div>
-            <div class="attendance-context-subject">${subjectLabel}</div>
-          </div>
+        <div class="exam-roster-context">
+          <strong>${classLabel}</strong><span>· ${subjectLabel}</span>
+          <div class="exam-roster-summary" aria-live="polite"><span>Přítomní <b id="roster-present-count" class="present">${presentCount}</b></span><span>Chybí <b id="roster-absent-count" class="absent">${absentCount}</b></span></div>
         </div>
 
-        ${list.length?`<div class="attendance-list" role="list" aria-label="Seznam žáků a jejich přítomnost">${rows}</div>`:'<div class="attendance-empty">V této třídě zatím nejsou žádní žáci.</div>'}
+        ${list.length?`<div class="exam-roster-table" role="table" aria-label="Žáci, přítomnost a pravidla">
+          <div class="exam-roster-table-head" role="row"><span>Žák</span><span>Přítomnost</span><span>Body</span><span>Pravidla</span></div>
+          ${rows}
+        </div>`:'<div class="attendance-empty">V této třídě zatím nejsou žádní žáci.</div>'}
 
-        <div class="attendance-summary" aria-live="polite">
-          <div>Přítomní: <strong class="present-count">${presentCount}</strong></div>
-          <div class="attendance-summary-sep" aria-hidden="true"></div>
-          <div>Chybí: <strong class="absent-count">${absentCount}</strong></div>
+        <div class="exam-roster-footer">
+          <div class="exam-roster-tip">Výchozí stav je „přítomen“. Pravidla otevři jen u žáků, kde něco potřebuješ změnit.</div>
+          <button class="exam-continue" data-action="draw-candidates" ${!presentCount?'disabled':''}><span>Losovat kandidáty</span><span class="arrow">▶</span></button>
         </div>
-
-        <div class="attendance-info">
-          <div class="attendance-info-icon" aria-hidden="true">i</div>
-          <div>Do losování vstoupí pouze přítomní žáci.</div>
-        </div>
-
-        <button class="exam-continue attendance-continue" data-action="exam-next-rules" ${!presentCount?'disabled':''}>
-          <span>Pokračovat k pravidlům</span><span class="arrow">▶</span>
-        </button>
-        <div class="arcade-footer"><span>Dobrovolný doplněk výuky.</span><span>ZZ-01</span></div>
+        <div class="arcade-footer"><span>Co nejméně kliknutí během hodiny.</span><span>ZZ-01</span></div>
       </section>`;
     app.innerHTML=layout(body,'Zkoušení');
   }
@@ -6595,20 +6692,26 @@ body::after{
     app.innerHTML=layout(body,'Zkoušení');
   }
 
+  function renderPreserveScroll(){
+    const y=window.scrollY||document.documentElement.scrollTop||0;
+    render();
+    requestAnimationFrame(()=>window.scrollTo({top:y,left:0,behavior:'auto'}));
+  }
+
   function toggleExamRuleInline(studentId,ruleId){
     const s=studentById(studentId),r=ruleById(ruleId); if(!s||!r)return;
     const was=!!s.ruleStates[r.id];
     if(was && r.system){
       modal({title:'Potvrzení odevzdání',body:`<p>Opravdu žák <strong>${esc(s.name)}</strong> práci odevzdal?</p>`,actions:[
         {label:'Ne',className:'secondary'},
-        {label:'Ano',className:'primary',onClick:()=>{s.ruleStates[r.id]=false;saveState();toast('Pravidlo označeno jako vyřešené.');render();}}
+        {label:'Ano',className:'primary',onClick:()=>{s.ruleStates[r.id]=false;saveState();toast('Pravidlo označeno jako vyřešené.');renderPreserveScroll();}}
       ]});
       return;
     }
     s.ruleStates[r.id]=!was;
     if(!was)s.collectedPoints+=(Number(r.points)||0);
     saveState();
-    render();
+    renderPreserveScroll();
   }
 
   function weightedCandidates(f,ignoreProtection=false){
@@ -6661,7 +6764,7 @@ body::after{
         <div class="candidates-head">
           <h1 class="candidates-title">Kandidáti<br>ke zkoušení</h1>
           <div class="candidates-subtitle">Návrh podle váženého losu.</div>
-          <div class="candidates-step">KROK 4 / 6</div>
+          <div class="candidates-step">KROK 3 / 5</div>
         </div>
 
         <div class="candidates-context">
@@ -6799,7 +6902,7 @@ body::after{
         <div class="topic-head">
           <div class="topic-title-line"><img class="topic-title-icon" src="assets/ui/h6-book.png" alt="" aria-hidden="true"><h1 class="topic-title">Výběr tématu</h1></div>
           <div class="topic-subtitle">Vyberte téma pro žáka nebo roztočte kolo štěstí.</div>
-          <div class="topic-step">KROK 5 / 6</div>
+          <div class="topic-step">KROK 4 / 5</div>
         </div>
 
         <div class="topic-context">
@@ -7059,7 +7162,7 @@ body::after{
       <section class="exam-live-screen fidelity-h7">
         <div class="exam-live-head">
           <h1 class="exam-live-title">Zkoušení</h1>
-          <div class="exam-live-step">KROK 6 / 6</div>
+          <div class="exam-live-step">KROK 5 / 5</div>
         </div>
 
         <div class="exam-live-context">
@@ -8758,7 +8861,24 @@ body::after{
     }else if(e.target.id==='exam-subject'){
       state.examFlow.subject=e.target.value; saveState();
     }else if(e.target.dataset.attendance){
-      state.examFlow.attendance[e.target.dataset.attendance]=e.target.checked; saveState(); render();
+      const studentId=e.target.dataset.attendance;
+      state.examFlow.attendance[studentId]=e.target.checked;
+      if(!e.target.checked && state.ui.ruleOpenStudentId===studentId) state.ui.ruleOpenStudentId='';
+      saveState();
+      const item=e.target.closest('[data-roster-student]');
+      if(item){
+        item.classList.toggle('is-present',e.target.checked);
+        item.classList.toggle('is-absent',!e.target.checked);
+        const label=item.querySelector('.roster-presence-label'); if(label)label.textContent=e.target.checked?'Přítomen':'Chybí';
+        const rulesBtn=item.querySelector('.exam-roster-rules-btn'); if(rulesBtn)rulesBtn.disabled=!e.target.checked;
+        if(!e.target.checked){ const panel=item.querySelector('.exam-roster-rule-panel'); if(panel)panel.remove(); if(rulesBtn){rulesBtn.classList.remove('is-open');rulesBtn.textContent='Pravidla';} }
+        const list=studentsForClass(state.examFlow.classId);
+        const present=list.filter(s=>state.examFlow.attendance[s.id]!==false).length;
+        const absent=Math.max(0,list.length-present);
+        const p=document.getElementById('roster-present-count'); const a=document.getElementById('roster-absent-count');
+        if(p)p.textContent=present; if(a)a.textContent=absent;
+        const go=document.querySelector('.exam-roster-footer .exam-continue'); if(go)go.disabled=!present;
+      }else renderPreserveScroll();
     }else if(e.target.id==='only-points'){
       state.ui.onlyPoints=e.target.checked; render();
     }else if(e.target.id==='wheel-subject'){
@@ -8953,7 +9073,7 @@ body::after{
     else if(action==='exam-rule-student-toggle'){
       const id=btn.dataset.id||'';
       state.ui.ruleOpenStudentId=state.ui.ruleOpenStudentId===id?'':id;
-      saveState();render();
+      saveState();renderPreserveScroll();
     }
     else if(action==='exam-inline-rule-toggle') toggleExamRuleInline(btn.dataset.student,btn.dataset.rule);
     else if(action==='student-rules') showStudentRules(btn.dataset.id);

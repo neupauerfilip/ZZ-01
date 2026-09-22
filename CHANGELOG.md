@@ -1,22 +1,34 @@
-# ZZ-01_EXAM_SCENE_E_VIDEO_BASED_SCENE_REBUILD
+# ZZ-01 — Compact Exam Flow A
 
-## Proč vznikl tento patch
-Video z reálného běhu ukázalo, že samostatné CSS-positioned postavy se při vykreslení neposazují spolehlivě k nábytku v pozadí. Tento patch proto mění princip scény.
+## Cíl
+Zrychlit zahájení zkoušení během reálné vyučovací hodiny a snížit počet obrazovek, kliknutí a vnitřního scrollování.
 
-## Co se mění
-- učitel a žák už nejsou během zkoušení samostatné absolutně pozicované obrázky
-- aplikace přepíná celé připravené 16:9 scénické snímky
-- každá scéna má postavy už pevně umístěné vůči katedře, tabuli a dveřím
-- klid: učitel za katedrou, žák u tabule
-- kontrola: učitel u tabule
-- nervozita / závěr: samostatné celé scénické snímky
-- konec času a přesčas: samostatné celé scénické snímky
-- velká časomíra je znovu postavená jako samostatný HUD panel s nulovým záporným letter-spacingem a bez ořezu
+## Změny
+- kompaktnější obrazovka „Zahájit zkoušení“
+- třída a předmět jsou vedle sebe na desktopu, na mobilu pod sebou
+- odstraněna velká souhrnná karta a nadbytečný vizuální prostor
+- sloučena Přítomnost + Pravidla do jedné obrazovky
+- všichni žáci jsou v jedné tabulce pod sebou; tabulka se zvětšuje s obsahem stránky
+- odstraněn vnitřní scroll seznamu žáků
+- každý řádek obsahuje: žáka, přítomnost, body a tlačítko „Pravidla“
+- pravidla se rozbalují pouze pod konkrétním žákem
+- nepřítomný žák má pravidla deaktivovaná a nejde do losování
+- přepnutí přítomnosti nepřekresluje celou stránku ani neskáče na začátek
+- při změně pravidel se zachová pozice na stránce
+- samostatný krok „Pravidla a trestné body“ je v běžném průchodu přeskočen
+- příprava zkoušení má nově 5 kroků místo 6
 
-## Test
-1. zahájit zkoušení
-2. projít countdown 3-2-1-FIGHT
-3. ověřit klidovou scénu
-4. nechat doběhnout čas do nervózní fáze
-5. ověřit 0:00 a přesčas
-6. změnit velikost okna – postavy musí zůstat na stejném místě vůči učebně
+## Nový průchod
+1. Třída + předmět
+2. Žáci + přítomnost + pravidla
+3. Kandidáti
+4. Téma
+5. Zkoušení
+
+
+## Hotfix A1 – Předmět na kroku 1
+- opraven vzhled tlačítek pro výběr předmětu na obrazovce „Zahájit zkoušení“
+- názvy předmětů už nejsou černé, ale ve světlém arkádovém stylu
+- text je nově centrovanější a nevejde-li se, zkrátí se korektně uvnitř tlačítka
+- rozložení předmětů je přehlednější: 2 sloupce na desktopu, 1 sloupec na mobilu
+- tlačítka mají větší vnitřní prostor a lépe sedí s checkboxem
