@@ -250,3 +250,8 @@
 - samostatné losování tématu zobrazuje stejné ikonky témat, ukazatel a animaci otáčení
 - tlačítko Roztočit kolo bylo nahrazeno stejným stylem akčního tlačítka jako ve zkoušení
 
+## 2026-09-22 — H1.17 Hotfix startu po loadingu
+- opravena runtime chyba samostatného Kola štěstí: pomocná funkce pro výběr ikon témat je nyní společná pro zkoušení i samostatné kolo
+- odstraněno zaseknutí na loading obrazovce při obnovení aplikace, pokud byla poslední otevřená stránka Kolo štěstí
+- přidána bezpečnostní pojistka startu: při neočekávané chybě obnovené stránky se aplikace vrátí do hlavního menu místo trvalého loadingu
+

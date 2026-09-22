@@ -4287,7 +4287,15 @@ body::after{
       splashFinishTimer=setTimeout(()=>{
         state.splashSeen=true;
         splashFinishScheduled=false;
-        render();
+        try{
+          render();
+        }catch(err){
+          console.error('Render after splash failed',err);
+          state.route='home';
+          state.activeExam=null;
+          try{ saveState(); renderHome(); }
+          catch(fallbackErr){ console.error('Home fallback failed',fallbackErr); }
+        }
       },remaining);
     };
 
@@ -6433,6 +6441,16 @@ body::after{
 
   function goQuestion(id){ state.examFlow.selectedStudentId=id; state.examFlow.stage='question'; saveState(); render(); }
 
+  function topicAsset(topic,index){
+    const t=String(topic||'').toLocaleLowerCase('cs');
+    if(t.includes('tepel')||t.includes('kalen')||t.includes('žíh')||t.includes('popou'))return 'h6-heat.png';
+    if(t.includes('měř')||t.includes('kontrol')||t.includes('toler'))return 'h6-measure.png';
+    if(t.includes('obráb')||t.includes('soustru')||t.includes('fréz'))return 'h6-machining.png';
+    if(t.includes('materi')||t.includes('kov')||t.includes('ocel'))return 'h6-materials.png';
+    if(t.includes('výrob')||t.includes('technolog'))return 'h6-production.png';
+    return ['h6-materials.png','h6-machining.png','h6-heat.png','h6-measure.png','h6-production.png'][Number(index||0)%5];
+  }
+
   function renderQuestionStep(f){
     const student=studentById(f.selectedStudentId);
     const cls=classById(f.classId);
@@ -6442,16 +6460,6 @@ body::after{
     const topicSource=f.topicSource||'';
     const classLabel=cls?esc(cls.displayName):'Třída';
     const subjectLabel=f.subject?esc(f.subject):'Předmět';
-
-    const topicAsset=(topic,index)=>{
-      const t=String(topic||'').toLocaleLowerCase('cs');
-      if(t.includes('tepel')||t.includes('kalen')||t.includes('žíh')||t.includes('popou'))return 'h6-heat.png';
-      if(t.includes('měř')||t.includes('kontrol')||t.includes('toler'))return 'h6-measure.png';
-      if(t.includes('obráb')||t.includes('soustru')||t.includes('fréz'))return 'h6-machining.png';
-      if(t.includes('materi')||t.includes('kov')||t.includes('ocel'))return 'h6-materials.png';
-      if(t.includes('výrob')||t.includes('technolog'))return 'h6-production.png';
-      return ['h6-materials.png','h6-machining.png','h6-heat.png','h6-measure.png','h6-production.png'][index%5];
-    };
 
     const topicRows=items.length
       ? items.map((topic,index)=>{
