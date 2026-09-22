@@ -4843,6 +4843,13 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 }
 </style>
 
+<style>
+/* EXAM F: fixed classroom viewport; controls stay outside the artwork. */
+.exam-classroom-stage[data-phase="overtime"]{animation:none!important}
+.exam-scene-banner,.exam-scene-clock{display:none!important}
+.exam-scene-frame{object-fit:contain!important}
+@media(prefers-reduced-motion:reduce){.exam-classroom-stage{animation:none!important}}
+</style>
 </head>
 <body>
   <div class="crt-overlay" aria-hidden="true"></div>
@@ -7685,40 +7692,84 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   };
 
   const examSceneFrames={
-    calm:'assets/ui/exam-scene-calm.png',
-    nod:'assets/ui/exam-scene-nod.png',
-    inspect:'assets/ui/exam-scene-inspect.png',
-    pointer:'assets/ui/exam-scene-pointer.png',
-    nervous:'assets/ui/exam-scene-nervous.png',
-    stressed:'assets/ui/exam-scene-stressed.png',
-    timeup:'assets/ui/exam-scene-timeup.png',
-    overtime:'assets/ui/exam-scene-overtime.png'
-  };
+    "coffee": "assets/ui/exam-f/01-coffee.png",
+    "nod": "assets/ui/exam-f/02-nod.png",
+    "written": "assets/ui/exam-f/03-written.png",
+    "stand": "assets/ui/exam-f/04-stand.png",
+    "walk": "assets/ui/exam-f/05-walk.png",
+    "explain": "assets/ui/exam-f/06-explain.png",
+    "point": "assets/ui/exam-f/07-point.png",
+    "hesitate": "assets/ui/exam-f/08-hesitate.png",
+    "sweat": "assets/ui/exam-f/09-sweat.png",
+    "dismiss": "assets/ui/exam-f/10-dismiss.png",
+    "to-seat": "assets/ui/exam-f/11-to-seat.png",
+    "seated": "assets/ui/exam-f/12-seated.png",
+    "return": "assets/ui/exam-f/13-return.png",
+    "plead": "assets/ui/exam-f/14-plead.png",
+    "lift": "assets/ui/exam-f/15-lift.png",
+    "exit": "assets/ui/exam-f/16-exit.png"
+};
 
+  // EXAM F: presentation only. Never changes grades, student data or timer state.
+  const examSceneImages=new Map();
+  let examSceneMemory={id:null,scene:null};
+  function preloadExamScenes(){
+    if(examSceneImages.size)return;
+    for(const [key,src] of Object.entries(examSceneFrames)){
+      const image=new Image();
+      examSceneImages.set(key,image);
+      image.src=src;
+    }
+  }
+  function pickExamScene(rem,total){
+    const ratio=Math.max(0,Math.min(1,rem/total));
+    const elapsed=Math.max(0,total-rem);
+    if(rem<=0){
+      const overtime=-rem;
+      const scene=overtime<2500?'dismiss':overtime<5000?'to-seat':
+        overtime<10000?'seated':overtime<14000?'return':
+        overtime<20000?'plead':overtime<23000?'lift':'exit';
+      return {scene,phase:overtime<10000?'timeup':'overtime',
+        label:overtime<10000?'ČAS VYPRŠEL':'PŘESČAS!'};
+    }
+    // Writing is shown once, rather than erasing and rewriting the equation.
+    if(ratio>.72){
+      return {scene:elapsed<1800?'coffee':elapsed<3600?'nod':'written',
+        phase:'calm',label:'JEŠTĚ JE ČAS'};
+    }
+    if(ratio>.42){
+      const t=Math.max(0,elapsed-total*.28)%24000;
+      const scene=t<2000?'stand':t<3500?'walk':t<7000?'explain':
+        t<10500?'point':t<12000?'walk':'written';
+      return {scene,phase:'working',label:t<12000?'UČITEL VYSVĚTLUJE':'JEŠTĚ JE ČAS'};
+    }
+    if(ratio>.18)return {scene:'hesitate',phase:'nervous',label:'ČAS BĚŽÍ'};
+    return {scene:'sweat',phase:'stressed',label:'POSLEDNÍ CHVÍLE!'};
+  }
   function updateExamClassroomScene(rem,paused=false){
     if(!state.activeExam)return;
     const stage=document.getElementById('exam-classroom-stage');
     const frame=document.getElementById('exam-scene-frame');
     const status=document.getElementById('exam-scene-status');
     if(!stage||!frame)return;
-    const total=examTotalMs();
-    const ratio=Math.max(0,Math.min(1,rem/total));
-    const elapsed=Math.max(0,now()-Number(state.activeExam.startedAt||now()));
-    const cycle=elapsed%11000;
-    let scene='calm',phase='calm',label='JEŠTĚ JE ČAS';
-
-    if(paused){scene='calm';phase='paused';label='PAUZA';}
-    else if(rem<=-10000){scene='overtime';phase='overtime';label='PŘESČAS!';}
-    else if(rem<=0){scene='timeup';phase='timeup';label='ČAS!';}
-    else if(ratio>.72){phase='calm';label='JEŠTĚ JE ČAS';scene=cycle<3800?'calm':cycle<6900?'nod':'calm';}
-    else if(ratio>.42){phase='working';label='UČITEL KONTROLUJE';scene=cycle<4500?'inspect':'pointer';}
-    else if(ratio>.18){phase='nervous';label='ČAS BĚŽÍ';scene=cycle<5200?'nervous':'pointer';}
-    else{phase='stressed';label='POSLEDNÍ CHVÍLE!';scene='stressed';}
-
-    const src=examSceneFrames[scene]||examSceneFrames.calm;
-    if(frame.getAttribute('src')!==src)frame.setAttribute('src',src);
-    stage.dataset.phase=phase;stage.dataset.scene=scene;
-    if(status)status.textContent=label;
+    preloadExamScenes();
+    if(examSceneMemory.id!==state.activeExam.id){
+      examSceneMemory={id:state.activeExam.id,scene:null};
+    }
+    const next=pickExamScene(rem,examTotalMs());
+    const scene=paused && examSceneMemory.scene?examSceneMemory.scene:next.scene;
+    const image=examSceneImages.get(scene);
+    // Keep the last visible frame while the next asset downloads (or if it fails).
+    if(image?.complete && image.naturalWidth>0){
+      const src=examSceneFrames[scene];
+      if(frame.getAttribute('src')!==src)frame.setAttribute('src',src);
+      examSceneMemory.scene=scene;
+    }else if(paused && examSceneMemory.scene){
+      frame.setAttribute('src',examSceneFrames[examSceneMemory.scene]);
+    }
+    stage.dataset.phase=paused?'paused':next.phase;
+    stage.dataset.scene=examSceneMemory.scene||'coffee';
+    if(status)status.textContent=paused?'PAUZA':next.label;
   }
 
   function beginExam(topic){
@@ -7817,7 +7868,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         <div class="exam-live-main">
           <section class="exam-student-panel exam-classroom-panel">
             <div id="exam-classroom-stage" class="exam-classroom-stage" data-phase="calm" data-teacher="coffee" data-student="write2">
-              <img id="exam-scene-frame" class="exam-scene-frame" src="assets/ui/exam-scene-calm.png" alt="Retro pixelová učebna během zkoušení">
+              <img id="exam-scene-frame" class="exam-scene-frame" src="assets/ui/exam-f/01-coffee.png" alt="Retro pixelová učebna během zkoušení">
               <div class="exam-scene-banner" aria-hidden="true"><span>TEACHER MODE</span></div>
               <div id="exam-scene-clock" class="exam-scene-clock">${formatDuration(rem)}</div>
               <div id="exam-scene-status" class="exam-scene-status">JEŠTĚ JE ČAS</div>

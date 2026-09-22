@@ -1,3 +1,20 @@
+# ZZ-01_EXAM_SCENE_F2 — integrace do index(5).html
+
+- Základ: index(5).html a CHANGELOG(5).md dodané uživatelem v tomto chatu.
+- Zachován slogan v hlavičce, písmo hlavního menu, filtrování předmětů podle třídy a Trofeje.
+- Přidaných 16 schválených scén zkoušení; přepínání podle zbývajícího času.
+- Pauza drží poslední scénu; přednačtení a zachování obrazu při chybě dalšího obrázku.
+- Countdown, hudba, hodnocení, data a ostatní logika beze změn.
+- Velká časomíra zachována, malé horní překryvy a třesení učebny odstraněny.
+- Přesčas je pouze vizuální scénka; sám neukončuje zkoušení ani nezapisuje známku.
+
+Ověření: syntaxe, přechody scén, pauza, nový pokus, chyba obrázku, integrita PNG,
+a přesná shoda celého kódu mimo vymezenou změnu s index(5).html.
+Přímý běh v prohlížeči zde nebylo možné ověřit. Jde o klíčové snímky, nikoli plynulou
+sprite animaci; drobné rozdíly v kresbě postav a rekvizit mezi snímky zůstávají.
+
+--- Původní changelog zachovaný v plném rozsahu ---
+
 # ZZ-01_HEADER_SLOGAN_UPDATE
 
 - v horní hlavičce nahrazen text `ZZ-01` sloganem „Proč zkoušet jednoduše, když to lze složitě.“
