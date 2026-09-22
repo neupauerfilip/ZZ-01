@@ -4170,56 +4170,63 @@ body::after{
 
 
 <style>
-/* EXAM SCENE C — alignment + writing + big timer recovery */
+/* EXAM SCENE D — corrected anchors, left desk mask, better timer */
+.exam-live-main{
+  grid-template-columns:minmax(500px,1.35fr) minmax(300px,.65fr)!important;
+  align-items:start!important;
+}
+.exam-classroom-panel{
+  padding:10px!important;min-height:0!important;justify-content:flex-start!important;
+  background:#f4ddb0!important;border-color:#1f1811!important;
+}
 .exam-desk-foreground{
   position:absolute;inset:0;z-index:5;pointer-events:none;
   background:url('assets/ui/exam-classroom-fidelity.png') center/100% 100% no-repeat;
-  clip-path:polygon(41.8% 60.5%,76.6% 60.5%,77.6% 94%,42.2% 94%);
+  clip-path:polygon(3.5% 40.5%,31.5% 40.5%,31.5% 71.5%,3.5% 71.5%);
   image-rendering:pixelated;
 }
-/* Seated teacher is physically behind the desk in this specific background. */
-.exam-scene-teacher{left:44%!important;bottom:18%!important;width:18%!important;z-index:4!important;}
+/* Seated teacher is masked by the left desk area and anchored to the real desk. */
+.exam-scene-teacher{left:8%!important;bottom:23%!important;width:13%!important;z-index:4!important;}
 .exam-classroom-stage[data-teacher="coffee"] .exam-scene-teacher,
 .exam-classroom-stage[data-teacher="nod"] .exam-scene-teacher{
-  left:44%!important;bottom:18%!important;width:18%!important;z-index:4!important;
+  left:8%!important;bottom:23%!important;width:13%!important;z-index:4!important;
 }
-/* Once teacher stands up, he moves in front of desk toward the board. */
 .exam-classroom-stage[data-teacher="stand"] .exam-scene-teacher{
-  left:44%!important;bottom:5.5%!important;width:17%!important;z-index:7!important;
+  left:23%!important;bottom:15%!important;width:14%!important;z-index:7!important;
 }
 .exam-classroom-stage[data-teacher="inspect"] .exam-scene-teacher{
-  left:49%!important;bottom:5.5%!important;width:17%!important;z-index:7!important;
+  left:49%!important;bottom:15%!important;width:12.8%!important;z-index:7!important;
 }
 .exam-classroom-stage[data-teacher="pointer"] .exam-scene-teacher{
-  left:51.5%!important;bottom:5.5%!important;width:17%!important;z-index:7!important;
+  left:46%!important;bottom:15%!important;width:13.2%!important;z-index:7!important;
 }
 .exam-classroom-stage[data-teacher="door"] .exam-scene-teacher{
-  left:68%!important;bottom:4%!important;width:17%!important;z-index:8!important;
+  left:75%!important;bottom:12.5%!important;width:13%!important;z-index:8!important;
 }
 .exam-classroom-stage[data-teacher="drag"] .exam-scene-teacher{
-  left:67%!important;bottom:4%!important;width:18.5%!important;z-index:8!important;
+  left:69%!important;bottom:12%!important;width:20%!important;z-index:8!important;
 }
-/* Student is anchored directly to the right-hand side of the blackboard. */
-.exam-scene-student{left:58.5%!important;bottom:6.5%!important;width:12.5%!important;z-index:7!important;}
+/* Student is anchored to the right side of the blackboard, not to the floor center. */
+.exam-scene-student{left:64%!important;bottom:14.5%!important;width:10.8%!important;z-index:7!important;}
 .exam-classroom-stage[data-student="write1"] .exam-scene-student,
 .exam-classroom-stage[data-student="write2"] .exam-scene-student{
-  left:58.5%!important;bottom:6.5%!important;width:12.5%!important;
+  left:64%!important;bottom:14.5%!important;width:10.8%!important;
   animation:examBoardWrite .72s steps(2,end) infinite alternate!important;
 }
 .exam-classroom-stage[data-student="think"] .exam-scene-student,
 .exam-classroom-stage[data-student="nervous"] .exam-scene-student,
 .exam-classroom-stage[data-student="sweat"] .exam-scene-student{
-  left:59%!important;bottom:6.5%!important;width:12.5%!important;
+  left:63.5%!important;bottom:13.8%!important;width:10.8%!important;
 }
-.exam-classroom-stage[data-student="leave"] .exam-scene-student{left:78%!important;bottom:5%!important;width:12.5%!important;}
-.exam-classroom-stage[data-student="dragged"] .exam-scene-student{left:74%!important;bottom:5%!important;width:14.5%!important;}
+.exam-classroom-stage[data-student="leave"] .exam-scene-student{left:78%!important;bottom:12.5%!important;width:12%!important;}
+.exam-classroom-stage[data-student="dragged"] .exam-scene-student{left:75%!important;bottom:12%!important;width:15%!important;}
 @keyframes examBoardWrite{from{transform:translate(0,0) rotate(0deg)}to{transform:translate(-2px,-1px) rotate(-1deg)}}
 
-/* Chalk content now lives strictly inside the blackboard area. */
-.exam-board-writing{left:35%!important;top:22%!important;width:31%!important;height:34%!important;z-index:3!important;}
-.exam-board-writing .chalk-a{left:4%!important;top:6%!important}
-.exam-board-writing .chalk-b{left:43%!important;top:40%!important}
-.exam-board-writing .chalk-c{left:22%!important;top:72%!important}
+/* Chalk content stays inside the real blackboard rectangle. */
+.exam-board-writing{left:39.5%!important;top:23.5%!important;width:26%!important;height:27%!important;z-index:3!important;}
+.exam-board-writing .chalk-a{left:6%!important;top:10%!important}
+.exam-board-writing .chalk-b{left:48%!important;top:44%!important}
+.exam-board-writing .chalk-c{left:24%!important;top:76%!important}
 .exam-classroom-stage[data-student="write1"] .chalk-c,
 .exam-classroom-stage[data-student="write2"] .chalk-c{
   opacity:.92!important;
@@ -4231,29 +4238,36 @@ body::after{
   72%,100%{clip-path:inset(0 0 0 0)}
 }
 
-/* Restore and harden the large countdown timer against layout overrides. */
-.fidelity-h7 .exam-timer-panel{min-width:260px!important;overflow:visible!important;}
+/* Bigger, cleaner timer box with no clipping. */
+.fidelity-h7 .exam-timer-panel{
+  min-width:300px!important;max-width:340px!important;width:100%!important;
+  overflow:visible!important;padding:12px!important;justify-content:flex-start!important;align-self:start!important;
+}
 .fidelity-h7 .exam-live-timer{
-  display:block!important;min-height:158px!important;overflow:visible!important;
-  padding:18px 12px 12px!important;
+  display:flex!important;flex-direction:column!important;justify-content:center!important;
+  min-height:220px!important;overflow:visible!important;
+  padding:18px 14px 14px!important;
 }
 .fidelity-h7 .exam-live-timer .timer{
   display:block!important;visibility:visible!important;opacity:1!important;
-  width:100%!important;min-height:1.2em!important;margin:0 auto!important;
+  width:100%!important;min-height:1.15em!important;margin:0 auto!important;
   overflow:visible!important;white-space:nowrap!important;text-align:center!important;
-  font-family:var(--pixel)!important;font-size:clamp(3rem,6.3vw,5.15rem)!important;
-  line-height:1.08!important;letter-spacing:-.075em!important;
+  font-family:var(--pixel)!important;font-size:clamp(3.3rem,5.7vw,5.2rem)!important;
+  line-height:1.05!important;letter-spacing:-.04em!important;
   color:#ff9615!important;text-shadow:5px 5px 0 #7f3100!important;
   font-variant-numeric:tabular-nums;
 }
 .fidelity-h7 .exam-live-timer .timer.over{color:#ff5964!important;text-shadow:5px 5px 0 #64141a!important;}
 .fidelity-h7 .exam-live-timer.is-paused .timer{color:#ffe56d!important;text-shadow:5px 5px 0 #6e5900!important;}
 @media(max-width:900px){
-  .fidelity-h7 .exam-live-timer .timer{font-size:clamp(3rem,14vw,5.15rem)!important;}
+  .exam-live-main{grid-template-columns:1fr!important;}
+  .fidelity-h7 .exam-timer-panel{max-width:none!important;min-width:0!important;}
+  .fidelity-h7 .exam-live-timer .timer{font-size:clamp(3rem,14vw,5rem)!important;}
 }
 @media(max-width:640px){
-  .exam-scene-teacher{left:44%!important;}
-  .exam-scene-student{left:58%!important;}
+  .exam-scene-teacher{left:7%!important;width:15%!important;}
+  .exam-scene-student{left:64%!important;width:12.8%!important;}
+  .exam-board-writing{font-size:.38rem!important;}
 }
 </style>
 
@@ -4268,7 +4282,7 @@ body::after{
   'use strict';
 
   const STORAGE_KEY = 'zkouskomat_zz01_state_v1';
-  const APP_VERSION = 'ZZ-01 / VISUAL v2 / ATTENDANCE';
+  const APP_VERSION = 'ZZ-01 / EXAM SCENE D / ANCHOR FIX';
   const app = document.getElementById('app');
   const toastRoot = document.getElementById('toast-root');
   const modalRoot = document.getElementById('modal-root');
@@ -7029,25 +7043,23 @@ body::after{
       teacherPose='drag'; studentPose='dragged'; phase='overtime'; label='PŘESČAS!';
     }else if(rem<=0){
       teacherPose='door'; studentPose='leave'; phase='timeup'; label='ČAS!';
-    }else if(ratio>.65){
+    }else if(ratio>.72){
       phase='calm'; label='JEŠTĚ JE ČAS';
-      if(cycle<2600){ teacherPose='coffee'; studentPose='write2'; }
-      else if(cycle<4300){ teacherPose='nod'; studentPose='write2'; }
-      else if(cycle<6000){ teacherPose='stand'; studentPose='think'; }
-      else if(cycle<8200){ teacherPose='inspect'; studentPose='write2'; }
-      else { teacherPose='pointer'; studentPose='write2'; }
-    }else if(ratio>.30){
+      if(cycle<3400){ teacherPose='coffee'; studentPose='write1'; }
+      else if(cycle<6200){ teacherPose='nod'; studentPose='write2'; }
+      else { teacherPose='stand'; studentPose='write2'; }
+    }else if(ratio>.42){
       phase='working'; label='UČITEL KONTROLUJE';
-      if(cycle<3600){ teacherPose='inspect'; studentPose='write2'; }
-      else if(cycle<6500){ teacherPose='pointer'; studentPose='think'; }
-      else { teacherPose='stand'; studentPose=(Math.floor(elapsed/750)%2?'write2':'nervous'); }
-    }else if(ratio>.10){
+      if(cycle<2800){ teacherPose='stand'; studentPose='write1'; }
+      else if(cycle<6400){ teacherPose='inspect'; studentPose='write2'; }
+      else { teacherPose='pointer'; studentPose='think'; }
+    }else if(ratio>.18){
       phase='nervous'; label='ČAS BĚŽÍ';
-      teacherPose=cycle<5200?'pointer':'inspect';
-      studentPose=cycle<2400?'write2':cycle<4900?'nervous':'think';
+      teacherPose=cycle<4200?'inspect':'pointer';
+      studentPose=cycle<2600?'write2':cycle<5400?'nervous':'think';
     }else{
       phase='stressed'; label='POSLEDNÍ CHVÍLE!';
-      teacherPose='stand'; studentPose='sweat';
+      teacherPose='pointer'; studentPose='sweat';
     }
 
     const setSrc=(el,src)=>{ if(el.getAttribute('src')!==src) el.setAttribute('src',src); };
