@@ -4018,6 +4018,156 @@ body::after{
 }
 </style>
 
+
+<style>
+/* EXAM SCENE B — fidelity verze podle schválené jednoduché denní retro předlohy */
+.exam-countdown-backdrop{
+  position:fixed;inset:0;z-index:9999;display:grid;place-items:center;
+  background:rgba(19,31,38,.88);backdrop-filter:blur(1px);
+}
+.exam-countdown-card{
+  width:min(720px,94vw);min-height:min(450px,74vh);display:grid;place-items:center;align-content:center;gap:14px;
+  border:6px solid #17130f;background:#f0d59a;
+  box-shadow:inset 0 0 0 5px #e4932d,12px 12px 0 #17130f;
+  image-rendering:pixelated;
+}
+.exam-countdown-kicker,.exam-countdown-sub{
+  font-family:var(--pixel);text-align:center;text-transform:uppercase;color:#2d2a23;letter-spacing:.04em;
+}
+.exam-countdown-kicker{
+  padding:8px 12px;border:3px solid #17130f;background:#fff0c8;
+  box-shadow:4px 4px 0 #17130f;font-size:clamp(.66rem,2vw,.92rem);
+}
+.exam-countdown-sub{font-size:.58rem;color:#5b5042}
+.exam-countdown-value{
+  display:block;max-width:min(72%,560px);max-height:250px;width:auto;height:auto;
+  image-rendering:pixelated;transform:scale(.76);opacity:.35;
+  filter:drop-shadow(7px 7px 0 #17130f);
+}
+.exam-countdown-value.pop{animation:examCountdownPop .62s steps(5,end) both}
+.exam-countdown-value.is-fight{max-width:min(88%,650px);max-height:205px;}
+@keyframes examCountdownPop{0%{transform:scale(.72);opacity:.25}45%{transform:scale(1.08);opacity:1}100%{transform:scale(.98);opacity:1}}
+
+.exam-live-main{
+  grid-template-columns:minmax(410px,1.45fr) minmax(220px,.55fr)!important;
+}
+.exam-classroom-panel{
+  padding:10px!important;min-height:0!important;justify-content:flex-start!important;
+  background:#f4ddb0!important;border-color:#1f1811!important;
+}
+.exam-classroom-stage{
+  position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;
+  border:5px solid #1b1712;background:#e9d2a7;
+  box-shadow:inset 0 0 0 3px #f6ebc9,6px 6px 0 #111;
+  image-rendering:pixelated;
+}
+.exam-classroom-bg{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;image-rendering:pixelated;
+}
+.exam-scene-character{
+  position:absolute;z-index:4;image-rendering:pixelated;transform-origin:50% 100%;
+  pointer-events:none;filter:none;transition:left .34s steps(5,end),bottom .34s steps(5,end),width .22s steps(3,end);
+}
+.exam-scene-teacher{left:10%;bottom:3%;width:24%;}
+.exam-scene-student{left:64%;bottom:4%;width:15.7%;}
+
+.exam-scene-banner{
+  position:absolute;z-index:6;left:10px;top:10px;display:flex;gap:7px;align-items:center;
+  font-family:var(--pixel);font-size:clamp(.44rem,1.35vw,.62rem);text-transform:uppercase;
+}
+.exam-scene-banner span{
+  border:3px solid #18130f;background:#fff0c8;color:#241d16;padding:6px 8px;
+  box-shadow:3px 3px 0 #18130f;
+}
+.exam-scene-clock{
+  position:absolute;z-index:7;right:10px;top:10px;padding:7px 9px;
+  border:3px solid #18130f;background:#e68c27;color:#fff8dc;box-shadow:3px 3px 0 #18130f;
+  font-family:var(--pixel);font-size:clamp(.55rem,1.8vw,.82rem);
+}
+.exam-scene-status{
+  position:absolute;left:10px;bottom:9px;z-index:7;padding:7px 9px;
+  border:3px solid #18130f;background:#fff0c8;color:#241d16;
+  font-family:var(--pixel);font-size:clamp(.42rem,1.3vw,.61rem);box-shadow:3px 3px 0 #18130f;text-transform:uppercase;
+}
+.exam-board-writing{
+  position:absolute;z-index:3;left:52%;top:22%;width:28%;height:33%;pointer-events:none;
+  color:#f6efcf;font-family:var(--pixel);font-size:clamp(.44rem,1.3vw,.72rem);line-height:1.65;
+  transform:rotate(-1deg);opacity:.86;text-shadow:1px 1px 0 rgba(0,0,0,.32);
+}
+.exam-board-writing .chalk-a,.exam-board-writing .chalk-b,.exam-board-writing .chalk-c{
+  position:absolute;transition:opacity .25s steps(2,end);
+}
+.exam-board-writing .chalk-a{left:6%;top:5%}
+.exam-board-writing .chalk-b{left:42%;top:35%}
+.exam-board-writing .chalk-c{left:16%;top:66%}
+.exam-thought-bubble{
+  position:absolute;z-index:8;left:72%;top:10%;display:none;place-items:center;
+  width:42px;height:34px;border:3px solid #18130f;background:#fff7df;color:#18130f;
+  box-shadow:3px 3px 0 #18130f;font-family:var(--pixel);font-size:.9rem;
+}
+.exam-classroom-stage[data-student="think"] .exam-thought-bubble{display:grid;animation:examThought .9s steps(2,end) infinite alternate;}
+
+.exam-classroom-stage[data-teacher="coffee"] .exam-scene-teacher{left:9%;bottom:2%;animation:examSip 2.4s steps(3,end) infinite;}
+.exam-classroom-stage[data-teacher="nod"] .exam-scene-teacher{left:9%;bottom:2%;animation:examNod .78s steps(2,end) infinite alternate;}
+.exam-classroom-stage[data-teacher="stand"] .exam-scene-teacher{left:20%;bottom:3%;width:22%;}
+.exam-classroom-stage[data-teacher="inspect"] .exam-scene-teacher{left:34%;bottom:3%;width:22%;}
+.exam-classroom-stage[data-teacher="pointer"] .exam-scene-teacher{left:38%;bottom:3%;width:22%;}
+.exam-classroom-stage[data-teacher="door"] .exam-scene-teacher{left:53%;bottom:3%;width:22%;}
+.exam-classroom-stage[data-teacher="drag"] .exam-scene-teacher{left:55%;bottom:3%;width:24%;animation:examDragTeacher 1.05s steps(5,end) infinite alternate;}
+
+.exam-classroom-stage[data-student="write1"] .exam-scene-student,
+.exam-classroom-stage[data-student="write2"] .exam-scene-student{animation:examWrite .62s steps(2,end) infinite alternate;}
+.exam-classroom-stage[data-student="nervous"] .exam-scene-student{animation:examNervous .27s steps(2,end) infinite;}
+.exam-classroom-stage[data-student="sweat"] .exam-scene-student{animation:examNervous .15s steps(2,end) infinite;}
+.exam-classroom-stage[data-student="leave"] .exam-scene-student{left:79%;animation:examLeave 1.25s steps(6,end) infinite alternate;}
+.exam-classroom-stage[data-student="dragged"] .exam-scene-student{left:70%;width:18%;animation:examDragged 1.05s steps(5,end) infinite alternate;}
+
+.exam-classroom-stage[data-student="write2"] .chalk-b,
+.exam-classroom-stage[data-student="think"] .chalk-c{opacity:.30}
+.exam-classroom-stage[data-student="nervous"] .chalk-c,
+.exam-classroom-stage[data-student="sweat"] .chalk-c{opacity:.08}
+
+.exam-classroom-stage[data-phase="working"] .exam-scene-banner span{background:#f2c965;}
+.exam-classroom-stage[data-phase="nervous"] .exam-scene-banner span{background:#eaa03d;}
+.exam-classroom-stage[data-phase="stressed"] .exam-scene-banner span,
+.exam-classroom-stage[data-phase="timeup"] .exam-scene-banner span,
+.exam-classroom-stage[data-phase="overtime"] .exam-scene-banner span{background:#d76439;color:#fff7dd;}
+.exam-classroom-stage[data-phase="stressed"] .exam-scene-clock,
+.exam-classroom-stage[data-phase="timeup"] .exam-scene-clock,
+.exam-classroom-stage[data-phase="overtime"] .exam-scene-clock{background:#bd3e31;}
+.exam-classroom-stage[data-phase="overtime"]{animation:examOvertimeShake .34s steps(2,end) infinite;}
+
+.exam-encourage{
+  margin-top:11px!important;border:3px solid #18130f!important;background:#fff0c8!important;color:#2b241d!important;
+  box-shadow:4px 4px 0 #18130f!important;font-family:var(--pixel);font-style:normal!important;font-size:.58rem;
+}
+
+@keyframes examSip{0%,62%,100%{transform:translateY(0)}70%,84%{transform:translateY(-3px) rotate(-1deg)}}
+@keyframes examNod{from{transform:rotate(-1deg)}to{transform:rotate(2deg)}}
+@keyframes examWrite{from{transform:translateY(0)}to{transform:translateY(-2px)}}
+@keyframes examNervous{0%{transform:translateX(-2px)}100%{transform:translateX(2px)}}
+@keyframes examThought{from{transform:translateY(0)}to{transform:translateY(-3px)}}
+@keyframes examLeave{from{transform:translateX(0)}to{transform:translateX(9px)}}
+@keyframes examDragTeacher{from{transform:translateX(-2px)}to{transform:translateX(4px)}}
+@keyframes examDragged{from{transform:translate(0,0) rotate(-1deg)}to{transform:translate(7px,-2px) rotate(3deg)}}
+@keyframes examOvertimeShake{0%{transform:translateX(-1px)}100%{transform:translateX(1px)}}
+
+@media(max-width:900px){
+  .exam-live-main{grid-template-columns:1fr!important;}
+  .exam-classroom-panel{order:1}.exam-timer-panel{order:2}
+}
+@media(max-width:640px){
+  .exam-countdown-card{min-height:58vh}
+  .exam-scene-banner{left:6px;top:6px}
+  .exam-scene-clock{right:6px;top:6px}
+  .exam-scene-status{left:6px;bottom:6px}
+  .exam-board-writing{font-size:.38rem}
+}
+@media(prefers-reduced-motion:reduce){
+  .exam-countdown-value,.exam-scene-character,.exam-thought-bubble,.exam-classroom-stage{animation:none!important;transition:none!important;}
+}
+</style>
+
 </head>
 <body>
   <div class="crt-overlay" aria-hidden="true"></div>
@@ -4317,6 +4467,8 @@ body::after{
     wheelTick:'assets/audio/sfx-wheel-tick.wav',
     wheelLand:'assets/audio/sfx-wheel-land.wav',
     trophy:'assets/audio/sfx-trophy-fanfare.wav',
+    countdownHit:'assets/audio/sfx-countdown-hit.wav',
+    fightHit:'assets/audio/sfx-fight-hit.wav',
     grade1:'assets/audio/grade-1-juchu.mp3',
     grade2:'assets/audio/grade-2-juchu.mp3',
     grade3:'assets/audio/grade-3-ok.mp3',
@@ -6700,6 +6852,124 @@ body::after{
     app.innerHTML=layout(body,'Zkoušení');
   }
 
+  let examCountdownRunning=false;
+  const examCountdownAssets={
+    '3':'assets/ui/exam-countdown-3.png',
+    '2':'assets/ui/exam-countdown-2.png',
+    '1':'assets/ui/exam-countdown-1.png',
+    'FIGHT!':'assets/ui/exam-countdown-fight.png'
+  };
+  function startExamCountdown(topic){
+    if(examCountdownRunning)return;
+    examCountdownRunning=true;
+    const steps=[
+      {label:'3',ms:650,sfx:'countdownHit'},
+      {label:'2',ms:650,sfx:'countdownHit'},
+      {label:'1',ms:650,sfx:'countdownHit'},
+      {label:'FIGHT!',ms:900,sfx:'fightHit'}
+    ];
+    modalRoot.innerHTML=`<div class="exam-countdown-backdrop" aria-live="assertive">
+      <div class="exam-countdown-card">
+        <div class="exam-countdown-kicker">PŘIPRAVIT KE ZKOUŠENÍ</div>
+        <img id="exam-countdown-value" class="exam-countdown-value" src="${examCountdownAssets['3']}" alt="3">
+        <div class="exam-countdown-sub">ZZ-01 · TEACHER MODE</div>
+      </div>
+    </div>`;
+    let i=0;
+    const value=document.getElementById('exam-countdown-value');
+    const runStep=()=>{
+      const step=steps[i];
+      if(!step){
+        modalRoot.innerHTML='';
+        examCountdownRunning=false;
+        beginExam(topic);
+        return;
+      }
+      if(value){
+        value.src=examCountdownAssets[step.label];
+        value.alt=step.label;
+        value.classList.toggle('is-fight',step.label==='FIGHT!');
+        value.classList.remove('pop');
+        void value.offsetWidth;
+        value.classList.add('pop');
+      }
+      playSfx(step.sfx);
+      i+=1;
+      setTimeout(runStep,step.ms);
+    };
+    runStep();
+  }
+
+  const examSceneAssets={
+    teacher:{
+      coffee:'assets/ui/exam-fidelity-teacher-coffee.png',
+      nod:'assets/ui/exam-fidelity-teacher-nod.png',
+      stand:'assets/ui/exam-fidelity-teacher-stand.png',
+      pointer:'assets/ui/exam-fidelity-teacher-pointer.png',
+      inspect:'assets/ui/exam-fidelity-teacher-inspect.png',
+      door:'assets/ui/exam-fidelity-teacher-door.png',
+      drag:'assets/ui/exam-fidelity-teacher-drag.png'
+    },
+    student:{
+      write1:'assets/ui/exam-fidelity-student-write1.png',
+      write2:'assets/ui/exam-fidelity-student-write2.png',
+      think:'assets/ui/exam-fidelity-student-think.png',
+      nervous:'assets/ui/exam-fidelity-student-nervous.png',
+      sweat:'assets/ui/exam-fidelity-student-sweat.png',
+      leave:'assets/ui/exam-fidelity-student-leave.png',
+      dragged:'assets/ui/exam-fidelity-student-dragged.png'
+    }
+  };
+
+  function updateExamClassroomScene(rem,paused=false){
+    if(!state.activeExam)return;
+    const stage=document.getElementById('exam-classroom-stage');
+    const teacher=document.getElementById('exam-scene-teacher');
+    const student=document.getElementById('exam-scene-student');
+    const status=document.getElementById('exam-scene-status');
+    if(!stage||!teacher||!student)return;
+    const total=examTotalMs();
+    const ratio=Math.max(0,Math.min(1,rem/total));
+    const elapsed=Math.max(0,now()-Number(state.activeExam.startedAt||now()));
+    const cycle=elapsed%11000;
+    let teacherPose='coffee',studentPose='write1',phase='calm',label='JEŠTĚ JE ČAS';
+
+    if(paused){
+      teacherPose='coffee'; studentPose='think'; phase='paused'; label='PAUZA';
+    }else if(rem<=-10000){
+      teacherPose='drag'; studentPose='dragged'; phase='overtime'; label='PŘESČAS!';
+    }else if(rem<=0){
+      teacherPose='door'; studentPose='leave'; phase='timeup'; label='ČAS!';
+    }else if(ratio>.65){
+      phase='calm'; label='JEŠTĚ JE ČAS';
+      if(cycle<2600){ teacherPose='coffee'; studentPose=(Math.floor(elapsed/650)%2?'write1':'write2'); }
+      else if(cycle<4300){ teacherPose='nod'; studentPose='write2'; }
+      else if(cycle<6000){ teacherPose='stand'; studentPose='think'; }
+      else if(cycle<8200){ teacherPose='inspect'; studentPose=(Math.floor(elapsed/700)%2?'write1':'write2'); }
+      else { teacherPose='pointer'; studentPose='write1'; }
+    }else if(ratio>.30){
+      phase='working'; label='UČITEL KONTROLUJE';
+      if(cycle<3600){ teacherPose='inspect'; studentPose='write1'; }
+      else if(cycle<6500){ teacherPose='pointer'; studentPose='think'; }
+      else { teacherPose='stand'; studentPose=(Math.floor(elapsed/750)%2?'write2':'nervous'); }
+    }else if(ratio>.10){
+      phase='nervous'; label='ČAS BĚŽÍ';
+      teacherPose=cycle<5200?'pointer':'inspect';
+      studentPose=cycle<2400?'write2':cycle<4900?'nervous':'think';
+    }else{
+      phase='stressed'; label='POSLEDNÍ CHVÍLE!';
+      teacherPose='stand'; studentPose='sweat';
+    }
+
+    const setSrc=(el,src)=>{ if(el.getAttribute('src')!==src) el.setAttribute('src',src); };
+    setSrc(teacher,examSceneAssets.teacher[teacherPose]);
+    setSrc(student,examSceneAssets.student[studentPose]);
+    stage.dataset.phase=phase;
+    stage.dataset.teacher=teacherPose;
+    stage.dataset.student=studentPose;
+    if(status)status.textContent=label;
+  }
+
   function beginExam(topic){
     const f=state.examFlow, s=studentById(f.selectedStudentId), c=classById(f.classId);
     const startedAt=now();
@@ -6730,6 +7000,8 @@ body::after{
       const ratio=Math.max(0,Math.min(1,rem/examTotalMs()));
       const paused=state.activeExam.paused===true;
       el.textContent=formatDuration(rem);
+      const sceneClock=document.getElementById('exam-scene-clock');
+      if(sceneClock)sceneClock.textContent=formatDuration(rem);
       el.classList.toggle('over',rem<=0);
       el.classList.toggle('paused',paused);
       const progress=document.getElementById('exam-time-progress');
@@ -6743,13 +7015,7 @@ body::after{
       if(quote){
         quote.textContent=paused?'„Zkoušení je pozastavené.“':rem<=0?'„Čas vypršel – pokračujte podle potřeby.“':ratio<.2?'„Už jen kousek.“':ratio<.55?'„Klid, to dáš!“':'„Jdeme na to!“';
       }
-      const avatar=document.getElementById('exam-student-avatar');
-      if(avatar){
-        const avatarMood=paused?'calm':rem<=0||ratio<.2?'stressed':ratio<.55?'nervous':'calm';
-        avatar.classList.remove('calm','nervous','stressed');
-        avatar.classList.add(avatarMood);
-        avatar.classList.toggle('is-paused',paused);
-      }
+      updateExamClassroomScene(rem,paused);
       if(rem<=0 && !paused && !state.activeExam.notified){
         state.activeExam.notified=true; saveState();
         toast('Čas zkoušení vypršel.','warn');
@@ -6798,20 +7064,20 @@ body::after{
         </div>
 
         <div class="exam-live-main">
-          <section class="exam-student-panel">
-            <div id="exam-student-avatar" class="h7-student-actor ${avatarMood} ${paused?'is-paused':''}" aria-hidden="true">
-              <span class="h7-student-hair"></span>
-              <span class="h7-student-head"></span>
-              <span class="h7-student-body"></span>
-              <span class="h7-student-arm left"></span>
-              <span class="h7-student-arm right"></span>
-              <span class="h7-student-leg left"></span>
-              <span class="h7-student-leg right"></span>
-              <span class="h7-student-shoe left"></span>
-              <span class="h7-student-shoe right"></span>
-              <span class="h7-student-mouth"></span>
-              <span class="h7-student-sweat drop-1"></span>
-              <span class="h7-student-sweat drop-2"></span>
+          <section class="exam-student-panel exam-classroom-panel">
+            <div id="exam-classroom-stage" class="exam-classroom-stage" data-phase="calm" data-teacher="coffee" data-student="write1">
+              <img class="exam-classroom-bg" src="assets/ui/exam-classroom-fidelity.png" alt="Retro pixelová učebna během zkoušení">
+              <div class="exam-scene-banner" aria-hidden="true"><span>TEACHER MODE</span></div>
+              <div id="exam-scene-clock" class="exam-scene-clock">${formatDuration(rem)}</div>
+              <div class="exam-board-writing" aria-hidden="true">
+                <span class="chalk-a">x + 4 = 9</span>
+                <span class="chalk-b">F = m · a</span>
+                <span class="chalk-c">a = Δv / Δt</span>
+              </div>
+              <img id="exam-scene-teacher" class="exam-scene-character exam-scene-teacher" src="assets/ui/exam-fidelity-teacher-coffee.png" alt="Učitel">
+              <img id="exam-scene-student" class="exam-scene-character exam-scene-student" src="assets/ui/exam-fidelity-student-write1.png" alt="Žák u tabule">
+              <div class="exam-thought-bubble" aria-hidden="true">?</div>
+              <div id="exam-scene-status" class="exam-scene-status">JEŠTĚ JE ČAS</div>
             </div>
             <div id="exam-encourage" class="exam-encourage">„${esc(mood)}“</div>
           </section>
@@ -6835,6 +7101,7 @@ body::after{
         <div class="arcade-footer"><span>Dobrovolný doplněk výuky.</span><span>ZZ-01</span></div>
       </section>`;
     app.innerHTML=layout(body,'Zkoušení');
+    updateExamClassroomScene(rem,paused);
     startTimerLoop();
   }
 
@@ -8744,7 +9011,7 @@ body::after{
     else if(action==='confirm-topic'){
       const topic=String(state.examFlow.topic||'').trim();
       if(!topic)return toast('Nejdřív vyber téma.','warn');
-      beginExam(topic);
+      startExamCountdown(topic);
     }
     else if(action==='spin-wheel'){
       const items=questionSetForSubject(state.examFlow.subject,false)?.items||[];

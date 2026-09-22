@@ -1,3 +1,12 @@
+# Exam Scene B — Fidelity classroom
+
+- nahrazen původní zjednodušený vizuál zkoušení novou denní retro pixel-art scénou podle schválené předlohy
+- nové průhledné sprity učitele: káva, přikyvování, vstávání, kontrola tabule, ukazovátko, konec času a přesčas
+- nové průhledné sprity žáka: psaní, přemýšlení, nervozita, pocení, odchod a přesčas
+- countdown 3–2–1–FIGHT nyní používá přímo vygenerovanou pixelovou grafiku, ne jen text
+- chování postav je dál svázané se zbývajícím časem zkoušení
+- zachována hudba, systémové zvuky, timer, pauza i známkování z předchozí verze
+
 # Changelog
 
 ## 2026-09-21 — GitHub baseline
@@ -315,4 +324,13 @@
 - samostatné Kolo štěstí z hlavního menu dostalo vlastní Casino / Circus hudební režim
 - zachovány stávající režimy hlavního menu, přípravy zkoušení, časovaného zkoušení a Scoringu
 - globální přepínač hudby v horní liště ovládá i oba nové podkresy
+
+## 2026-09-22 — Exam Scene A: countdown a animovaná učebna
+- před spuštěním časovaného zkoušení se zobrazuje retro odpočet 3–2–1–FIGHT
+- přidána denní jednoduchá pixelová učebna se samostatnými sprity učitele a žáka
+- učitel při dostatku času popíjí kávu, přikyvuje a občas vstane zkontrolovat tabuli ukazovátkem
+- žák střídá psaní a přemýšlení, s ubývajícím časem je nervóznější a v závěru se potí
+- při vypršení času učitel ukáže směrem ke dveřím a žák odchází
+- po delším překročení limitu se spustí komická přesčasová animace odvedení žáka ke dveřím
+- přidány dva nové tlumené úderové zvuky pro countdown a FIGHT; respektují globální vypínač systémových zvuků
 
