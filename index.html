@@ -4850,6 +4850,106 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 .exam-scene-frame{object-fit:contain!important}
 @media(prefers-reduced-motion:reduce){.exam-classroom-stage{animation:none!important}}
 </style>
+
+<style>
+/* ZZ-01 AVATAR PACK A1 — 20 retro 8bit teacher avatars */
+.teacher-avatar-img{
+  image-rendering:pixelated;
+  image-rendering:crisp-edges;
+}
+.avatar-select-panel{
+  margin-top:14px;
+  border:3px solid #126c80;
+  background:#061823;
+  box-shadow:4px 4px 0 #02070d;
+}
+.avatar-select-panel>summary{
+  min-height:62px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:8px 12px;
+  cursor:pointer;
+  list-style:none;
+  color:#fff4dc;
+  background:#082331;
+  font-family:var(--pixel);
+  font-size:.76rem;
+  user-select:none;
+}
+.avatar-select-panel>summary::-webkit-details-marker{display:none}
+.avatar-select-panel>summary::before{
+  content:"▶";
+  color:#ff9b15;
+  margin-right:2px;
+}
+.avatar-select-panel[open]>summary::before{content:"▼"}
+.avatar-select-panel[open]>summary{
+  border-bottom:3px solid #126c80;
+  background:#0a2a39;
+}
+.avatar-select-title{flex:1}
+.avatar-select-current{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+.avatar-select-body{padding:12px}
+.avatar-group-title{
+  margin:4px 0 8px;
+  color:#20e7eb;
+  font-family:var(--pixel);
+  font-size:.72rem;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+}
+.avatar-group-title:not(:first-child){margin-top:16px}
+.settings-screen .avatar-select-panel .avatar-picker{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(64px,1fr));
+  gap:8px;
+  margin-top:0;
+}
+.settings-screen .avatar-select-panel .avatar-preset{
+  min-height:94px;
+  padding:7px 5px;
+  border:2px solid #126c80;
+  background:#071820;
+}
+.settings-screen .avatar-select-panel .avatar-preset:hover{
+  filter:brightness(1.08);
+}
+.settings-screen .avatar-select-panel .avatar-preset.active{
+  border-color:#ff9b15;
+  box-shadow:inset 0 0 0 2px #7f4b09;
+  background:#39240d;
+}
+.settings-screen .avatar-select-panel .avatar-preset .teacher-avatar-wrap{
+  width:52px;
+  height:52px;
+  border-color:#1adbe2;
+}
+.settings-screen .avatar-select-panel .avatar-preset span:last-child{
+  font-size:.62rem;
+}
+@media(max-width:700px){
+  .settings-screen .avatar-select-panel .avatar-picker{
+    grid-template-columns:repeat(4,minmax(60px,1fr));
+  }
+}
+@media(max-width:480px){
+  .settings-screen .avatar-select-panel .avatar-picker{
+    grid-template-columns:repeat(3,minmax(60px,1fr));
+  }
+}
+</style>
+
+<style>
+/* ZZ-01 CLASS SHARING PATCH — school classes + teacher assignments */
+.h8-school-action{position:absolute;left:0;top:10px;min-height:58px;padding:8px 16px;border:4px solid #dffefd;background:#083442;color:#20eef2;font-family:var(--pixel);font-size:.72rem;box-shadow:inset 0 0 0 3px #0b7184,5px 5px 0 #02070d;clip-path:polygon(9px 0,calc(100% - 9px) 0,100% 9px,100% calc(100% - 9px),calc(100% - 9px) 100%,9px 100%,0 calc(100% - 9px),0 9px)}
+.school-class-list{display:grid;gap:9px;margin-top:14px}.school-class-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:11px 12px;border:2px solid #145e70;background:#061821}.school-class-main{min-width:0}.school-class-main strong{display:block;color:#fff4dc;font-family:var(--pixel);font-size:.78rem}.school-class-main span,.school-class-main small{display:block;margin-top:5px;color:#8fb1b8;font-size:.68rem}.school-class-used{padding:8px 10px;border:2px solid #1b9d70;color:#7ff0b9;font-family:var(--pixel);font-size:.62rem;background:#09251d}
+@media(max-width:760px){.h8-head{padding-bottom:154px!important}.h8-school-action{top:auto;bottom:82px;left:0;right:0;width:100%}.h8-head-action{bottom:12px}}@media(max-width:540px){.school-class-row{grid-template-columns:1fr}.school-class-row .btn,.school-class-used{width:100%;text-align:center}}
+</style>
 </head>
 <body>
   <div class="crt-overlay" aria-hidden="true"></div>
@@ -5116,12 +5216,15 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       },
       classes:[{
         id:classId,displayName:'2.A',schoolYear:'2026/2027',previousClassId:null,
-        studentIds:students.map(s=>s.id),subjects:['Technické kreslení','Strojírenská technologie']
+        createdByTeacherId:'u_me',teacherIds:['u_me'],
+        studentIds:students.map(s=>s.id),
+        teacherSubjects:{u_me:['Technické kreslení','Strojírenská technologie']},
+        subjects:['Technické kreslení','Strojírenská technologie']
       }],
       students,
       rules:defaultRules(),
       questionSets:[{
-        id:'qs_1',subject:'Technické kreslení',name:'Témata ke zkoušení',items:['Tolerance','Závity','Drsnost povrchu','Kótování','Řezy a průřezy']
+        id:'qs_1',teacherId:'u_me',subject:'Technické kreslení',name:'Témata ke zkoušení',items:['Tolerance','Závity','Drsnost povrchu','Kótování','Řezy a průřezy']
       }],
       history:[],
       settings:{timerMinutes:5,protectionHours:2,lockersEnabled:true,lockerProbability:25,lockerItems:defaultLockerItems(),notifications:false,musicEnabled:true,sfxEnabled:true},
@@ -5154,7 +5257,17 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         settings:{...base.settings,...parsedSettings,lockerItems:Array.isArray(parsedSettings.lockerItems)?parsedSettings.lockerItems:defaultLockerItems()},
         gamification:{...bg,...pg,season:{...bg.season,...(pg.season||{})},archivedSeasons:Array.isArray(pg.archivedSeasons)?pg.archivedSeasons:[],events:Array.isArray(pg.events)?pg.events:[],teacherAwards:pg.teacherAwards||{},trophySchemaVersion:Number(pg.trophySchemaVersion||0),teacherTrophies:pg.teacherTrophies||{},bossPointLimit:Math.max(1,Number(pg.bossPointLimit??bg.bossPointLimit)||5),bossAdjustments:Array.isArray(pg.bossAdjustments)?pg.bossAdjustments:[],challenges:Array.isArray(pg.challenges)?pg.challenges:bg.challenges},
         schoolDirectory:parsed.schoolDirectory||base.schoolDirectory,schoolArchives:parsed.schoolArchives||{},ui:{...base.ui,...(parsed.ui||{})},online:navigator.onLine,splashSeen:false};
-      merged.classes=(merged.classes||[]).map(c=>({...c,studentIds:Array.isArray(c.studentIds)?c.studentIds:[],subjects:Array.isArray(c.subjects)?c.subjects:[]}));
+      const currentTeacherId=merged.user?.id||'u_me';
+      merged.classes=(merged.classes||[]).map(c=>{
+        const legacySubjects=Array.isArray(c.subjects)?[...c.subjects]:[];
+        const teacherIds=Array.isArray(c.teacherIds)&&c.teacherIds.length?[...new Set(c.teacherIds.filter(Boolean))]:[currentTeacherId];
+        const teacherSubjects=(c.teacherSubjects&&typeof c.teacherSubjects==='object'&&!Array.isArray(c.teacherSubjects))
+          ?Object.fromEntries(Object.entries(c.teacherSubjects).map(([teacherId,subjects])=>[teacherId,Array.isArray(subjects)?[...new Set(subjects.filter(Boolean))]:[]]))
+          :{};
+        if(teacherIds.includes(currentTeacherId) && !Array.isArray(teacherSubjects[currentTeacherId])) teacherSubjects[currentTeacherId]=legacySubjects;
+        const union=[...new Set(Object.values(teacherSubjects).flatMap(subjects=>Array.isArray(subjects)?subjects:[]).filter(Boolean))];
+        return {...c,createdByTeacherId:c.createdByTeacherId||teacherIds[0]||currentTeacherId,teacherIds,teacherSubjects,studentIds:Array.isArray(c.studentIds)?c.studentIds:[],subjects:union.length?union:legacySubjects};
+      });
       merged.students=(merged.students||[]).map(s=>({...s,lockerPointAdjust:Number(s.lockerPointAdjust||0)}));
       if(merged.school && Array.isArray(merged.school.teachers)){
         merged.school.teachers=merged.school.teachers.map(t=>({
@@ -5163,7 +5276,9 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
           accountRef:t.accountRef||((t.email||'').trim().toLowerCase()||null)
         }));
       }
-      merged.questionSets=Array.isArray(merged.questionSets)?merged.questionSets:[];
+      merged.questionSets=Array.isArray(merged.questionSets)
+        ?merged.questionSets.map(q=>({...q,teacherId:q.teacherId||currentTeacherId}))
+        :[];
       const ps=parsed.staffroom||{};
       merged.staffroom={
         messages:Array.isArray(ps.messages)?ps.messages:[],
@@ -5368,6 +5483,15 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 
   function studentById(id){ return state.students.find(s=>s.id===id); }
   function classById(id){ return state.classes.find(c=>c.id===id); }
+  function currentTeacherId(){ return state.user?.id||'u_me'; }
+  function teacherNameById(id){ const t=(state.school?.teachers||[]).find(x=>x.id===id); return t?.nickname||t?.name||'Učitel'; }
+  function classUsedByTeacher(c,teacherId=currentTeacherId()){ return !!c&&Array.isArray(c.teacherIds)&&c.teacherIds.includes(teacherId); }
+  function classesForCurrentTeacher(){ const teacherId=currentTeacherId(); return state.classes.filter(c=>classUsedByTeacher(c,teacherId)); }
+  function classSubjectsForTeacher(c,teacherId=currentTeacherId()){ if(!c)return[]; if(!c.teacherSubjects||typeof c.teacherSubjects!=='object'||Array.isArray(c.teacherSubjects))c.teacherSubjects={}; if(!Array.isArray(c.teacherSubjects[teacherId]))c.teacherSubjects[teacherId]=[]; return c.teacherSubjects[teacherId]; }
+  function syncClassSubjectUnion(c){ if(!c)return[]; const union=[...new Set(Object.values(c.teacherSubjects||{}).flatMap(subjects=>Array.isArray(subjects)?subjects:[]).filter(Boolean))]; c.subjects=union; return union; }
+  function setClassSubjectsForTeacher(c,subjects,teacherId=currentTeacherId()){ if(!c)return[]; if(!c.teacherSubjects||typeof c.teacherSubjects!=='object'||Array.isArray(c.teacherSubjects))c.teacherSubjects={}; c.teacherSubjects[teacherId]=[...new Set((subjects||[]).map(x=>String(x||'').trim()).filter(Boolean))]; if(!Array.isArray(c.teacherIds))c.teacherIds=[]; if(!c.teacherIds.includes(teacherId))c.teacherIds.push(teacherId); syncClassSubjectUnion(c); return c.teacherSubjects[teacherId]; }
+  function addSchoolClassToCurrentTeacher(classId){ const c=classById(classId); if(!c)return false; const teacherId=currentTeacherId(); if(!Array.isArray(c.teacherIds))c.teacherIds=[]; if(c.teacherIds.includes(teacherId))return false; c.teacherIds.push(teacherId); if(!c.teacherSubjects||typeof c.teacherSubjects!=='object'||Array.isArray(c.teacherSubjects))c.teacherSubjects={}; if(!Array.isArray(c.teacherSubjects[teacherId]))c.teacherSubjects[teacherId]=[]; syncClassSubjectUnion(c); return true; }
+  function myClassesForStudent(id){ return classesForCurrentTeacher().filter(c=>(c.studentIds||[]).includes(id)); }
   function ruleById(id){ return state.rules.find(r=>r.id===id); }
   function studentsForClass(classId){ const c=classById(classId); return c ? c.studentIds.map(studentById).filter(Boolean) : []; }
   function activeRules(){ return state.rules.filter(r=>r.active); }
@@ -5396,7 +5520,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     if(!me) return;
     me.examsCompleted=state.history.filter(h=>h.teacherId===state.user.id && h.completed).length;
     me.passesUsed=state.history.filter(h=>h.teacherId===state.user.id && h.passUsed).length;
-    me.studentCount=new Set(state.classes.flatMap(c=>c.studentIds)).size;
+    me.studentCount=new Set(classesForCurrentTeacher().flatMap(c=>c.studentIds||[])).size;
     me.lockerEnabledRate=state.settings.lockersEnabled?100:0;
     me.lockerAppearances=state.history.filter(h=>h.teacherId===state.user.id && h.lockerAppeared).length;
   }
@@ -6055,7 +6179,9 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     saveState();
   }
 
-  const avatarPresets=[
+  // Nová sada obrázkových avatarů. Staré px:* avatary ponecháváme
+  // pouze kvůli kompatibilitě s dříve uloženými profily.
+  const legacyAvatarPresets=[
     {id:'px:cyan',label:'Tyrkysový',skin:'#e8b58d',hair:'#28231f',shirt:'#26c6d1',bg:'#0b2730'},
     {id:'px:orange',label:'Oranžový',skin:'#efbc8e',hair:'#5a321c',shirt:'#e9812f',bg:'#321c10'},
     {id:'px:green',label:'Zelený',skin:'#d9aa82',hair:'#202724',shirt:'#65b97c',bg:'#10291a'},
@@ -6064,8 +6190,33 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     {id:'px:gold',label:'Zlatý',skin:'#ddb085',hair:'#45311c',shirt:'#d7a54b',bg:'#2d2411'}
   ];
 
+  const avatarPresets=[
+    {id:'av:f01',label:'Žena 1',gender:'f',src:'assets/avatars/teacher_f01.png'},
+    {id:'av:f02',label:'Žena 2',gender:'f',src:'assets/avatars/teacher_f02.png'},
+    {id:'av:f03',label:'Žena 3',gender:'f',src:'assets/avatars/teacher_f03.png'},
+    {id:'av:f04',label:'Žena 4',gender:'f',src:'assets/avatars/teacher_f04.png'},
+    {id:'av:f05',label:'Žena 5',gender:'f',src:'assets/avatars/teacher_f05.png'},
+    {id:'av:f06',label:'Žena 6',gender:'f',src:'assets/avatars/teacher_f06.png'},
+    {id:'av:f07',label:'Žena 7',gender:'f',src:'assets/avatars/teacher_f07.png'},
+    {id:'av:f08',label:'Žena 8',gender:'f',src:'assets/avatars/teacher_f08.png'},
+    {id:'av:f09',label:'Žena 9',gender:'f',src:'assets/avatars/teacher_f09.png'},
+    {id:'av:f10',label:'Žena 10',gender:'f',src:'assets/avatars/teacher_f10.png'},
+    {id:'av:m01',label:'Muž 1',gender:'m',src:'assets/avatars/teacher_m01.png'},
+    {id:'av:m02',label:'Muž 2',gender:'m',src:'assets/avatars/teacher_m02.png'},
+    {id:'av:m03',label:'Muž 3',gender:'m',src:'assets/avatars/teacher_m03.png'},
+    {id:'av:m04',label:'Muž 4',gender:'m',src:'assets/avatars/teacher_m04.png'},
+    {id:'av:m05',label:'Muž 5',gender:'m',src:'assets/avatars/teacher_m05.png'},
+    {id:'av:m06',label:'Muž 6',gender:'m',src:'assets/avatars/teacher_m06.png'},
+    {id:'av:m07',label:'Muž 7',gender:'m',src:'assets/avatars/teacher_m07.png'},
+    {id:'av:m08',label:'Muž 8',gender:'m',src:'assets/avatars/teacher_m08.png'},
+    {id:'av:m09',label:'Muž 9',gender:'m',src:'assets/avatars/teacher_m09.png'},
+    {id:'av:m10',label:'Muž 10',gender:'m',src:'assets/avatars/teacher_m10.png'}
+  ];
+
+  const allAvatarPresets=[...avatarPresets,...legacyAvatarPresets];
+
   function avatarPreset(value){
-    return avatarPresets.find(a=>a.id===value)||avatarPresets[0];
+    return allAvatarPresets.find(a=>a.id===value)||avatarPresets[0];
   }
 
   function avatarMarkup(value,size='md'){
@@ -6073,6 +6224,10 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     const cls=`teacher-avatar-wrap avatar-${size}`;
     if(v.startsWith('data:image/')){
       return `<span class="${cls}"><img class="teacher-avatar-img" src="${v}" alt="Avatar učitele"></span>`;
+    }
+    if(v.startsWith('av:')){
+      const p=avatarPreset(v);
+      return `<span class="${cls}" title="${esc(p.label)}"><img class="teacher-avatar-img" src="${p.src}" alt="${esc(p.label)}"></span>`;
     }
     if(v.startsWith('px:')){
       const p=avatarPreset(v);
@@ -6989,47 +7144,17 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   }
 
   function renderClasses(){
-    const totalStudents=new Set(state.classes.flatMap(c=>c.studentIds||[])).size;
-    const totalSubjects=new Set(state.classes.flatMap(c=>c.subjects||[])).size;
-    const cards=state.classes.map(c=>{
-      const subjects=(c.subjects||[]);
+    const myClasses=classesForCurrentTeacher();
+    const totalStudents=new Set(myClasses.flatMap(c=>c.studentIds||[])).size;
+    const totalSubjects=new Set(myClasses.flatMap(c=>classSubjectsForTeacher(c))).size;
+    const cards=myClasses.map(c=>{
+      const subjects=classSubjectsForTeacher(c);
       const chips=subjects.slice(0,3).map(s=>`<span class="h8-subject-chip">${esc(s)}</span>`).join('');
       const more=subjects.length>3?`<span class="h8-subject-chip">+${subjects.length-3}</span>`:'';
-      return `<article class="h8-class-card">
-        <div class="h8-class-card-main">
-          <div class="h8-class-icon" aria-hidden="true"></div>
-          <div>
-            <div class="h8-class-name">${esc(c.displayName)}</div>
-            <div class="h8-class-year">ŠKOLNÍ ROK ${esc(c.schoolYear)}</div>
-            <div class="h8-class-meta">${c.studentIds.length} ${c.studentIds.length===1?'žák':'žáků'} · ${subjects.length} ${subjects.length===1?'předmět':'předmětů'}</div>
-            ${subjects.length?`<div class="h8-subject-chips">${chips}${more}</div>`:'<div class="h8-no-subject">Bez přiřazeného předmětu</div>'}
-          </div>
-        </div>
-        <button type="button" class="h8-open-class" data-action="open-class" data-id="${c.id}">Otevřít třídu ▶</button>
-      </article>`;
+      const teacherCount=(c.teacherIds||[]).length;
+      return `<article class="h8-class-card"><div class="h8-class-card-main"><div class="h8-class-icon" aria-hidden="true"></div><div><div class="h8-class-name">${esc(c.displayName)}</div><div class="h8-class-year">ŠKOLNÍ ROK ${esc(c.schoolYear)}</div><div class="h8-class-meta">${c.studentIds.length} ${c.studentIds.length===1?'žák':'žáků'} · ${subjects.length} ${subjects.length===1?'můj předmět':'mých předmětů'} · ${teacherCount} ${teacherCount===1?'učitel':'učitelé'}</div>${subjects.length?`<div class="h8-subject-chips">${chips}${more}</div>`:'<div class="h8-no-subject">Zatím bez mého přiřazeného předmětu</div>'}</div></div><button type="button" class="h8-open-class" data-action="open-class" data-id="${c.id}">Otevřít třídu ▶</button></article>`;
     }).join('');
-    const content=`<section class="classes-screen fidelity-h8">
-      <div class="h8-head">
-        <h1 class="h8-title">Moje třídy</h1>
-        <div class="h8-subtitle">Správa tříd, žáků a jejich přiřazení.</div>
-        <button type="button" class="h8-head-action" data-action="add-class">+ Nová třída</button>
-      </div>
-
-      <div class="h8-overview">
-        <div class="h8-kpi"><strong>${state.classes.length}</strong><span>Třídy</span></div>
-        <div class="h8-kpi"><strong>${totalStudents}</strong><span>Žáků v mých třídách</span></div>
-        <div class="h8-kpi"><strong>${totalSubjects}</strong><span>Přiřazených předmětů</span></div>
-      </div>
-
-      ${cards?`<div class="h8-class-grid">${cards}</div>`:'<div class="h8-empty">Zatím tu nejsou žádné třídy.<br>Začni tlačítkem „Nová třída“.</div>'}
-
-      <div class="h8-utilities">
-        <button class="h8-utility-btn" data-action="history">Historie</button>
-        ${state.user.role==='admin'?'<button class="h8-utility-btn" data-action="admin">Správa školy</button>':'<span></span>'}
-        <button class="h8-utility-btn danger" data-action="clean-slate">Čistý štít</button>
-      </div>
-      <div class="arcade-footer"><span>Správa tříd</span><span>ZZ-01</span></div>
-    </section>`;
+    const content=`<section class="classes-screen fidelity-h8"><div class="h8-head"><h1 class="h8-title">Moje třídy</h1><div class="h8-subtitle">Společné školní třídy, které používáš pro svou výuku.</div><button type="button" class="h8-school-action" data-action="school-classes">Třídy školy</button><button type="button" class="h8-head-action" data-action="add-class">+ Nová třída</button></div><div class="h8-overview"><div class="h8-kpi"><strong>${myClasses.length}</strong><span>Moje třídy</span></div><div class="h8-kpi"><strong>${totalStudents}</strong><span>Žáků v mých třídách</span></div><div class="h8-kpi"><strong>${totalSubjects}</strong><span>Mých předmětů</span></div></div>${cards?`<div class="h8-class-grid">${cards}</div>`:'<div class="h8-empty">Zatím nepoužíváš žádnou třídu.<br>Vyber ji přes „Třídy školy“ nebo založ novou.</div>'}<div class="h8-utilities"><button class="h8-utility-btn" data-action="history">Historie</button>${state.user.role==='admin'?'<button class="h8-utility-btn" data-action="admin">Správa školy</button>':'<span></span>'}<button class="h8-utility-btn danger" data-action="clean-slate">Čistý štít</button></div><div class="arcade-footer"><span>Správa tříd</span><span>ZZ-01</span></div></section>`;
     app.innerHTML=layout(content,'Moje třídy');
   }
 
@@ -7038,7 +7163,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     if(!c){ state.route='classes'; return render(); }
     const tab=state.ui.classTab||'students';
     const students=studentsForClass(c.id);
-    const subjects=(c.subjects||[]);
+    const subjects=classSubjectsForTeacher(c);
     let body='';
 
     if(tab==='students'){
@@ -7070,7 +7195,8 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
           <label>Název třídy<input id="class-name" value="${esc(c.displayName)}"></label>
           <label>Školní rok<input id="class-year" value="${esc(c.schoolYear)}"></label>
         </div>
-        <label class="h8-settings-subjects">Předměty (oddělit čárkou)<input id="class-subjects" value="${esc(subjects.join(', '))}"></label>
+        <label class="h8-settings-subjects">Moje předměty v této třídě (oddělit čárkou)<input id="class-subjects" value="${esc(subjects.join(', '))}"></label>
+        <div class="tiny muted" style="margin-top:8px">Název třídy, školní rok a žáci jsou společné pro školu. Tento seznam předmětů je jen tvůj.</div>
         <div class="h8-settings-actions">
           <button class="h8-save-class" data-action="save-class" data-id="${c.id}">Uložit změny</button>
           <button class="h8-promote-class" data-action="promote-class" data-id="${c.id}">Převést do nového školního roku</button>
@@ -7105,7 +7231,8 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   }
 
   function startExamFlow(){
-    state.examFlow={stage:'select',classId:state.classes[0]?.id||'',subject:'',attendance:{},selectedStudentId:null,candidateChoiceId:null,candidates:[],topic:'',lockerAppeared:false,lockerResult:null,ignoreProtection:false};
+    const myClasses=classesForCurrentTeacher();
+    state.examFlow={stage:'select',classId:myClasses[0]?.id||'',subject:'',attendance:{},selectedStudentId:null,candidateChoiceId:null,candidates:[],topic:'',lockerAppeared:false,lockerResult:null,ignoreProtection:false};
     state.route='exam'; saveState(); render();
   }
 
@@ -7126,8 +7253,10 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   }
 
   function renderExamSelect(f){
-    const classOptions=state.classes.map(c=>`<option value="${c.id}" ${f.classId===c.id?'selected':''}>${esc(c.displayName)} — ${esc(c.schoolYear)}</option>`).join('');
-    const c=classById(f.classId)||state.classes[0];
+    const myClasses=classesForCurrentTeacher();
+    const classOptions=myClasses.map(c=>`<option value="${c.id}" ${f.classId===c.id?'selected':''}>${esc(c.displayName)} — ${esc(c.schoolYear)}</option>`).join('');
+    const selectedClass=classById(f.classId);
+    const c=(selectedClass&&classUsedByTeacher(selectedClass))?selectedClass:myClasses[0];
     if(c && !f.classId) f.classId=c.id;
     const subjectGroups=subjectsForExamClass(c?.id);
     const subjectOptions=subjectGroups.all.map(s=>`<option value="${esc(s)}" ${f.subject===s?'selected':''}>${esc(s)}</option>`).join('');
@@ -7137,7 +7266,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         <span class="arcade-check">${f.subject===s?'✓':''}</span>
         <span class="subject-choice-copy"><strong>${esc(s)}</strong>${linkedSet.has(s)?'':`<small class="subject-choice-note">Při prvním použití se přiřadí k této třídě.</small>`}</span>
       </button>`).join('');
-    const classChoices=state.classes.map(item=>`
+    const classChoices=myClasses.map(item=>`
       <button type="button" class="class-picker-option ${c?.id===item.id?'is-selected':''}" data-action="exam-class-choice" data-id="${item.id}">
         <span class="class-picker-check">${c?.id===item.id?'✓':''}</span>
         <span class="class-picker-name">${esc(item.displayName)}</span>
@@ -7154,7 +7283,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         <div class="exam-start-grid">
           <div class="exam-start-section class-section">
             <div class="arcade-section-label"><img src="assets/ui/select-class.png" alt="" aria-hidden="true"><h2>Třída</h2></div>
-            ${state.classes.length?`
+            ${myClasses.length?`
               <details class="class-picker">
                 <summary class="class-picker-summary" aria-label="Vybrat třídu">
                   <span class="class-picker-summary-name">${c?esc(c.displayName):'Vyber třídu'}</span>
@@ -8101,7 +8230,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     let body='';
     const allStudents=state.students.slice().sort((a,b)=>b.collectedPoints-a.collectedPoints);
     if(tab==='my'){
-      const myClasses=state.classes.slice().sort((a,b)=>{
+      const myClasses=classesForCurrentTeacher().slice().sort((a,b)=>{
         const y=String(b.schoolYear||'').localeCompare(String(a.schoolYear||''),'cs');
         return y || String(a.displayName||'').localeCompare(String(b.displayName||''),'cs',{numeric:true});
       });
@@ -8117,7 +8246,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         const cls=selectedClass ? selectedClass : null;
         const classLabel=cls
           ? `${cls.displayName} — ${cls.schoolYear||''}`
-          : classesForStudent(st.id).map(c=>`${c.displayName} — ${c.schoolYear||''}`).join(', ') || '—';
+          : myClassesForStudent(st.id).map(c=>`${c.displayName} — ${c.schoolYear||''}`).join(', ') || '—';
         return `<tr><td>${i+1}.</td><td>${esc(st.name)}</td><td>${esc(classLabel)}</td><td>${st.collectedPoints}</td><td>${currentPoints(st)}</td><td>${st.examsCountPeriod}</td></tr>`;
       }).join('');
       body=`${classFilter}<div class="table-wrap"><table><thead><tr><th>#</th><th>Žák</th><th>Třída</th><th>Nasbíráno</th><th>Aktuálně</th><th>Zkoušení</th></tr></thead><tbody>${rows||'<tr><td colspan="6"><div class="empty">V této třídě zatím nejsou žádní žáci.</div></td></tr>'}</tbody></table></div>`;
@@ -8263,33 +8392,34 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   function classesForStudent(id){ return state.classes.filter(c=>(c.studentIds||[]).includes(id)); }
 
   function subjectNames(){
+    const teacherId=currentTeacherId();
     return [...new Set([
-      ...state.classes.flatMap(c=>c.subjects||[]),
-      ...state.questionSets.map(q=>q.subject)
+      ...classesForCurrentTeacher().flatMap(c=>classSubjectsForTeacher(c,teacherId)),
+      ...state.questionSets.filter(q=>(q.teacherId||teacherId)===teacherId).map(q=>q.subject)
     ].filter(Boolean))].sort((a,b)=>a.localeCompare(b,'cs'));
   }
 
-  // Při zahájení zkoušení se nabízejí pouze předměty
-  // přiřazené právě vybrané třídě.
+  // Nabízí se pouze předměty aktuálního učitele v dané třídě.
   function subjectsForExamClass(classId){
     const c=classById(classId);
-    const linked=[...new Set((c?.subjects||[]).filter(Boolean))];
+    const linked=[...new Set(classSubjectsForTeacher(c).filter(Boolean))];
     return {linked,rest:[],all:linked};
   }
 
   function linkSubjectToClass(subject,classId){
     const c=classById(classId);
-    if(!c || !subject) return false;
-    if(!Array.isArray(c.subjects)) c.subjects=[];
-    if(c.subjects.includes(subject)) return false;
-    c.subjects.push(subject);
+    if(!c || !subject || !classUsedByTeacher(c)) return false;
+    const subjects=classSubjectsForTeacher(c);
+    if(subjects.includes(subject)) return false;
+    setClassSubjectsForTeacher(c,[...subjects,subject]);
     return true;
   }
 
   function questionSetForSubject(subject,create=false){
-    let q=state.questionSets.find(x=>x.subject===subject);
+    const teacherId=currentTeacherId();
+    let q=state.questionSets.find(x=>x.subject===subject && (x.teacherId||teacherId)===teacherId);
     if(!q && create){
-      q={id:uid('qs'),subject,name:'Témata ke zkoušení',items:[]};
+      q={id:uid('qs'),teacherId,subject,name:'Témata ke zkoušení',items:[]};
       state.questionSets.push(q);
     }
     return q||null;
@@ -8305,15 +8435,16 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   }
 
   function renderGrades(){
-    if(!state.classes.length){
+    const myClasses=classesForCurrentTeacher();
+    if(!myClasses.length){
       app.innerHTML=layout(`<section class="pack-a-screen grades-fidelity"><div class="pack-a-hero"><div><div class="pack-a-kicker">KLASIFIKACE</div><h1>Známkování</h1></div></div><div class="pack-a-empty">Nejdřív založ alespoň jednu třídu.</div></section>`,'Známkování');
       return;
     }
     let classId=state.ui.gradeClassId;
-    if(!classById(classId)) classId=state.classes[0].id;
+    if(!classById(classId) || !classUsedByTeacher(classById(classId))) classId=myClasses[0].id;
     state.ui.gradeClassId=classId;
     const c=classById(classId);
-    const subjects=c.subjects||[];
+    const subjects=classSubjectsForTeacher(c);
     let subject=state.ui.gradeSubject;
     if(!subjects.includes(subject)) subject=subjects[0]||'';
     state.ui.gradeSubject=subject;
@@ -8340,7 +8471,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       <div class="pack-a-grade-filter">
         <label>Školní rok<input value="${esc(c.schoolYear)}" disabled></label>
         <label>Pololetí<select id="grade-semester"><option value="1" ${semester==='1'?'selected':''}>1. pololetí</option><option value="2" ${semester==='2'?'selected':''}>2. pololetí</option></select></label>
-        <label>Třída<select id="grade-class">${state.classes.map(x=>`<option value="${x.id}" ${x.id===classId?'selected':''}>${esc(x.displayName)} — ${esc(x.schoolYear)}</option>`).join('')}</select></label>
+        <label>Třída<select id="grade-class">${myClasses.map(x=>`<option value="${x.id}" ${x.id===classId?'selected':''}>${esc(x.displayName)} — ${esc(x.schoolYear)}</option>`).join('')}</select></label>
         <label>Předmět<select id="grade-subject">${subjects.length?subjects.map(s=>`<option ${s===subject?'selected':''}>${esc(s)}</option>`).join(''):'<option value="">Bez předmětu</option>'}</select></label>
       </div>
       <div class="pack-a-kpis three">
@@ -8361,9 +8492,10 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   function renderSubjects(){
     const subjects=subjectNames();
     const totalTopics=subjects.reduce((n,subject)=>n+(questionSetForSubject(subject,false)?.items?.length||0),0);
-    const assignments=subjects.reduce((n,subject)=>n+state.classes.filter(c=>(c.subjects||[]).includes(subject)).length,0);
+    const myClasses=classesForCurrentTeacher();
+    const assignments=subjects.reduce((n,subject)=>n+myClasses.filter(c=>classSubjectsForTeacher(c).includes(subject)).length,0);
     const cards=subjects.map((subject,index)=>{
-      const classes=state.classes.filter(c=>(c.subjects||[]).includes(subject));
+      const classes=myClasses.filter(c=>classSubjectsForTeacher(c).includes(subject));
       const q=questionSetForSubject(subject,false);
       const topicCount=q?.items?.length||0;
       return `<button class="subject-card pack-a-subject-card" data-action="open-subject" data-subject="${esc(subject)}">
@@ -8396,7 +8528,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     const subject=state.ui.openSubject;
     if(!subject || !subjectNames().includes(subject)){state.route='subjects';return renderSubjects();}
     const q=questionSetForSubject(subject,true);
-    const assigned=state.classes.filter(c=>(c.subjects||[]).includes(subject));
+    const assigned=classesForCurrentTeacher().filter(c=>classSubjectsForTeacher(c).includes(subject));
     const topics=(q.items||[]).map((topic,index)=>`<div class="pack-a-topic-row">
       <div class="pack-a-topic-index">${String(index+1).padStart(2,'0')}</div>
       <div class="pack-a-topic-name">${esc(topic)}</div>
@@ -9050,16 +9182,18 @@ body::after{
   }
 
   function addSubjectModal(){
-    modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">Nový předmět</h2><label>Název předmětu<input id="subject-name" placeholder="Např. Český jazyk"></label><div class="tiny muted" style="margin-top:10px">Každý předmět vytvořený v „Moje předměty“ se automaticky nabídne při zahájení zkoušení. Tady ho můžeš rovnou přiřadit ke konkrétním třídám.</div><div class="subject-class-list">${state.classes.map(c=>`<label><input type="checkbox" data-subject-class="${c.id}" checked> ${esc(c.displayName)} — ${esc(c.schoolYear)}</label>`).join('')}</div><div class="modal-actions"><button class="btn ghost" id="subject-cancel">Zrušit</button><button class="btn primary" id="subject-save">Vytvořit</button></div></section></div>`;
+    const myClasses=classesForCurrentTeacher();
+    modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">Nový předmět</h2><label>Název předmětu<input id="subject-name" placeholder="Např. Český jazyk"></label><div class="tiny muted" style="margin-top:10px">Předmět je tvůj. Můžeš ho přiřadit jen ke třídám školy, které používáš.</div><div class="subject-class-list">${myClasses.map(c=>`<label><input type="checkbox" data-subject-class="${c.id}" checked> ${esc(c.displayName)} — ${esc(c.schoolYear)}</label>`).join('')}</div><div class="modal-actions"><button class="btn ghost" id="subject-cancel">Zrušit</button><button class="btn primary" id="subject-save">Vytvořit</button></div></section></div>`;
     document.getElementById('subject-cancel').onclick=closeModal;
-    document.getElementById('subject-save').onclick=()=>{const name=document.getElementById('subject-name').value.trim();if(!name)return toast('Zadej název předmětu.','error');if(subjectNames().some(s=>s.toLowerCase()===name.toLowerCase()))return toast('Takový předmět už existuje.','error');document.querySelectorAll('[data-subject-class]').forEach(ch=>{if(ch.checked){const c=classById(ch.dataset.subjectClass);if(c){if(!Array.isArray(c.subjects))c.subjects=[];if(!c.subjects.includes(name))c.subjects.push(name);}}});questionSetForSubject(name,true);state.ui.openSubject=name;state.route='subject-detail';saveState();closeModal();toast('Předmět vytvořen.');render();};
+    document.getElementById('subject-save').onclick=()=>{const name=document.getElementById('subject-name').value.trim();if(!name)return toast('Zadej název předmětu.','error');if(subjectNames().some(s=>s.toLowerCase()===name.toLowerCase()))return toast('Takový předmět už existuje.','error');modalRoot.querySelectorAll('[data-subject-class]').forEach(ch=>{if(ch.checked){const c=classById(ch.dataset.subjectClass);if(c&&classUsedByTeacher(c))setClassSubjectsForTeacher(c,[...classSubjectsForTeacher(c),name]);}});questionSetForSubject(name,true);state.ui.openSubject=name;state.route='subject-detail';saveState();closeModal();toast('Předmět vytvořen.');render();};
   }
 
   function editSubjectModal(){
-    const old=state.ui.openSubject; if(!old)return;
-    modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">Upravit předmět</h2><label>Název předmětu<input id="subject-name" value="${esc(old)}"></label><div class="tiny muted" style="margin-top:10px">Přiřazení ke třídám</div><div class="subject-class-list">${state.classes.map(c=>`<label><input type="checkbox" data-subject-class="${c.id}" ${(c.subjects||[]).includes(old)?'checked':''}> ${esc(c.displayName)} — ${esc(c.schoolYear)}</label>`).join('')}</div><div class="modal-actions"><button class="btn ghost" id="subject-cancel">Zrušit</button><button class="btn primary" id="subject-save">Uložit</button></div></section></div>`;
+    const old=state.ui.openSubject;if(!old)return;
+    const teacherId=currentTeacherId(),myClasses=classesForCurrentTeacher();
+    modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">Upravit předmět</h2><label>Název předmětu<input id="subject-name" value="${esc(old)}"></label><div class="tiny muted" style="margin-top:10px">Přiřazení k mým třídám</div><div class="subject-class-list">${myClasses.map(c=>`<label><input type="checkbox" data-subject-class="${c.id}" ${classSubjectsForTeacher(c).includes(old)?'checked':''}> ${esc(c.displayName)} — ${esc(c.schoolYear)}</label>`).join('')}</div><div class="modal-actions"><button class="btn ghost" id="subject-cancel">Zrušit</button><button class="btn primary" id="subject-save">Uložit</button></div></section></div>`;
     document.getElementById('subject-cancel').onclick=closeModal;
-    document.getElementById('subject-save').onclick=()=>{const name=document.getElementById('subject-name').value.trim()||old;state.classes.forEach(c=>{const checked=modalRoot.querySelector(`[data-subject-class="${c.id}"]`)?.checked;c.subjects=(c.subjects||[]).filter(s=>s!==old);if(checked&&!c.subjects.includes(name))c.subjects.push(name);});state.questionSets.filter(q=>q.subject===old).forEach(q=>q.subject=name);state.history.filter(h=>h.subject===old).forEach(h=>h.subject=name);state.ui.openSubject=name;saveState();closeModal();toast('Předmět uložen.');render();};
+    document.getElementById('subject-save').onclick=()=>{const name=document.getElementById('subject-name').value.trim()||old;myClasses.forEach(c=>{const checked=modalRoot.querySelector(`[data-subject-class="${c.id}"]`)?.checked;const next=classSubjectsForTeacher(c).filter(s=>s!==old);if(checked&&!next.includes(name))next.push(name);setClassSubjectsForTeacher(c,next);});state.questionSets.filter(q=>(q.teacherId||teacherId)===teacherId&&q.subject===old).forEach(q=>q.subject=name);state.history.filter(h=>h.teacherId===teacherId&&h.subject===old).forEach(h=>h.subject=name);state.ui.openSubject=name;saveState();closeModal();toast('Předmět uložen.');render();};
   }
 
   function topicModal(index=null){
@@ -9218,9 +9352,22 @@ body::after{
               <p>Avatar je osobní nastavení učitele. Vyber pixelovou postavičku nebo nahraj vlastní obrázek.</p>
             </div>
           </div>
-          <div class="avatar-picker">
-            ${avatarPresets.map(p=>`<button class="avatar-preset ${state.user.avatar===p.id?'active':''}" data-action="avatar-preset" data-avatar="${p.id}">${avatarMarkup(p.id,'md')}<span>${esc(p.label)}</span></button>`).join('')}
-          </div>
+          <details class="avatar-select-panel">
+            <summary>
+              <span class="avatar-select-title">Vybrat avatar</span>
+              <span class="avatar-select-current">${avatarMarkup(state.user.avatar,'md')}</span>
+            </summary>
+            <div class="avatar-select-body">
+              <div class="avatar-group-title">Ženy</div>
+              <div class="avatar-picker">
+                ${avatarPresets.filter(p=>p.gender==='f').map(p=>`<button class="avatar-preset ${state.user.avatar===p.id?'active':''}" data-action="avatar-preset" data-avatar="${p.id}">${avatarMarkup(p.id,'md')}<span>${esc(p.label)}</span></button>`).join('')}
+              </div>
+              <div class="avatar-group-title">Muži</div>
+              <div class="avatar-picker">
+                ${avatarPresets.filter(p=>p.gender==='m').map(p=>`<button class="avatar-preset ${state.user.avatar===p.id?'active':''}" data-action="avatar-preset" data-avatar="${p.id}">${avatarMarkup(p.id,'md')}<span>${esc(p.label)}</span></button>`).join('')}
+              </div>
+            </div>
+          </details>
           <div class="settings-upload">
             <input id="profile-avatar-upload" type="file" accept="image/*">
             ${String(state.user.avatar||'').startsWith('data:image/')?'<button class="btn secondary" data-action="avatar-reset">Vrátit pixelový avatar</button>':''}
@@ -9480,10 +9627,19 @@ body::after{
     modalRoot.querySelectorAll('[data-other-student]').forEach(b=>b.onclick=()=>{const id=b.dataset.otherStudent;closeModal();candidatePrecheck(id);});
   }
 
+  function showSchoolClassesModal(){
+    if(!can('manageClasses')) return toast('Pro tuto akci nemáš přidělené oprávnění.','error');
+    const teacherId=currentTeacherId();
+    const rows=state.classes.slice().sort((a,b)=>String(b.schoolYear||'').localeCompare(String(a.schoolYear||''),'cs')||String(a.displayName||'').localeCompare(String(b.displayName||''),'cs',{numeric:true})).map(c=>{const used=classUsedByTeacher(c,teacherId),creator=teacherNameById(c.createdByTeacherId),teacherCount=(c.teacherIds||[]).length;return `<div class="school-class-row"><div class="school-class-main"><strong>${esc(c.displayName)}</strong><span>${esc(c.schoolYear)} · ${c.studentIds?.length||0} žáků · ${teacherCount} ${teacherCount===1?'učitel':'učitelé'}</span><small>Založil: ${esc(creator)}</small></div>${used?'<span class="school-class-used">POUŽÍVÁŠ</span>':`<button class="btn primary" data-use-school-class="${c.id}">Přidat k mým třídám</button>`}</div>`;}).join('');
+    modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal school-class-modal"><h2 class="pixel-title">Třídy školy</h2><p class="muted">Jedna třída je společná pro celou školu. Přidáním ji nekopíruješ — používáš stejný seznam žáků, ale svoje vlastní předměty.</p><div class="school-class-list">${rows||'<div class="empty">Ve škole zatím nejsou žádné třídy.</div>'}</div><div class="modal-actions"><button class="btn ghost" id="school-classes-close">Zavřít</button></div></section></div>`;
+    document.getElementById('school-classes-close').onclick=closeModal;
+    modalRoot.querySelectorAll('[data-use-school-class]').forEach(btn=>btn.onclick=()=>{if(addSchoolClassToCurrentTeacher(btn.dataset.useSchoolClass)){saveState();closeModal();toast('Třída přidána k tvým třídám.');render();}});
+  }
+
   function addClassModal(){
-    modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">Nová třída</h2><label>Název<input id="new-class-name" placeholder="např. 2.A"></label><label style="margin-top:10px">Školní rok<input id="new-class-year" value="${esc(state.school.schoolYear)}"></label><label style="margin-top:10px">Předměty (čárkou)<input id="new-class-subjects" placeholder="Technické kreslení, ..."></label><div class="modal-actions"><button class="btn ghost" id="cancel-class">Zrušit</button><button class="btn primary" id="create-class">Vytvořit</button></div></section></div>`;
+    modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">Nová školní třída</h2><p class="muted">Třída bude společná pro školu. Ostatní učitelé si ji mohou později přidat mezi svoje třídy.</p><label>Název<input id="new-class-name" placeholder="např. 2.A"></label><label style="margin-top:10px">Školní rok<input id="new-class-year" value="${esc(state.school.schoolYear)}"></label><label style="margin-top:10px">Moje předměty v této třídě (čárkou)<input id="new-class-subjects" placeholder="Technické kreslení, ..."></label><div class="modal-actions"><button class="btn ghost" id="cancel-class">Zrušit</button><button class="btn primary" id="create-class">Vytvořit</button></div></section></div>`;
     document.getElementById('cancel-class').onclick=closeModal;
-    document.getElementById('create-class').onclick=()=>{const name=document.getElementById('new-class-name').value.trim(),year=document.getElementById('new-class-year').value.trim();if(!name||!year)return toast('Vyplň název i školní rok.','error');const n={id:uid('cl'),displayName:name,schoolYear:year,previousClassId:null,studentIds:[],subjects:document.getElementById('new-class-subjects').value.split(',').map(x=>x.trim()).filter(Boolean)};state.classes.push(n);state.ui.openClassId=n.id;state.ui.classTab='students';state.route='class-detail';saveState();closeModal();toast('Třída vytvořena. Teď můžeš přidat žáky.');render();};
+    document.getElementById('create-class').onclick=()=>{const name=document.getElementById('new-class-name').value.trim(),year=document.getElementById('new-class-year').value.trim();if(!name||!year)return toast('Vyplň název i školní rok.','error');const teacherId=currentTeacherId(),subjects=document.getElementById('new-class-subjects').value.split(',').map(x=>x.trim()).filter(Boolean);const n={id:uid('cl'),displayName:name,schoolYear:year,previousClassId:null,createdByTeacherId:teacherId,teacherIds:[teacherId],studentIds:[],teacherSubjects:{[teacherId]:subjects},subjects:[...subjects]};state.classes.push(n);state.ui.openClassId=n.id;state.ui.classTab='students';state.route='class-detail';saveState();closeModal();toast('Školní třída vytvořena. Ostatní učitelé ji mohou použít.');render();};
   }
 
   function addStudentModal(classId){
@@ -9598,7 +9754,7 @@ body::after{
     const c=classById(id); if(!c)return;
     modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">Nový školní rok</h2><p>Vytvoří se nová třída s novým interním ID. Historie ${esc(c.displayName)} — ${esc(c.schoolYear)} zůstane zachována.</p><label>Nový název třídy<input id="promote-name" value="${esc(c.displayName)}"></label><label style="margin-top:10px">Nový školní rok<input id="promote-year" placeholder="2027/2028"></label><div class="modal-actions"><button class="btn ghost" id="promote-cancel">Zrušit</button><button class="btn primary" id="promote-save">Vytvořit návaznou třídu</button></div></section></div>`;
     document.getElementById('promote-cancel').onclick=closeModal;
-    document.getElementById('promote-save').onclick=()=>{const name=document.getElementById('promote-name').value.trim(),year=document.getElementById('promote-year').value.trim();if(!name||!year)return toast('Vyplň název i školní rok.','error');const n={id:uid('cl'),displayName:name,schoolYear:year,previousClassId:c.id,studentIds:[...c.studentIds],subjects:[...c.subjects]};state.classes.push(n);state.school.schoolYear=year;saveState();closeModal();toast('Návazná třída vytvořena.');state.ui.openClassId=n.id;render();};
+    document.getElementById('promote-save').onclick=()=>{const name=document.getElementById('promote-name').value.trim(),year=document.getElementById('promote-year').value.trim();if(!name||!year)return toast('Vyplň název i školní rok.','error');const teacherSubjects=Object.fromEntries(Object.entries(c.teacherSubjects||{}).map(([teacherId,subjects])=>[teacherId,[...(subjects||[])]]));const n={id:uid('cl'),displayName:name,schoolYear:year,previousClassId:c.id,createdByTeacherId:currentTeacherId(),teacherIds:[...(c.teacherIds||[currentTeacherId()])],studentIds:[...c.studentIds],teacherSubjects,subjects:[...new Set(Object.values(teacherSubjects).flat())]};state.classes.push(n);state.school.schoolYear=year;saveState();closeModal();toast('Návazná školní třída vytvořena.');state.ui.openClassId=n.id;render();};
   }
 
   function cleanSlate(){
@@ -9795,13 +9951,14 @@ body::after{
     else if(action==='add-topic') topicModal(null);
     else if(action==='edit-topic') topicModal(Number(btn.dataset.index));
     else if(action==='delete-topic'){const q=questionSetForSubject(state.ui.openSubject,true),i=Number(btn.dataset.index);modal({title:'Odebrat téma?',body:`<p>Opravdu odebrat téma <strong>${esc(q.items[i]||'')}</strong>?</p>`,actions:[{label:'Ne',className:'secondary'},{label:'Ano',className:'danger',onClick:()=>{q.items.splice(i,1);saveState();toast('Téma odebráno.');render();}}]});}
-    else if(action==='delete-subject'){const subject=state.ui.openSubject;modal({title:'Odebrat předmět?',body:`<p>Předmět <strong>${esc(subject)}</strong> se přestane nabízet v aktuálních třídách. Historické známky zůstanou zachované.</p>`,actions:[{label:'Ne',className:'secondary'},{label:'Ano',className:'danger',onClick:()=>{state.classes.forEach(c=>c.subjects=(c.subjects||[]).filter(s=>s!==subject));state.questionSets=state.questionSets.filter(q=>q.subject!==subject);state.ui.openSubject='';state.route='subjects';saveState();toast('Předmět odebrán z aktuální nabídky.');render();}}]});}
+    else if(action==='delete-subject'){const subject=state.ui.openSubject,teacherId=currentTeacherId();modal({title:'Odebrat předmět?',body:`<p>Předmět <strong>${esc(subject)}</strong> se přestane nabízet v tvých třídách. Předměty ostatních učitelů ani společné třídy se nezmění.</p>`,actions:[{label:'Ne',className:'secondary'},{label:'Ano',className:'danger',onClick:()=>{classesForCurrentTeacher().forEach(c=>setClassSubjectsForTeacher(c,classSubjectsForTeacher(c).filter(s=>s!==subject)));state.questionSets=state.questionSets.filter(q=>!((q.teacherId||teacherId)===teacherId&&q.subject===subject));state.ui.openSubject='';state.route='subjects';saveState();toast('Předmět odebrán z tvé aktuální nabídky.');render();}}]});}
     else if(action==='grade-view'){state.ui.gradeView=btn.dataset.view;saveState();render();}
     else if(action==='grade-print') gradePrint();
     else if(action==='grade-export-excel') gradeExportExcel();
     else if(action==='admin'){state.route='admin';saveState();render();}
     else if(action==='open-class'){state.ui.openClassId=btn.dataset.id;state.ui.classTab='students';state.route='class-detail';saveState();render();}
     else if(action==='class-tab'){state.ui.classTab=btn.dataset.tab;saveState();render();}
+    else if(action==='school-classes') showSchoolClassesModal();
     else if(action==='add-class') addClassModal();
     else if(action==='add-student') addStudentModal(btn.dataset.class);
     else if(action==='student-detail') showStudentDetail(btn.dataset.id,btn.dataset.class);
@@ -9809,7 +9966,7 @@ body::after{
       const c=classById(btn.dataset.class),s=studentById(btn.dataset.id);modal({title:'Odebrat žáka z třídy?',body:`<p>${esc(s.name)} bude odebrán pouze z aktuálního seznamu třídy. Historie zůstane.</p>`,actions:[{label:'Ne',className:'secondary'},{label:'Ano',className:'danger',onClick:()=>{c.studentIds=c.studentIds.filter(id=>id!==s.id);saveState();toast('Žák odebrán z aktuální třídy.');render();}}]});
     }
     else if(action==='rename-student'){const s=studentById(btn.dataset.id);modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2>Upravit žáka</h2><label>Jméno<input id="rename-student" value="${esc(s.name)}"></label><div class="modal-actions"><button class="btn ghost" id="rename-cancel">Zrušit</button><button class="btn primary" id="rename-save">Uložit</button></div></section></div>`;document.getElementById('rename-cancel').onclick=closeModal;document.getElementById('rename-save').onclick=()=>{s.name=document.getElementById('rename-student').value.trim()||s.name;saveState();closeModal();render();};}
-    else if(action==='save-class'){const c=classById(btn.dataset.id);c.displayName=document.getElementById('class-name').value.trim()||c.displayName;c.schoolYear=document.getElementById('class-year').value.trim()||c.schoolYear;c.subjects=document.getElementById('class-subjects').value.split(',').map(x=>x.trim()).filter(Boolean);saveState();toast('Třída uložena.');render();}
+    else if(action==='save-class'){const c=classById(btn.dataset.id);c.displayName=document.getElementById('class-name').value.trim()||c.displayName;c.schoolYear=document.getElementById('class-year').value.trim()||c.schoolYear;setClassSubjectsForTeacher(c,document.getElementById('class-subjects').value.split(',').map(x=>x.trim()).filter(Boolean));saveState();toast('Třída uložena. Sdílené údaje platí pro školu, předměty jen pro tebe.');render();}
     else if(action==='promote-class') promoteClassModal(btn.dataset.id);
     else if(action==='clean-slate') cleanSlate();
     else if(action==='exam-class-choice'){
@@ -9929,7 +10086,9 @@ body::after{
     else if(action==='end-exam') showGradeModal();
     else if(action==='result-next-exam'){
       const r=state.ui.lastExamResult||{};
-      state.examFlow={stage:'select',classId:r.classId||state.classes[0]?.id||'',subject:r.subject||'',attendance:{},selectedStudentId:null,candidates:[],topic:'',lockerAppeared:false,lockerResult:null,ignoreProtection:false};
+      const myClasses=classesForCurrentTeacher();
+      const fallbackClassId=(r.classId&&myClasses.some(c=>c.id===r.classId))?r.classId:(myClasses[0]?.id||'');
+      state.examFlow={stage:'select',classId:fallbackClassId,subject:r.subject||'',attendance:{},selectedStudentId:null,candidates:[],topic:'',lockerAppeared:false,lockerResult:null,ignoreProtection:false};
       state.route='exam';saveState();render();
     }
     else if(action==='result-home'){state.route='home';saveState();render();}

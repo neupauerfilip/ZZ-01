@@ -1,3 +1,34 @@
+# ZZ-01_SCHOOL_CLASSES_A1 — sdílené třídy školy
+
+- třída je nově školní objekt: název, školní rok a seznam žáků jsou společné pro učitele stejné školy
+- každá třída eviduje, kteří učitelé ji používají (`teacherIds`) a kdo ji založil (`createdByTeacherId`)
+- každý učitel má u stejné třídy vlastní přiřazené předměty (`teacherSubjects`)
+- témata předmětů jsou navázaná na konkrétního učitele (`questionSets.teacherId`)
+- obrazovka „Moje třídy“ ukazuje jen třídy používané aktuálním učitelem
+- přidáno tlačítko „Třídy školy“ s přehledem společných tříd a volbou „Přidat k mým třídám“
+- přidání existující třídy nekopíruje žáky ani třídu; učitel používá stejnou školní třídu
+- zkoušení, známkování, scoring „moje třídy“ a nabídka předmětů respektují pouze třídy a předměty aktuálního učitele
+- úprava názvu třídy, školního roku a žáků je společná pro školu; úprava předmětů zůstává osobní pro učitele
+- stará uložená data se při načtení automaticky převedou do nového modelu
+- avatarový patch A1 i animace zkoušení zůstávají zachované
+- současná offline HTML verze stále ukládá data lokálně; skutečné sdílení mezi různými zařízeními bude po napojení na společný server/databázi
+
+--- Původní changelog zachovaný v plném rozsahu ---
+
+# ZZ-01_AVATAR_PACK_A1 — 20 retro avatarů učitelů
+
+- přidáno 20 nových obrázkových avatarů učitelů: 10 žen a 10 mužů
+- avatary mají záměrně jednoduchý starší 8bitový vzhled a nízké logické rozlišení
+- nové assety jsou uloženy v `assets/avatars/`
+- výběr avataru v Nastavení je nově schovaný v otevíracím panelu „Vybrat avatar“
+- uvnitř jsou oddělené skupiny „Ženy“ a „Muži“
+- avatar se po výběru dál používá ve stejných místech aplikace jako dříve
+- původní `px:*` avatary zůstaly interně zachované pouze kvůli kompatibilitě se staršími uloženými profily
+- vlastní nahrání obrázku zůstává zachováno
+- animace zkoušení a ostatní logika aplikace zůstaly beze změny
+
+--- Původní changelog zachovaný v plném rozsahu ---
+
 # ZZ-01_EXAM_SCENE_F2 — integrace do index(5).html
 
 - Základ: index(5).html a CHANGELOG(5).md dodané uživatelem v tomto chatu.
