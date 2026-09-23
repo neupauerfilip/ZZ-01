@@ -1,3 +1,23 @@
+# ZZ-01_SIGNED_POINTS_LOGIC — sjednocení znamének bodů
+
+- celá aplikace nově používá jednotnou logiku: záporné body (−) jsou trestné, kladné body (+) jsou pochvalné / odměnové
+- výchozí trestná pravidla žáků byla převedena z kladných hodnot na záporné hodnoty
+- editor pravidel nyní dovoluje hodnoty −99 až +99 a přímo vysvětluje význam znamének
+- kladné a záporné hodnoty pravidel se v aplikaci zobrazují se správným znaménkem; záporné jsou červené a kladné zelené
+- aktuální bodová bilance žáka je podepsaná: např. −3 je trestná bilance, +2 pochvalná bilance
+- vážený los používá pouze velikost záporné části bilance; −3 znamená 3 trestné body pro váhu losu, kladná bilance trest nezvyšuje
+- dlouhodobé „nasbírané“ body žáků se nově vedou ve stejné podepsané logice
+- stará lokální data se při prvním načtení automaticky migrují: dosavadní kladné trestné hodnoty pravidel a žáků se převedou na záporné
+- staré efekty vlastních skříněk se při migraci také obrátí; vestavěná odměna „Mínus jeden bod“ je nově „Pochvala +1“
+- vlastní skříňky používají stejnou logiku: − trest, + pochvala
+- u Šéfové zůstává scoring matematicky podepsaný: záporné body snižují skóre, kladné body předchozí záporné body vyrovnávají a případně tvoří bonus
+- rozhraní Šéfové výslovně uvádí „− = trestné body, + = pochvalné body“
+- upozornění „Pochvala od Šéfové“ / „Výtka od Šéfové“ zůstává zachováno a odpovídá znaménku
+- bodové záznamy Šéfové se nemigrují, protože již před tímto patchem měly správnou logiku: + bylo kladné a − záporné
+- hlavní menu, sdílené třídy, testovací účty, avatary a animace zkoušení zůstávají zachované
+
+--- Původní changelog zachovaný v plném rozsahu ---
+
 # ZZ-01_BOSS_FEEDBACK_NOTIFICATIONS — pochvala a výtka od Šéfové
 
 - při novém ručním bodovém zásahu Šéfové se cílovému učiteli uloží jednorázové upozornění

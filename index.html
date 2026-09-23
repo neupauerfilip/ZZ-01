@@ -5159,6 +5159,37 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 .boss-feedback-modal .modal-actions .btn{min-width:150px}
 </style>
 
+
+<style>
+/* ZZ-01 SIGNED POINTS LOGIC — minus = penalty, plus = praise */
+.point-value.negative,
+.rules-inline-points.negative,
+.rules-points-badge.negative,
+.exam-roster-points.negative{
+  color:#ff6a64 !important;
+}
+.point-value.positive,
+.rules-inline-points.positive,
+.rules-points-badge.positive,
+.exam-roster-points.positive{
+  color:#45df94 !important;
+}
+.point-value.neutral,
+.rules-inline-points.neutral,
+.rules-points-badge.neutral,
+.exam-roster-points.neutral{
+  color:#b8c8ca !important;
+}
+.rules-points-badge.negative{
+  border-color:#b7443f !important;
+  background:#281110 !important;
+}
+.rules-points-badge.positive{
+  border-color:#23895c !important;
+  background:#0b231a !important;
+}
+</style>
+
 </head>
 <body>
   <div class="crt-overlay" aria-hidden="true"></div>
@@ -5247,14 +5278,14 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   const fmtDate = ts => new Intl.DateTimeFormat('cs-CZ',{dateStyle:'medium',timeStyle:'short'}).format(new Date(ts));
 
   const defaultRules = () => [
-    {id:'r_last',name:'Sedí v poslední řadě',description:'Doporučené pravidlo',points:1,editable:true,deletable:true,active:true,system:false},
-    {id:'r_tools',name:'Nemá pomůcky',description:'Doporučené pravidlo',points:2,editable:true,deletable:true,active:true,system:false},
-    {id:'r_shoes',name:'Nemá přezůvky',description:'Doporučené pravidlo',points:2,editable:true,deletable:true,active:true,system:false},
-    {id:'r_snack',name:'Svačí bez domluvy',description:'Doporučené pravidlo',points:2,editable:true,deletable:true,active:true,system:false},
-    {id:'r_phone',name:'Mobil bez dovolení',description:'Doporučené pravidlo',points:3,editable:true,deletable:true,active:true,system:false},
-    {id:'r_late',name:'Pozdní příchod',description:'Doporučené pravidlo',points:1,editable:true,deletable:true,active:true,system:false},
-    {id:'r_oftenlate',name:'Často neodevzdává práci v termínu',description:'Doporučené pravidlo',points:2,editable:true,deletable:true,active:true,system:false},
-    {id:'r_missingwork',name:'Neodevzdal práci v termínu',description:'Systémové pravidlo – zůstává aktivní i po zkoušení.',points:2,editable:false,deletable:false,active:true,system:true}
+    {id:'r_last',name:'Sedí v poslední řadě',description:'Doporučené pravidlo',points:-1,editable:true,deletable:true,active:true,system:false},
+    {id:'r_tools',name:'Nemá pomůcky',description:'Doporučené pravidlo',points:-2,editable:true,deletable:true,active:true,system:false},
+    {id:'r_shoes',name:'Nemá přezůvky',description:'Doporučené pravidlo',points:-2,editable:true,deletable:true,active:true,system:false},
+    {id:'r_snack',name:'Svačí bez domluvy',description:'Doporučené pravidlo',points:-2,editable:true,deletable:true,active:true,system:false},
+    {id:'r_phone',name:'Mobil bez dovolení',description:'Doporučené pravidlo',points:-3,editable:true,deletable:true,active:true,system:false},
+    {id:'r_late',name:'Pozdní příchod',description:'Doporučené pravidlo',points:-1,editable:true,deletable:true,active:true,system:false},
+    {id:'r_oftenlate',name:'Často neodevzdává práci v termínu',description:'Doporučené pravidlo',points:-2,editable:true,deletable:true,active:true,system:false},
+    {id:'r_missingwork',name:'Neodevzdal práci v termínu',description:'Systémové pravidlo – zůstává aktivní i po zkoušení.',points:-2,editable:false,deletable:false,active:true,system:true}
   ];
 
   const demoStudents = () => [
@@ -5276,12 +5307,12 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     return [
       {
         id:'locker_minus1',
-        name:'Mínus jeden bod',
+        name:'Pochvala +1',
         kind:'points',
-        points:-1,
+        points:1,
         builtIn:true,
         active:true,
-        icon:'−1',
+        icon:'+1',
         visual:'point'
       },
       {
@@ -5407,6 +5438,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     const classId='cl_1';
     return {
       schema:1,
+      pointSignSchemaVersion:2,
       authenticated:false,
       authProvider:null,
       onboardingDone:false,
@@ -5524,6 +5556,20 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         gamification:{...bg,...pg,season:{...bg.season,...(pg.season||{})},archivedSeasons:Array.isArray(pg.archivedSeasons)?pg.archivedSeasons:[],events:Array.isArray(pg.events)?pg.events:[],teacherAwards:pg.teacherAwards||{},trophySchemaVersion:Number(pg.trophySchemaVersion||0),teacherTrophies:pg.teacherTrophies||{},bossPointLimit:Math.max(1,Number(pg.bossPointLimit??bg.bossPointLimit)||5),bossAdjustments:Array.isArray(pg.bossAdjustments)?pg.bossAdjustments:[],challenges:Array.isArray(pg.challenges)?pg.challenges:bg.challenges},
         schoolDirectory:parsed.schoolDirectory||base.schoolDirectory,schoolArchives:parsed.schoolArchives||{},ui:{...base.ui,...(parsed.ui||{})},online:navigator.onLine,splashSeen:false};
       const currentTeacherId=merged.user?.id||'u_me';
+      const legacyPointSigns=Number(parsed.pointSignSchemaVersion||0)<2;
+      if(legacyPointSigns){
+        merged.rules=(merged.rules||[]).map(r=>({...r,points:-(Number(r.points)||0)}));
+        merged.settings.lockerItems=(merged.settings.lockerItems||[]).map(item=>{
+          if(item.kind!=='points') return item;
+          const migrated={...item,points:-(Number(item.points)||0)};
+          if(item.id==='locker_minus1'){
+            migrated.name='Pochvala +1';
+            migrated.icon='+1';
+          }
+          return migrated;
+        });
+      }
+      merged.pointSignSchemaVersion=2;
       merged.classes=(merged.classes||[]).map(c=>{
         const legacySubjects=Array.isArray(c.subjects)?[...c.subjects]:[];
         const teacherIds=Array.isArray(c.teacherIds)&&c.teacherIds.length?[...new Set(c.teacherIds.filter(Boolean))]:[currentTeacherId];
@@ -5534,7 +5580,11 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         const union=[...new Set(Object.values(teacherSubjects).flatMap(subjects=>Array.isArray(subjects)?subjects:[]).filter(Boolean))];
         return {...c,createdByTeacherId:c.createdByTeacherId||teacherIds[0]||currentTeacherId,teacherIds,teacherSubjects,studentIds:Array.isArray(c.studentIds)?c.studentIds:[],subjects:union.length?union:legacySubjects};
       });
-      merged.students=(merged.students||[]).map(s=>({...s,lockerPointAdjust:Number(s.lockerPointAdjust||0)}));
+      merged.students=(merged.students||[]).map(s=>({
+        ...s,
+        collectedPoints:legacyPointSigns?-(Number(s.collectedPoints||0)):Number(s.collectedPoints||0),
+        lockerPointAdjust:legacyPointSigns?-(Number(s.lockerPointAdjust||0)):Number(s.lockerPointAdjust||0)
+      }));
       if(merged.school && Array.isArray(merged.school.teachers)){
         merged.school.teachers=merged.school.teachers.map(t=>({
           ...t,
@@ -5761,18 +5811,39 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   function ruleById(id){ return state.rules.find(r=>r.id===id); }
   function studentsForClass(classId){ const c=classById(classId); return c ? c.studentIds.map(studentById).filter(Boolean) : []; }
   function activeRules(){ return state.rules.filter(r=>r.active); }
+  function formatSignedNumber(value){
+    const n=Number(value)||0;
+    return n>0?`+${n}`:`${n}`;
+  }
+  function signedPointText(value){
+    const n=Number(value)||0;
+    const a=Math.abs(n);
+    const word=a===1?'bod':(a>=2&&a<=4?'body':'bodů');
+    return `${formatSignedNumber(n)} ${word}`;
+  }
+  function pointTone(value){
+    const n=Number(value)||0;
+    return n<0?'negative':n>0?'positive':'neutral';
+  }
   function baseRulePoints(student){
     return Object.entries(student.ruleStates||{}).reduce((sum,[rid,on])=>{
       const r=ruleById(rid); return sum + (on && r && r.active ? Number(r.points)||0 : 0);
     },0);
   }
+  function currentPointBalance(student){
+    return baseRulePoints(student)+Number(student.lockerPointAdjust||0);
+  }
+  function currentPenaltyPoints(student){
+    return Math.max(0,-currentPointBalance(student));
+  }
+  // Kompatibilní interní helper: los pracuje s velikostí trestu jako kladnou vahou.
   function currentPoints(student){
-    return Math.max(0,baseRulePoints(student)+Number(student.lockerPointAdjust||0));
+    return currentPenaltyPoints(student);
   }
   function applyLockerPoints(student,delta){
-    const before=currentPoints(student);
-    const after=Math.max(0,before+Number(delta||0));
-    student.lockerPointAdjust=after-baseRulePoints(student);
+    const before=currentPointBalance(student);
+    student.lockerPointAdjust=Number(student.lockerPointAdjust||0)+Number(delta||0);
+    const after=currentPointBalance(student);
     return {before,after,applied:after-before};
   }
   function isProtected(student){
@@ -6300,7 +6371,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal">
       <h2 class="pixel-title">Body učitelů – Šéfová</h2>
       <div class="boss-badge">ŠÉFOVÁ · ${esc(boss?.nickname||boss?.name||state.user.name)}</div>
-      <p class="muted">Ruční herní body za školní události mimo zkoušení. Rozsah jedné události je maximálně ±${limit} bodů.</p>
+      <p class="muted">Jednotná logika: <strong>− = trestné body</strong>, <strong>+ = pochvalné body</strong>. Kladné body vyrovnávají předchozí záporné body a po jejich vyrovnání fungují jako bonus. Rozsah jedné události je maximálně ±${limit} bodů.</p>
 
       <div class="form-grid">
         <label>Učitel
@@ -6315,7 +6386,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       <label style="margin-top:10px">Důvod <span class="required-mark">*</span>
         <input id="boss-reason" maxlength="120" required placeholder="Povinné — např. Zachránil školní tiskárnu">
       </label>
-      <div class="tiny muted" style="margin-top:7px">Důvod je povinný. Kladné číslo skóre zvýší, záporné ho sníží. Šéfová nemůže přidělovat body sama sobě.</div>
+      <div class="tiny muted" style="margin-top:7px">Důvod je povinný. Zadej např. <strong>−3</strong> za výtku nebo <strong>+2</strong> za pochvalu. Součet se přímo promítá do scoringu učitele. Šéfová nemůže udělovat body sama sobě.</div>
 
       <div class="modal-actions" style="justify-content:flex-start">
         <button class="btn primary" id="boss-save-adjustment" disabled>Přidělit body</button>
@@ -6375,7 +6446,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         notifyRecipient:true,recipientAcknowledgedAt:null
       });
       saveState();
-      toast(points>0?`Učiteli přidáno +${points} bodů.`:`Učiteli odebráno ${Math.abs(points)} bodů.`);
+      toast(points>0?`Pochvala: +${points} bodů.`:`Výtka: ${points} trestných bodů.`);
       // Otevření znovu odložíme na další event loop, aby se starý click handler
       // bezpečně dokončil a nový modal dostal vlastní čerstvé handlery.
       setTimeout(()=>showBossPointsManager(),0);
@@ -7231,11 +7302,13 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       ? `<div class="tiny muted" style="margin-top:9px">Tvoje pozice: <strong>${myIndex+1}. místo</strong> · ${teacherGameScore(myTeacher).toFixed(1)} b.</div>`
       : '';
 
-    const worst=state.students.slice().sort((a,b)=>
-      (Number(b.collectedPoints||0)-Number(a.collectedPoints||0)) ||
-      (currentPoints(b)-currentPoints(a)) ||
-      String(a.name||'').localeCompare(String(b.name||''),'cs')
-    )[0];
+    const worst=state.students
+      .filter(s=>Number(s.collectedPoints||0)<0 || currentPenaltyPoints(s)>0)
+      .slice().sort((a,b)=>
+        (Number(a.collectedPoints||0)-Number(b.collectedPoints||0)) ||
+        (currentPenaltyPoints(b)-currentPenaltyPoints(a)) ||
+        String(a.name||'').localeCompare(String(b.name||''),'cs')
+      )[0];
 
     let studentCard='';
     if(worst){
@@ -7251,12 +7324,12 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
           <div class="tiny muted">NEJVÍCE TRESTNÝCH BODŮ VE ŠKOLE</div>
           <div class="home-student-name">${esc(worst.name)}</div>
           <div class="meta">${classLabel}</div>
-          <div class="home-points-big">${Number(worst.collectedPoints||0)} nasbíraných b.</div>
-          <div class="tiny muted">Aktuálně: ${currentPoints(worst)} b.</div>
+          <div class="home-points-big point-value ${pointTone(worst.collectedPoints)}">${formatSignedNumber(worst.collectedPoints)} nasbíraných b.</div>
+          <div class="tiny muted">Aktuální bilance: <span class="point-value ${pointTone(currentPointBalance(worst))}">${formatSignedNumber(currentPointBalance(worst))} b.</span> · trest pro los: ${currentPenaltyPoints(worst)} b.</div>
         </div>
       </div>`;
     }else{
-      studentCard='<div class="empty">Ve škole zatím nejsou žádní žáci.</div>';
+      studentCard='<div class="empty">Ve škole zatím není žádný žák s trestnými body.</div>';
     }
 
     return `<div class="home-summary-grid">
@@ -7357,7 +7430,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         ${[
           ['1','Přihlas se a vyber školu','V produkční verzi bude účet propojen s Google nebo Microsoft přihlášením. Členství učitele ve škole je navázané na účet / e-mail.'],
           ['2','Připrav třídy, žáky a předměty','V Moje třídy spravuješ třídy a žáky. V Moje předměty vytváříš předměty a témata pro zkoušení.'],
-          ['3','Zahaj zkoušení','Vyber třídu a předmět, označ docházku a nastav aktuální pravidla / trestné body jednotlivých žáků.'],
+          ['3','Zahaj zkoušení','Vyber třídu a předmět, označ docházku a nastav aktuální pravidla. Záporné body jsou trestné, kladné jsou pochvalné.'],
           ['4','Nech ZZ-01 doporučit kandidáty','Pravděpodobnost doporučení roste s aktuálními trestnými body. Učitel ale vždy rozhoduje, koho skutečně vyzkouší.'],
           ['5','Vyber téma','Použij uložené téma, roztoč Kolo štěstí nebo napiš vlastní téma.'],
           ['6','Dokonči zkoušení','Časovač pouze upozorňuje. Na konci zadej známku 1–5 nebo ukonči zkoušení bez známky. Výsledek se uloží do historie.']
@@ -7382,7 +7455,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         <h2>Jak funguje losování žáků</h2>
         <p class="muted">Zkouškomat doporučuje kandidáty, ale konečné rozhodnutí zůstává vždy na učiteli.</p>
         <div class="list">
-          <div class="list-item"><div><strong>Vážený los</strong><div class="tiny muted">Váha žáka = 1 + aktuální trestné body. Vyšší počet bodů tedy zvyšuje šanci na doporučení.</div></div></div>
+          <div class="list-item"><div><strong>Vážený los</strong><div class="tiny muted">Záporné body jsou trestné. Pro los se použije jejich velikost: bilance −3 znamená 3 trestné body a vyšší šanci na doporučení. Kladná bilance trest nezvyšuje.</div></div></div>
           <div class="list-item"><div><strong>Stejné body</strong><div class="tiny muted">Když mají všichni stejné body, probíhá čistě náhodný výběr.</div></div></div>
           <div class="list-item"><div><strong>Ochranný interval</strong><div class="tiny muted">Nedávno zkoušený žák může být dočasně vyřazen z doporučení. Nastavení lze změnit nebo vypnout.</div></div></div>
           <div class="list-item"><div><strong>Nedostatek kandidátů</strong><div class="tiny muted">Když jsou všichni chránění, může učitel jednorázově ochranu ignorovat nebo žáka vybrat ručně.</div></div></div>
@@ -7391,9 +7464,9 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 
       <section class="pixel-frame help-card">
         <h2>Trestné body žáků</h2>
-        <p class="muted">Aktuální body ovlivňují los. Nasbírané body slouží pro dlouhodobější přehled a scoring.</p>
+        <p class="muted">Jednotná logika celé aplikace: <strong>− znamená trest</strong>, <strong>+ znamená pochvalu</strong>. Kladné body vyrovnávají záporné. Pro vážený los se používá pouze výsledná velikost záporné bilance.</p>
         <div class="list">
-          <div class="list-item"><div><strong>Moje pravidla</strong><div class="tiny muted">Učitel může běžná pravidla přejmenovat, změnit jejich bodovou hodnotu, vypnout, smazat nebo přidat vlastní.</div></div></div>
+          <div class="list-item"><div><strong>Moje pravidla</strong><div class="tiny muted">Učitel zadává trestné pravidlo záporným číslem (např. −2) a pochvalné pravidlo kladným číslem (např. +1).</div></div></div>
           <div class="list-item"><div><strong>Neodevzdal práci v termínu</strong><div class="tiny muted">Systémové pravidlo se zvláštním chováním. Zůstává aktivní, dokud učitel nepotvrdí, že žák práci odevzdal.</div></div></div>
           <div class="list-item"><div><strong>Po zkoušení</strong><div class="tiny muted">Běžné aktuální body se po dokončeném zkoušení resetují podle pravidel aplikace. Historické údaje zůstávají.</div></div></div>
         </div>
@@ -7404,8 +7477,8 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         <div class="list">
           <div class="list-item"><div><strong>Propustka</strong><div class="tiny muted">Jednorázový žolík. Pokud ji žák použije, zkoušení se neuskuteční a propustka se spotřebuje.</div></div></div>
           <div class="list-item"><div><strong>Školní skříňka</strong><div class="tiny muted">Volitelná náhodná událost mezi výběrem žáka a tématem. Pravděpodobnost lze nastavit.</div></div></div>
-          <div class="list-item"><div><strong>Moje skříňky</strong><div class="tiny muted">Učitel může zapnout nebo vypnout předdefinované výsledky a vytvářet vlastní. Vlastní výsledek má název a může přidat nebo ubrat aktuální body žáka.</div></div></div>
-          <div class="list-item"><div><strong>Vlastní skříňka</strong><div class="tiny muted">V prototypu se zobrazí jako textová kartička padající ze skříňky. Aktuální body nikdy neklesnou pod nulu.</div></div></div>
+          <div class="list-item"><div><strong>Moje skříňky</strong><div class="tiny muted">Učitel může zapnout nebo vypnout předdefinované výsledky a vytvářet vlastní. I zde platí: záporné číslo je trest, kladné je pochvala.</div></div></div>
+          <div class="list-item"><div><strong>Vlastní skříňka</strong><div class="tiny muted">V prototypu se zobrazí jako textová kartička padající ze skříňky. Výsledek se započítá do stejné podepsané bodové bilance žáka.</div></div></div>
         </div>
       </section>
 
@@ -7595,9 +7668,9 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         <div class="h8-student-avatar" aria-hidden="true"></div>
         <div class="h8-student-copy clickable-row" data-action="student-detail" data-id="${s.id}" data-class="${c.id}" role="button" tabindex="0">
           <div class="h8-student-name">${esc(s.name)}</div>
-          <div class="h8-student-meta">Nasbíráno ${s.collectedPoints} b. · zkoušen ${s.examsCountPeriod}×</div>
+          <div class="h8-student-meta">Nasbíráno <span class="point-value ${pointTone(s.collectedPoints)}">${formatSignedNumber(s.collectedPoints)} b.</span> · zkoušen ${s.examsCountPeriod}×</div>
         </div>
-        <div class="h8-points-badge">${currentPoints(s)} b.</div>
+        <div class="h8-points-badge point-value ${pointTone(currentPointBalance(s))}">${formatSignedNumber(currentPointBalance(s))} b.</div>
         <div class="h8-student-actions">
           <button class="h8-mini-btn" data-action="rename-student" data-id="${s.id}">Upravit</button>
           <button class="h8-mini-btn danger" data-action="remove-student" data-id="${s.id}" data-class="${c.id}">Odebrat</button>
@@ -7744,28 +7817,25 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 
     if(state.ui.ruleOpenStudentId && !list.some(s=>s.id===state.ui.ruleOpenStudentId)) state.ui.ruleOpenStudentId='';
 
-    const pointText=n=>{
-      n=Number(n)||0;
-      return `${n} ${n===1?'bod':(n>=2&&n<=4?'body':'bodů')}`;
-    };
+    const pointText=n=>signedPointText(n);
 
     const rows=list.map(s=>{
       const present=f.attendance[s.id]!==false;
-      const points=currentPoints(s);
+      const points=currentPointBalance(s);
       const open=state.ui.ruleOpenStudentId===s.id && present;
       const ruleRows=open?rules.map(r=>{
         const on=!!s.ruleStates[r.id];
         return `<div class="exam-roster-rule-chip">
           <button type="button" class="rules-inline-toggle ${on?'on':''}" data-action="exam-inline-rule-toggle" data-student="${s.id}" data-rule="${r.id}" aria-pressed="${on?'true':'false'}" aria-label="${on?'Vypnout':'Zapnout'} ${esc(r.name)}">${on?'✓':''}</button>
           <div class="rules-inline-name">${esc(r.name)}</div>
-          <div class="rules-inline-points">+${Number(r.points)||0}</div>
+          <div class="rules-inline-points point-value ${pointTone(r.points)}">${formatSignedNumber(r.points)}</div>
         </div>`;
       }).join(''):'';
       return `<article class="exam-roster-item ${present?'is-present':'is-absent'}" data-roster-student="${s.id}">
         <div class="exam-roster-row-main">
           <div class="exam-roster-name"><span>${esc(s.name)}</span></div>
           <label class="exam-roster-presence"><input class="attendance-check" type="checkbox" data-attendance="${s.id}" ${present?'checked':''} aria-label="${present?'Přítomen':'Chybí'} – ${esc(s.name)}"><span class="roster-presence-label">${present?'Přítomen':'Chybí'}</span></label>
-          <div class="exam-roster-points ${points>0?'has-points':''}">${pointText(points)}</div>
+          <div class="exam-roster-points ${pointTone(points)}">${pointText(points)}</div>
           <button type="button" class="exam-roster-rules-btn ${open?'is-open':''}" data-action="exam-rule-student-toggle" data-id="${s.id}" ${present?'':'disabled'}>${open?'Zavřít':'Pravidla'}</button>
         </div>
         ${open?`<div class="exam-roster-rule-panel"><div class="exam-roster-rule-list">${ruleRows||'<div class="rules-empty">Nejsou aktivní žádná pravidla.</div>'}</div></div>`:''}
@@ -7814,20 +7884,17 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       state.ui.ruleOpenStudentId='';
     }
 
-    const pointText=n=>{
-      n=Number(n)||0;
-      return `${n} ${n===1?'bod':(n>=2&&n<=4?'body':'bodů')}`;
-    };
+    const pointText=n=>signedPointText(n);
 
     const studentCards=visible.map(s=>{
-      const points=currentPoints(s);
+      const points=currentPointBalance(s);
       const open=state.ui.ruleOpenStudentId===s.id;
       const rows=open?rules.map(r=>{
         const on=!!s.ruleStates[r.id];
         return `<div class="rules-inline-row">
           <button type="button" class="rules-inline-toggle ${on?'on':''}" data-action="exam-inline-rule-toggle" data-student="${s.id}" data-rule="${r.id}" aria-pressed="${on?'true':'false'}" aria-label="${on?'Vypnout':'Zapnout'} ${esc(r.name)}">${on?'✓':''}</button>
           <div class="rules-inline-name">${esc(r.name)}${r.system?'<span class="rules-inline-system">SYSTÉMOVÉ PRAVIDLO</span>':''}</div>
-          <div class="rules-inline-points">+${Number(r.points)||0}</div>
+          <div class="rules-inline-points point-value ${pointTone(r.points)}">${formatSignedNumber(r.points)}</div>
         </div>`;
       }).join(''):'';
 
@@ -7835,7 +7902,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         <div class="rules-student-summary">
           <span class="rules-person" aria-hidden="true"></span>
           <span class="rules-student-name">${esc(s.name)}</span>
-          <span class="rules-points-badge ${points>0?'has-points':'zero-points'}">${pointText(points)}</span>
+          <span class="rules-points-badge ${pointTone(points)}">${pointText(points)}</span>
           <button type="button" class="rules-edit-btn ${open?'is-open':''}" data-action="exam-rule-student-toggle" data-id="${s.id}" aria-expanded="${open?'true':'false'}">
             ${open?'Zavřít':'Upravit podmínky'}
           </button>
@@ -7884,7 +7951,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 
         <button type="button" class="rules-manage" data-action="manage-rules">✎ &nbsp; Správa seznamu pravidel</button>
 
-        <div class="rules-info"><div class="rules-info-icon">i</div><div>Body se počítají automaticky ze zaškrtnutých podmínek. Vyšší počet bodů zvyšuje šanci při váženém losu.</div></div>
+        <div class="rules-info"><div class="rules-info-icon">i</div><div><strong>− = trest, + = pochvala.</strong> Kladné body vyrovnávají záporné. Vážený los zvyšuje pouze výsledná záporná bilance.</div></div>
 
         <button class="exam-continue" data-action="draw-candidates" ${!students.length?'disabled':''}>
           <span>Vybrat kandidáty</span><span class="arrow">▶</span>
@@ -7940,10 +8007,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     const validIds=(f.candidates||[]).filter(id=>studentById(id));
     if(!validIds.includes(f.candidateChoiceId)) f.candidateChoiceId=validIds[0]||null;
 
-    const pointText=n=>{
-      n=Number(n)||0;
-      return `${n} ${n===1?'bod':(n>=2&&n<=4?'body':'bodů')}`;
-    };
+    const pointText=n=>signedPointText(n);
 
     const items=validIds.map((id,i)=>{
       const s=studentById(id);
@@ -7953,14 +8017,14 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         <span class="candidate-copy">
           <span class="candidate-kicker">Kandidát ${i+1}</span>
           <span class="candidate-name">${esc(s.name)}</span>
-          <span class="candidate-points">${pointText(currentPoints(s))}</span>
+          <span class="candidate-points point-value ${pointTone(currentPointBalance(s))}">${pointText(currentPointBalance(s))}</span>
           <span class="candidate-history">Zkoušen v období: ${Number(s.examsCountPeriod||0)}×</span>
         </span>
         <span class="candidate-select-pill">${selected?'Vybrán':'Vybrat'}</span>
       </button>`;
     }).join('');
 
-    const message=state.ui.drawMessage||'Vážený los zohledňuje aktuální trestné body.';
+    const message=state.ui.drawMessage||'Vážený los zohledňuje pouze zápornou část aktuální bodové bilance.';
     const body=`
       <section class="candidates-screen">
         <div class="candidates-head">
@@ -8024,10 +8088,9 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     }else{
       const result=applyLockerPoints(s,Number(item.points||0));
       state.examFlow.lockerPointsDelta=result.applied;
-      if(result.applied>0) effectText=`Přidáno +${result.applied} aktuálních trestných bodů.`;
-      else if(result.applied<0) effectText=`Ubráno ${Math.abs(result.applied)} aktuálních trestných bodů.`;
-      else if(Number(item.points||0)<0) effectText='Body už nešlo snížit – žák je na nule.';
-      else effectText='Počet bodů se nezměnil.';
+      if(result.applied>0) effectText=`Pochvala +${result.applied} bodů. Kladné body vyrovnávají trestné.`;
+      else if(result.applied<0) effectText=`Trest ${result.applied} bodů.`;
+      else effectText='Bodová bilance se nezměnila.';
     }
 
     saveState();
@@ -8652,7 +8715,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     syncCurrentTeacherStats();
     const tab=state.ui.scoreTab||'my';
     let body='';
-    const allStudents=state.students.slice().sort((a,b)=>b.collectedPoints-a.collectedPoints);
+    const allStudents=state.students.slice().sort((a,b)=>Number(a.collectedPoints||0)-Number(b.collectedPoints||0));
     if(tab==='my'){
       const myClasses=classesForCurrentTeacher().slice().sort((a,b)=>{
         const y=String(b.schoolYear||'').localeCompare(String(a.schoolYear||''),'cs');
@@ -8671,11 +8734,11 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         const classLabel=cls
           ? `${cls.displayName} — ${cls.schoolYear||''}`
           : myClassesForStudent(st.id).map(c=>`${c.displayName} — ${c.schoolYear||''}`).join(', ') || '—';
-        return `<tr><td>${i+1}.</td><td>${esc(st.name)}</td><td>${esc(classLabel)}</td><td>${st.collectedPoints}</td><td>${currentPoints(st)}</td><td>${st.examsCountPeriod}</td></tr>`;
+        return `<tr><td>${i+1}.</td><td>${esc(st.name)}</td><td>${esc(classLabel)}</td><td><span class="point-value ${pointTone(st.collectedPoints)}">${formatSignedNumber(st.collectedPoints)}</span></td><td><span class="point-value ${pointTone(currentPointBalance(st))}">${formatSignedNumber(currentPointBalance(st))}</span></td><td>${st.examsCountPeriod}</td></tr>`;
       }).join('');
       body=`${classFilter}<div class="table-wrap"><table><thead><tr><th>#</th><th>Žák</th><th>Třída</th><th>Nasbíráno</th><th>Aktuálně</th><th>Zkoušení</th></tr></thead><tbody>${rows||'<tr><td colspan="6"><div class="empty">V této třídě zatím nejsou žádní žáci.</div></td></tr>'}</tbody></table></div>`;
     }else if(tab==='school'){
-      const rows=allStudents.map((st,i)=>`<tr><td>${i+1}.</td><td>${esc(st.name)}</td><td>${esc(classesForStudent(st.id).map(c=>`${c.displayName} — ${c.schoolYear||''}`).join(', ')||'—')}</td><td>${st.collectedPoints}</td><td>${currentPoints(st)}</td><td>${st.examsCountPeriod}</td></tr>`).join('');
+      const rows=allStudents.map((st,i)=>`<tr><td>${i+1}.</td><td>${esc(st.name)}</td><td>${esc(classesForStudent(st.id).map(c=>`${c.displayName} — ${c.schoolYear||''}`).join(', ')||'—')}</td><td><span class="point-value ${pointTone(st.collectedPoints)}">${formatSignedNumber(st.collectedPoints)}</span></td><td><span class="point-value ${pointTone(currentPointBalance(st))}">${formatSignedNumber(currentPointBalance(st))}</span></td><td>${st.examsCountPeriod}</td></tr>`).join('');
       body=`<div class="table-wrap"><table><thead><tr><th>#</th><th>Žák</th><th>Třída</th><th>Nasbíráno</th><th>Aktuálně</th><th>Zkoušení</th></tr></thead><tbody>${rows}</tbody></table></div>`;
     }else{
       const g=state.gamification||defaultGamification();
@@ -8759,7 +8822,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       </div>`;
 
       const bossControl=isBossUser()
-        ? `<div class="boss-panel"><div class="section-title"><div><h3 style="margin:0">Šéfová – ruční body</h3><div class="tiny muted">Body za školní události, které nejsou navázané na zkoušení.</div></div><button class="btn primary" data-action="boss-points-manager">Přidělit / odebrat body</button></div></div>`
+        ? `<div class="boss-panel"><div class="section-title"><div><h3 style="margin:0">Šéfová – pochvalné a trestné body</h3><div class="tiny muted">− znamená trest, + znamená pochvalu. Kladné body vyrovnávají záporné.</div></div><button class="btn primary" data-action="boss-points-manager">Udělit body</button></div></div>`
         : '';
 
       const rawView=state.ui.teacherScoreView||'challenges';
@@ -8797,7 +8860,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         ${toolbar}
         <div style="margin-top:14px">${gameBody}</div>
         <section class="pixel-frame card" style="margin-top:16px">
-          <div class="section-title"><div><h2>Historie bodů od Šéfové</h2><div class="tiny muted">Ruční zásahy zůstávají dohledatelné; opravy se provádějí stornem.</div></div></div>
+          <div class="section-title"><div><h2>Historie bodů od Šéfové</h2><div class="tiny muted">Záporné hodnoty jsou trestné, kladné pochvalné. Ruční zásahy zůstávají dohledatelné; opravy se provádějí stornem.</div></div></div>
           ${bossAdjustmentHistoryHtml(12)}
         </section>
         <div class="game-note">Scoring je herní prvek Zkouškomatu. Neslouží k hodnocení pracovního výkonu učitelů.</div>`;
@@ -9636,7 +9699,7 @@ body::after{
     if(item.kind==='pass') return 'Propustka';
     if(item.kind==='nothing') return 'Bez bodové změny';
     const p=Number(item.points||0);
-    return p>0?`+${p} bodů`:p<0?`${p} bodů`:'0 bodů';
+    return signedPointText(p);
   }
 
   function showLockersManager(){
@@ -9699,7 +9762,7 @@ body::after{
       <label style="margin-top:10px">Bodový efekt
         <input id="custom-locker-points" type="number" min="-10" max="10" step="1" value="${Number(item?.points||0)}">
       </label>
-      <div class="tiny muted" style="margin-top:8px">Záporné číslo body ubere, kladné přidá. Aktuální trestné body nikdy neklesnou pod nulu.</div>
+      <div class="tiny muted" style="margin-top:8px"><strong>− = trest, + = pochvala.</strong> Např. −2 přidá dva trestné body, +2 dva trestné body vyrovná; případný přebytek zůstává jako kladná pochvalná bilance.</div>
       <div class="tiny muted" style="margin-top:6px">Vlastní skříňka nemá obrázek – z otevřené šatní skříně vypadne pouze text s tímto názvem.</div>
       <div class="modal-actions">
         <button class="btn ghost" id="custom-locker-cancel">Zrušit</button>
@@ -9728,7 +9791,7 @@ body::after{
         ? '<div class="locker-result-icon">▣</div>'
         : item.kind==='nothing'
           ? '<div class="locker-result-icon">□</div>'
-          : '<div class="locker-result-icon">−1</div>';
+          : `<div class="locker-result-icon">${esc(item.icon||formatSignedNumber(item.points))}</div>`;
       return `<div class="locker-scene">
         <div class="locker-cabinet"></div>
         <div class="locker-result predefined">${visual}<div class="locker-result-name">${esc(item.name)}</div><div class="locker-result-effect">${esc(effectText)}</div></div>
@@ -9912,7 +9975,7 @@ body::after{
 
         ${adminOnly?`<div class="boss-panel">
           <h3 style="margin-top:0">Role Šéfová</h3>
-          <p class="tiny muted">Šéfová je běžný učitel s jednou zvláštní pravomocí: ručně přidělovat nebo ubírat herní body učitelům.</p>
+          <p class="tiny muted">Šéfová je běžný učitel s jednou zvláštní pravomocí: ručně udělovat trestné body záporným číslem a pochvalné body kladným číslem.</p>
           <div class="form-grid">
             <label>Aktuální Šéfová
               <select id="boss-teacher-select">
@@ -10017,8 +10080,8 @@ body::after{
 
   function showStudentRules(studentId){
     const s=studentById(studentId); if(!s) return;
-    const rows=activeRules().map(r=>`<div class="rule-row"><div><strong>${esc(r.name)}</strong><div class="tiny muted">${esc(r.description||'')} ${r.system?'· SYSTÉMOVÉ':''}</div></div><span class="score-pill">+${r.points}</span><button class="toggle ${s.ruleStates[r.id]?'on':''}" aria-label="${s.ruleStates[r.id]?'Vypnout':'Zapnout'} ${esc(r.name)}" data-rule-toggle="${r.id}" data-student="${s.id}"></button></div>`).join('');
-    modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal" role="dialog" aria-modal="true"><h2 class="pixel-title">${esc(s.name)}</h2><div class="badge">Aktuálně ${currentPoints(s)} bodů</div><div class="list" style="margin-top:12px;max-height:55vh">${rows}</div><div class="modal-actions"><button class="btn secondary" id="close-rules">Hotovo</button></div></section></div>`;
+    const rows=activeRules().map(r=>`<div class="rule-row"><div><strong>${esc(r.name)}</strong><div class="tiny muted">${esc(r.description||'')} ${r.system?'· SYSTÉMOVÉ':''}</div></div><span class="score-pill point-value ${pointTone(r.points)}">${formatSignedNumber(r.points)}</span><button class="toggle ${s.ruleStates[r.id]?'on':''}" aria-label="${s.ruleStates[r.id]?'Vypnout':'Zapnout'} ${esc(r.name)}" data-rule-toggle="${r.id}" data-student="${s.id}"></button></div>`).join('');
+    modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal" role="dialog" aria-modal="true"><h2 class="pixel-title">${esc(s.name)}</h2><div class="badge point-value ${pointTone(currentPointBalance(s))}">Aktuálně ${signedPointText(currentPointBalance(s))}</div><div class="list" style="margin-top:12px;max-height:55vh">${rows}</div><div class="modal-actions"><button class="btn secondary" id="close-rules">Hotovo</button></div></section></div>`;
     document.getElementById('close-rules').onclick=()=>{closeModal();saveState();render();};
     modalRoot.querySelectorAll('[data-rule-toggle]').forEach(btn=>btn.onclick=()=>toggleRule(btn.dataset.student,btn.dataset.ruleToggle,btn));
   }
@@ -10041,8 +10104,8 @@ body::after{
   }
 
   function showRulesManager(){
-    const rows=state.rules.map(r=>`<div class="rule-row"><div><strong>${esc(r.name)}</strong><div class="tiny muted">${r.system?'Systémové – nelze přejmenovat ani smazat.':'Běžné pravidlo'}</div></div><span class="score-pill">+${r.points}</span><div class="row"><button class="btn ghost" data-edit-rule="${r.id}" ${r.editable?'':'disabled'}>Upravit</button><button class="btn danger" data-delete-rule="${r.id}" ${r.deletable?'':'disabled'}>Smazat</button></div></div>`).join('');
-    modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">Moje pravidla</h2><div class="list" style="max-height:55vh">${rows}</div><div class="modal-actions"><button class="btn primary" id="new-rule">+ Přidat pravidlo</button><button class="btn secondary" id="close-manager">Hotovo</button></div></section></div>`;
+    const rows=state.rules.map(r=>`<div class="rule-row"><div><strong>${esc(r.name)}</strong><div class="tiny muted">${r.system?'Systémové – nelze přejmenovat ani smazat.':'Běžné pravidlo'}</div></div><span class="score-pill point-value ${pointTone(r.points)}">${formatSignedNumber(r.points)}</span><div class="row"><button class="btn ghost" data-edit-rule="${r.id}" ${r.editable?'':'disabled'}>Upravit</button><button class="btn danger" data-delete-rule="${r.id}" ${r.deletable?'':'disabled'}>Smazat</button></div></div>`).join('');
+    modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">Moje pravidla</h2><p class="muted"><strong>− = trest, + = pochvala.</strong> Např. −2 přidá dva trestné body, +2 dva trestné body vyrovná.</p><div class="list" style="max-height:55vh">${rows}</div><div class="modal-actions"><button class="btn primary" id="new-rule">+ Přidat pravidlo</button><button class="btn secondary" id="close-manager">Hotovo</button></div></section></div>`;
     document.getElementById('close-manager').onclick=closeModal;
     document.getElementById('new-rule').onclick=()=>editRuleModal(null);
     modalRoot.querySelectorAll('[data-edit-rule]').forEach(b=>b.onclick=()=>editRuleModal(b.dataset.editRule));
@@ -10051,11 +10114,12 @@ body::after{
 
   function editRuleModal(id){
     const r=id?ruleById(id):null;
-    modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">${r?'Upravit pravidlo':'Nové pravidlo'}</h2><label>Název<input id="rule-name" value="${esc(r?.name||'')}"></label><label style="margin-top:10px">Popis<input id="rule-desc" value="${esc(r?.description||'')}"></label><label style="margin-top:10px">Body<input id="rule-points" type="number" min="0" max="99" value="${r?.points??1}"></label><div class="modal-actions"><button class="btn ghost" id="rule-cancel">Zrušit</button><button class="btn primary" id="rule-save">Uložit</button></div></section></div>`;
+    modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">${r?'Upravit pravidlo':'Nové pravidlo'}</h2><label>Název<input id="rule-name" value="${esc(r?.name||'')}"></label><label style="margin-top:10px">Popis<input id="rule-desc" value="${esc(r?.description||'')}"></label><label style="margin-top:10px">Body (− trest / + pochvala)<input id="rule-points" type="number" min="-99" max="99" step="1" value="${r?.points??-1}"></label><div class="tiny muted" style="margin-top:7px">Trestné pravidlo zadej se znaménkem mínus, například −2. Pochvalné pravidlo zadej kladně, například +1.</div><div class="modal-actions"><button class="btn ghost" id="rule-cancel">Zrušit</button><button class="btn primary" id="rule-save">Uložit</button></div></section></div>`;
     document.getElementById('rule-cancel').onclick=showRulesManager;
     document.getElementById('rule-save').onclick=()=>{
       const name=document.getElementById('rule-name').value.trim(); const points=Number(document.getElementById('rule-points').value); if(!name) return toast('Zadej název pravidla.','error');
-      if(r){r.name=name;r.description=document.getElementById('rule-desc').value.trim();r.points=Math.max(0,points||0);} else state.rules.push({id:uid('rule'),name,description:document.getElementById('rule-desc').value.trim(),points:Math.max(0,points||0),editable:true,deletable:true,active:true,system:false});
+      const signedPoints=Math.max(-99,Math.min(99,Number.isFinite(points)?Math.trunc(points):0));
+      if(r){r.name=name;r.description=document.getElementById('rule-desc').value.trim();r.points=signedPoints;} else state.rules.push({id:uid('rule'),name,description:document.getElementById('rule-desc').value.trim(),points:signedPoints,editable:true,deletable:true,active:true,system:false});
       saveState(); toast('Pravidlo uloženo.'); showRulesManager();
     };
   }
@@ -10067,7 +10131,7 @@ body::after{
 
   function showOtherStudentChooser(){
     const f=state.examFlow; const eligible=studentsForClass(f.classId).filter(s=>f.attendance[s.id]!==false);
-    modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">Zvolit jiného žáka</h2><div class="list">${eligible.map(s=>`<button class="list-item" data-other-student="${s.id}"><span>${esc(s.name)}</span><span class="score-pill">${currentPoints(s)}</span></button>`).join('')}</div><div class="modal-actions"><button class="btn ghost" id="cancel-other">Zrušit</button></div></section></div>`;
+    modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">Zvolit jiného žáka</h2><div class="list">${eligible.map(s=>`<button class="list-item" data-other-student="${s.id}"><span>${esc(s.name)}</span><span class="score-pill point-value ${pointTone(currentPointBalance(s))}">${formatSignedNumber(currentPointBalance(s))}</span></button>`).join('')}</div><div class="modal-actions"><button class="btn ghost" id="cancel-other">Zrušit</button></div></section></div>`;
     document.getElementById('cancel-other').onclick=closeModal;
     modalRoot.querySelectorAll('[data-other-student]').forEach(b=>b.onclick=()=>{const id=b.dataset.otherStudent;closeModal();candidatePrecheck(id);});
   }
@@ -10189,7 +10253,7 @@ body::after{
 
   function showStudentDetail(studentId,classId){
     const s=studentById(studentId),c=classById(classId); if(!s||!c) return;
-    modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">${esc(s.name)}</h2><p class="muted">${esc(c.displayName)} — ${esc(c.schoolYear)}</p><div class="grid grid-2"><div class="kpi pixel-frame"><strong>${currentPoints(s)}</strong><span>aktuální body</span></div><div class="kpi pixel-frame"><strong>${s.examsCountPeriod}</strong><span>zkoušení v období</span></div></div><div class="modal-actions"><button class="btn ghost" id="student-detail-close">Zavřít</button><button class="btn secondary" id="student-detail-edit">Upravit jméno</button><button class="btn danger" id="student-detail-remove">Odebrat z třídy</button></div></section></div>`;
+    modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">${esc(s.name)}</h2><p class="muted">${esc(c.displayName)} — ${esc(c.schoolYear)}</p><div class="grid grid-2"><div class="kpi pixel-frame"><strong class="point-value ${pointTone(currentPointBalance(s))}">${formatSignedNumber(currentPointBalance(s))}</strong><span>aktuální bilance</span></div><div class="kpi pixel-frame"><strong>${s.examsCountPeriod}</strong><span>zkoušení v období</span></div></div><div class="modal-actions"><button class="btn ghost" id="student-detail-close">Zavřít</button><button class="btn secondary" id="student-detail-edit">Upravit jméno</button><button class="btn danger" id="student-detail-remove">Odebrat z třídy</button></div></section></div>`;
     document.getElementById('student-detail-close').onclick=closeModal;
     document.getElementById('student-detail-edit').onclick=()=>{closeModal(); const fake={dataset:{id:s.id}}; const evt=new CustomEvent('click'); /* handled directly below */ modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2>Upravit žáka</h2><label>Jméno<input id="rename-student" value="${esc(s.name)}"></label><div class="modal-actions"><button class="btn ghost" id="rename-cancel">Zrušit</button><button class="btn primary" id="rename-save">Uložit</button></div></section></div>`;document.getElementById('rename-cancel').onclick=closeModal;document.getElementById('rename-save').onclick=()=>{s.name=document.getElementById('rename-student').value.trim()||s.name;saveState();closeModal();toast('Žák upraven.');render();};};
     document.getElementById('student-detail-remove').onclick=()=>{closeModal();modal({title:'Odebrat žáka z třídy?',body:`<p>${esc(s.name)} bude odebrán pouze z aktuálního seznamu třídy. Historie zůstane zachována.</p>`,actions:[{label:'Ne',className:'secondary'},{label:'Ano',className:'danger',onClick:()=>{c.studentIds=c.studentIds.filter(id=>id!==s.id);saveState();toast('Žák odebrán z aktuální třídy.');render();}}]});};
@@ -10447,7 +10511,7 @@ body::after{
       if(!present.length)return toast('Není označen žádný přítomný žák.','error');
       let picks=weightedCandidates(f,false);
       if(!picks.length && present.length){modal({title:'Všichni jsou v ochranném intervalu',body:'<p>Pro tento los můžeš ochranu jednorázově ignorovat, nebo se vrátit a vybrat žáka ručně.</p>',actions:[{label:'Zpět',className:'secondary'},{label:'Ignorovat ochranu pro tento los',className:'primary',onClick:()=>{f.ignoreProtection=true;f.candidates=weightedCandidates(f,true);f.candidateChoiceId=f.candidates[0]||null;f.stage='candidates';state.ui.drawMessage='Ochranný interval byl pro tento los ignorován.';saveState();render();}}]});return;}
-      const points=present.filter(s=>!isProtected(s)).map(currentPoints);state.ui.drawMessage=points.length&&points.every(p=>p===points[0])?'Při shodě bodů probíhá náhodný výběr.':'Vážený los: vyšší počet aktuálních bodů zvyšuje šanci na výběr.';f.candidates=picks;f.candidateChoiceId=picks[0]||null;f.stage='candidates';saveState();render();
+      const points=present.filter(s=>!isProtected(s)).map(currentPenaltyPoints);state.ui.drawMessage=points.length&&points.every(p=>p===points[0])?'Při shodě trestných bodů probíhá náhodný výběr.':'Vážený los: větší záporná bilance znamená více trestných bodů a vyšší šanci na výběr.';f.candidates=picks;f.candidateChoiceId=picks[0]||null;f.stage='candidates';saveState();render();
     }
     else if(action==='choose-candidate'){
       state.examFlow.candidateChoiceId=btn.dataset.id||null;saveState();render();
