@@ -1,3 +1,21 @@
+# ZZ-01_BOSS_FEEDBACK_NOTIFICATIONS — pochvala a výtka od Šéfové
+
+- při novém ručním bodovém zásahu Šéfové se cílovému učiteli uloží jednorázové upozornění
+- kladné body zobrazí zavíratelné okno „Pochvala od Šéfové“
+- záporné body zobrazí zavíratelné okno „Výtka od Šéfové“
+- v okně je uvedeno jméno Šéfové, povinný důvod a výrazný počet přidaných nebo odebraných bodů
+- kladné body jsou vykreslené zeleně, záporné body červeně
+- upozornění lze zavřít křížkem nebo tlačítkem „Zavřít“
+- po zavření se zpráva označí jako přečtená a už znovu nevyskočí
+- pokud čeká více zpráv od Šéfové, zobrazí se postupně po jedné
+- starší historické bodové záznamy před tímto patchem žádné nové vyskakovací zprávy nevytvoří
+- během právě běžícího časovaného zkoušení upozornění nevyskakuje
+- tlačítko „Přidělit body“ je u Šéfové neaktivní, dokud není vybraný učitel a vyplněný důvod
+- původní serverová validace důvodu zůstává zachovaná jako druhá kontrola
+- ostatní scoring, testovací účty, sdílené třídy, avatary, hlavní menu i animace zkoušení zůstávají beze změny
+
+--- Původní changelog zachovaný v plném rozsahu ---
+
 # ZZ-01_MAIN_MENU_BITMAP_FONT_V1 — písmo hlavního menu podle reference
 
 - texty v tlačítkách hlavního menu už nepoužívají systémový `Fixedsys` ani jiný náhradní font

@@ -5071,6 +5071,94 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 /* ZZ-01 BOSS POINTS + SCORING FIX */
 /* Funkční oprava je v JS: historie bodů Šéfové používá existující fmtDate(). */
 </style>
+
+<style>
+/* ZZ-01 BOSS FEEDBACK NOTIFICATIONS */
+.required-mark{color:#ff625d;font-weight:900}
+.boss-feedback-backdrop{background:rgba(2,7,13,.9)}
+.boss-feedback-modal{
+  position:relative;
+  width:min(520px,100%);
+  text-align:center;
+  padding:24px 20px 20px;
+  border-width:4px;
+  box-shadow:10px 10px 0 #02070d;
+}
+.boss-feedback-modal.positive{
+  border-color:#36d68b;
+  background:#071f19;
+}
+.boss-feedback-modal.negative{
+  border-color:#ff5f5a;
+  background:#251010;
+}
+.boss-feedback-kicker{
+  margin-bottom:10px;
+  color:#89afb4;
+  font-family:var(--pixel);
+  font-size:.62rem;
+  letter-spacing:.08em;
+}
+.boss-feedback-modal.positive .pixel-title{color:#91f0bd}
+.boss-feedback-modal.negative .pixel-title{color:#ff9b97}
+.boss-feedback-from{
+  margin-top:-4px;
+  color:#c6d8d9;
+  font-size:.74rem;
+}
+.boss-feedback-points{
+  display:inline-block;
+  margin:18px auto 15px;
+  padding:10px 18px;
+  border:4px solid currentColor;
+  background:#02070d;
+  font-family:var(--pixel);
+  font-size:1.5rem;
+  line-height:1;
+  box-shadow:5px 5px 0 rgba(0,0,0,.55);
+}
+.boss-feedback-points.positive{color:#45df94}
+.boss-feedback-points.negative{color:#ff625d}
+.boss-feedback-reason{
+  margin:4px 0 10px;
+  padding:14px;
+  border:2px solid #31545b;
+  background:#06151b;
+  text-align:left;
+}
+.boss-feedback-reason span{
+  display:block;
+  margin-bottom:6px;
+  color:#78a0a7;
+  font-family:var(--pixel);
+  font-size:.58rem;
+  text-transform:uppercase;
+}
+.boss-feedback-reason strong{
+  display:block;
+  color:#fff4dc;
+  font-size:.9rem;
+  line-height:1.5;
+}
+.boss-feedback-x{
+  position:absolute;
+  top:8px;
+  right:9px;
+  width:36px;
+  height:36px;
+  padding:0;
+  border:2px solid #47636a;
+  background:#07131a;
+  color:#fff4dc;
+  font-family:var(--pixel);
+  font-size:1rem;
+  cursor:pointer;
+}
+.boss-feedback-x:hover{filter:brightness(1.2)}
+.boss-feedback-modal .modal-actions{justify-content:center}
+.boss-feedback-modal .modal-actions .btn{min-width:150px}
+</style>
+
 </head>
 <body>
   <div class="crt-overlay" aria-hidden="true"></div>
@@ -6129,6 +6217,55 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     return teacherScore(t)+teacherChallengePoints(t.id)+teacherBossPoints(t.id);
   }
 
+  function pendingBossFeedbackForCurrentUser(){
+    const teacherId=currentTeacherId();
+    return (state.gamification?.bossAdjustments||[])
+      .filter(a=>a.teacherId===teacherId && a.notifyRecipient===true && !a.recipientAcknowledgedAt && !a.reversalOf)
+      .slice()
+      .sort((a,b)=>Number(a.at)-Number(b.at))[0]||null;
+  }
+
+  function showPendingBossFeedback(){
+    if(!state.authenticated || !state.onboardingDone || state.activeExam) return;
+    if(modalRoot.innerHTML.trim()) return;
+
+    const adjustment=pendingBossFeedbackForCurrentUser();
+    if(!adjustment) return;
+
+    const points=Number(adjustment.points||0);
+    const positive=points>0;
+    const boss=(state.school.teachers||[]).find(t=>t.id===adjustment.bossId);
+    const bossName=boss?.nickname||boss?.name||'Šéfová';
+    const title=positive?'Pochvala od Šéfové':'Výtka od Šéfové';
+    const signed=`${positive?'+':'−'}${Math.abs(points)}`;
+
+    modalRoot.innerHTML=`<div class="modal-backdrop boss-feedback-backdrop">
+      <section class="modal boss-feedback-modal ${positive?'positive':'negative'}" role="dialog" aria-modal="true" aria-labelledby="boss-feedback-title">
+        <button type="button" class="boss-feedback-x" id="boss-feedback-x" aria-label="Zavřít">×</button>
+        <div class="boss-feedback-kicker">ZPRÁVA OD ŠÉFOVÉ</div>
+        <h2 id="boss-feedback-title" class="pixel-title">${esc(title)}</h2>
+        <div class="boss-feedback-from">${esc(bossName)}</div>
+        <div class="boss-feedback-points ${positive?'positive':'negative'}">${signed} B.</div>
+        <div class="boss-feedback-reason">
+          <span>Důvod</span>
+          <strong>${esc(adjustment.reason||'—')}</strong>
+        </div>
+        <div class="modal-actions">
+          <button class="btn ${positive?'primary':'danger'}" id="boss-feedback-close">Zavřít</button>
+        </div>
+      </section>
+    </div>`;
+
+    const acknowledge=()=>{
+      adjustment.recipientAcknowledgedAt=now();
+      saveState();
+      closeModal();
+      setTimeout(()=>showPendingBossFeedback(),50);
+    };
+    document.getElementById('boss-feedback-close').onclick=acknowledge;
+    document.getElementById('boss-feedback-x').onclick=acknowledge;
+  }
+
   function bossAdjustmentHistoryHtml(limit=12){
     const items=(state.gamification?.bossAdjustments||[]).slice().sort((a,b)=>Number(b.at)-Number(a.at)).slice(0,limit);
     if(!items.length) return '<div class="empty">Šéfová zatím žádné body nepřidělila ani neodebrala.</div>';
@@ -6175,13 +6312,13 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
           <input id="boss-points" type="number" min="${-limit}" max="${limit}" step="1" value="1">
         </label>
       </div>
-      <label style="margin-top:10px">Důvod
-        <input id="boss-reason" maxlength="120" placeholder="Např. Zachránil školní tiskárnu">
+      <label style="margin-top:10px">Důvod <span class="required-mark">*</span>
+        <input id="boss-reason" maxlength="120" required placeholder="Povinné — např. Zachránil školní tiskárnu">
       </label>
-      <div class="tiny muted" style="margin-top:7px">Kladné číslo skóre zvýší, záporné ho sníží. Šéfová nemůže přidělovat body sama sobě.</div>
+      <div class="tiny muted" style="margin-top:7px">Důvod je povinný. Kladné číslo skóre zvýší, záporné ho sníží. Šéfová nemůže přidělovat body sama sobě.</div>
 
       <div class="modal-actions" style="justify-content:flex-start">
-        <button class="btn primary" id="boss-save-adjustment" ${targets.length?'':'disabled'}>Přidělit body</button>
+        <button class="btn primary" id="boss-save-adjustment" disabled>Přidělit body</button>
         <button class="btn secondary" id="boss-close-manager">Hotovo</button>
       </div>
 
@@ -6211,9 +6348,19 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       render();
     };
     const save=document.getElementById('boss-save-adjustment');
+    const reasonInput=document.getElementById('boss-reason');
+    const targetInput=document.getElementById('boss-target');
+    const updateBossSaveState=()=>{
+      if(!save) return;
+      save.disabled=!(targets.length && targetInput?.value && reasonInput?.value.trim());
+    };
+    reasonInput?.addEventListener('input',updateBossSaveState);
+    targetInput?.addEventListener('change',updateBossSaveState);
+    updateBossSaveState();
+
     if(save) save.onclick=()=>{
-      const teacherId=document.getElementById('boss-target')?.value;
-      const reason=document.getElementById('boss-reason')?.value.trim();
+      const teacherId=targetInput?.value;
+      const reason=reasonInput?.value.trim();
       const points=Math.trunc(Number(document.getElementById('boss-points')?.value||0));
       if(!teacherId)return toast('Vyber učitele.','error');
       if(teacherId===state.user.id)return toast('Šéfová nemůže přidělovat body sama sobě.','error');
@@ -6224,7 +6371,8 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       state.gamification.bossAdjustments=state.gamification.bossAdjustments||[];
       state.gamification.bossAdjustments.push({
         id:uid('bosspts'),teacherId,bossId:state.user.id,at:now(),points,reason,
-        seasonId:state.gamification.season.id,reversalOf:null,reversedById:null
+        seasonId:state.gamification.season.id,reversalOf:null,reversedById:null,
+        notifyRecipient:true,recipientAcknowledgedAt:null
       });
       saveState();
       toast(points>0?`Učiteli přidáno +${points} bodů.`:`Učiteli odebráno ${Math.abs(points)} bodů.`);
@@ -9847,6 +9995,7 @@ body::after{
     if(!state.splashSeen) return renderSplash();
     if(!state.authenticated) return renderLogin();
     if(!state.onboardingDone) return renderOnboarding();
+    if(!state.activeExam) queueMicrotask(showPendingBossFeedback);
     if(state.activeExam){ state.route='exam'; state.examFlow=state.examFlow||{stage:'exam'}; state.examFlow.stage='exam'; }
     if(state.route==='home') return renderHome();
     if(state.route==='classes') return renderClasses();
