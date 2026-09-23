@@ -1,3 +1,18 @@
+# ZZ-01_TEST_USERS_A1 — testovací víceuživatelský režim
+
+- přidány dva lokální testovací účty: „Testovací učitel“ a „Testovací Šéfová“
+- v Nastavení je nová karta „Testovací režim“ pro okamžité přepnutí mezi administrátorem, běžným učitelem a Šéfovou
+- přepnutí používá stejná lokální školní data, takže lze bez druhého účtu otestovat sdílené třídy
+- Testovací učitel začíná bez přiřazených tříd a může si existující školní třídu přidat přes „Třídy školy“
+- Testovací Šéfová má běžná práva učitele a při aktivním přepnutí skutečnou roli Šéfová, včetně nástroje „Body učitelů“
+- původní Šéfová školy se při přepnutí na Testovací Šéfovou dočasně uloží a po přepnutí zpět automaticky obnoví
+- horní lišta nyní u aktivní Šéfové správně zobrazuje roli „šéfová“
+- testovací účty se automaticky doplní i do již existujících lokálních uložených dat
+- sdílené třídy, avatary a animace zkoušení zůstávají zachované
+- testovací režim je určen pouze pro lokální prototyp; nenahrazuje budoucí skutečné přihlášení více uživatelů přes databázi
+
+--- Původní changelog zachovaný v plném rozsahu ---
+
 # ZZ-01_SCHOOL_CLASSES_A1 — sdílené třídy školy
 
 - třída je nově školní objekt: název, školní rok a seznam žáků jsou společné pro učitele stejné školy
