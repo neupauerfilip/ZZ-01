@@ -1,3 +1,24 @@
+# ZZ-01_KOBERECEK_SCORING — rozpad scoringu a úsporný Kobereček
+
+- ve Scoring → Učitelé jsou body od Šéfové nově rozdělené do dvou samostatných sloupců
+- „Pochvaly Šéfové +“ ukazují součet aktuálně platných kladných zásahů
+- „Trestné Šéfové −“ ukazují součet aktuálně platných záporných zásahů
+- stornované zásahy se do těchto dvou součtů nepočítají
+- čistý příspěvek Šéfové do celkového skóre zůstává součtem kladných a záporných platných zásahů
+- podium také zobrazuje pochvaly a tresty Šéfové odděleně
+- ve Scoring → Učitelé přibylo tlačítko „Jít na kobereček“
+- Kobereček zobrazuje osobní souhrn: Skóre ZZ-01, bonus výzev, pochvaly Šéfové, trestné body Šéfové a celkové skóre
+- část Šéfová obsahuje chronologický seznam pochval, výtek a storen v aktuální sezóně včetně uloženého důvodu a autora
+- stornované záznamy zůstávají na Koberečku viditelné jako auditní historie, ale nejsou započítané do aktivních pochval/trestů
+- část „Body mimo Šéfovou — výzvy“ vypisuje všechny aktuálně bodované splněné výzvy, jejich bodovou hodnotu, podmínku a dosažený stav
+- část „Jak vzniká Skóre ZZ-01“ transparentně ukazuje vzorec (zkoušení − propustky) / žáci × 100 a jeho vstupní hodnoty
+- Kobereček nevytváří žádný nový trvale ukládaný bodový deník
+- výzvy i Skóre ZZ-01 se na Koberečku dopočítávají z již existujících dat; kvůli tomuto přehledu tedy úložiště neroste s každým zobrazením ani přepočtem
+- nové persistentní pole ani nová historie nebyly přidány, což je vhodné i pro budoucí serverovou databázi
+- stávající potvrzování bodových změn, vysvětlivky znamének, upozornění od Šéfové a ostatní funkce zůstávají zachované
+
+--- Původní changelog zachovaný v plném rozsahu ---
+
 # ZZ-01_POINT_EXPLANATION_CONFIRM — vysvětlení účinku bodů + potvrzení
 
 - při definování nebo úpravě pravidla se pod polem Body živě zobrazuje slovní vysvětlení účinku zadané hodnoty
