@@ -5458,6 +5458,107 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 }
 </style>
 
+
+<style>
+/* ZZ-01 TAHAK LOCKER — compact transferable student inventory */
+.locker-cheatsheet-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:54px;
+  height:54px;
+  margin:0 auto 8px;
+  border:4px solid #f4d27a;
+  background:#20180b;
+  color:#fff0ad;
+  font-family:var(--pixel);
+  font-size:1.6rem;
+  box-shadow:4px 4px 0 #05080b;
+}
+.cheatsheet-inline{
+  color:#f1d577;
+  font-weight:800;
+}
+.cheatsheet-kpi{
+  border-color:#9d7932!important;
+}
+.cheatsheet-kpi strong{
+  color:#f2d273!important;
+}
+.exam-cheatsheet-button{
+  min-height:54px;
+  border:4px solid #d2a847;
+  background:#2a1d08;
+  color:#ffdf82;
+  box-shadow:5px 5px 0 #02070d;
+  font-family:var(--pixel);
+  cursor:pointer;
+}
+.exam-cheatsheet-button:hover:not(:disabled){
+  filter:brightness(1.12);
+  transform:translateY(-1px);
+}
+.exam-cheatsheet-button.is-used,
+.exam-cheatsheet-button:disabled{
+  opacity:.62;
+  cursor:default;
+  border-color:#657074;
+  background:#11191d;
+  color:#aab7b9;
+}
+.cheatsheet-used-note{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin:12px 0 0;
+  padding:10px 12px;
+  border:3px solid #d2a847;
+  background:#211806;
+  box-shadow:4px 4px 0 #02070d;
+  text-align:center;
+}
+.cheatsheet-used-note strong{
+  color:#ffe086;
+  font-family:var(--pixel);
+  font-size:.7rem;
+}
+.cheatsheet-used-note span{
+  color:#f7ead0;
+  font-size:.72rem;
+}
+.cheatsheet-confirm{
+  text-align:center;
+}
+.cheatsheet-confirm-icon{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:76px;
+  height:76px;
+  margin:4px auto 14px;
+  border:5px solid #d5aa45;
+  background:#211707;
+  color:#ffe18a;
+  font-family:var(--pixel);
+  font-size:2rem;
+  box-shadow:6px 6px 0 #02070d;
+}
+.cheatsheet-benefit{
+  margin:8px auto;
+  padding:9px 12px;
+  border:2px solid #8e7132;
+  background:#161208;
+  color:#ffe7a2;
+  font-family:var(--pixel);
+  font-size:.68rem;
+}
+@media(max-width:760px){
+  .exam-live-actions .exam-cheatsheet-button{width:100%}
+}
+</style>
+
 </head>
 <body>
   <div class="crt-overlay" aria-hidden="true"></div>
@@ -5559,7 +5660,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   const demoStudents = () => [
     'Adam Král','Barbora Malá','Cyril Novotný','Daniela Pokorná','Eliška Svobodová','Filip Horák','Gabriela Černá','Hynek Dvořák','Irena Veselá','Jakub Beneš','Karolína Blažková','Lukáš Procházka'
   ].map((name,i)=>({
-    id:`st_${i+1}`,name,active:true,ruleStates:{},collectedPoints:0,lockerPointAdjust:0,passCount:i===4?1:0,examsCountPeriod:i%3,lastExamAt:0
+    id:`st_${i+1}`,name,active:true,ruleStates:{},collectedPoints:0,lockerPointAdjust:0,passCount:i===4?1:0,cheatSheetCount:0,examsCountPeriod:i%3,lastExamAt:0
   }));
 
   const demoSchoolDirectory = () => [
@@ -5602,8 +5703,26 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         active:true,
         icon:'P',
         visual:'pass'
+      },
+      {
+        id:'locker_cheatsheet',
+        name:'Tahák',
+        kind:'cheatsheet',
+        points:0,
+        builtIn:true,
+        active:true,
+        icon:'T',
+        visual:'cheatsheet'
       }
     ];
+  }
+
+  function ensureBuiltInLockerItems(items){
+    const list=Array.isArray(items)?items:[];
+    defaultLockerItems().forEach(def=>{
+      if(!list.some(item=>item.id===def.id)) list.push({...def});
+    });
+    return list;
   }
 
   const trophyCatalog = [
@@ -5820,7 +5939,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       const bg=base.gamification;
       const parsedSettings=parsed.settings||{};
       const merged={...base,...parsed,
-        settings:{...base.settings,...parsedSettings,lockerItems:Array.isArray(parsedSettings.lockerItems)?parsedSettings.lockerItems:defaultLockerItems()},
+        settings:{...base.settings,...parsedSettings,lockerItems:ensureBuiltInLockerItems(Array.isArray(parsedSettings.lockerItems)?parsedSettings.lockerItems:defaultLockerItems())},
         gamification:{...bg,...pg,season:{...bg.season,...(pg.season||{})},archivedSeasons:Array.isArray(pg.archivedSeasons)?pg.archivedSeasons:[],events:Array.isArray(pg.events)?pg.events:[],teacherAwards:pg.teacherAwards||{},trophySchemaVersion:Number(pg.trophySchemaVersion||0),teacherTrophies:pg.teacherTrophies||{},bossPointLimit:Math.max(1,Number(pg.bossPointLimit??bg.bossPointLimit)||5),bossAdjustments:Array.isArray(pg.bossAdjustments)?pg.bossAdjustments:[],challenges:Array.isArray(pg.challenges)?pg.challenges:bg.challenges},
         schoolDirectory:parsed.schoolDirectory||base.schoolDirectory,schoolArchives:parsed.schoolArchives||{},ui:{...base.ui,...(parsed.ui||{})},online:navigator.onLine,splashSeen:false};
       const currentTeacherId=merged.user?.id||'u_me';
@@ -5851,7 +5970,8 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       merged.students=(merged.students||[]).map(s=>({
         ...s,
         collectedPoints:legacyPointSigns?-(Number(s.collectedPoints||0)):Number(s.collectedPoints||0),
-        lockerPointAdjust:legacyPointSigns?-(Number(s.lockerPointAdjust||0)):Number(s.lockerPointAdjust||0)
+        lockerPointAdjust:legacyPointSigns?-(Number(s.lockerPointAdjust||0)):Number(s.lockerPointAdjust||0),
+        cheatSheetCount:Math.max(0,Math.trunc(Number(s.cheatSheetCount||0)))
       }));
       if(merged.school && Array.isArray(merged.school.teachers)){
         merged.school.teachers=merged.school.teachers.map(t=>({
@@ -7940,6 +8060,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         <h2>Propustky a školní skříňky</h2>
         <div class="list">
           <div class="list-item"><div><strong>Propustka</strong><div class="tiny muted">Jednorázový žolík. Pokud ji žák použije, zkoušení se neuskuteční a propustka se spotřebuje.</div></div></div>
+          <div class="list-item"><div><strong>Tahák</strong><div class="tiny muted">Přenositelný předmět ze školní skříňky. Žák si ho uchovává, dokud ho nepoužije při zkoušení. Přidá +1 minutu a jednu stručnou nápovědu od učitele. V jednom zkoušení lze použít jen jeden Tahák.</div></div></div>
           <div class="list-item"><div><strong>Školní skříňka</strong><div class="tiny muted">Volitelná náhodná událost mezi výběrem žáka a tématem. Pravděpodobnost lze nastavit.</div></div></div>
           <div class="list-item"><div><strong>Moje skříňky</strong><div class="tiny muted">Učitel může zapnout nebo vypnout předdefinované výsledky a vytvářet vlastní. I zde platí: záporné číslo je trest, kladné je pochvala.</div></div></div>
           <div class="list-item"><div><strong>Vlastní skříňka</strong><div class="tiny muted">V prototypu se zobrazí jako textová kartička padající ze skříňky. Výsledek se započítá do stejné podepsané bodové bilance žáka.</div></div></div>
@@ -8132,7 +8253,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         <div class="h8-student-avatar" aria-hidden="true"></div>
         <div class="h8-student-copy clickable-row" data-action="student-detail" data-id="${s.id}" data-class="${c.id}" role="button" tabindex="0">
           <div class="h8-student-name">${esc(s.name)}</div>
-          <div class="h8-student-meta">Nasbíráno <span class="point-value ${pointTone(s.collectedPoints)}">${formatSignedNumber(s.collectedPoints)} b.</span> · zkoušen ${s.examsCountPeriod}×</div>
+          <div class="h8-student-meta">Nasbíráno <span class="point-value ${pointTone(s.collectedPoints)}">${formatSignedNumber(s.collectedPoints)} b.</span> · zkoušen ${s.examsCountPeriod}×${Number(s.cheatSheetCount||0)>0?` · <span class="cheatsheet-inline">Tahák ×${Math.trunc(Number(s.cheatSheetCount||0))}</span>`:''}</div>
         </div>
         <div class="h8-points-badge point-value ${pointTone(currentPointBalance(s))}">${formatSignedNumber(currentPointBalance(s))} b.</div>
         <div class="h8-student-actions">
@@ -8547,6 +8668,9 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     if(item.kind==='pass'){
       s.passCount++;
       effectText='Skříňka přidělila propustku.';
+    }else if(item.kind==='cheatsheet'){
+      s.cheatSheetCount=Math.max(0,Math.trunc(Number(s.cheatSheetCount||0)))+1;
+      effectText=`Tahák uložen. Žák má nyní ${s.cheatSheetCount}× Tahák.`;
     }else if(item.kind==='nothing'){
       effectText='Skříňka je dnes prázdná.';
     }else{
@@ -8561,7 +8685,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     playSfx('locker');
     modal({
       title:'Školní skříňka',
-      body:`${lockerVisualHtml(item,effectText)}${item.kind==='pass'?'<p>Novou propustku lze použít hned nebo si ji nechat na později.</p>':''}`,
+      body:`${lockerVisualHtml(item,effectText)}${item.kind==='pass'?'<p>Novou propustku lze použít hned nebo si ji nechat na později.</p>':''}${item.kind==='cheatsheet'?'<p><strong>Tahák je přenositelný.</strong> Žák si ho ponechá do zkoušení, ve kterém ho použije. Přidá +1 minutu a jednu stručnou nápovědu od učitele.</p>':''}`,
       actions:[
         ...(item.kind==='pass'?[{
           label:'Použít propustku',
@@ -8859,7 +8983,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     state.activeExam={
       id:uid('exam'),teacherId:state.user.id,studentId:s.id,classId:c.id,subject:f.subject,schoolYear:c.schoolYear,
       topic:topic||'Bez tématu',startedAt,durationMs,timerTotalMs:durationMs,timerEndsAt:startedAt+durationMs,
-      paused:false,pausedRemainingMs:null,notified:false,
+      paused:false,pausedRemainingMs:null,notified:false,cheatSheetUsed:false,
       lockerAppeared:!!f.lockerAppeared,lockerResultId:f.lockerResult||null,lockerResultName:f.lockerResultName||'',
       lockerPointsDelta:Number(f.lockerPointsDelta||0),customTopicUsed:!!f.customTopicUsed
     };
@@ -8920,6 +9044,81 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     return `${over?'+':''}${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
   }
 
+  function showCheatSheetConfirm(){
+    const e=state.activeExam;
+    if(!e) return;
+    const st=studentById(e.studentId);
+    if(!st) return;
+    const count=Math.max(0,Math.trunc(Number(st.cheatSheetCount||0)));
+    if(e.cheatSheetUsed) return toast('Tahák už byl v tomto zkoušení použit.','warn');
+    if(count<1) return toast('Žák nemá žádný Tahák.','warn');
+
+    const wasPaused=e.paused===true;
+    if(!wasPaused){
+      e.pausedRemainingMs=remainingMs();
+      e.paused=true;
+      saveState();
+    }else if(!Number.isFinite(Number(e.pausedRemainingMs))){
+      e.pausedRemainingMs=remainingMs();
+      saveState();
+    }
+
+    const restoreWithoutUse=()=>{
+      const current=state.activeExam;
+      if(!current) return;
+      if(!wasPaused){
+        const rem=Number.isFinite(Number(current.pausedRemainingMs))?Number(current.pausedRemainingMs):remainingMs();
+        current.timerEndsAt=now()+rem;
+        current.paused=false;
+        current.pausedRemainingMs=null;
+      }
+      saveState();
+      render();
+    };
+
+    modal({
+      title:'Použít Tahák?',
+      body:`<div class="cheatsheet-confirm">
+        <div class="cheatsheet-confirm-icon">T</div>
+        <p><strong>${esc(st.name)}</strong> spotřebuje 1× Tahák.</p>
+        <div class="cheatsheet-benefit">+1:00 k času</div>
+        <div class="cheatsheet-benefit">+ 1 stručná nápověda od učitele</div>
+        <p class="tiny muted">Během tohoto potvrzení je časomíra pozastavená. V jednom zkoušení lze použít maximálně jeden Tahák.</p>
+      </div>`,
+      actions:[
+        {label:'Zrušit',className:'secondary',onClick:restoreWithoutUse},
+        {label:'Použít Tahák',className:'primary',onClick:()=>{
+          const current=state.activeExam;
+          const student=current?studentById(current.studentId):null;
+          if(!current||!student) return;
+          if(current.cheatSheetUsed) return restoreWithoutUse();
+          if(Math.max(0,Math.trunc(Number(student.cheatSheetCount||0)))<1) return restoreWithoutUse();
+
+          const rem=Number.isFinite(Number(current.pausedRemainingMs))?Number(current.pausedRemainingMs):remainingMs();
+          const newRem=rem+60000;
+          student.cheatSheetCount=Math.max(0,Math.trunc(Number(student.cheatSheetCount||0))-1);
+          current.cheatSheetUsed=true;
+          current.cheatSheetUsedAt=now();
+          current.timerTotalMs=Math.max(1,Number(current.timerTotalMs||current.durationMs||1)+60000);
+
+          if(wasPaused){
+            current.paused=true;
+            current.pausedRemainingMs=newRem;
+          }else{
+            current.paused=false;
+            current.pausedRemainingMs=null;
+            current.timerEndsAt=now()+newRem;
+          }
+          if(newRem>0) current.notified=false;
+
+          saveState();
+          render();
+          toast('Tahák použit: +1:00. Učitel nyní poskytne jednu stručnou nápovědu.');
+        }}
+      ]
+    });
+  }
+
   function renderActiveExam(){
     const e=state.activeExam;
     if(!e){ state.examFlow.stage='question'; return render(); }
@@ -8928,6 +9127,8 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     const percent=Math.round(ratio*100);
     const over=rem<=0;
     const paused=e.paused===true;
+    const cheatCount=Math.max(0,Math.trunc(Number(st?.cheatSheetCount||0)));
+    const showCheatSheet=cheatCount>0||e.cheatSheetUsed===true;
     const mood=paused?'Zkoušení je pozastavené.':over?'Čas vypršel – pokračujte podle potřeby.':ratio<.2?'Už jen kousek.':ratio<.55?'Klid, to dáš!':'Jdeme na to!';
     const avatarMood=paused?'calm':over||ratio<.2?'stressed':ratio<.55?'nervous':'calm';
     const classLabel=cls?`${esc(cls.displayName)} · ${esc(cls.schoolYear)}`:'Třída';
@@ -8965,10 +9166,13 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
           </section>
         </div>
 
+        ${e.cheatSheetUsed?`<div class="cheatsheet-used-note"><strong>TAHÁK POUŽIT · +1:00</strong><span>Učitel nyní poskytne žákovi jednu stručnou nápovědu.</span></div>`:''}
+
         <div class="exam-live-actions">
           <button type="button" class="exam-pause-button ${paused?'is-resume':''}" data-action="toggle-exam-pause">
             ${paused?'▶ &nbsp; Pokračovat':'Ⅱ &nbsp; Pozastavit'}
           </button>
+          ${showCheatSheet?`<button type="button" class="exam-cheatsheet-button ${e.cheatSheetUsed?'is-used':''}" data-action="use-cheatsheet" ${e.cheatSheetUsed?'disabled':''}>T &nbsp; ${e.cheatSheetUsed?'Tahák použit':`Tahák ×${cheatCount}`}</button>`:''}
           <button type="button" class="exam-end-button" data-action="end-exam">■ &nbsp; Ukončit zkoušení</button>
         </div>
 
@@ -10162,12 +10366,13 @@ body::after{
   }
 
   function lockerItems(){
-    state.settings.lockerItems=Array.isArray(state.settings.lockerItems)?state.settings.lockerItems:defaultLockerItems();
+    state.settings.lockerItems=ensureBuiltInLockerItems(Array.isArray(state.settings.lockerItems)?state.settings.lockerItems:defaultLockerItems());
     return state.settings.lockerItems;
   }
 
   function lockerEffectLabel(item){
     if(item.kind==='pass') return 'Propustka';
+    if(item.kind==='cheatsheet') return 'Přenositelný Tahák';
     if(item.kind==='nothing') return 'Bez bodové změny';
     const p=Number(item.points||0);
     return signedPointText(p);
@@ -10260,9 +10465,11 @@ body::after{
     if(item.builtIn){
       const visual=item.kind==='pass'
         ? '<div class="locker-result-icon">▣</div>'
-        : item.kind==='nothing'
-          ? '<div class="locker-result-icon">□</div>'
-          : `<div class="locker-result-icon">${esc(item.icon||formatSignedNumber(item.points))}</div>`;
+        : item.kind==='cheatsheet'
+          ? '<div class="locker-result-icon locker-cheatsheet-icon">T</div>'
+          : item.kind==='nothing'
+            ? '<div class="locker-result-icon">□</div>'
+            : `<div class="locker-result-icon">${esc(item.icon||formatSignedNumber(item.points))}</div>`;
       return `<div class="locker-scene">
         <div class="locker-cabinet"></div>
         <div class="locker-result predefined">${visual}<div class="locker-result-name">${esc(item.name)}</div><div class="locker-result-effect">${esc(effectText)}</div></div>
@@ -10769,7 +10976,7 @@ body::after{
     document.getElementById('create-student').onclick=()=>{
       const name=document.getElementById('new-student-name').value.trim();
       if(!name)return toast('Zadej jméno žáka.','error');
-      const st={id:uid('st'),name,active:true,ruleStates:{},collectedPoints:0,lockerPointAdjust:0,passCount:0,examsCountPeriod:0,lastExamAt:0};
+      const st={id:uid('st'),name,active:true,ruleStates:{},collectedPoints:0,lockerPointAdjust:0,passCount:0,cheatSheetCount:0,examsCountPeriod:0,lastExamAt:0};
       state.students.push(st);c.studentIds.push(st.id);saveState();closeModal();toast('Nový žák vytvořen a přidán do třídy.');render();
     };
 
@@ -10778,7 +10985,7 @@ body::after{
 
   function showStudentDetail(studentId,classId){
     const s=studentById(studentId),c=classById(classId); if(!s||!c) return;
-    modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">${esc(s.name)}</h2><p class="muted">${esc(c.displayName)} — ${esc(c.schoolYear)}</p><div class="grid grid-2"><div class="kpi pixel-frame"><strong class="point-value ${pointTone(currentPointBalance(s))}">${formatSignedNumber(currentPointBalance(s))}</strong><span>aktuální bilance</span></div><div class="kpi pixel-frame"><strong>${s.examsCountPeriod}</strong><span>zkoušení v období</span></div></div><div class="modal-actions"><button class="btn ghost" id="student-detail-close">Zavřít</button><button class="btn secondary" id="student-detail-edit">Upravit jméno</button><button class="btn danger" id="student-detail-remove">Odebrat z třídy</button></div></section></div>`;
+    modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">${esc(s.name)}</h2><p class="muted">${esc(c.displayName)} — ${esc(c.schoolYear)}</p><div class="grid grid-2"><div class="kpi pixel-frame"><strong class="point-value ${pointTone(currentPointBalance(s))}">${formatSignedNumber(currentPointBalance(s))}</strong><span>aktuální bilance</span></div><div class="kpi pixel-frame"><strong>${s.examsCountPeriod}</strong><span>zkoušení v období</span></div><div class="kpi pixel-frame cheatsheet-kpi"><strong>${Math.max(0,Math.trunc(Number(s.cheatSheetCount||0)))}</strong><span>Taháky v inventáři</span></div></div><div class="tiny muted" style="margin-top:10px">Tahák je přenositelný předmět. Při zkoušení přidá +1 minutu a jednu stručnou nápovědu od učitele.</div><div class="modal-actions"><button class="btn ghost" id="student-detail-close">Zavřít</button><button class="btn secondary" id="student-detail-edit">Upravit jméno</button><button class="btn danger" id="student-detail-remove">Odebrat z třídy</button></div></section></div>`;
     document.getElementById('student-detail-close').onclick=closeModal;
     document.getElementById('student-detail-edit').onclick=()=>{closeModal(); const fake={dataset:{id:s.id}}; const evt=new CustomEvent('click'); /* handled directly below */ modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2>Upravit žáka</h2><label>Jméno<input id="rename-student" value="${esc(s.name)}"></label><div class="modal-actions"><button class="btn ghost" id="rename-cancel">Zrušit</button><button class="btn primary" id="rename-save">Uložit</button></div></section></div>`;document.getElementById('rename-cancel').onclick=closeModal;document.getElementById('rename-save').onclick=()=>{s.name=document.getElementById('rename-student').value.trim()||s.name;saveState();closeModal();toast('Žák upraven.');render();};};
     document.getElementById('student-detail-remove').onclick=()=>{closeModal();modal({title:'Odebrat žáka z třídy?',body:`<p>${esc(s.name)} bude odebrán pouze z aktuálního seznamu třídy. Historie zůstane zachována.</p>`,actions:[{label:'Ne',className:'secondary'},{label:'Ano',className:'danger',onClick:()=>{c.studentIds=c.studentIds.filter(id=>id!==s.id);saveState();toast('Žák odebrán z aktuální třídy.');render();}}]});};
@@ -11104,6 +11311,7 @@ body::after{
         toast(`Vylosované téma: ${topic}`);
       },2100);
     }
+    else if(action==='use-cheatsheet') showCheatSheetConfirm();
     else if(action==='toggle-exam-pause'){
       const e=state.activeExam; if(!e)return;
       if(e.paused===true){

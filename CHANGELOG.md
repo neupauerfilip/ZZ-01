@@ -1,3 +1,26 @@
+# ZZ-01_TAHAK_LOCKER — přenositelný Tahák ze školní skříňky
+
+- mezi předdefinované výsledky Šatní / školní skříňky přibyl „Tahák“
+- Tahák je aktivní v losování skříňky stejně jako ostatní předdefinované výsledky a lze ho ve správě skříněk vypnout
+- když Tahák padne, uloží se konkrétnímu žákovi do inventáře
+- inventář je datově úsporný: u žáka se ukládá pouze malé celé číslo `cheatSheetCount`, nevzniká nový rostoucí historický log
+- starší uložené profily žáků dostanou při načtení automaticky `cheatSheetCount = 0`
+- starší uložené konfigurace skříněk automaticky dostanou novou předdefinovanou položku Tahák, aniž by se přepsalo zapnutí/vypnutí ostatních skříněk
+- Taháky se mohou sčítat a zůstávají žákovi mezi zkoušeními, dokud je nepoužije
+- v seznamu žáků a detailu žáka je vidět počet vlastněných Taháků
+- během aktivního zkoušení se žákovi, který Tahák vlastní, zobrazí tlačítko „Tahák ×N“
+- po kliknutí se časomíra dočasně pozastaví a zobrazí se potvrzení „Použít Tahák?“
+- potvrzení jasně uvádí dva efekty: +1:00 k času a jednu stručnou nápovědu od učitele
+- po potvrzení se jeden Tahák spotřebuje a k časomíře se přesně přičte 60 sekund
+- přidání minuty funguje i po vypršení času; pokud se čas vrátí nad nulu, upozornění na vypršení se znovu aktivuje pro další konec času
+- pokud bylo zkoušení před otevřením Taháku spuštěné, po potvrzení nebo zrušení pokračuje; pokud už bylo ručně pozastavené, zůstane pozastavené
+- v jednom zkoušení lze použít maximálně jeden Tahák, i když jich žák vlastní více
+- po použití zůstane na obrazovce připomínka „TAHÁK POUŽIT · +1:00“ a pokyn, že učitel má poskytnout jednu stručnou nápovědu
+- Tahák nezasahuje do známky, trestných bodů, propustek ani ostatní logiky zkoušení
+- Kobereček, scoring, body Šéfové a všechny předchozí funkce zůstávají zachované
+
+--- Původní changelog zachovaný v plném rozsahu ---
+
 # ZZ-01_KOBERECEK_SCORING — rozpad scoringu a úsporný Kobereček
 
 - ve Scoring → Učitelé jsou body od Šéfové nově rozdělené do dvou samostatných sloupců
