@@ -1,3 +1,26 @@
+# ZZ-01_BOSS_POINTS_AND_SCORING_FIX — Body učitelů + Scoring
+
+- nalezena společná příčina obou chyb po prvním přidělení bodů Šéfovou
+- historie bodů používala neexistující funkci `formatDate(...)`
+- oba chybné výskyty byly nahrazeny existující funkcí `fmtDate(...)`, kterou aplikace používá i v ostatních přehledech
+- po prvním bodovém zásahu lze znovu otevřít „Body učitelů“
+- tlačítko „Scoring / Přehledy“ z hlavního menu po bodovém zásahu opět vykreslí Scoring
+- zachována předchozí oprava bezpečného opakovaného otevření modálu Body učitelů
+- testovací účty, sdílené třídy, avatary a animace zkoušení zůstávají beze změny
+
+--- Původní changelog zachovaný v plném rozsahu ---
+
+# ZZ-01_BOSS_POINTS_REOPEN_FIX — opakované otevírání Body učitelů
+
+- opraveno opakované otevírání okna „Body učitelů“ u Šéfové
+- po tlačítku „Hotovo“ se aktuální obrazovka znovu vykreslí, takže tlačítko „Body učitelů“ má vždy čerstvou obsluhu
+- po přidělení bodů se obnovení modálního okna provádí až v dalším event loopu, ne uvnitř právě běžícího click handleru
+- stejný bezpečný způsob obnovení je použit i po stornu nebo zrušení storna
+- bodové záznamy, historie, limity a role Šéfové zůstávají beze změny
+- testovací účty, sdílené třídy, avatary i animace zkoušení zůstávají zachované
+
+--- Původní changelog zachovaný v plném rozsahu ---
+
 # ZZ-01_TEST_USERS_A1 — testovací víceuživatelský režim
 
 - přidány dva lokální testovací účty: „Testovací učitel“ a „Testovací Šéfová“

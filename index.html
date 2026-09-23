@@ -5002,6 +5002,14 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 }
 </style>
 
+<style>
+/* ZZ-01 BOSS POINTS REOPEN FIX */
+/* Funkční změna je v JS; tento marker usnadňuje kontrolu verze patche. */
+</style>
+<style>
+/* ZZ-01 BOSS POINTS + SCORING FIX */
+/* Funkční oprava je v JS: historie bodů Šéfové používá existující fmtDate(). */
+</style>
 </head>
 <body>
   <div class="crt-overlay" aria-hidden="true"></div>
@@ -6070,7 +6078,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         const issuer=state.school.teachers.find(t=>t.id===a.bossId);
         const delta=Number(a.points||0);
         return `<tr>
-          <td>${formatDate(a.at)}</td>
+          <td>${fmtDate(a.at)}</td>
           <td>${esc(target?.nickname||target?.name||'Neznámý učitel')}</td>
           <td><span class="boss-delta ${delta>=0?'positive':'negative'}">${delta>0?'+':''}${delta}</span></td>
           <td>${esc(a.reason||'—')}${a.reversalOf?' · STORNO':''}</td>
@@ -6126,7 +6134,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
           return `<div class="boss-adjustment-row ${a.reversalOf?'reversal':''}">
             <div>
               <strong>${esc(target?.nickname||target?.name||'Učitel')}</strong>
-              <div class="tiny muted">${formatDate(a.at)} · ${esc(a.reason||'—')}</div>
+              <div class="tiny muted">${fmtDate(a.at)} · ${esc(a.reason||'—')}</div>
             </div>
             <div class="row">
               <span class="boss-delta ${delta>=0?'positive':'negative'}">${delta>0?'+':''}${delta}</span>
@@ -6137,7 +6145,10 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       </div>
     </section></div>`;
 
-    document.getElementById('boss-close-manager').onclick=closeModal;
+    document.getElementById('boss-close-manager').onclick=()=>{
+      closeModal();
+      render();
+    };
     const save=document.getElementById('boss-save-adjustment');
     if(save) save.onclick=()=>{
       const teacherId=document.getElementById('boss-target')?.value;
@@ -6156,7 +6167,9 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       });
       saveState();
       toast(points>0?`Učiteli přidáno +${points} bodů.`:`Učiteli odebráno ${Math.abs(points)} bodů.`);
-      showBossPointsManager();
+      // Otevření znovu odložíme na další event loop, aby se starý click handler
+      // bezpečně dokončil a nový modal dostal vlastní čerstvé handlery.
+      setTimeout(()=>showBossPointsManager(),0);
     };
 
     modalRoot.querySelectorAll('[data-boss-reverse]').forEach(btn=>btn.onclick=()=>{
@@ -6166,7 +6179,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         title:'Stornovat bodový zásah?',
         body:`<p>Storno vytvoří nový opačný záznam. Původní událost zůstane v historii.</p><p><strong>${esc(original.reason)}</strong> · ${Number(original.points)>0?'+':''}${Number(original.points)} b.</p>`,
         actions:[
-          {label:'Ne',className:'secondary',onClick:showBossPointsManager},
+          {label:'Ne',className:'secondary',onClick:()=>setTimeout(()=>showBossPointsManager(),0)},
           {label:'Ano, stornovat',className:'danger',onClick:()=>{
             const reversal={
               id:uid('bosspts'),teacherId:original.teacherId,bossId:state.user.id,at:now(),
@@ -6175,7 +6188,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
             };
             original.reversedById=reversal.id;
             state.gamification.bossAdjustments.push(reversal);
-            saveState();toast('Bodový zásah byl stornován.');showBossPointsManager();
+            saveState();toast('Bodový zásah byl stornován.');setTimeout(()=>showBossPointsManager(),0);
           }}
         ]
       });
