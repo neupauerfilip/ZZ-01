@@ -1,3 +1,15 @@
+# ZZ-01_MAIN_MENU_BITMAP_FONT_V1 — písmo hlavního menu podle reference
+
+- texty v tlačítkách hlavního menu už nepoužívají systémový `Fixedsys` ani jiný náhradní font
+- přidán vlastní 5×7 bitmapový renderer přímo v aplikaci, takže vzhled je stejný na každém počítači
+- styl se drží reference „Moje předměty“: smíšená velikost písmen, hrubé čtvercové pixely, minimální mezery a žádné vyhlazování
+- zachována česká diakritika v názvech menu (`á`, `í`, `ř`, `š`, `ě` atd.)
+- odstraněna předchozí žlutá uppercase varianta hlavního menu
+- změna se týká pouze názvů osmi dlaždic hlavního menu; ostatní typografie aplikace zůstává beze změny
+- zachovány opravy Body učitelů a Scoringu, testovací účty, sdílené třídy, avatary i animace zkoušení
+
+--- Původní changelog zachovaný v plném rozsahu ---
+
 # ZZ-01_BOSS_POINTS_AND_SCORING_FIX — Body učitelů + Scoring
 
 - nalezena společná příčina obou chyb po prvním přidělení bodů Šéfovou
