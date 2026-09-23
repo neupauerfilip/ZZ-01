@@ -1,3 +1,21 @@
+# ZZ-01_POINT_EXPLANATION_CONFIRM — vysvětlení účinku bodů + potvrzení
+
+- při definování nebo úpravě pravidla se pod polem Body živě zobrazuje slovní vysvětlení účinku zadané hodnoty
+- záporná hodnota zobrazuje červeně „Přiděluješ trestné body“
+- kladná hodnota zobrazuje zeleně „Odebíráš trestné body“ a vysvětluje, že případný přebytek se započítá jako pochvalné body
+- nulová hodnota se zobrazuje neutrálně jako „Bez bodové změny“
+- před uložením nového nebo upraveného pravidla se zobrazí potvrzovací okno s názvem pravidla, hodnotou a slovním významem
+- tlačítko „Zpět“ vrací uživatele do editoru se zachovanými rozepsanými hodnotami
+- při běžném zaškrtávání podmínek během zahájení zkoušení se žádné potvrzení nepřidává
+- stejná živá vysvětlivka je přidána do formuláře Šéfové pro ruční udělení bodů
+- Šéfová před skutečným odesláním dostane potvrzení „Potvrdit výtku?“ nebo „Potvrdit pochvalu?“
+- potvrzení Šéfové zobrazuje učitele, důvod, znaménko bodů a slovní účinek
+- po volbě „Zpět“ se formulář Šéfové obnoví se zachovaným učitelem, důvodem i počtem bodů
+- požadavek na povinný důvod u Šéfové zůstává zachován
+- samotná logika znamének z předchozího patche se nemění: − je trest, + je pochvala / vyrovnání trestu
+
+--- Původní changelog zachovaný v plném rozsahu ---
+
 # ZZ-01_SIGNED_POINTS_LOGIC — sjednocení znamének bodů
 
 - celá aplikace nově používá jednotnou logiku: záporné body (−) jsou trestné, kladné body (+) jsou pochvalné / odměnové

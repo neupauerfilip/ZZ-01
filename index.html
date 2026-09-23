@@ -5190,6 +5190,108 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 }
 </style>
 
+
+<style>
+/* ZZ-01 POINT EXPLANATION + CONFIRMATION */
+.point-action-note{
+  margin-top:10px;
+  padding:10px 12px;
+  border:2px solid #426068;
+  background:#07151c;
+  box-shadow:3px 3px 0 #02070d;
+}
+.point-action-note strong{
+  display:block;
+  margin-bottom:5px;
+  font-family:var(--pixel);
+  font-size:.68rem;
+}
+.point-action-note span{
+  display:block;
+  font-size:.7rem;
+  line-height:1.45;
+  color:#c6d6d8;
+}
+.point-action-note.negative{
+  border-color:#b94742;
+  background:#251010;
+}
+.point-action-note.negative strong{color:#ff756f}
+.point-action-note.positive{
+  border-color:#23895c;
+  background:#09251a;
+}
+.point-action-note.positive strong{color:#51e49b}
+.point-action-note.neutral strong{color:#a8bec2}
+
+.point-confirm-card{
+  margin-top:6px;
+  padding:16px;
+  border:3px solid #45636a;
+  background:#07151c;
+  text-align:center;
+  box-shadow:5px 5px 0 #02070d;
+}
+.point-confirm-card.negative{
+  border-color:#c44843;
+  background:#251010;
+}
+.point-confirm-card.positive{
+  border-color:#268e60;
+  background:#09251a;
+}
+.point-confirm-value{
+  display:inline-block;
+  margin:2px auto 12px;
+  padding:8px 14px;
+  border:3px solid currentColor;
+  background:#02070d;
+  font-family:var(--pixel);
+  font-size:1.25rem;
+  line-height:1;
+}
+.point-confirm-card.negative .point-confirm-value{color:#ff6963}
+.point-confirm-card.positive .point-confirm-value{color:#49e097}
+.point-confirm-card.neutral .point-confirm-value{color:#b7c7ca}
+.point-confirm-action{
+  font-family:var(--pixel);
+  font-size:.76rem;
+  color:#fff4dc;
+  line-height:1.45;
+}
+.point-confirm-explanation{
+  margin-top:8px;
+  color:#b7c9cb;
+  font-size:.72rem;
+  line-height:1.5;
+}
+.point-confirm-details{
+  display:grid;
+  gap:8px;
+  margin-top:14px;
+  text-align:left;
+}
+.point-confirm-details>div{
+  padding:9px 10px;
+  border:2px solid #274a53;
+  background:#06131a;
+}
+.point-confirm-details span{
+  display:block;
+  margin-bottom:4px;
+  color:#719aa1;
+  font-family:var(--pixel);
+  font-size:.56rem;
+  text-transform:uppercase;
+}
+.point-confirm-details strong{
+  display:block;
+  color:#fff4dc;
+  font-size:.78rem;
+  line-height:1.45;
+}
+</style>
+
 </head>
 <body>
   <div class="crt-overlay" aria-hidden="true"></div>
@@ -5825,6 +5927,30 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     const n=Number(value)||0;
     return n<0?'negative':n>0?'positive':'neutral';
   }
+  function pointActionExplanation(value){
+    const n=Math.trunc(Number(value)||0);
+    const a=Math.abs(n);
+    const word=a===1?'trestný bod':(a>=2&&a<=4?'trestné body':'trestných bodů');
+    if(n<0){
+      return {
+        tone:'negative',
+        title:'Přiděluješ trestné body',
+        text:`Přiděluješ ${a} ${word}.`
+      };
+    }
+    if(n>0){
+      return {
+        tone:'positive',
+        title:'Odebíráš trestné body',
+        text:`Odebíráš / vyrovnáváš ${a} ${word}. Pokud už žádné trestné body nejsou, hodnota se započítá jako +${a} pochvalných bodů.`
+      };
+    }
+    return {
+      tone:'neutral',
+      title:'Bez bodové změny',
+      text:'Tato hodnota bodovou bilanci nezmění.'
+    };
+  }
   function baseRulePoints(student){
     return Object.entries(student.ruleStates||{}).reduce((sum,[rid,on])=>{
       const r=ruleById(rid); return sum + (on && r && r.active ? Number(r.points)||0 : 0);
@@ -6357,7 +6483,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     </table></div>`;
   }
 
-  function showBossPointsManager(){
+  function showBossPointsManager(draft=null){
     if(!isBossUser()) return toast('Body může přidělovat pouze učitel určený jako Šéfová.','error');
 
     const boss=bossTeacher();
@@ -6376,16 +6502,17 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       <div class="form-grid">
         <label>Učitel
           <select id="boss-target">
-            ${targets.map(t=>`<option value="${t.id}">${esc(t.nickname||t.name)}${t.role==='admin'?' · ADMIN':''}</option>`).join('')}
+            ${targets.map(t=>`<option value="${t.id}" ${draft?.teacherId===t.id?'selected':''}>${esc(t.nickname||t.name)}${t.role==='admin'?' · ADMIN':''}</option>`).join('')}
           </select>
         </label>
         <label>Body
-          <input id="boss-points" type="number" min="${-limit}" max="${limit}" step="1" value="1">
+          <input id="boss-points" type="number" min="${-limit}" max="${limit}" step="1" value="${Number.isFinite(Number(draft?.points))?Math.trunc(Number(draft.points)):1}">
         </label>
       </div>
       <label style="margin-top:10px">Důvod <span class="required-mark">*</span>
-        <input id="boss-reason" maxlength="120" required placeholder="Povinné — např. Zachránil školní tiskárnu">
+        <input id="boss-reason" maxlength="120" required value="${esc(draft?.reason||'')}" placeholder="Povinné — např. Zachránil školní tiskárnu">
       </label>
+      <div id="boss-point-explain" class="point-action-note" aria-live="polite"></div>
       <div class="tiny muted" style="margin-top:7px">Důvod je povinný. Zadej např. <strong>−3</strong> za výtku nebo <strong>+2</strong> za pochvalu. Součet se přímo promítá do scoringu učitele. Šéfová nemůže udělovat body sama sobě.</div>
 
       <div class="modal-actions" style="justify-content:flex-start">
@@ -6421,35 +6548,68 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     const save=document.getElementById('boss-save-adjustment');
     const reasonInput=document.getElementById('boss-reason');
     const targetInput=document.getElementById('boss-target');
+    const pointsInput=document.getElementById('boss-points');
+    const explain=document.getElementById('boss-point-explain');
+
+    const updateBossPointExplanation=()=>{
+      const info=pointActionExplanation(pointsInput?.value||0);
+      if(explain){
+        explain.className=`point-action-note ${info.tone}`;
+        explain.innerHTML=`<strong>${esc(info.title)}</strong><span>${esc(info.text)}</span>`;
+      }
+    };
     const updateBossSaveState=()=>{
       if(!save) return;
-      save.disabled=!(targets.length && targetInput?.value && reasonInput?.value.trim());
+      const points=Math.trunc(Number(pointsInput?.value||0));
+      save.disabled=!(targets.length && targetInput?.value && reasonInput?.value.trim() && points!==0 && Math.abs(points)<=limit);
+      updateBossPointExplanation();
     };
     reasonInput?.addEventListener('input',updateBossSaveState);
     targetInput?.addEventListener('change',updateBossSaveState);
+    pointsInput?.addEventListener('input',updateBossSaveState);
     updateBossSaveState();
 
     if(save) save.onclick=()=>{
       const teacherId=targetInput?.value;
       const reason=reasonInput?.value.trim();
-      const points=Math.trunc(Number(document.getElementById('boss-points')?.value||0));
+      const points=Math.trunc(Number(pointsInput?.value||0));
       if(!teacherId)return toast('Vyber učitele.','error');
       if(teacherId===state.user.id)return toast('Šéfová nemůže přidělovat body sama sobě.','error');
       if(!reason)return toast('Napiš důvod přidělení bodů.','error');
       if(points===0)return toast('Počet bodů nesmí být 0.','error');
       if(Math.abs(points)>limit)return toast(`Maximum na jednu událost je ±${limit} bodů.`,'error');
 
-      state.gamification.bossAdjustments=state.gamification.bossAdjustments||[];
-      state.gamification.bossAdjustments.push({
-        id:uid('bosspts'),teacherId,bossId:state.user.id,at:now(),points,reason,
-        seasonId:state.gamification.season.id,reversalOf:null,reversedById:null,
-        notifyRecipient:true,recipientAcknowledgedAt:null
+      const target=(state.school.teachers||[]).find(t=>t.id===teacherId);
+      const info=pointActionExplanation(points);
+      const confirmTitle=points<0?'Potvrdit výtku?':'Potvrdit pochvalu?';
+      const confirmLabel=points<0?'Potvrdit výtku':'Potvrdit pochvalu';
+
+      modal({
+        title:confirmTitle,
+        body:`<div class="point-confirm-card ${info.tone}">
+          <div class="point-confirm-value">${formatSignedNumber(points)} B.</div>
+          <div class="point-confirm-action">${esc(info.title)}</div>
+          <div class="point-confirm-explanation">${esc(info.text)}</div>
+          <div class="point-confirm-details">
+            <div><span>Učitel</span><strong>${esc(target?.nickname||target?.name||'Učitel')}</strong></div>
+            <div><span>Důvod</span><strong>${esc(reason)}</strong></div>
+          </div>
+        </div>`,
+        actions:[
+          {label:'Zpět',className:'secondary',onClick:()=>showBossPointsManager({teacherId,reason,points})},
+          {label:confirmLabel,className:points<0?'danger':'primary',onClick:()=>{
+            state.gamification.bossAdjustments=state.gamification.bossAdjustments||[];
+            state.gamification.bossAdjustments.push({
+              id:uid('bosspts'),teacherId,bossId:state.user.id,at:now(),points,reason,
+              seasonId:state.gamification.season.id,reversalOf:null,reversedById:null,
+              notifyRecipient:true,recipientAcknowledgedAt:null
+            });
+            saveState();
+            toast(points>0?`Pochvala: +${points} bodů.`:`Výtka: ${points} trestných bodů.`);
+            setTimeout(()=>showBossPointsManager(),0);
+          }}
+        ]
       });
-      saveState();
-      toast(points>0?`Pochvala: +${points} bodů.`:`Výtka: ${points} trestných bodů.`);
-      // Otevření znovu odložíme na další event loop, aby se starý click handler
-      // bezpečně dokončil a nový modal dostal vlastní čerstvé handlery.
-      setTimeout(()=>showBossPointsManager(),0);
     };
 
     modalRoot.querySelectorAll('[data-boss-reverse]').forEach(btn=>btn.onclick=()=>{
@@ -10112,15 +10272,69 @@ body::after{
     modalRoot.querySelectorAll('[data-delete-rule]').forEach(b=>b.onclick=()=>deleteRule(b.dataset.deleteRule));
   }
 
-  function editRuleModal(id){
+  function editRuleModal(id,draft=null){
     const r=id?ruleById(id):null;
-    modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">${r?'Upravit pravidlo':'Nové pravidlo'}</h2><label>Název<input id="rule-name" value="${esc(r?.name||'')}"></label><label style="margin-top:10px">Popis<input id="rule-desc" value="${esc(r?.description||'')}"></label><label style="margin-top:10px">Body (− trest / + pochvala)<input id="rule-points" type="number" min="-99" max="99" step="1" value="${r?.points??-1}"></label><div class="tiny muted" style="margin-top:7px">Trestné pravidlo zadej se znaménkem mínus, například −2. Pochvalné pravidlo zadej kladně, například +1.</div><div class="modal-actions"><button class="btn ghost" id="rule-cancel">Zrušit</button><button class="btn primary" id="rule-save">Uložit</button></div></section></div>`;
+    const draftName=draft?.name??r?.name??'';
+    const draftDescription=draft?.description??r?.description??'';
+    const draftPoints=Number.isFinite(Number(draft?.points))?Math.trunc(Number(draft.points)):(r?.points??-1);
+
+    modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">${r?'Upravit pravidlo':'Nové pravidlo'}</h2>
+      <label>Název<input id="rule-name" value="${esc(draftName)}"></label>
+      <label style="margin-top:10px">Popis<input id="rule-desc" value="${esc(draftDescription)}"></label>
+      <label style="margin-top:10px">Body (− trest / + pochvala)<input id="rule-points" type="number" min="-99" max="99" step="1" value="${draftPoints}"></label>
+      <div id="rule-point-explain" class="point-action-note" aria-live="polite"></div>
+      <div class="tiny muted" style="margin-top:7px">Trestné pravidlo zadej se znaménkem mínus, například −2. Pochvalné pravidlo zadej kladně, například +1.</div>
+      <div class="modal-actions"><button class="btn ghost" id="rule-cancel">Zrušit</button><button class="btn primary" id="rule-save">Uložit</button></div>
+    </section></div>`;
+
     document.getElementById('rule-cancel').onclick=showRulesManager;
+    const pointsInput=document.getElementById('rule-points');
+    const explain=document.getElementById('rule-point-explain');
+    const updateRuleExplanation=()=>{
+      const info=pointActionExplanation(pointsInput?.value||0);
+      if(explain){
+        explain.className=`point-action-note ${info.tone}`;
+        explain.innerHTML=`<strong>${esc(info.title)}</strong><span>${esc(info.text)}</span>`;
+      }
+    };
+    pointsInput?.addEventListener('input',updateRuleExplanation);
+    updateRuleExplanation();
+
     document.getElementById('rule-save').onclick=()=>{
-      const name=document.getElementById('rule-name').value.trim(); const points=Number(document.getElementById('rule-points').value); if(!name) return toast('Zadej název pravidla.','error');
+      const name=document.getElementById('rule-name').value.trim();
+      const description=document.getElementById('rule-desc').value.trim();
+      const points=Number(pointsInput?.value);
+      if(!name) return toast('Zadej název pravidla.','error');
+
       const signedPoints=Math.max(-99,Math.min(99,Number.isFinite(points)?Math.trunc(points):0));
-      if(r){r.name=name;r.description=document.getElementById('rule-desc').value.trim();r.points=signedPoints;} else state.rules.push({id:uid('rule'),name,description:document.getElementById('rule-desc').value.trim(),points:signedPoints,editable:true,deletable:true,active:true,system:false});
-      saveState(); toast('Pravidlo uloženo.'); showRulesManager();
+      const info=pointActionExplanation(signedPoints);
+      modal({
+        title:'Potvrdit bodování pravidla?',
+        body:`<div class="point-confirm-card ${info.tone}">
+          <div class="point-confirm-value">${formatSignedNumber(signedPoints)} B.</div>
+          <div class="point-confirm-action">${esc(info.title)}</div>
+          <div class="point-confirm-explanation">${esc(info.text)}</div>
+          <div class="point-confirm-details">
+            <div><span>Pravidlo</span><strong>${esc(name)}</strong></div>
+            ${description?`<div><span>Popis</span><strong>${esc(description)}</strong></div>`:''}
+          </div>
+        </div>`,
+        actions:[
+          {label:'Zpět',className:'secondary',onClick:()=>editRuleModal(id,{name,description,points:signedPoints})},
+          {label:'Potvrdit',className:signedPoints<0?'danger':'primary',onClick:()=>{
+            if(r){
+              r.name=name;
+              r.description=description;
+              r.points=signedPoints;
+            }else{
+              state.rules.push({id:uid('rule'),name,description,points:signedPoints,editable:true,deletable:true,active:true,system:false});
+            }
+            saveState();
+            toast('Pravidlo uloženo.');
+            showRulesManager();
+          }}
+        ]
+      });
     };
   }
 
