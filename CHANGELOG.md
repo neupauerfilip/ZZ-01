@@ -1,3 +1,16 @@
+# ZZ-01_ENERGITAK_LOCKER — nová skříňka Energiťák
+
+- mezi předdefinované výsledky Šatní / školní skříňky přibyl „Energiťák“
+- Energiťák okamžitě zapíše žákovi `−2` body, tedy dva trestné body
+- nejde o přenositelný inventární předmět jako Tahák; účinek se provede hned po vylosování
+- v přehledu skříněk je účinek popsaný jako „−2 trestné body“
+- Energiťák má vlastní retro symbol blesku
+- starší uložené konfigurace skříněk dostanou Energiťák automaticky přes existující mechanismus `ensureBuiltInLockerItems`, aniž by se přepsalo nastavení ostatních skříněk
+- Energiťák lze ve správě skříněk stejně jako ostatní předdefinované výsledky zapnout nebo vypnout
+- Tahák, Kobereček, scoring, body Šéfové a ostatní funkce zůstávají zachované
+
+--- Původní changelog zachovaný v plném rozsahu ---
+
 # ZZ-01_TAHAK_LOCKER — přenositelný Tahák ze školní skříňky
 
 - mezi předdefinované výsledky Šatní / školní skříňky přibyl „Tahák“

@@ -5559,6 +5559,25 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 }
 </style>
 
+
+<style>
+/* ZZ-01 ENERGITAK LOCKER */
+.locker-energy-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:58px;
+  height:58px;
+  margin:0 auto 8px;
+  border:4px solid #ff6a64;
+  background:#28100f;
+  color:#ffd76d;
+  font-family:var(--pixel);
+  font-size:1.7rem;
+  box-shadow:4px 4px 0 #05080b;
+}
+</style>
+
 </head>
 <body>
   <div class="crt-overlay" aria-hidden="true"></div>
@@ -5713,6 +5732,16 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         active:true,
         icon:'T',
         visual:'cheatsheet'
+      },
+      {
+        id:'locker_energy',
+        name:'Energiťák',
+        kind:'points',
+        points:-2,
+        builtIn:true,
+        active:true,
+        icon:'⚡',
+        visual:'energy'
       }
     ];
   }
@@ -8676,7 +8705,9 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     }else{
       const result=applyLockerPoints(s,Number(item.points||0));
       state.examFlow.lockerPointsDelta=result.applied;
-      if(result.applied>0) effectText=`Pochvala +${result.applied} bodů. Kladné body vyrovnávají trestné.`;
+      if(item.id==='locker_energy'){
+        effectText='Energiťák: −2 trestné body.';
+      }else if(result.applied>0) effectText=`Pochvala +${result.applied} bodů. Kladné body vyrovnávají trestné.`;
       else if(result.applied<0) effectText=`Trest ${result.applied} bodů.`;
       else effectText='Bodová bilance se nezměnila.';
     }
@@ -10373,6 +10404,7 @@ body::after{
   function lockerEffectLabel(item){
     if(item.kind==='pass') return 'Propustka';
     if(item.kind==='cheatsheet') return 'Přenositelný Tahák';
+    if(item.id==='locker_energy') return '−2 trestné body';
     if(item.kind==='nothing') return 'Bez bodové změny';
     const p=Number(item.points||0);
     return signedPointText(p);
@@ -10467,9 +10499,11 @@ body::after{
         ? '<div class="locker-result-icon">▣</div>'
         : item.kind==='cheatsheet'
           ? '<div class="locker-result-icon locker-cheatsheet-icon">T</div>'
-          : item.kind==='nothing'
-            ? '<div class="locker-result-icon">□</div>'
-            : `<div class="locker-result-icon">${esc(item.icon||formatSignedNumber(item.points))}</div>`;
+          : item.id==='locker_energy'
+            ? '<div class="locker-result-icon locker-energy-icon">⚡</div>'
+            : item.kind==='nothing'
+              ? '<div class="locker-result-icon">□</div>'
+              : `<div class="locker-result-icon">${esc(item.icon||formatSignedNumber(item.points))}</div>`;
       return `<div class="locker-scene">
         <div class="locker-cabinet"></div>
         <div class="locker-result predefined">${visual}<div class="locker-result-name">${esc(item.name)}</div><div class="locker-result-effect">${esc(effectText)}</div></div>
