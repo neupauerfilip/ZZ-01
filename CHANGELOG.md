@@ -1,3 +1,36 @@
+# ZZ-01_LOCKERS_INVENTORY_ANIMATION — kompletní systém školních skříněk
+
+- dokončen a sjednocen systém náhodných školních skříněk před zkoušením
+- mezi vestavěné nálezy nyní patří: Plesnivá svačina, Přezůvky, Propustka, Tahák, Energiťák a Kafíčko pro učitele
+- Plesnivá svačina okamžitě přidá žákovi 1 trestný bod
+- Přezůvky okamžitě odeberou žákovi 1 trestný bod, nejvýše do nuly
+- Energiťák okamžitě přidá žákovi 1 trestný bod
+- Propustka, Tahák a Kafíčko pro učitele se ukládají do inventáře konkrétního žáka
+- inventář je nově oddělený podle předmětu; předmět získaný například v češtině nelze použít v matematice
+- Propustku lze použít ihned po získání nebo ji ponechat v inventáři na později
+- při použití Propustky se žák tomuto zkoušení vyhne, získá 1 kladný bod a učitel dostane 1 trestný bod
+- Tahák je pozitivní předmět pro žáka; během zkoušení jej může žák slovně uplatnit a učitel použití potvrdí kliknutím v aplikaci
+- při použití Taháku se jeden kus spotřebuje a učitel dostane 1 trestný bod
+- Kafíčko pro učitele je rovněž součást inventáře žáka; při použití se jeden kus spotřebuje, učitel získá 1 kladný bod a čas zkoušení se prodlouží o 1 minutu
+- v aktivním zkoušení se zobrazují dostupné položky Tahák a Kafíčko včetně aktuálního počtu kusů
+- detail žáka zobrazuje inventář rozdělený podle jednotlivých předmětů
+- při přejmenování předmětu se jeho inventář automaticky převede pod nový název a neztratí se
+- přidána kompletní pixel-art animace skříňky: zatřesení, třífázové otevření, vyskočení předmětu, dopad a zobrazení výsledku
+- přidána možnost „Přeskočit animaci“, která okamžitě zobrazí finální stav a odemkne další krok
+- doplněny samostatné grafické assety pro zavřenou/otevřenou skříňku, všech 6 předmětů a jejich vizuální efekty
+- doplněny arkádové zvuky pro zatřesení, otevření a vyskočení předmětu
+- každý vestavěný nález má navíc vlastní krátký rozpoznatelný arkádový zvuk
+- všechny zvuky skříněk respektují globální přepínač systémových zvuků
+- pravděpodobnost výskytu skříňky je nastavitelná v rozsahu 0–100 %
+- každý nález má vlastní nastavitelnou váhu v losování a lze jej samostatně zapnout nebo vypnout
+- vypnuté položky se do výpočtu pravděpodobností nezapočítávají
+- opraveno opakované losování skříňky: jeden žák nemůže v rámci stejného průchodu dostat druhý pokus ani při návratu A → B → A
+- skříňková obrazovka, výsledková karta a inventář byly optimalizovány také pro úzké mobilní displeje
+- zachována kompatibilita se staršími uloženými daty; starší globální počty inventáře se při načtení migrují do nové struktury
+- tato verze nahrazuje starší experimentální chování skříněk popsané níže v changelogu, zejména dřívější varianty Taháku a Energiťáku
+
+--- Původní changelog zachovaný v plném rozsahu ---
+
 # ZZ-01_ENERGITAK_LOCKER — nová skříňka Energiťák
 
 - mezi předdefinované výsledky Šatní / školní skříňky přibyl „Energiťák“

@@ -1,0 +1,14 @@
+ZZ-01 – patch skřínky / inventář / animace
+
+Použití:
+1. Rozbal ZIP.
+2. Obsah složky nakopíruj do kořene aktuálního projektu ZZ-01.
+3. Potvrď sloučení složek a nahrazení index.html.
+4. Ostatní původní assety projektu zůstanou beze změny.
+
+Patch obsahuje:
+- nový index.html
+- assets/locker/ – kompletní grafika skříněk a šesti nálezů
+- assets/audio/ – zvuky animace skříňky a jednotlivých nálezů
+
+Základ: uživatelem nahraný aktuální projekt ZZ-01.zip z 27. 9. 2026.
