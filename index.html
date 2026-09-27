@@ -6306,6 +6306,8 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       if(p && typeof p.catch==='function') p.catch(()=>{});
     }catch(_){ }
   }
+  let lockerSfxTimers=[];
+
   function stopLockerSfx(){
     lockerSfxTimers.forEach(clearTimeout);
     lockerSfxTimers=[];
@@ -8936,8 +8938,17 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 
   function maybeLocker(id){
     if(!state.settings.lockersEnabled){ return goQuestion(id); }
+    const probability=Math.min(100,Math.max(0,Number(state.settings.lockerProbability)||0));
+    if(state.settings.lockerProbability!==probability){
+      state.settings.lockerProbability=probability;
+      saveState();
+    }
     const activeLockers=lockerItems().filter(x=>x.active!==false);
-    if(!activeLockers.length){ return goQuestion(id); }
+    if(!activeLockers.length){
+      toast('Skříňky jsou zapnuté, ale není aktivní žádný nález. Otevři Nastavení → Moje skříňky.','warn');
+      return goQuestion(id);
+    }
+    if(probability<=0){ return goQuestion(id); }
     const alreadyRolled=new Set(Array.isArray(state.examFlow.lockerRolledStudentIds)?state.examFlow.lockerRolledStudentIds:[]);
     if(state.examFlow.lockerRollStudentId) alreadyRolled.add(state.examFlow.lockerRollStudentId);
     if(alreadyRolled.has(id)) return goQuestion(id);
@@ -8947,7 +8958,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     state.examFlow.lockerAppeared=false;
     state.examFlow.lockerResult=null;
     state.examFlow.lockerResultName='';
-    const appeared=Math.random()*100 < state.settings.lockerProbability;
+    const appeared=Math.random()*100 < probability;
     state.examFlow.lockerAppeared=appeared;
     saveState();
     if(!appeared) return goQuestion(id);
@@ -10999,6 +11010,9 @@ body::after{
 
   function renderSettings(){
     const notifyOn=staffroomNotificationEnabled();
+    const configuredLockers=lockerItems();
+    const activeLockerCount=configuredLockers.filter(x=>x.active!==false).length;
+    const lockerProbability=Math.min(100,Math.max(0,Number(state.settings.lockerProbability)||0));
     const content=`<section class="settings-screen fidelity-h13">
       <div class="settings-hero">
         <div>
@@ -11012,7 +11026,7 @@ body::after{
       <div class="settings-stats">
         <div class="settings-stat"><span>Délka zkoušení</span><strong>${Number(state.settings.timerMinutes)||0} min</strong></div>
         <div class="settings-stat"><span>Ochranný interval</span><strong>${Number(state.settings.protectionHours)||0} h</strong></div>
-        <div class="settings-stat accent"><span>Skříňka</span><strong>${state.settings.lockersEnabled?`${Number(state.settings.lockerProbability)||0} %`:'Vypnuta'}</strong></div>
+        <div class="settings-stat accent"><span>Skříňka</span><strong>${state.settings.lockersEnabled?`${lockerProbability} % · ${activeLockerCount} aktivních`:'Vypnuta'}</strong></div>
       </div>
 
       <div class="settings-grid">
@@ -11058,6 +11072,7 @@ body::after{
           </div>
           <div class="settings-options" style="margin-top:12px">
             <label class="settings-option"><input id="locker-enabled" type="checkbox" ${state.settings.lockersEnabled?'checked':''}><span>Používat školní skříňky<small>Bonusová událost před zkoušením.</small></span></label>
+            <div class="settings-note" style="grid-column:1/-1">Aktivní nálezy skříňky: <strong>${activeLockerCount}/${configuredLockers.length}</strong>${state.settings.lockersEnabled&&activeLockerCount===0?' · <span style="color:#ff9b7a">Skříňka nemůže padnout, dokud v „Moje skříňky“ nezapneš alespoň jeden nález.</span>':''}</div>
             <label class="settings-option"><input id="notify-enabled" type="checkbox" ${state.settings.notifications?'checked':''}><span>Upozornit při vypršení času<small>Lokální upozornění během běžící aplikace.</small></span></label>
             <label class="settings-option"><input id="staffroom-notify-settings" type="checkbox" ${notifyOn?'checked':''}><span>Upozornění ze Sborovny<small>Plný push při zavřené aplikaci bude vyžadovat online/PWA verzi.</small></span></label>
             <label class="settings-option"><input id="music-enabled-settings" type="checkbox" ${state.settings.musicEnabled!==false?'checked':''}><span>Hudba v aplikaci<small>Hlavní menu, příprava zkoušení a samotné časované zkoušení mají vlastní hudební podkres.</small></span></label>
