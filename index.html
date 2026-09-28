@@ -9242,7 +9242,11 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       const teacherCount=(c.teacherIds||[]).length;
       return `<article class="h8-class-card"><div class="h8-class-card-main"><div class="h8-class-icon" aria-hidden="true"></div><div><div class="h8-class-name">${esc(c.displayName)}</div><div class="h8-class-year">ŠKOLNÍ ROK ${esc(c.schoolYear)}</div><div class="h8-class-meta">${c.studentIds.length} ${c.studentIds.length===1?'žák':'žáků'} · ${subjects.length} ${subjects.length===1?'můj předmět':'mých předmětů'} · ${teacherCount} ${teacherCount===1?'učitel':'učitelé'}</div>${subjects.length?`<div class="h8-subject-chips">${chips}${more}</div>`:'<div class="h8-no-subject">Zatím bez mého přiřazeného předmětu</div>'}</div></div><button type="button" class="h8-open-class" data-action="open-class" data-id="${c.id}">Otevřít třídu ▶</button></article>`;
     }).join('');
-    const content=`<section class="classes-screen fidelity-h8"><div class="h8-head"><h1 class="h8-title">Moje třídy</h1><div class="h8-subtitle">Společné školní třídy, které používáš pro svou výuku.</div><button type="button" class="h8-school-action" data-action="school-classes">Třídy školy</button><button type="button" class="h8-head-action" data-action="add-class">+ Nová třída</button></div><div class="h8-overview"><div class="h8-kpi"><strong>${myClasses.length}</strong><span>Moje třídy</span></div><div class="h8-kpi"><strong>${totalStudents}</strong><span>Žáků v mých třídách</span></div><div class="h8-kpi"><strong>${totalSubjects}</strong><span>Mých předmětů</span></div></div>${cards?`<div class="h8-class-grid">${cards}</div>`:'<div class="h8-empty">Zatím nepoužíváš žádnou třídu.<br>Vyber ji přes „Třídy školy“ nebo založ novou.</div>'}<div class="h8-utilities"><button class="h8-utility-btn" data-action="history">Historie</button>${state.user.role==='admin'?'<button class="h8-utility-btn" data-action="admin">Správa školy</button>':'<span></span>'}<button class="h8-utility-btn danger" data-action="clean-slate">Čistý štít</button></div><div class="arcade-footer"><span>Správa tříd</span><span>ZZ-01</span></div></section>`;
+    const canCreateClass=can('manageClasses');
+    const emptyText=canCreateClass
+      ? 'Zatím nepoužíváš žádnou třídu.<br>Nejdřív zkus „Vybrat z tříd školy“, případně založ novou.'
+      : 'Zatím nepoužíváš žádnou třídu.<br>Vyber si některou z hotových tříd školy.';
+    const content=`<section class="classes-screen fidelity-h8"><div class="h8-head"><h1 class="h8-title">Moje třídy</h1><div class="h8-subtitle">Společné školní třídy, které používáš pro svou výuku.</div><button type="button" class="h8-school-action" data-action="school-classes">Vybrat z tříd školy</button>${canCreateClass?'<button type="button" class="h8-head-action" data-action="add-class">+ Nová třída</button>':''}</div><div class="h8-overview"><div class="h8-kpi"><strong>${myClasses.length}</strong><span>Moje třídy</span></div><div class="h8-kpi"><strong>${totalStudents}</strong><span>Žáků v mých třídách</span></div><div class="h8-kpi"><strong>${totalSubjects}</strong><span>Mých předmětů</span></div></div>${cards?`<div class="h8-class-grid">${cards}</div>`:`<div class="h8-empty">${emptyText}</div>`}<div class="h8-utilities"><button class="h8-utility-btn" data-action="history">Historie</button>${state.user.role==='admin'?'<button class="h8-utility-btn" data-action="admin">Správa školy</button>':'<span></span>'}<button class="h8-utility-btn danger" data-action="clean-slate">Čistý štít</button></div><div class="arcade-footer"><span>Správa tříd</span><span>ZZ-01</span></div></section>`;
     app.innerHTML=layout(content,'Moje třídy');
   }
 
@@ -12118,19 +12122,66 @@ body::after{
     modalRoot.querySelectorAll('[data-other-student]').forEach(b=>b.onclick=()=>{const id=b.dataset.otherStudent;closeModal();candidatePrecheck(id);});
   }
 
-  function showSchoolClassesModal(){
-    if(!can('manageClasses')) return toast('Pro tuto akci nemáš přidělené oprávnění.','error');
+  async function refreshSchoolStructureFromServer({pushDirty=true}={}){
+    if(!remoteSchoolStructureEnabled()) return false;
+    try{
+      if(pushDirty && state.ui?.schoolStructureDirty===true) await syncSupabaseSchoolStructure();
+      // Pokud se push nepovedl, lokální data nesmíme přepsat prázdnou/starší serverovou kopií.
+      if(state.ui?.schoolStructureDirty===true) return false;
+      await pullSupabaseSchoolStructure();
+      return true;
+    }catch(err){
+      console.error('School structure refresh failed',err);
+      return false;
+    }
+  }
+
+  async function showSchoolClassesModal(){
+    // Výběr z hotových tříd je dostupný každému schválenému učiteli školy.
+    // Právo manageClasses je potřeba až pro založení/editaci sdílené třídy.
+    if(remoteSchoolStructureEnabled()){
+      const ok=await refreshSchoolStructureFromServer({pushDirty:true});
+      if(!ok && state.ui?.schoolStructureDirty===true) toast('Nepodařilo se dokončit synchronizaci. Zobrazuji poslední data v tomto zařízení.','warn');
+    }
     const teacherId=currentTeacherId();
     const rows=state.classes.slice().sort((a,b)=>String(b.schoolYear||'').localeCompare(String(a.schoolYear||''),'cs')||String(a.displayName||'').localeCompare(String(b.displayName||''),'cs',{numeric:true})).map(c=>{const used=classUsedByTeacher(c,teacherId),creator=teacherNameById(c.createdByTeacherId),teacherCount=(c.teacherIds||[]).length;return `<div class="school-class-row"><div class="school-class-main"><strong>${esc(c.displayName)}</strong><span>${esc(c.schoolYear)} · ${c.studentIds?.length||0} žáků · ${teacherCount} ${teacherCount===1?'učitel':'učitelé'}</span><small>Založil: ${esc(creator)}</small></div>${used?'<span class="school-class-used">POUŽÍVÁŠ</span>':`<button class="btn primary" data-use-school-class="${c.id}">Přidat k mým třídám</button>`}</div>`;}).join('');
-    modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal school-class-modal"><h2 class="pixel-title">Třídy školy</h2><p class="muted">Jedna třída je společná pro celou školu. Přidáním ji nekopíruješ — používáš stejný seznam žáků, ale svoje vlastní předměty.</p><div class="school-class-list">${rows||'<div class="empty">Ve škole zatím nejsou žádné třídy.</div>'}</div><div class="modal-actions"><button class="btn ghost" id="school-classes-close">Zavřít</button></div></section></div>`;
+    modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal school-class-modal"><h2 class="pixel-title">Třídy školy</h2><p class="muted">Vyber si z tříd, které už ve škole existují. Přidáním třídu nekopíruješ — používáš stejný seznam žáků, ale svoje vlastní předměty.</p><div class="school-class-list">${rows||'<div class="empty">Ve škole zatím nejsou žádné třídy.</div>'}</div><div class="modal-actions"><button class="btn secondary" id="school-classes-refresh">↻ Obnovit ze serveru</button><button class="btn ghost" id="school-classes-close">Zavřít</button></div></section></div>`;
     document.getElementById('school-classes-close').onclick=closeModal;
-    modalRoot.querySelectorAll('[data-use-school-class]').forEach(btn=>btn.onclick=()=>{if(addSchoolClassToCurrentTeacher(btn.dataset.useSchoolClass)){saveState();closeModal();toast('Třída přidána k tvým třídám.');render();}});
+    document.getElementById('school-classes-refresh').onclick=async()=>{const b=document.getElementById('school-classes-refresh');if(b)b.disabled=true;const ok=await refreshSchoolStructureFromServer({pushDirty:true});if(ok){toast('Třídy školy obnoveny.');return showSchoolClassesModal();}if(b)b.disabled=false;toast('Obnovení se nepodařilo.','warn');};
+    modalRoot.querySelectorAll('[data-use-school-class]').forEach(btn=>btn.onclick=async()=>{
+      if(!addSchoolClassToCurrentTeacher(btn.dataset.useSchoolClass)) return;
+      saveState();
+      btn.disabled=true;
+      btn.textContent='Ukládám…';
+      if(remoteSchoolStructureEnabled()){
+        await syncSupabaseSchoolStructure();
+        if(state.ui?.schoolStructureDirty!==true) await pullSupabaseSchoolStructure();
+      }
+      closeModal();
+      toast(state.ui?.schoolStructureDirty===true?'Třída je přidaná v zařízení; server se zkusí synchronizovat znovu.':'Třída přidána k tvým třídám.',state.ui?.schoolStructureDirty===true?'warn':'');
+      render();
+    });
   }
 
   function addClassModal(){
-    modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">Nová školní třída</h2><p class="muted">Třída bude společná pro školu. Ostatní učitelé si ji mohou později přidat mezi svoje třídy.</p><label>Název<input id="new-class-name" placeholder="např. 2.A"></label><label style="margin-top:10px">Školní rok<input id="new-class-year" value="${esc(state.school.schoolYear)}"></label><label style="margin-top:10px">Moje předměty v této třídě (čárkou)<input id="new-class-subjects" placeholder="Technické kreslení, ..."></label><div class="modal-actions"><button class="btn ghost" id="cancel-class">Zrušit</button><button class="btn primary" id="create-class">Vytvořit</button></div></section></div>`;
+    if(!can('manageClasses')) return void showSchoolClassesModal();
+    modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">Nová školní třída</h2><p class="muted">Nejdřív používej hotovou třídu, pokud už ve škole existuje. Nová třída bude společná pro školu a ostatní učitelé si ji mohou později přidat.</p><button type="button" class="btn secondary full" id="choose-existing-class" style="margin-bottom:14px">Vybrat z hotových tříd školy</button><label>Název<input id="new-class-name" placeholder="např. 2.A"></label><label style="margin-top:10px">Školní rok<input id="new-class-year" value="${esc(state.school.schoolYear)}"></label><label style="margin-top:10px">Moje předměty v této třídě (čárkou)<input id="new-class-subjects" placeholder="Technické kreslení, ..."></label><div class="modal-actions"><button class="btn ghost" id="cancel-class">Zrušit</button><button class="btn primary" id="create-class">Vytvořit</button></div></section></div>`;
     document.getElementById('cancel-class').onclick=closeModal;
-    document.getElementById('create-class').onclick=()=>{const name=document.getElementById('new-class-name').value.trim(),year=document.getElementById('new-class-year').value.trim();if(!name||!year)return toast('Vyplň název i školní rok.','error');const teacherId=currentTeacherId(),subjects=document.getElementById('new-class-subjects').value.split(',').map(x=>x.trim()).filter(Boolean);const n={id:uid('cl'),displayName:name,schoolYear:year,previousClassId:null,createdByTeacherId:teacherId,teacherIds:[teacherId],studentIds:[],teacherSubjects:{[teacherId]:subjects},subjects:[...subjects]};state.classes.push(n);markSchoolStructureDirty();state.ui.openClassId=n.id;state.ui.classTab='students';state.route='class-detail';saveState();closeModal();toast('Školní třída vytvořena. Ostatní učitelé ji mohou použít.');render();};
+    document.getElementById('choose-existing-class').onclick=()=>showSchoolClassesModal();
+    document.getElementById('create-class').onclick=async()=>{
+      const name=document.getElementById('new-class-name').value.trim(),year=document.getElementById('new-class-year').value.trim();
+      if(!name||!year)return toast('Vyplň název i školní rok.','error');
+      const createBtn=document.getElementById('create-class');if(createBtn){createBtn.disabled=true;createBtn.textContent='Ukládám…';}
+      const teacherId=currentTeacherId(),subjects=document.getElementById('new-class-subjects').value.split(',').map(x=>x.trim()).filter(Boolean);
+      const n={id:uid('cl'),displayName:name,schoolYear:year,previousClassId:null,createdByTeacherId:teacherId,teacherIds:[teacherId],studentIds:[],teacherSubjects:{[teacherId]:subjects},subjects:[...subjects]};
+      state.classes.push(n);markSchoolStructureDirty();state.ui.openClassId=n.id;state.ui.classTab='students';state.route='class-detail';saveState();closeModal();render();
+      if(remoteSchoolStructureEnabled()){
+        await syncSupabaseSchoolStructure();
+        if(state.ui?.schoolStructureDirty!==true) await pullSupabaseSchoolStructure();
+      }
+      saveState();render();
+      toast(state.ui?.schoolStructureDirty===true?'Třída je uložená v zařízení. Server ji zkusí uložit znovu při dalším připojení.':'Školní třída vytvořena a uložena na server.',state.ui?.schoolStructureDirty===true?'warn':'');
+    };
   }
 
   function addStudentModal(classId){
@@ -12217,17 +12268,31 @@ body::after{
     search.addEventListener('search',renderExistingStudents);
 
     document.getElementById('cancel-student').onclick=closeModal;
-    if(addExisting) addExisting.onclick=()=>{
+    if(addExisting) addExisting.onclick=async()=>{
       const ids=[...selected];
       if(!ids.length)return toast('Vyber alespoň jednoho žáka.','warn');
+      addExisting.disabled=true;addExisting.textContent='Ukládám…';
       ids.forEach(id=>{if(!c.studentIds.includes(id)){c.studentIds.push(id);noteEnrollmentAdded(c.id,id);}});
-      saveState();closeModal();toast(`Přidáno žáků: ${ids.length}.`);render();
+      saveState();closeModal();render();
+      if(remoteSchoolStructureEnabled()){
+        await syncSupabaseSchoolStructure();
+        if(state.ui?.schoolStructureDirty!==true) await pullSupabaseSchoolStructure();
+      }
+      saveState();render();
+      toast(state.ui?.schoolStructureDirty===true?`Přidáno žáků: ${ids.length}. Server čeká na další synchronizaci.`:`Přidáno žáků: ${ids.length}.`,state.ui?.schoolStructureDirty===true?'warn':'');
     };
-    document.getElementById('create-student').onclick=()=>{
+    document.getElementById('create-student').onclick=async()=>{
       const name=document.getElementById('new-student-name').value.trim();
       if(!name)return toast('Zadej jméno žáka.','error');
+      const createBtn=document.getElementById('create-student');if(createBtn){createBtn.disabled=true;createBtn.textContent='Ukládám…';}
       const st={id:uid('st'),name,active:true,ruleStates:{},collectedPoints:0,positivePoints:0,lockerPointAdjust:0,subjectInventories:{},passCount:0,cheatCount:0,coffeeCount:0,cheatSheetCount:0,examsCountPeriod:0,lastExamAt:0};
-      state.students.push(st);c.studentIds.push(st.id);noteEnrollmentAdded(c.id,st.id);saveState();closeModal();toast('Nový žák vytvořen a přidán do třídy.');render();
+      state.students.push(st);c.studentIds.push(st.id);noteEnrollmentAdded(c.id,st.id);saveState();closeModal();render();
+      if(remoteSchoolStructureEnabled()){
+        await syncSupabaseSchoolStructure();
+        if(state.ui?.schoolStructureDirty!==true) await pullSupabaseSchoolStructure();
+      }
+      saveState();render();
+      toast(state.ui?.schoolStructureDirty===true?'Žák je uložený v zařízení; server se zkusí synchronizovat znovu.':'Nový žák vytvořen, přidán do třídy a uložen na server.',state.ui?.schoolStructureDirty===true?'warn':'');
     };
 
     renderExistingStudents();
@@ -12411,7 +12476,7 @@ body::after{
     else if(action==='wheel'){state.route='wheel';saveState();render();}
     else if(action==='grades'){state.route='grades';saveState();render();}
     else if(action==='subjects'){state.route='subjects';saveState();render();}
-    else if(action==='classes'){state.route='classes';saveState();render();}
+    else if(action==='classes'){state.route='classes';saveState();render();if(remoteSchoolStructureEnabled())void (async()=>{const ok=await refreshSchoolStructureFromServer({pushDirty:true});if(ok&&state.route==='classes')render();})();}
     else if(action==='scoring'){state.route='scoring';saveState();render();}
     else if(action==='staffroom'){state.route='staffroom';saveState();render();}
     else if(action==='staffroom-send'){sendStaffroomMessage();}
@@ -12451,7 +12516,7 @@ body::after{
     else if(action==='admin'){state.route='admin';saveState();render();}
     else if(action==='open-class'){state.ui.openClassId=btn.dataset.id;state.ui.classTab='students';state.route='class-detail';saveState();render();}
     else if(action==='class-tab'){state.ui.classTab=btn.dataset.tab;saveState();render();}
-    else if(action==='school-classes') showSchoolClassesModal();
+    else if(action==='school-classes') void showSchoolClassesModal();
     else if(action==='add-class') addClassModal();
     else if(action==='add-student') addStudentModal(btn.dataset.class);
     else if(action==='student-detail') showStudentDetail(btn.dataset.id,btn.dataset.class);

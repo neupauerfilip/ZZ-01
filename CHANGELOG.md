@@ -1,3 +1,13 @@
+# ZZ-01 SCHOOL SYNC FIX + CLASS PICKER
+
+- Opraveno ukládání školních tříd a žáků: po vytvoření/přidání se synchronizace se Supabase spustí okamžitě, ne pouze přes odložený časovač.
+- Obrazovka Moje třídy při otevření zkusí dorovnat lokální a serverová školní data.
+- Každý schválený učitel může otevřít „Vybrat z tříd školy“ a přidat si existující školní třídu ke svým třídám.
+- Právo `manageClasses` je potřeba jen pro založení/editaci společné třídy, ne pro její použití.
+- Dialog Třídy školy má ruční tlačítko „Obnovit ze serveru“.
+- Při zakládání nové třídy je nejdřív nabídnuta možnost použít již existující třídu školy.
+- Lokální změny se při chybě serveru nemažou; aplikace je ponechá v zařízení pro další pokus o synchronizaci.
+
 # ZZ-01_SUPABASE_SCHOOL_STRUCTURE — sdílené třídy, žáci a předměty
 
 - přidána skutečná Supabase vrstva pro školní třídy, žáky, zápisy žáků do tříd a přiřazení učitelů
