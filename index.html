@@ -5938,6 +5938,18 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     if(!list.some(x=>x.classId===classId&&x.studentId===studentId)) list.push({classId,studentId});
     markSchoolStructureDirty();
   }
+  function noteClassMetadataChanged(classId){
+    state.ui=state.ui||{};
+    const list=state.ui.pendingClassUpdates=Array.isArray(state.ui.pendingClassUpdates)?state.ui.pendingClassUpdates:[];
+    if(classId && !list.includes(classId)) list.push(classId);
+    markSchoolStructureDirty();
+  }
+  function noteStudentMetadataChanged(studentId){
+    state.ui=state.ui||{};
+    const list=state.ui.pendingStudentUpdates=Array.isArray(state.ui.pendingStudentUpdates)?state.ui.pendingStudentUpdates:[];
+    if(studentId && !list.includes(studentId)) list.push(studentId);
+    markSchoolStructureDirty();
+  }
   function scheduleSupabaseSchoolStructureSync(delay=650){
     if(!remoteSchoolStructureEnabled()) return;
     if(remoteSchoolStructureTimer) clearTimeout(remoteSchoolStructureTimer);
@@ -5984,64 +5996,106 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       let studentMap=remoteStudentByClientKey(remote.students);
       let subjectMap=new Map((remote.subjects||[]).map(r=>[r.name,r]));
 
-      if(can('manageClasses') && state.classes.length){
-        const rows=state.classes.map(c=>{
-          const old=classMap.get(c.id);
-          return {
+      if(can('manageClasses')){
+        // Sdílené třídy nevkládáme přes UPSERT všechny najednou. UPSERT cizí třídy
+        // naráží na RLS created_by a navíc by mohl přepsat novější změny jiného učitele.
+        const newClasses=state.classes.filter(c=>!classMap.has(c.id));
+        if(newClasses.length){
+          const rows=newClasses.map(c=>({
             school_id:schoolId,
             client_key:c.id,
             display_name:String(c.displayName||'').trim()||'Třída',
             school_year:String(c.schoolYear||state.school.schoolYear||'').trim(),
-            previous_class_id:old?.previous_class_id||null,
-            created_by:old?.created_by||teacherId,
+            previous_class_id:c.previousClassId?(classMap.get(c.previousClassId)?.id||null):null,
+            created_by:teacherId,
+            active:c.active!==false,
+            updated_at:new Date().toISOString()
+          }));
+          const {data,error}=await supabaseClient.from('school_classes').insert(rows).select('id,school_id,client_key,display_name,school_year,previous_class_id,created_by,active,created_at,updated_at');
+          if(error) throw error;
+          const inserted=data||[];
+          remote.classes=[...(remote.classes||[]),...inserted];
+          classMap=remoteClassByClientKey(remote.classes);
+        }
+
+        state.classes.forEach(c=>{const row=classMap.get(c.id);if(row)c.remoteId=row.id;});
+
+        // Existující třídu měníme jen tehdy, když uživatel skutečně upravil její sdílené údaje.
+        const pendingClassIds=[...new Set(state.ui?.pendingClassUpdates||[])];
+        const completedClassIds=[];
+        for(const classId of pendingClassIds){
+          const c=state.classes.find(x=>x.id===classId);
+          const row=classMap.get(classId);
+          if(!c){completedClassIds.push(classId);continue;}
+          if(!row) continue;
+          const previous=c.previousClassId?classMap.get(c.previousClassId):null;
+          const payload={
+            display_name:String(c.displayName||'').trim()||row.display_name,
+            school_year:String(c.schoolYear||'').trim()||row.school_year,
+            previous_class_id:previous?.id||null,
             active:c.active!==false,
             updated_at:new Date().toISOString()
           };
-        });
-        const {data,error}=await supabaseClient.from('school_classes').upsert(rows,{onConflict:'school_id,client_key'}).select('id,school_id,client_key,display_name,school_year,previous_class_id,created_by,active,created_at,updated_at');
-        if(error) throw error;
-        const changed=data||[];
-        const changedKeys=new Set(changed.map(r=>r.client_key));
-        remote.classes=[...(remote.classes||[]).filter(r=>!changedKeys.has(r.client_key)),...changed];
-        classMap=remoteClassByClientKey(remote.classes);
-        for(const c of state.classes){
-          const row=classMap.get(c.id); if(row) c.remoteId=row.id;
+          const {data,error}=await supabaseClient.from('school_classes').update(payload).eq('id',row.id).eq('school_id',schoolId).select('id,school_id,client_key,display_name,school_year,previous_class_id,created_by,active,created_at,updated_at');
+          if(error) throw error;
+          const updated=Array.isArray(data)?data[0]:data;
+          if(updated){
+            remote.classes=(remote.classes||[]).map(r=>r.id===updated.id?updated:r);
+            classMap=remoteClassByClientKey(remote.classes);
+            c.remoteId=updated.id;
+          }
+          completedClassIds.push(classId);
         }
-        const previousUpdates=state.classes.map(c=>{
-          const row=classMap.get(c.id);
-          const previous=c.previousClassId?classMap.get(c.previousClassId):null;
-          if(!row) return null;
-          const target=previous?.id||null;
-          if((row.previous_class_id||null)===target) return null;
-          return supabaseClient.from('school_classes').update({previous_class_id:target,updated_at:new Date().toISOString()}).eq('id',row.id).eq('school_id',schoolId);
-        }).filter(Boolean);
-        if(previousUpdates.length){
-          const updates=await Promise.all(previousUpdates);
-          const failed=updates.find(r=>r.error); if(failed) throw failed.error;
+        if(completedClassIds.length){
+          state.ui.pendingClassUpdates=(state.ui.pendingClassUpdates||[]).filter(id=>!completedClassIds.includes(id));
         }
       }else{
         state.classes.forEach(c=>{const row=classMap.get(c.id);if(row)c.remoteId=row.id;});
       }
 
-      if(can('manageStudents') && state.students.length){
-        const rows=state.students.map(st=>{
-          const old=studentMap.get(st.id);
-          return {
+      if(can('manageStudents')){
+        // Stejně jako u tříd vkládáme pouze nové žáky. Existující sdílené profily
+        // se aktualizují jen po explicitní editaci, aby starší zařízení nepřepisovalo cizí změny.
+        const newStudents=state.students.filter(st=>!studentMap.has(st.id));
+        if(newStudents.length){
+          const rows=newStudents.map(st=>({
             school_id:schoolId,
             client_key:st.id,
             display_name:String(st.name||'').trim()||'Žák',
             active:st.active!==false,
-            created_by:old?.created_by||teacherId,
+            created_by:teacherId,
             updated_at:new Date().toISOString()
-          };
-        });
-        const {data,error}=await supabaseClient.from('students').upsert(rows,{onConflict:'school_id,client_key'}).select('id,school_id,client_key,display_name,active,created_by,created_at,updated_at');
-        if(error) throw error;
-        const changed=data||[];
-        const changedKeys=new Set(changed.map(r=>r.client_key));
-        remote.students=[...(remote.students||[]).filter(r=>!changedKeys.has(r.client_key)),...changed];
-        studentMap=remoteStudentByClientKey(remote.students);
+          }));
+          const {data,error}=await supabaseClient.from('students').insert(rows).select('id,school_id,client_key,display_name,active,created_by,created_at,updated_at');
+          if(error) throw error;
+          const inserted=data||[];
+          remote.students=[...(remote.students||[]),...inserted];
+          studentMap=remoteStudentByClientKey(remote.students);
+        }
+
         state.students.forEach(st=>{const row=studentMap.get(st.id);if(row)st.remoteId=row.id;});
+
+        const pendingStudentIds=[...new Set(state.ui?.pendingStudentUpdates||[])];
+        const completedStudentIds=[];
+        for(const studentId of pendingStudentIds){
+          const st=state.students.find(x=>x.id===studentId);
+          const row=studentMap.get(studentId);
+          if(!st){completedStudentIds.push(studentId);continue;}
+          if(!row) continue;
+          const payload={display_name:String(st.name||'').trim()||row.display_name,active:st.active!==false,updated_at:new Date().toISOString()};
+          const {data,error}=await supabaseClient.from('students').update(payload).eq('id',row.id).eq('school_id',schoolId).select('id,school_id,client_key,display_name,active,created_by,created_at,updated_at');
+          if(error) throw error;
+          const updated=Array.isArray(data)?data[0]:data;
+          if(updated){
+            remote.students=(remote.students||[]).map(r=>r.id===updated.id?updated:r);
+            studentMap=remoteStudentByClientKey(remote.students);
+            st.remoteId=updated.id;
+          }
+          completedStudentIds.push(studentId);
+        }
+        if(completedStudentIds.length){
+          state.ui.pendingStudentUpdates=(state.ui.pendingStudentUpdates||[]).filter(id=>!completedStudentIds.includes(id));
+        }
       }else{
         state.students.forEach(st=>{const row=studentMap.get(st.id);if(row)st.remoteId=row.id;});
       }
@@ -6090,9 +6144,10 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
           ...classesForCurrentTeacher().flatMap(c=>classSubjectsForTeacher(c,teacherId)),
           ...state.questionSets.filter(q=>(q.teacherId||teacherId)===teacherId).map(q=>q.subject)
         ].map(x=>String(x||'').trim()).filter(Boolean))];
-        if(subjectNamesToSync.length){
-          const rows=subjectNamesToSync.map(name=>({school_id:schoolId,name,active:true,created_by:subjectMap.get(name)?.created_by||teacherId,updated_at:new Date().toISOString()}));
-          const {data,error}=await supabaseClient.from('subjects').upsert(rows,{onConflict:'school_id,name'}).select('id,school_id,name,active,created_by,created_at,updated_at');
+        const missingSubjectNames=subjectNamesToSync.filter(name=>!subjectMap.has(name));
+        if(missingSubjectNames.length){
+          const rows=missingSubjectNames.map(name=>({school_id:schoolId,name,active:true,created_by:teacherId,updated_at:new Date().toISOString()}));
+          const {data,error}=await supabaseClient.from('subjects').insert(rows).select('id,school_id,name,active,created_by,created_at,updated_at');
           if(error) throw error;
           (data||[]).forEach(r=>subjectMap.set(r.name,r));
         }
@@ -12523,8 +12578,8 @@ body::after{
     else if(action==='remove-student'){
       const c=classById(btn.dataset.class),s=studentById(btn.dataset.id);modal({title:'Odebrat žáka z třídy?',body:`<p>${esc(s.name)} bude odebrán pouze z aktuálního seznamu třídy. Historie zůstane.</p>`,actions:[{label:'Ne',className:'secondary'},{label:'Ano',className:'danger',onClick:()=>{c.studentIds=c.studentIds.filter(id=>id!==s.id);noteEnrollmentRemoved(c.id,s.id);saveState();toast('Žák odebrán z aktuální třídy.');render();}}]});
     }
-    else if(action==='rename-student'){const s=studentById(btn.dataset.id);modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2>Upravit žáka</h2><label>Jméno<input id="rename-student" value="${esc(s.name)}"></label><div class="modal-actions"><button class="btn ghost" id="rename-cancel">Zrušit</button><button class="btn primary" id="rename-save">Uložit</button></div></section></div>`;document.getElementById('rename-cancel').onclick=closeModal;document.getElementById('rename-save').onclick=()=>{s.name=document.getElementById('rename-student').value.trim()||s.name;markSchoolStructureDirty();saveState();closeModal();render();};}
-    else if(action==='save-class'){const c=classById(btn.dataset.id);c.displayName=document.getElementById('class-name').value.trim()||c.displayName;c.schoolYear=document.getElementById('class-year').value.trim()||c.schoolYear;setClassSubjectsForTeacher(c,document.getElementById('class-subjects').value.split(',').map(x=>x.trim()).filter(Boolean));markSchoolStructureDirty();saveState();toast('Třída uložena. Sdílené údaje platí pro školu, předměty jen pro tebe.');render();}
+    else if(action==='rename-student'){const s=studentById(btn.dataset.id);modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2>Upravit žáka</h2><label>Jméno<input id="rename-student" value="${esc(s.name)}"></label><div class="modal-actions"><button class="btn ghost" id="rename-cancel">Zrušit</button><button class="btn primary" id="rename-save">Uložit</button></div></section></div>`;document.getElementById('rename-cancel').onclick=closeModal;document.getElementById('rename-save').onclick=()=>{s.name=document.getElementById('rename-student').value.trim()||s.name;noteStudentMetadataChanged(s.id);saveState();closeModal();render();};}
+    else if(action==='save-class'){const c=classById(btn.dataset.id);c.displayName=document.getElementById('class-name').value.trim()||c.displayName;c.schoolYear=document.getElementById('class-year').value.trim()||c.schoolYear;setClassSubjectsForTeacher(c,document.getElementById('class-subjects').value.split(',').map(x=>x.trim()).filter(Boolean));noteClassMetadataChanged(c.id);saveState();toast('Třída uložena. Sdílené údaje platí pro školu, předměty jen pro tebe.');render();}
     else if(action==='promote-class') promoteClassModal(btn.dataset.id);
     else if(action==='clean-slate') cleanSlate();
     else if(action==='exam-class-choice'){

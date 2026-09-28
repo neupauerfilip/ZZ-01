@@ -1,3 +1,14 @@
+# ZZ-01 CROSS-TEACHER SYNC FIX
+
+- opraven kritický 403 konflikt při synchronizaci sdílených tříd mezi více učiteli
+- nové třídy se nyní pouze vkládají; existující cizí třídy se při běžné synchronizaci znovu nevkládají přes UPSERT
+- sdílený název/školní rok třídy se aktualizuje jen po skutečné editaci uživatelem s oprávněním
+- stejný bezpečný model je použit pro žáky: nový žák se vloží, existující profil se mění jen po explicitní editaci
+- sdílené předměty se znovu nevkládají, pokud už ve škole existují
+- tím se odstraní stav, kdy GET školních tříd vracel 200, ale následný POST/UPSERT skončil 403 a UI zůstalo na starých lokálních datech
+- ověřeno RLS testem: třídu vytvořenou testovacím učitelem vidí i admin
+- JavaScript prošel kontrolou syntaxe `node --check`
+
 # ZZ-01 SCHOOL SYNC FIX + CLASS PICKER
 
 - Opraveno ukládání školních tříd a žáků: po vytvoření/přidání se synchronizace se Supabase spustí okamžitě, ne pouze přes odložený časovač.
