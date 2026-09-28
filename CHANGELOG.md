@@ -1,3 +1,21 @@
+# ZZ-01_SUPABASE_SCHOOL_STRUCTURE — sdílené třídy, žáci a předměty
+
+- přidána skutečná Supabase vrstva pro školní třídy, žáky, zápisy žáků do tříd a přiřazení učitelů
+- jedna školní třída a jeden žák mají stabilní serverové UUID; stávající lokální ID zůstává jako `client_key`, takže se nerozbije historie ani odkazy v aplikaci
+- třídy a seznamy žáků jsou společné pro školu, zatímco každý učitel má vlastní přiřazení tříd a vlastní předměty
+- přidán samostatný katalog `teacher_subjects`, takže předmět učitele existuje i tehdy, když ještě není přiřazen žádné třídě
+- změny názvu třídy, školního roku, jména žáka, přiřazení žáků a předmětů se po připojení synchronizují do Supabase
+- odebrání žáka ze třídy se vede jako historicky bezpečné neaktivní členství; starší lokální kopie nemá automaticky mazat novější změny jiného učitele
+- po přihlášení se školní struktura načte ze Supabase a lokální body, skříňky, inventář a další osobní stav učitele se při tom zachovají
+- při obnovení internetu se odložené změny školní struktury znovu synchronizují
+- připravená tabulka `student_accounts` pro budoucí propojení žáka se skutečným účtem; zatím není z klientské aplikace přístupná
+- připraven neměnný `student_point_events` ledger pro budoucí scoring žáků, testy, výzvy a další zdroje kladných/záporných bodů
+- budoucí žákovská verze Zkouškomatu tak může navázat na stejné stabilní `student_id` bez předělávání tříd a historie
+- témata ke zkoušení, známky, inventář a samotný průběh zkoušení zatím zůstávají v lokální vrstvě; budou migrovány v dalších fázích
+- přidány migrace `006_school_structure_students.sql` a `007_school_structure_refinements.sql`
+
+---
+
 # ZZ-01_SUPABASE_TEACHER_APPROVAL
 
 - potvrzovací e-mail po registraci směřuje na veřejnou GitHub Pages verzi Zkouškomatu

@@ -5913,6 +5913,314 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       state.user.role='teacher';
     }
   }
+  let remoteSchoolStructureSyncBusy=false;
+  let remoteSchoolStructureSyncQueued=false;
+  let remoteSchoolStructureHydrating=false;
+  let remoteSchoolStructureTimer=null;
+
+  function remoteSchoolStructureEnabled(){
+    return !!(supabaseClient && state?.authenticated && state?.authProvider==='supabase' && state?.onboardingDone && state?.school?.id && state?.user?.id && navigator.onLine);
+  }
+  function markSchoolStructureDirty(){
+    if(remoteSchoolStructureHydrating || !state) return;
+    state.ui=state.ui||{};
+    state.ui.schoolStructureDirty=true;
+    scheduleSupabaseSchoolStructureSync();
+  }
+  function noteEnrollmentAdded(classId,studentId){
+    state.ui=state.ui||{};
+    state.ui.pendingEnrollmentRemovals=(state.ui.pendingEnrollmentRemovals||[]).filter(x=>!(x.classId===classId&&x.studentId===studentId));
+    markSchoolStructureDirty();
+  }
+  function noteEnrollmentRemoved(classId,studentId){
+    state.ui=state.ui||{};
+    const list=state.ui.pendingEnrollmentRemovals=Array.isArray(state.ui.pendingEnrollmentRemovals)?state.ui.pendingEnrollmentRemovals:[];
+    if(!list.some(x=>x.classId===classId&&x.studentId===studentId)) list.push({classId,studentId});
+    markSchoolStructureDirty();
+  }
+  function scheduleSupabaseSchoolStructureSync(delay=650){
+    if(!remoteSchoolStructureEnabled()) return;
+    if(remoteSchoolStructureTimer) clearTimeout(remoteSchoolStructureTimer);
+    remoteSchoolStructureTimer=setTimeout(()=>{remoteSchoolStructureTimer=null;void syncSupabaseSchoolStructure();},delay);
+  }
+  function localStudentDefaults(){
+    return {active:true,ruleStates:{},collectedPoints:0,positivePoints:0,lockerPointAdjust:0,subjectInventories:{},passCount:0,cheatCount:0,coffeeCount:0,cheatSheetCount:0,examsCountPeriod:0,lastExamAt:0};
+  }
+  function remoteClassByClientKey(rows){ return new Map((rows||[]).map(r=>[r.client_key,r])); }
+  function remoteStudentByClientKey(rows){ return new Map((rows||[]).map(r=>[r.client_key,r])); }
+
+  async function fetchRemoteSchoolStructureRows(){
+    if(!remoteSchoolStructureEnabled()) return null;
+    const schoolId=state.school.id;
+    const [classesRes,studentsRes,enrollRes,teacherClassRes,subjectsRes,teacherCatalogRes,teacherSubjectRes]=await Promise.all([
+      supabaseClient.from('school_classes').select('id,school_id,client_key,display_name,school_year,previous_class_id,created_by,active,created_at,updated_at').eq('school_id',schoolId).order('created_at',{ascending:true}),
+      supabaseClient.from('students').select('id,school_id,client_key,display_name,active,created_by,created_at,updated_at').eq('school_id',schoolId).order('created_at',{ascending:true}),
+      supabaseClient.from('class_enrollments').select('school_id,class_id,student_id,active,joined_at,left_at').eq('school_id',schoolId),
+      supabaseClient.from('teacher_class_assignments').select('school_id,class_id,teacher_id,created_at').eq('school_id',schoolId),
+      supabaseClient.from('subjects').select('id,school_id,name,active,created_by,created_at,updated_at').eq('school_id',schoolId).order('name',{ascending:true}),
+      supabaseClient.from('teacher_subjects').select('school_id,teacher_id,subject_id,created_at').eq('school_id',schoolId),
+      supabaseClient.from('teacher_class_subjects').select('school_id,class_id,teacher_id,subject_id,created_at').eq('school_id',schoolId)
+    ]);
+    const results=[classesRes,studentsRes,enrollRes,teacherClassRes,subjectsRes,teacherCatalogRes,teacherSubjectRes];
+    const failed=results.find(r=>r.error);
+    if(failed) throw failed.error;
+    return {
+      classes:classesRes.data||[],students:studentsRes.data||[],enrollments:enrollRes.data||[],
+      teacherClasses:teacherClassRes.data||[],subjects:subjectsRes.data||[],teacherCatalog:teacherCatalogRes.data||[],teacherSubjects:teacherSubjectRes.data||[]
+    };
+  }
+
+  async function syncSupabaseSchoolStructure(){
+    if(!remoteSchoolStructureEnabled()) return;
+    if(remoteSchoolStructureSyncBusy){ remoteSchoolStructureSyncQueued=true; return; }
+    remoteSchoolStructureSyncBusy=true;
+    try{
+      const schoolId=state.school.id;
+      const teacherId=currentTeacherId();
+      let remote=await fetchRemoteSchoolStructureRows();
+      if(!remote) return;
+
+      let classMap=remoteClassByClientKey(remote.classes);
+      let studentMap=remoteStudentByClientKey(remote.students);
+      let subjectMap=new Map((remote.subjects||[]).map(r=>[r.name,r]));
+
+      if(can('manageClasses') && state.classes.length){
+        const rows=state.classes.map(c=>{
+          const old=classMap.get(c.id);
+          return {
+            school_id:schoolId,
+            client_key:c.id,
+            display_name:String(c.displayName||'').trim()||'Třída',
+            school_year:String(c.schoolYear||state.school.schoolYear||'').trim(),
+            previous_class_id:old?.previous_class_id||null,
+            created_by:old?.created_by||teacherId,
+            active:c.active!==false,
+            updated_at:new Date().toISOString()
+          };
+        });
+        const {data,error}=await supabaseClient.from('school_classes').upsert(rows,{onConflict:'school_id,client_key'}).select('id,school_id,client_key,display_name,school_year,previous_class_id,created_by,active,created_at,updated_at');
+        if(error) throw error;
+        const changed=data||[];
+        const changedKeys=new Set(changed.map(r=>r.client_key));
+        remote.classes=[...(remote.classes||[]).filter(r=>!changedKeys.has(r.client_key)),...changed];
+        classMap=remoteClassByClientKey(remote.classes);
+        for(const c of state.classes){
+          const row=classMap.get(c.id); if(row) c.remoteId=row.id;
+        }
+        const previousUpdates=state.classes.map(c=>{
+          const row=classMap.get(c.id);
+          const previous=c.previousClassId?classMap.get(c.previousClassId):null;
+          if(!row) return null;
+          const target=previous?.id||null;
+          if((row.previous_class_id||null)===target) return null;
+          return supabaseClient.from('school_classes').update({previous_class_id:target,updated_at:new Date().toISOString()}).eq('id',row.id).eq('school_id',schoolId);
+        }).filter(Boolean);
+        if(previousUpdates.length){
+          const updates=await Promise.all(previousUpdates);
+          const failed=updates.find(r=>r.error); if(failed) throw failed.error;
+        }
+      }else{
+        state.classes.forEach(c=>{const row=classMap.get(c.id);if(row)c.remoteId=row.id;});
+      }
+
+      if(can('manageStudents') && state.students.length){
+        const rows=state.students.map(st=>{
+          const old=studentMap.get(st.id);
+          return {
+            school_id:schoolId,
+            client_key:st.id,
+            display_name:String(st.name||'').trim()||'Žák',
+            active:st.active!==false,
+            created_by:old?.created_by||teacherId,
+            updated_at:new Date().toISOString()
+          };
+        });
+        const {data,error}=await supabaseClient.from('students').upsert(rows,{onConflict:'school_id,client_key'}).select('id,school_id,client_key,display_name,active,created_by,created_at,updated_at');
+        if(error) throw error;
+        const changed=data||[];
+        const changedKeys=new Set(changed.map(r=>r.client_key));
+        remote.students=[...(remote.students||[]).filter(r=>!changedKeys.has(r.client_key)),...changed];
+        studentMap=remoteStudentByClientKey(remote.students);
+        state.students.forEach(st=>{const row=studentMap.get(st.id);if(row)st.remoteId=row.id;});
+      }else{
+        state.students.forEach(st=>{const row=studentMap.get(st.id);if(row)st.remoteId=row.id;});
+      }
+
+      // Vytvoření/obnovení členství žáků ve třídách je pouze aditivní.
+      // Odebrání se vede samostatnou frontou, aby starší lokální kopie nesmazala změnu jiného učitele.
+      if(can('manageStudents')){
+        const enrollmentRows=[];
+        state.classes.forEach(c=>{
+          const rc=classMap.get(c.id); if(!rc) return;
+          (c.studentIds||[]).forEach(studentKey=>{
+            const rs=studentMap.get(studentKey); if(!rs) return;
+            enrollmentRows.push({school_id:schoolId,class_id:rc.id,student_id:rs.id,active:true,left_at:null});
+          });
+        });
+        if(enrollmentRows.length){
+          const {error}=await supabaseClient.from('class_enrollments').upsert(enrollmentRows,{onConflict:'class_id,student_id'});
+          if(error) throw error;
+        }
+        const pending=[...(state.ui?.pendingEnrollmentRemovals||[])];
+        const completed=[];
+        for(const rem of pending){
+          const rc=classMap.get(rem.classId),rs=studentMap.get(rem.studentId);
+          if(!rc||!rs){completed.push(rem);continue;}
+          const {error}=await supabaseClient.from('class_enrollments').update({active:false,left_at:new Date().toISOString()}).eq('school_id',schoolId).eq('class_id',rc.id).eq('student_id',rs.id);
+          if(error) throw error;
+          completed.push(rem);
+        }
+        if(completed.length){
+          state.ui.pendingEnrollmentRemovals=(state.ui.pendingEnrollmentRemovals||[]).filter(x=>!completed.some(c=>c.classId===x.classId&&c.studentId===x.studentId));
+        }
+      }
+
+      // Přiřazení tříd k učiteli synchronizujeme aditivně.
+      // Díky tomu starší zařízení nesmaže třídu, kterou mezitím přiřadil admin nebo jiné zařízení.
+      {
+        const rows=classesForCurrentTeacher().map(c=>classMap.get(c.id)).filter(Boolean).map(rc=>({school_id:schoolId,class_id:rc.id,teacher_id:teacherId}));
+        if(rows.length){
+          const {error}=await supabaseClient.from('teacher_class_assignments').upsert(rows,{onConflict:'class_id,teacher_id'});
+          if(error) throw error;
+        }
+      }
+
+      if(can('manageSubjects')){
+        const subjectNamesToSync=[...new Set([
+          ...classesForCurrentTeacher().flatMap(c=>classSubjectsForTeacher(c,teacherId)),
+          ...state.questionSets.filter(q=>(q.teacherId||teacherId)===teacherId).map(q=>q.subject)
+        ].map(x=>String(x||'').trim()).filter(Boolean))];
+        if(subjectNamesToSync.length){
+          const rows=subjectNamesToSync.map(name=>({school_id:schoolId,name,active:true,created_by:subjectMap.get(name)?.created_by||teacherId,updated_at:new Date().toISOString()}));
+          const {data,error}=await supabaseClient.from('subjects').upsert(rows,{onConflict:'school_id,name'}).select('id,school_id,name,active,created_by,created_at,updated_at');
+          if(error) throw error;
+          (data||[]).forEach(r=>subjectMap.set(r.name,r));
+        }
+        const {error:catalogDeleteError}=await supabaseClient.from('teacher_subjects').delete().eq('school_id',schoolId).eq('teacher_id',teacherId);
+        if(catalogDeleteError) throw catalogDeleteError;
+        const catalogRows=subjectNamesToSync.map(name=>subjectMap.get(name)).filter(Boolean).map(rs=>({school_id:schoolId,teacher_id:teacherId,subject_id:rs.id}));
+        if(catalogRows.length){
+          const {error}=await supabaseClient.from('teacher_subjects').insert(catalogRows);
+          if(error) throw error;
+        }
+
+        const {error:deleteError}=await supabaseClient.from('teacher_class_subjects').delete().eq('school_id',schoolId).eq('teacher_id',teacherId);
+        if(deleteError) throw deleteError;
+        const rows=[];
+        classesForCurrentTeacher().forEach(c=>{
+          const rc=classMap.get(c.id); if(!rc)return;
+          classSubjectsForTeacher(c,teacherId).forEach(name=>{
+            const rs=subjectMap.get(name); if(rs)rows.push({school_id:schoolId,class_id:rc.id,teacher_id:teacherId,subject_id:rs.id});
+          });
+        });
+        if(rows.length){
+          const {error}=await supabaseClient.from('teacher_class_subjects').insert(rows);
+          if(error) throw error;
+        }
+      }
+
+      state.ui=state.ui||{};
+      state.ui.schoolStructureDirty=false;
+      state.ui.schoolStructureRemoteSchoolId=schoolId;
+      dataStore.saveRaw(JSON.stringify({...state,splashSeen:true}));
+    }catch(err){
+      console.error('School structure sync failed',err);
+      state.ui=state.ui||{};
+      state.ui.schoolStructureDirty=true;
+      if(state.route!=='exam'&&state.route!=='class-detail') toast('Školní data se teď nepodařilo synchronizovat. Změny zůstaly v zařízení.','warn');
+    }finally{
+      remoteSchoolStructureSyncBusy=false;
+      if(remoteSchoolStructureSyncQueued){remoteSchoolStructureSyncQueued=false;scheduleSupabaseSchoolStructureSync(250);}
+    }
+  }
+
+  async function pullSupabaseSchoolStructure(){
+    if(!remoteSchoolStructureEnabled()) return;
+    const remote=await fetchRemoteSchoolStructureRows();
+    if(!remote) return;
+    const schoolId=state.school.id;
+    const oldStudents=new Map((state.students||[]).map(s=>[s.id,s]));
+    const oldClasses=new Map((state.classes||[]).map(c=>[c.id,c]));
+    const classKeyByRemoteId=new Map(remote.classes.map(r=>[r.id,r.client_key]));
+    const studentKeyByRemoteId=new Map(remote.students.map(r=>[r.id,r.client_key]));
+    const subjectByRemoteId=new Map(remote.subjects.map(r=>[r.id,r]));
+    const teacherIdsByClass=new Map();
+    const subjectsByClassTeacher=new Map();
+    const studentsByClass=new Map();
+    const catalogSubjectsForCurrentTeacher=(remote.teacherCatalog||[])
+      .filter(row=>row.teacher_id===currentTeacherId())
+      .map(row=>subjectByRemoteId.get(row.subject_id)?.name)
+      .filter(Boolean);
+
+    (remote.teacherClasses||[]).forEach(row=>{
+      const key=classKeyByRemoteId.get(row.class_id); if(!key)return;
+      if(!teacherIdsByClass.has(key))teacherIdsByClass.set(key,[]);
+      const list=teacherIdsByClass.get(key); if(!list.includes(row.teacher_id))list.push(row.teacher_id);
+    });
+    (remote.teacherSubjects||[]).forEach(row=>{
+      const classKey=classKeyByRemoteId.get(row.class_id),subject=subjectByRemoteId.get(row.subject_id);
+      if(!classKey||!subject)return;
+      const mapKey=`${classKey}::${row.teacher_id}`;
+      if(!subjectsByClassTeacher.has(mapKey))subjectsByClassTeacher.set(mapKey,[]);
+      const list=subjectsByClassTeacher.get(mapKey); if(!list.includes(subject.name))list.push(subject.name);
+    });
+    (remote.enrollments||[]).filter(row=>row.active!==false).forEach(row=>{
+      const classKey=classKeyByRemoteId.get(row.class_id),studentKey=studentKeyByRemoteId.get(row.student_id);
+      if(!classKey||!studentKey)return;
+      if(!studentsByClass.has(classKey))studentsByClass.set(classKey,[]);
+      const list=studentsByClass.get(classKey); if(!list.includes(studentKey))list.push(studentKey);
+    });
+
+    remoteSchoolStructureHydrating=true;
+    try{
+      state.students=remote.students.filter(r=>r.active!==false).map(r=>{
+        const old=oldStudents.get(r.client_key)||{};
+        return {...localStudentDefaults(),...old,id:r.client_key,remoteId:r.id,name:r.display_name,active:r.active!==false};
+      });
+      state.classes=remote.classes.filter(r=>r.active!==false).map(r=>{
+        const old=oldClasses.get(r.client_key)||{};
+        const teacherIds=teacherIdsByClass.get(r.client_key)||[];
+        const teacherSubjects={};
+        teacherIds.forEach(tid=>{teacherSubjects[tid]=[...(subjectsByClassTeacher.get(`${r.client_key}::${tid}`)||[])];});
+        const union=[...new Set(Object.values(teacherSubjects).flat())];
+        return {
+          ...old,
+          id:r.client_key,
+          remoteId:r.id,
+          displayName:r.display_name,
+          schoolYear:r.school_year,
+          previousClassId:r.previous_class_id?classKeyByRemoteId.get(r.previous_class_id)||null:null,
+          createdByTeacherId:r.created_by,
+          teacherIds,
+          studentIds:[...(studentsByClass.get(r.client_key)||[])],
+          teacherSubjects,
+          subjects:union,
+          active:r.active!==false
+        };
+      });
+      catalogSubjectsForCurrentTeacher.forEach(name=>{
+        const teacherId=currentTeacherId();
+        if(!state.questionSets.some(q=>q.subject===name&&(q.teacherId||teacherId)===teacherId))
+          state.questionSets.push({id:uid('qs'),teacherId,subject:name,name:'Témata ke zkoušení',items:[]});
+      });
+      state.ui=state.ui||{};
+      state.ui.schoolStructureDirty=false;
+      state.ui.schoolStructureRemoteSchoolId=schoolId;
+      if(state.ui.openClassId&&!state.classes.some(c=>c.id===state.ui.openClassId))state.ui.openClassId=null;
+      dataStore.saveRaw(JSON.stringify({...state,splashSeen:true}));
+    }finally{
+      remoteSchoolStructureHydrating=false;
+    }
+  }
+
+  async function initializeSupabaseSchoolStructure(){
+    if(!remoteSchoolStructureEnabled()) return;
+    state.ui=state.ui||{};
+    const firstForSchool=state.ui.schoolStructureRemoteSchoolId!==state.school.id;
+    if(firstForSchool || state.ui.schoolStructureDirty===true) await syncSupabaseSchoolStructure();
+    await pullSupabaseSchoolStructure();
+  }
+
   async function refreshSupabaseSchoolTeachers(){
     if(!supabaseClient||!state.school?.id||!state.user?.id) return [];
     state.ui=state.ui||{};
@@ -6016,6 +6324,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     state.user.nickname=profile?.nickname||'';
     state.user.avatar=profile?.avatar||state.user.avatar||'px:cyan';
     await refreshSupabaseMembership();
+    if(state.onboardingDone) await initializeSupabaseSchoolStructure();
     saveState();
   }
   async function initSupabaseAuth(){
@@ -6151,6 +6460,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     const {data,error}=await supabaseClient.rpc('create_school',{p_name:name,p_city:city,p_address:address,p_school_year:year});
     if(error) return toast(authErrorText(error),'error');
     await refreshSupabaseMembership();
+    if(state.onboardingDone) await initializeSupabaseSchoolStructure();
     saveState();
     toast('Škola byla založena. Jsi její administrátor.');
     render();
@@ -6737,6 +7047,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   function saveState(){
     try{ dataStore.saveRaw(JSON.stringify({...state,splashSeen:true})); }
     catch(e){ toast('Data se nepodařilo uložit do zařízení.','error'); }
+    if(state?.ui?.schoolStructureDirty) scheduleSupabaseSchoolStructureSync();
   }
 
   function finishSplashWhenReady(){
@@ -6803,8 +7114,8 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   function classesForCurrentTeacher(){ const teacherId=currentTeacherId(); return state.classes.filter(c=>classUsedByTeacher(c,teacherId)); }
   function classSubjectsForTeacher(c,teacherId=currentTeacherId()){ if(!c)return[]; if(!c.teacherSubjects||typeof c.teacherSubjects!=='object'||Array.isArray(c.teacherSubjects))c.teacherSubjects={}; if(!Array.isArray(c.teacherSubjects[teacherId]))c.teacherSubjects[teacherId]=[]; return c.teacherSubjects[teacherId]; }
   function syncClassSubjectUnion(c){ if(!c)return[]; const union=[...new Set(Object.values(c.teacherSubjects||{}).flatMap(subjects=>Array.isArray(subjects)?subjects:[]).filter(Boolean))]; c.subjects=union; return union; }
-  function setClassSubjectsForTeacher(c,subjects,teacherId=currentTeacherId()){ if(!c)return[]; if(!c.teacherSubjects||typeof c.teacherSubjects!=='object'||Array.isArray(c.teacherSubjects))c.teacherSubjects={}; c.teacherSubjects[teacherId]=[...new Set((subjects||[]).map(x=>String(x||'').trim()).filter(Boolean))]; if(!Array.isArray(c.teacherIds))c.teacherIds=[]; if(!c.teacherIds.includes(teacherId))c.teacherIds.push(teacherId); syncClassSubjectUnion(c); return c.teacherSubjects[teacherId]; }
-  function addSchoolClassToCurrentTeacher(classId){ const c=classById(classId); if(!c)return false; const teacherId=currentTeacherId(); if(!Array.isArray(c.teacherIds))c.teacherIds=[]; if(c.teacherIds.includes(teacherId))return false; c.teacherIds.push(teacherId); if(!c.teacherSubjects||typeof c.teacherSubjects!=='object'||Array.isArray(c.teacherSubjects))c.teacherSubjects={}; if(!Array.isArray(c.teacherSubjects[teacherId]))c.teacherSubjects[teacherId]=[]; syncClassSubjectUnion(c); return true; }
+  function setClassSubjectsForTeacher(c,subjects,teacherId=currentTeacherId()){ if(!c)return[]; if(!c.teacherSubjects||typeof c.teacherSubjects!=='object'||Array.isArray(c.teacherSubjects))c.teacherSubjects={}; c.teacherSubjects[teacherId]=[...new Set((subjects||[]).map(x=>String(x||'').trim()).filter(Boolean))]; if(!Array.isArray(c.teacherIds))c.teacherIds=[]; if(!c.teacherIds.includes(teacherId))c.teacherIds.push(teacherId); syncClassSubjectUnion(c); markSchoolStructureDirty(); return c.teacherSubjects[teacherId]; }
+  function addSchoolClassToCurrentTeacher(classId){ const c=classById(classId); if(!c)return false; const teacherId=currentTeacherId(); if(!Array.isArray(c.teacherIds))c.teacherIds=[]; if(c.teacherIds.includes(teacherId))return false; c.teacherIds.push(teacherId); if(!c.teacherSubjects||typeof c.teacherSubjects!=='object'||Array.isArray(c.teacherSubjects))c.teacherSubjects={}; if(!Array.isArray(c.teacherSubjects[teacherId]))c.teacherSubjects[teacherId]=[]; syncClassSubjectUnion(c); markSchoolStructureDirty(); return true; }
   function myClassesForStudent(id){ return classesForCurrentTeacher().filter(c=>(c.studentIds||[]).includes(id)); }
   function ruleById(id){ return state.rules.find(r=>r.id===id); }
   function studentsForClass(classId){ const c=classById(classId); return c ? c.studentIds.map(studentById).filter(Boolean) : []; }
@@ -11177,7 +11488,7 @@ body::after{
     const myClasses=classesForCurrentTeacher();
     modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">Nový předmět</h2><label>Název předmětu<input id="subject-name" placeholder="Např. Český jazyk"></label><div class="tiny muted" style="margin-top:10px">Předmět je tvůj. Můžeš ho přiřadit jen ke třídám školy, které používáš.</div><div class="subject-class-list">${myClasses.map(c=>`<label><input type="checkbox" data-subject-class="${c.id}" checked> ${esc(c.displayName)} — ${esc(c.schoolYear)}</label>`).join('')}</div><div class="modal-actions"><button class="btn ghost" id="subject-cancel">Zrušit</button><button class="btn primary" id="subject-save">Vytvořit</button></div></section></div>`;
     document.getElementById('subject-cancel').onclick=closeModal;
-    document.getElementById('subject-save').onclick=()=>{const name=document.getElementById('subject-name').value.trim();if(!name)return toast('Zadej název předmětu.','error');if(subjectNames().some(s=>s.toLowerCase()===name.toLowerCase()))return toast('Takový předmět už existuje.','error');modalRoot.querySelectorAll('[data-subject-class]').forEach(ch=>{if(ch.checked){const c=classById(ch.dataset.subjectClass);if(c&&classUsedByTeacher(c))setClassSubjectsForTeacher(c,[...classSubjectsForTeacher(c),name]);}});questionSetForSubject(name,true);state.ui.openSubject=name;state.route='subject-detail';saveState();closeModal();toast('Předmět vytvořen.');render();};
+    document.getElementById('subject-save').onclick=()=>{const name=document.getElementById('subject-name').value.trim();if(!name)return toast('Zadej název předmětu.','error');if(subjectNames().some(s=>s.toLowerCase()===name.toLowerCase()))return toast('Takový předmět už existuje.','error');modalRoot.querySelectorAll('[data-subject-class]').forEach(ch=>{if(ch.checked){const c=classById(ch.dataset.subjectClass);if(c&&classUsedByTeacher(c))setClassSubjectsForTeacher(c,[...classSubjectsForTeacher(c),name]);}});questionSetForSubject(name,true);markSchoolStructureDirty();state.ui.openSubject=name;state.route='subject-detail';saveState();closeModal();toast('Předmět vytvořen.');render();};
   }
 
   function editSubjectModal(){
@@ -11185,7 +11496,7 @@ body::after{
     const teacherId=currentTeacherId(),myClasses=classesForCurrentTeacher();
     modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">Upravit předmět</h2><label>Název předmětu<input id="subject-name" value="${esc(old)}"></label><div class="tiny muted" style="margin-top:10px">Přiřazení k mým třídám</div><div class="subject-class-list">${myClasses.map(c=>`<label><input type="checkbox" data-subject-class="${c.id}" ${classSubjectsForTeacher(c).includes(old)?'checked':''}> ${esc(c.displayName)} — ${esc(c.schoolYear)}</label>`).join('')}</div><div class="modal-actions"><button class="btn ghost" id="subject-cancel">Zrušit</button><button class="btn primary" id="subject-save">Uložit</button></div></section></div>`;
     document.getElementById('subject-cancel').onclick=closeModal;
-    document.getElementById('subject-save').onclick=()=>{const name=document.getElementById('subject-name').value.trim()||old;myClasses.forEach(c=>{const checked=modalRoot.querySelector(`[data-subject-class="${c.id}"]`)?.checked;const next=classSubjectsForTeacher(c).filter(s=>s!==old);if(checked&&!next.includes(name))next.push(name);setClassSubjectsForTeacher(c,next);});state.questionSets.filter(q=>(q.teacherId||teacherId)===teacherId&&q.subject===old).forEach(q=>q.subject=name);state.history.filter(h=>h.teacherId===teacherId&&h.subject===old).forEach(h=>h.subject=name);if(name!==old){state.students.forEach(student=>{const bags=student.subjectInventories;if(!bags||typeof bags!=='object'||!bags[old])return;const src=bags[old],dst=bags[name]||{passCount:0,cheatCount:0,coffeeCount:0};dst.passCount=Number(dst.passCount||0)+Number(src.passCount||0);dst.cheatCount=Number(dst.cheatCount||0)+Number(src.cheatCount||0);dst.coffeeCount=Number(dst.coffeeCount||0)+Number(src.coffeeCount||0);bags[name]=dst;delete bags[old];});if(state.examFlow?.subject===old)state.examFlow.subject=name;if(state.activeExam?.subject===old)state.activeExam.subject=name;}state.ui.openSubject=name;saveState();closeModal();toast('Předmět uložen.');render();};
+    document.getElementById('subject-save').onclick=()=>{const name=document.getElementById('subject-name').value.trim()||old;myClasses.forEach(c=>{const checked=modalRoot.querySelector(`[data-subject-class="${c.id}"]`)?.checked;const next=classSubjectsForTeacher(c).filter(s=>s!==old);if(checked&&!next.includes(name))next.push(name);setClassSubjectsForTeacher(c,next);});state.questionSets.filter(q=>(q.teacherId||teacherId)===teacherId&&q.subject===old).forEach(q=>q.subject=name);state.history.filter(h=>h.teacherId===teacherId&&h.subject===old).forEach(h=>h.subject=name);if(name!==old){state.students.forEach(student=>{const bags=student.subjectInventories;if(!bags||typeof bags!=='object'||!bags[old])return;const src=bags[old],dst=bags[name]||{passCount:0,cheatCount:0,coffeeCount:0};dst.passCount=Number(dst.passCount||0)+Number(src.passCount||0);dst.cheatCount=Number(dst.cheatCount||0)+Number(src.cheatCount||0);dst.coffeeCount=Number(dst.coffeeCount||0)+Number(src.coffeeCount||0);bags[name]=dst;delete bags[old];});if(state.examFlow?.subject===old)state.examFlow.subject=name;if(state.activeExam?.subject===old)state.activeExam.subject=name;}state.ui.openSubject=name;markSchoolStructureDirty();saveState();closeModal();toast('Předmět uložen.');render();};
   }
 
   function topicModal(index=null){
@@ -11819,7 +12130,7 @@ body::after{
   function addClassModal(){
     modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">Nová školní třída</h2><p class="muted">Třída bude společná pro školu. Ostatní učitelé si ji mohou později přidat mezi svoje třídy.</p><label>Název<input id="new-class-name" placeholder="např. 2.A"></label><label style="margin-top:10px">Školní rok<input id="new-class-year" value="${esc(state.school.schoolYear)}"></label><label style="margin-top:10px">Moje předměty v této třídě (čárkou)<input id="new-class-subjects" placeholder="Technické kreslení, ..."></label><div class="modal-actions"><button class="btn ghost" id="cancel-class">Zrušit</button><button class="btn primary" id="create-class">Vytvořit</button></div></section></div>`;
     document.getElementById('cancel-class').onclick=closeModal;
-    document.getElementById('create-class').onclick=()=>{const name=document.getElementById('new-class-name').value.trim(),year=document.getElementById('new-class-year').value.trim();if(!name||!year)return toast('Vyplň název i školní rok.','error');const teacherId=currentTeacherId(),subjects=document.getElementById('new-class-subjects').value.split(',').map(x=>x.trim()).filter(Boolean);const n={id:uid('cl'),displayName:name,schoolYear:year,previousClassId:null,createdByTeacherId:teacherId,teacherIds:[teacherId],studentIds:[],teacherSubjects:{[teacherId]:subjects},subjects:[...subjects]};state.classes.push(n);state.ui.openClassId=n.id;state.ui.classTab='students';state.route='class-detail';saveState();closeModal();toast('Školní třída vytvořena. Ostatní učitelé ji mohou použít.');render();};
+    document.getElementById('create-class').onclick=()=>{const name=document.getElementById('new-class-name').value.trim(),year=document.getElementById('new-class-year').value.trim();if(!name||!year)return toast('Vyplň název i školní rok.','error');const teacherId=currentTeacherId(),subjects=document.getElementById('new-class-subjects').value.split(',').map(x=>x.trim()).filter(Boolean);const n={id:uid('cl'),displayName:name,schoolYear:year,previousClassId:null,createdByTeacherId:teacherId,teacherIds:[teacherId],studentIds:[],teacherSubjects:{[teacherId]:subjects},subjects:[...subjects]};state.classes.push(n);markSchoolStructureDirty();state.ui.openClassId=n.id;state.ui.classTab='students';state.route='class-detail';saveState();closeModal();toast('Školní třída vytvořena. Ostatní učitelé ji mohou použít.');render();};
   }
 
   function addStudentModal(classId){
@@ -11909,14 +12220,14 @@ body::after{
     if(addExisting) addExisting.onclick=()=>{
       const ids=[...selected];
       if(!ids.length)return toast('Vyber alespoň jednoho žáka.','warn');
-      ids.forEach(id=>{if(!c.studentIds.includes(id))c.studentIds.push(id);});
+      ids.forEach(id=>{if(!c.studentIds.includes(id)){c.studentIds.push(id);noteEnrollmentAdded(c.id,id);}});
       saveState();closeModal();toast(`Přidáno žáků: ${ids.length}.`);render();
     };
     document.getElementById('create-student').onclick=()=>{
       const name=document.getElementById('new-student-name').value.trim();
       if(!name)return toast('Zadej jméno žáka.','error');
       const st={id:uid('st'),name,active:true,ruleStates:{},collectedPoints:0,positivePoints:0,lockerPointAdjust:0,subjectInventories:{},passCount:0,cheatCount:0,coffeeCount:0,cheatSheetCount:0,examsCountPeriod:0,lastExamAt:0};
-      state.students.push(st);c.studentIds.push(st.id);saveState();closeModal();toast('Nový žák vytvořen a přidán do třídy.');render();
+      state.students.push(st);c.studentIds.push(st.id);noteEnrollmentAdded(c.id,st.id);saveState();closeModal();toast('Nový žák vytvořen a přidán do třídy.');render();
     };
 
     renderExistingStudents();
@@ -11937,7 +12248,7 @@ body::after{
     const c=classById(id); if(!c)return;
     modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">Nový školní rok</h2><p>Vytvoří se nová třída s novým interním ID. Historie ${esc(c.displayName)} — ${esc(c.schoolYear)} zůstane zachována.</p><label>Nový název třídy<input id="promote-name" value="${esc(c.displayName)}"></label><label style="margin-top:10px">Nový školní rok<input id="promote-year" placeholder="2027/2028"></label><div class="modal-actions"><button class="btn ghost" id="promote-cancel">Zrušit</button><button class="btn primary" id="promote-save">Vytvořit návaznou třídu</button></div></section></div>`;
     document.getElementById('promote-cancel').onclick=closeModal;
-    document.getElementById('promote-save').onclick=()=>{const name=document.getElementById('promote-name').value.trim(),year=document.getElementById('promote-year').value.trim();if(!name||!year)return toast('Vyplň název i školní rok.','error');const teacherSubjects=Object.fromEntries(Object.entries(c.teacherSubjects||{}).map(([teacherId,subjects])=>[teacherId,[...(subjects||[])]]));const n={id:uid('cl'),displayName:name,schoolYear:year,previousClassId:c.id,createdByTeacherId:currentTeacherId(),teacherIds:[...(c.teacherIds||[currentTeacherId()])],studentIds:[...c.studentIds],teacherSubjects,subjects:[...new Set(Object.values(teacherSubjects).flat())]};state.classes.push(n);state.school.schoolYear=year;saveState();closeModal();toast('Návazná školní třída vytvořena.');state.ui.openClassId=n.id;render();};
+    document.getElementById('promote-save').onclick=()=>{const name=document.getElementById('promote-name').value.trim(),year=document.getElementById('promote-year').value.trim();if(!name||!year)return toast('Vyplň název i školní rok.','error');const teacherSubjects=Object.fromEntries(Object.entries(c.teacherSubjects||{}).map(([teacherId,subjects])=>[teacherId,[...(subjects||[])]]));const n={id:uid('cl'),displayName:name,schoolYear:year,previousClassId:c.id,createdByTeacherId:currentTeacherId(),teacherIds:[...(c.teacherIds||[currentTeacherId()])],studentIds:[...c.studentIds],teacherSubjects,subjects:[...new Set(Object.values(teacherSubjects).flat())]};state.classes.push(n);markSchoolStructureDirty();state.school.schoolYear=year;saveState();closeModal();toast('Návazná školní třída vytvořena.');state.ui.openClassId=n.id;render();};
   }
 
   function cleanSlate(){
@@ -12071,7 +12382,7 @@ body::after{
     else if(action==='select-school'){state.ui.selectedSchoolId=btn.dataset.id;saveState();render();}
     else if(action==='join-selected-school'){void requestJoinSchoolSupabase();}
     else if(action==='create-school-onboarding'){void createSchoolSupabase();}
-    else if(action==='refresh-membership'){void (async()=>{try{await refreshSupabaseMembership();saveState();render();if(state.onboardingDone)toast('Členství je schválené.');else toast('Žádost stále čeká na schválení.','warn');}catch(err){toast(authErrorText(err),'error');}})();}
+    else if(action==='refresh-membership'){void (async()=>{try{await refreshSupabaseMembership();if(state.onboardingDone)await initializeSupabaseSchoolStructure();saveState();render();if(state.onboardingDone)toast('Členství je schválené.');else toast('Žádost stále čeká na schválení.','warn');}catch(err){toast(authErrorText(err),'error');}})();}
     else if(action==='cancel-membership'){void cancelPendingMembershipSupabase();}
     else if(action==='finish-onboarding'){state.onboardingDone=true;saveState();render();}
     else if(action==='go-home'){
@@ -12133,7 +12444,7 @@ body::after{
     else if(action==='add-topic') topicModal(null);
     else if(action==='edit-topic') topicModal(Number(btn.dataset.index));
     else if(action==='delete-topic'){const q=questionSetForSubject(state.ui.openSubject,true),i=Number(btn.dataset.index);modal({title:'Odebrat téma?',body:`<p>Opravdu odebrat téma <strong>${esc(q.items[i]||'')}</strong>?</p>`,actions:[{label:'Ne',className:'secondary'},{label:'Ano',className:'danger',onClick:()=>{q.items.splice(i,1);saveState();toast('Téma odebráno.');render();}}]});}
-    else if(action==='delete-subject'){const subject=state.ui.openSubject,teacherId=currentTeacherId();modal({title:'Odebrat předmět?',body:`<p>Předmět <strong>${esc(subject)}</strong> se přestane nabízet v tvých třídách. Předměty ostatních učitelů ani společné třídy se nezmění.</p>`,actions:[{label:'Ne',className:'secondary'},{label:'Ano',className:'danger',onClick:()=>{classesForCurrentTeacher().forEach(c=>setClassSubjectsForTeacher(c,classSubjectsForTeacher(c).filter(s=>s!==subject)));state.questionSets=state.questionSets.filter(q=>!((q.teacherId||teacherId)===teacherId&&q.subject===subject));state.ui.openSubject='';state.route='subjects';saveState();toast('Předmět odebrán z tvé aktuální nabídky.');render();}}]});}
+    else if(action==='delete-subject'){const subject=state.ui.openSubject,teacherId=currentTeacherId();modal({title:'Odebrat předmět?',body:`<p>Předmět <strong>${esc(subject)}</strong> se přestane nabízet v tvých třídách. Předměty ostatních učitelů ani společné třídy se nezmění.</p>`,actions:[{label:'Ne',className:'secondary'},{label:'Ano',className:'danger',onClick:()=>{classesForCurrentTeacher().forEach(c=>setClassSubjectsForTeacher(c,classSubjectsForTeacher(c).filter(s=>s!==subject)));state.questionSets=state.questionSets.filter(q=>!((q.teacherId||teacherId)===teacherId&&q.subject===subject));state.ui.openSubject='';state.route='subjects';markSchoolStructureDirty();saveState();toast('Předmět odebrán z tvé aktuální nabídky.');render();}}]});}
     else if(action==='grade-view'){state.ui.gradeView=btn.dataset.view;saveState();render();}
     else if(action==='grade-print') gradePrint();
     else if(action==='grade-export-excel') gradeExportExcel();
@@ -12145,10 +12456,10 @@ body::after{
     else if(action==='add-student') addStudentModal(btn.dataset.class);
     else if(action==='student-detail') showStudentDetail(btn.dataset.id,btn.dataset.class);
     else if(action==='remove-student'){
-      const c=classById(btn.dataset.class),s=studentById(btn.dataset.id);modal({title:'Odebrat žáka z třídy?',body:`<p>${esc(s.name)} bude odebrán pouze z aktuálního seznamu třídy. Historie zůstane.</p>`,actions:[{label:'Ne',className:'secondary'},{label:'Ano',className:'danger',onClick:()=>{c.studentIds=c.studentIds.filter(id=>id!==s.id);saveState();toast('Žák odebrán z aktuální třídy.');render();}}]});
+      const c=classById(btn.dataset.class),s=studentById(btn.dataset.id);modal({title:'Odebrat žáka z třídy?',body:`<p>${esc(s.name)} bude odebrán pouze z aktuálního seznamu třídy. Historie zůstane.</p>`,actions:[{label:'Ne',className:'secondary'},{label:'Ano',className:'danger',onClick:()=>{c.studentIds=c.studentIds.filter(id=>id!==s.id);noteEnrollmentRemoved(c.id,s.id);saveState();toast('Žák odebrán z aktuální třídy.');render();}}]});
     }
-    else if(action==='rename-student'){const s=studentById(btn.dataset.id);modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2>Upravit žáka</h2><label>Jméno<input id="rename-student" value="${esc(s.name)}"></label><div class="modal-actions"><button class="btn ghost" id="rename-cancel">Zrušit</button><button class="btn primary" id="rename-save">Uložit</button></div></section></div>`;document.getElementById('rename-cancel').onclick=closeModal;document.getElementById('rename-save').onclick=()=>{s.name=document.getElementById('rename-student').value.trim()||s.name;saveState();closeModal();render();};}
-    else if(action==='save-class'){const c=classById(btn.dataset.id);c.displayName=document.getElementById('class-name').value.trim()||c.displayName;c.schoolYear=document.getElementById('class-year').value.trim()||c.schoolYear;setClassSubjectsForTeacher(c,document.getElementById('class-subjects').value.split(',').map(x=>x.trim()).filter(Boolean));saveState();toast('Třída uložena. Sdílené údaje platí pro školu, předměty jen pro tebe.');render();}
+    else if(action==='rename-student'){const s=studentById(btn.dataset.id);modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2>Upravit žáka</h2><label>Jméno<input id="rename-student" value="${esc(s.name)}"></label><div class="modal-actions"><button class="btn ghost" id="rename-cancel">Zrušit</button><button class="btn primary" id="rename-save">Uložit</button></div></section></div>`;document.getElementById('rename-cancel').onclick=closeModal;document.getElementById('rename-save').onclick=()=>{s.name=document.getElementById('rename-student').value.trim()||s.name;markSchoolStructureDirty();saveState();closeModal();render();};}
+    else if(action==='save-class'){const c=classById(btn.dataset.id);c.displayName=document.getElementById('class-name').value.trim()||c.displayName;c.schoolYear=document.getElementById('class-year').value.trim()||c.schoolYear;setClassSubjectsForTeacher(c,document.getElementById('class-subjects').value.split(',').map(x=>x.trim()).filter(Boolean));markSchoolStructureDirty();saveState();toast('Třída uložena. Sdílené údaje platí pro školu, předměty jen pro tebe.');render();}
     else if(action==='promote-class') promoteClassModal(btn.dataset.id);
     else if(action==='clean-slate') cleanSlate();
     else if(action==='exam-class-choice'){
@@ -12410,7 +12721,7 @@ body::after{
     }
   });
 
-  window.addEventListener('online',()=>{state.online=true;saveState();toast('Připojení obnoveno.');render();});
+  window.addEventListener('online',()=>{state.online=true;saveState();toast('Připojení obnoveno.');void initializeSupabaseSchoolStructure().then(()=>render()).catch(err=>console.warn('School structure reconnect sync failed',err));render();});
   window.addEventListener('offline',()=>{state.online=false;saveState();toast('Bez připojení – pracuji lokálně.','warn');render();});
   document.addEventListener('visibilitychange',()=>{
     if(document.hidden) stopAllBackgroundMusic(false); else syncBackgroundMusic();
