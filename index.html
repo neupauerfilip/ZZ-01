@@ -5789,6 +5789,27 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   'use strict';
 
   const STORAGE_KEY = 'zkouskomat_zz01_state_v1';
+
+  /* DATA STORE
+     Jediné místo, přes které aplikace načítá a ukládá svůj stav.
+     Fáze 1 používá localStorage beze změny chování. V dalších fázích sem
+     připojíme Supabase a synchronizaci, aniž bychom museli přepisovat každé
+     volání saveState() v celé aplikaci. */
+  const dataStore={
+    mode:'local',
+    loadRaw(){
+      return localStorage.getItem(STORAGE_KEY);
+    },
+    saveRaw(value){
+      localStorage.setItem(STORAGE_KEY,value);
+    },
+    removeLocal(){
+      localStorage.removeItem(STORAGE_KEY);
+    },
+    diagnostics(){
+      return {mode:this.mode,key:STORAGE_KEY,online:navigator.onLine};
+    }
+  };
   const APP_VERSION = 'ZZ-01 / EXAM SCENE E / BAKED FRAMES';
   const app = document.getElementById('app');
   const toastRoot = document.getElementById('toast-root');
@@ -6122,7 +6143,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 
   function loadState(){
     try{
-      const raw=localStorage.getItem(STORAGE_KEY);
+      const raw=dataStore.loadRaw();
       if(!raw) return ensureTestAccounts(initialState());
       const parsed=JSON.parse(raw);
       const base=initialState();
@@ -6362,7 +6383,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   }
 
   function saveState(){
-    try{ localStorage.setItem(STORAGE_KEY,JSON.stringify({...state,splashSeen:true})); }
+    try{ dataStore.saveRaw(JSON.stringify({...state,splashSeen:true})); }
     catch(e){ toast('Data se nepodařilo uložit do zařízení.','error'); }
   }
 

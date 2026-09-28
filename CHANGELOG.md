@@ -1,3 +1,16 @@
+# ZZ-01_BACKEND_FOUNDATION — příprava na účty a databázi
+
+- přidána centrální datová vrstva `dataStore`; aplikace už nenačítá ani neukládá stav přímo přes jednotlivá volání `localStorage`
+- současný offline režim zůstává beze změny a dál používá lokální úložiště
+- připraven základ pro pozdější přepnutí na Supabase bez přepisování všech volání `saveState()`
+- přidána první databázová migrace pro profily uživatelů, školy a členství učitelů
+- připraveny role `admin` a `teacher` a stavy členství `pending`, `approved`, `rejected`
+- přidána Row Level Security pravidla pro oddělení dat jednotlivých škol
+- přidána databázová funkce pro bezpečné založení školy a prvního admina v jedné transakci
+- další fáze: skutečné přihlášení přes Supabase Auth, následně migrace tříd, žáků, předmětů, zkoušení a inventáře
+
+---
+
 # ZZ-01_LOCKERS_INVENTORY_ANIMATION — kompletní systém školních skříněk
 
 - dokončen a sjednocen systém náhodných školních skříněk před zkoušením
