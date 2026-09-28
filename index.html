@@ -5777,6 +5777,15 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 .exam-inventory-item b{display:grid;place-items:center;min-width:25px;height:25px;padding:0 3px;border:2px solid #ffcf4a;background:#5b3000;color:#fff4b0;font-size:.68rem}
 .exam-inventory-hint{margin-top:7px;color:#91aebd;font-size:.68rem;line-height:1.35;text-align:center}
 @media(max-width:420px){.exam-inventory-items{grid-template-columns:1fr}.exam-inventory-item{grid-template-columns:40px 1fr auto}}
+
+.auth-tabs{display:flex;gap:8px;margin:16px 0 14px}.auth-tabs .tab{flex:1}
+.auth-form{display:grid;gap:11px}.auth-form label{display:grid;gap:6px}.auth-form input{width:100%}
+.auth-status{margin:12px 0;padding:10px 12px;border:2px solid #2f8f8b;background:#071823;color:#d9f7f5;font-size:.78rem;line-height:1.45}
+.auth-status.warn{border-color:#ffbf68;color:#fff0c9}.auth-status.error{border-color:#ff6d5f;color:#ffd9d5}
+.auth-backend-badge{display:inline-flex;align-items:center;gap:7px;margin-top:12px;padding:6px 9px;border:1px solid #2f8f8b;color:#9bb8bd;font-size:.7rem}
+.pending-membership{padding:14px;border:2px solid #ffbf68;background:#241b0d}.pending-membership strong{color:#ffcf7b}
+.school-search-actions{display:flex;gap:8px;align-items:end}.school-search-actions label{flex:1}
+@media(max-width:560px){.school-search-actions{display:grid}.auth-tabs{display:grid;grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
@@ -5784,6 +5793,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   <div id="app" class="app-shell" aria-live="polite"></div>
   <div id="toast-root" class="toast-root" aria-live="assertive" aria-atomic="true"></div>
   <div id="modal-root"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
 (() => {
   'use strict';
@@ -5814,6 +5824,257 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   const app = document.getElementById('app');
   const toastRoot = document.getElementById('toast-root');
   const modalRoot = document.getElementById('modal-root');
+
+  /* SUPABASE AUTH / SCHOOL FOUNDATION */
+  const SUPABASE_URL='https://xgdwffzabigacfetfrob.supabase.co';
+  const SUPABASE_PUBLISHABLE_KEY='sb_publishable_kbAdv_yjzJmHlou2hFWRXQ_OQL9zB9I';
+  const supabaseClient=(window.supabase&&typeof window.supabase.createClient==='function')
+    ? window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{
+        auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}
+      })
+    : null;
+  let authUiMode='login';
+  let authUiMessage='';
+  let authUiMessageType='';
+  let authUiBusy=false;
+  let authInitialized=false;
+
+  function setAuthMessage(message='',type=''){
+    authUiMessage=String(message||'');
+    authUiMessageType=String(type||'');
+  }
+  function authErrorText(error){
+    const msg=String(error?.message||error||'').trim();
+    const low=msg.toLowerCase();
+    if(low.includes('invalid login credentials')) return 'Nesprávný e-mail nebo heslo.';
+    if(low.includes('email not confirmed')) return 'Nejdřív potvrď e-mail pomocí odkazu, který poslal Supabase.';
+    if(low.includes('user already registered')) return 'Účet s tímto e-mailem už existuje.';
+    if(low.includes('password should be at least')) return 'Heslo je příliš krátké.';
+    if(low.includes('signup is disabled')) return 'Registrace je v Supabase momentálně vypnutá.';
+    if(low.includes('failed to fetch')||low.includes('network')) return 'Nepodařilo se spojit se serverem. Zkontroluj internetové připojení.';
+    return msg||'Operace se nepodařila.';
+  }
+  function remoteSchoolToLocal(row){
+    return {
+      id:row.school_id||row.id,
+      name:row.school_name||row.name||'Škola',
+      city:row.city||'',
+      address:row.address||'',
+      schoolYear:row.school_year||row.schoolYear||'2026/2027',
+      avatar:'▦',
+      teacherCount:Number(row.teacher_count||0)
+    };
+  }
+  function ensureCurrentTeacherForRemoteMembership(role='teacher'){
+    if(!state.school) return;
+    if(!Array.isArray(state.school.teachers)) state.school.teachers=[];
+    let me=state.school.teachers.find(t=>t.id===state.user.id);
+    if(!me){
+      me={id:state.user.id,name:state.user.name,nickname:state.user.nickname||'',email:state.user.email||'',avatar:state.user.avatar||'px:cyan',approved:true,active:true,role,permissions:defaultTeacherPermissions(),examsCompleted:0,passesUsed:0,studentCount:0,lockerEnabledRate:state.settings.lockersEnabled?100:0,lockerAppearances:0};
+      state.school.teachers.push(me);
+    }
+    me.name=state.user.name;
+    me.nickname=state.user.nickname||'';
+    me.email=state.user.email||me.email||'';
+    me.avatar=state.user.avatar||me.avatar||'px:cyan';
+    me.role=role==='admin'?'admin':'teacher';
+    me.approved=true;
+    me.active=true;
+    state.user.role=me.role;
+  }
+  async function refreshSupabaseMembership(){
+    if(!supabaseClient||!state.user?.id) return;
+    const {data,error}=await supabaseClient.rpc('my_school_memberships');
+    if(error) throw error;
+    const memberships=Array.isArray(data)?data:[];
+    const approved=memberships.find(m=>m.status==='approved');
+    const pending=memberships.find(m=>m.status==='pending');
+    const rejected=memberships.find(m=>m.status==='rejected');
+    state.ui=state.ui||{};
+    state.ui.pendingMembership=pending?{...pending}:null;
+    state.ui.rejectedMembership=rejected?{...rejected}:null;
+    if(approved){
+      const sc=remoteSchoolToLocal(approved);
+      if(state.user.schoolId!==sc.id){
+        if(state.user.schoolId||state.school?.id) archiveCurrentSchool(false);
+        restoreOrCreateSchoolWorkspace(sc);
+      }else{
+        state.school={...state.school,id:sc.id,name:sc.name,city:sc.city,address:sc.address,schoolYear:sc.schoolYear};
+      }
+      state.user.schoolId=sc.id;
+      state.user.role=approved.role==='admin'?'admin':'teacher';
+      ensureCurrentTeacherForRemoteMembership(state.user.role);
+      state.onboardingDone=true;
+    }else{
+      state.onboardingDone=false;
+      state.user.schoolId=null;
+      state.user.role='teacher';
+    }
+  }
+  async function applySupabaseSession(session){
+    if(!session?.user) return;
+    const u=session.user;
+    state.authenticated=true;
+    state.authProvider='supabase';
+    state.user=state.user||{};
+    state.user.id=u.id;
+    state.user.email=u.email||'';
+    const {data:profile,error:profileError}=await supabaseClient.from('profiles').select('id,display_name,nickname,avatar').eq('id',u.id).maybeSingle();
+    if(profileError) console.warn('Profile load failed',profileError);
+    const fallbackName=u.user_metadata?.display_name||u.user_metadata?.full_name||String(u.email||'Učitel').split('@')[0];
+    state.user.name=profile?.display_name||fallbackName||'Učitel';
+    state.user.nickname=profile?.nickname||'';
+    state.user.avatar=profile?.avatar||state.user.avatar||'px:cyan';
+    await refreshSupabaseMembership();
+    saveState();
+  }
+  async function initSupabaseAuth(){
+    try{
+      if(!supabaseClient){
+        state.authenticated=false;
+        state.onboardingDone=false;
+        setAuthMessage('Supabase knihovna se nenačetla. Zkontroluj připojení k internetu.','error');
+        return;
+      }
+      const {data,error}=await supabaseClient.auth.getSession();
+      if(error) throw error;
+      if(data?.session) await applySupabaseSession(data.session);
+      else{
+        state.authenticated=false;
+        state.onboardingDone=false;
+        state.authProvider=null;
+        saveState();
+      }
+      supabaseClient.auth.onAuthStateChange((event,session)=>{
+        setTimeout(async()=>{
+          try{
+            if(session) await applySupabaseSession(session);
+            else if(event==='SIGNED_OUT'){
+              state.authenticated=false;
+              state.onboardingDone=false;
+              state.authProvider=null;
+              state.user.schoolId=null;
+              saveState();
+            }
+            if(authInitialized) render();
+          }catch(err){ console.error('Auth state sync failed',err); }
+        },0);
+      });
+    }catch(err){
+      console.error('Supabase auth initialization failed',err);
+      state.authenticated=false;
+      state.onboardingDone=false;
+      setAuthMessage(authErrorText(err),'error');
+    }finally{
+      authInitialized=true;
+    }
+  }
+  async function submitSupabaseAuth(){
+    if(!supabaseClient||authUiBusy) return;
+    const email=String(document.getElementById('auth-email')?.value||'').trim().toLowerCase();
+    const password=String(document.getElementById('auth-password')?.value||'');
+    const displayName=String(document.getElementById('auth-name')?.value||'').trim();
+    const confirmPassword=String(document.getElementById('auth-password-confirm')?.value||'');
+    if(!email||!email.includes('@')) return setAuthMessage('Zadej platný e-mail.','error'),renderLogin();
+    if(password.length<6) return setAuthMessage('Heslo musí mít alespoň 6 znaků.','error'),renderLogin();
+    if(authUiMode==='register'){
+      if(!displayName) return setAuthMessage('Zadej své jméno.','error'),renderLogin();
+      if(password!==confirmPassword) return setAuthMessage('Hesla se neshodují.','error'),renderLogin();
+    }
+    authUiBusy=true; setAuthMessage(''); renderLogin();
+    try{
+      if(authUiMode==='register'){
+        const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{display_name:displayName}}});
+        if(error) throw error;
+        if(data?.session){
+          await applySupabaseSession(data.session);
+          setAuthMessage('Účet byl vytvořen.','');
+          render();
+        }else{
+          setAuthMessage('Účet je vytvořen. Na e-mail jsme poslali potvrzovací odkaz. Po potvrzení se přihlas.','warn');
+          authUiMode='login';
+          renderLogin();
+        }
+      }else{
+        const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
+        if(error) throw error;
+        await applySupabaseSession(data.session);
+        setAuthMessage('');
+        render();
+      }
+    }catch(err){
+      setAuthMessage(authErrorText(err),'error');
+      renderLogin();
+    }finally{
+      authUiBusy=false;
+      if(!state.authenticated) renderLogin();
+    }
+  }
+  async function logoutSupabase(){
+    try{ if(supabaseClient) await supabaseClient.auth.signOut(); }
+    catch(err){ console.warn('Supabase sign out failed',err); }
+    state.authenticated=false;
+    state.onboardingDone=false;
+    state.authProvider=null;
+    state.user.schoolId=null;
+    state.route='home';
+    state.splashSeen=true;
+    saveState();
+    render();
+  }
+  async function searchSchoolsSupabase(){
+    if(!supabaseClient) return;
+    const q=String(document.getElementById('school-search')?.value??state.ui.schoolSearch??'').trim();
+    state.ui.schoolSearch=q;
+    state.ui.remoteSchoolsLoading=true;
+    renderOnboarding();
+    try{
+      const {data,error}=await supabaseClient.rpc('search_schools',{p_query:q});
+      if(error) throw error;
+      state.ui.remoteSchools=(data||[]).map(remoteSchoolToLocal);
+      state.ui.selectedSchoolId=null;
+    }catch(err){
+      toast(authErrorText(err),'error');
+    }finally{
+      state.ui.remoteSchoolsLoading=false;
+      saveState();
+      renderOnboarding();
+    }
+  }
+  async function requestJoinSchoolSupabase(){
+    const schoolId=state.ui.selectedSchoolId;
+    if(!schoolId) return toast('Nejdřív vyber školu.','error');
+    const {error}=await supabaseClient.from('school_memberships').insert({school_id:schoolId,user_id:state.user.id,role:'teacher',status:'pending'});
+    if(error) return toast(authErrorText(error),'error');
+    await refreshSupabaseMembership();
+    saveState();
+    toast('Žádost byla odeslána administrátorovi školy.');
+    render();
+  }
+  async function createSchoolSupabase(){
+    const name=String(document.getElementById('school-name')?.value||'').trim();
+    const city=String(document.getElementById('school-city')?.value||'').trim();
+    const address=String(document.getElementById('school-address')?.value||'').trim();
+    const year=String(document.getElementById('school-year')?.value||'').trim()||'2026/2027';
+    if(!name||!city) return toast('Vyplň název školy a město.','error');
+    const {data,error}=await supabaseClient.rpc('create_school',{p_name:name,p_city:city,p_address:address,p_school_year:year});
+    if(error) return toast(authErrorText(error),'error');
+    await refreshSupabaseMembership();
+    saveState();
+    toast('Škola byla založena. Jsi její administrátor.');
+    render();
+  }
+  async function cancelPendingMembershipSupabase(){
+    const pending=state.ui?.pendingMembership;
+    if(!pending?.school_id) return;
+    const {error}=await supabaseClient.from('school_memberships').delete().eq('school_id',pending.school_id).eq('user_id',state.user.id).eq('status','pending');
+    if(error) return toast(authErrorText(error),'error');
+    state.ui.pendingMembership=null;
+    await refreshSupabaseMembership();
+    saveState();
+    toast('Žádost o vstup byla zrušena.');
+    render();
+  }
 
   /* ZZ-01 Headline CZ: custom Czech 5x7 heading renderer. */
   const ZZ01_HEADLINE_PATTERNS={
@@ -6221,7 +6482,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 
   let state=loadState();
   migrateLegacyTrophies();
-  appDataReady=true;
+  appDataReady=false;
   let timerTick=null;
 
   /* AUDIO SYSTEM — více hudebních režimů + systémové zvuky */
@@ -7749,7 +8010,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       </div>`,
       actions:[
         {label:'Zavřít',className:'secondary'},
-        {label:'Odejít ze školy',className:'danger',onClick:requestLeaveSchool},
+        ...(state.authProvider==='supabase'?[]:[{label:'Odejít ze školy',className:'danger',onClick:requestLeaveSchool}]),
         {label:'Odhlásit se',className:'danger',onClick:requestLogout}
       ]
     });
@@ -7762,13 +8023,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       body:'<p>Odhlášení tě neodebere ze školy. Po dalším přihlášení se vrátíš ke stejné škole a uloženým datům.</p>',
       actions:[
         {label:'Ne',className:'secondary'},
-        {label:'Ano, odhlásit',className:'danger',onClick:()=>{
-          state.authenticated=false;
-          state.route='home';
-          state.splashSeen=true;
-          saveState();
-          render();
-        }}
+        {label:'Ano, odhlásit',className:'danger',onClick:()=>{ void logoutSupabase(); }}
       ]
     });
   }
@@ -7885,52 +8140,83 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   }
 
   function renderLogin(){
+    const registering=authUiMode==='register';
+    const status=authUiMessage?`<div class="auth-status ${authUiMessageType==='error'?'error':authUiMessageType==='warn'?'warn':''}">${esc(authUiMessage)}</div>`:'';
     app.innerHTML=`<section class="login-wrap"><div class="login-box pixel-frame">
-      <h1 class="pixel-title">Zkouškomat</h1><p class="muted">Přihlášení učitele</p>
-      <div class="providers">
-        <button class="btn provider" data-action="login" data-provider="Google">Pokračovat přes Google</button>
-        <button class="btn provider" data-action="login" data-provider="Microsoft">Pokračovat přes Microsoft</button>
+      <h1 class="pixel-title">Zkouškomat</h1>
+      <p class="muted">Skutečný účet učitele · Supabase</p>
+      <div class="auth-tabs">
+        <button class="tab ${!registering?'active':''}" data-action="auth-mode" data-mode="login">Přihlášení</button>
+        <button class="tab ${registering?'active':''}" data-action="auth-mode" data-mode="register">Registrace</button>
       </div>
-      <hr class="pixel"><p class="tiny muted">Tato lokální MVP verze simuluje přihlášení. Produkční Google/Microsoft OAuth vyžaduje backend a aplikační klíče.</p>
+      ${status}
+      <div class="auth-form">
+        ${registering?`<label>Jméno a příjmení<input id="auth-name" autocomplete="name" placeholder="Jan Novák"></label>`:''}
+        <label>E-mail<input id="auth-email" type="email" autocomplete="email" placeholder="ucitel@skola.cz"></label>
+        <label>Heslo<input id="auth-password" type="password" autocomplete="${registering?'new-password':'current-password'}" placeholder="Alespoň 6 znaků"></label>
+        ${registering?`<label>Heslo znovu<input id="auth-password-confirm" type="password" autocomplete="new-password" placeholder="Zopakuj heslo"></label>`:''}
+        <button class="btn primary full" data-action="auth-submit" ${authUiBusy?'disabled':''}>${authUiBusy?'Pracuji…':registering?'Vytvořit účet':'Přihlásit se'}</button>
+      </div>
+      <div class="auth-backend-badge">● Backend: Supabase · EU</div>
+      <p class="tiny muted" style="margin-top:12px">Google a Microsoft přihlášení doplníme později. Teď nejdřív ověřujeme spolehlivý základ e-mail + heslo.</p>
     </div></section>`;
   }
 
   function renderOnboarding(){
+    const pending=state.ui?.pendingMembership;
+    if(pending){
+      app.innerHTML=`<section class="login-wrap"><div class="login-box pixel-frame">
+        <h1 class="pixel-title">Čeká se na schválení</h1>
+        <div class="pending-membership">
+          <strong>${esc(pending.school_name||'Vybraná škola')}</strong>
+          <div class="tiny" style="margin-top:6px">${esc(pending.city||'')}${pending.address?` · ${esc(pending.address)}`:''}</div>
+          <p>Žádost o vstup byla odeslána. Přístup získáš, až tě administrátor školy schválí.</p>
+        </div>
+        <div class="row" style="margin-top:14px">
+          <button class="btn primary" data-action="refresh-membership">Zkontrolovat schválení</button>
+          <button class="btn ghost" data-action="cancel-membership">Zrušit žádost</button>
+          <button class="btn secondary" data-action="logout">Odhlásit se</button>
+        </div>
+      </div></section>`;
+      return;
+    }
     const mode=state.ui.onboardingMode||'existing';
-    const q=(state.ui.schoolSearch||'').trim().toLowerCase();
-    const schools=(state.schoolDirectory||[]).filter(sc=>!q || `${sc.name} ${sc.city} ${sc.address}`.toLowerCase().includes(q));
-    const selected=(state.schoolDirectory||[]).find(sc=>sc.id===state.ui.selectedSchoolId);
+    const schools=Array.isArray(state.ui.remoteSchools)?state.ui.remoteSchools:[];
+    const selected=schools.find(sc=>sc.id===state.ui.selectedSchoolId);
     const existing=`<div class="school-search-wrap">
-      <label>Najít již založenou školu
-        <input id="school-search" value="${esc(state.ui.schoolSearch||'')}" placeholder="Napiš název školy, město nebo adresu…" autocomplete="off">
-      </label>
-      <div class="tiny muted">Čím více škol v systému bude, tím důležitější je vyhledávání. Stejnojmenné školy rozlišujeme městem a adresou.</div>
+      <div class="school-search-actions">
+        <label>Najít již založenou školu
+          <input id="school-search" value="${esc(state.ui.schoolSearch||'')}" placeholder="Název školy, město nebo adresa…" autocomplete="off">
+        </label>
+        <button class="btn secondary" data-action="search-schools" ${state.ui.remoteSchoolsLoading?'disabled':''}>${state.ui.remoteSchoolsLoading?'Hledám…':'Hledat'}</button>
+      </div>
+      <div class="tiny muted">Vyhledávání probíhá v databázi Zkouškomatu. Zobrazuje jen základní údaje školy.</div>
       <div class="school-results" id="school-results">
         ${schools.length?schools.map(sc=>`<div class="school-card ${selected?.id===sc.id?'selected':''}">
-          <div class="school-main"><div class="school-name">${esc(sc.avatar||'▦')} ${esc(sc.name)}</div><div class="school-meta">${esc(sc.city)} · ${esc(sc.address)} · ${sc.teacherCount||0} učitelů</div></div>
+          <div class="school-main"><div class="school-name">▦ ${esc(sc.name)}</div><div class="school-meta">${esc(sc.city)}${sc.address?` · ${esc(sc.address)}`:''} · ${Number(sc.teacherCount||0)} učitelů</div></div>
           <button class="btn ${selected?.id===sc.id?'primary':'secondary'}" data-action="select-school" data-id="${sc.id}">${selected?.id===sc.id?'Vybráno':'Vybrat'}</button>
-        </div>`).join(''):'<div class="empty-state">Žádná škola neodpovídá hledání. Zkus jiný název nebo založ novou školu.</div>'}
+        </div>`).join(''):(state.ui.remoteSchoolsLoading?'':'<div class="empty-state">Zadej název nebo město a stiskni Hledat.</div>')}
       </div>
-      ${selected?`<div class="pixel-inset" style="padding:12px"><strong>Vybraná škola:</strong> ${esc(selected.name)}<br><span class="tiny muted">${esc(selected.city)} · ${esc(selected.address)}</span></div>
+      ${selected?`<div class="pixel-inset" style="padding:12px"><strong>Vybraná škola:</strong> ${esc(selected.name)}<br><span class="tiny muted">${esc(selected.city)}${selected.address?` · ${esc(selected.address)}`:''}</span></div>
       <button class="btn primary" data-action="join-selected-school">Požádat o připojení ke škole</button>`:''}
     </div>`;
     const create=`<div class="stack">
-      <label>Název nové školy<input id="school-name" value="" placeholder="Název školy"></label>
-      <label>Město<input id="school-city" value="" placeholder="Město"></label>
-      <label>Adresa<input id="school-address" value="" placeholder="Ulice a číslo"></label>
-      <label>Školní rok<input id="school-year" value="${esc(state.school.schoolYear)}" placeholder="2026/2027"></label>
+      <label>Název nové školy<input id="school-name" placeholder="Název školy"></label>
+      <label>Město<input id="school-city" placeholder="Město"></label>
+      <label>Adresa<input id="school-address" placeholder="Ulice a číslo"></label>
+      <label>Školní rok<input id="school-year" value="${esc(state.school?.schoolYear||'2026/2027')}" placeholder="2026/2027"></label>
       <button class="btn primary" data-action="create-school-onboarding">Založit novou školu</button>
-      <p class="tiny muted">První zakladatel nové školy se stává jejím prvním administrátorem.</p>
+      <p class="tiny muted">Zakladatel se automaticky stane prvním administrátorem školy.</p>
     </div>`;
     app.innerHTML=`<section class="login-wrap"><div class="login-box pixel-frame">
       <h1 class="pixel-title">Připojení ke škole</h1>
-      <p class="muted">Vyber existující školu, nebo založ novou.</p>
+      <p class="muted">Přihlášen: ${esc(state.user.email||state.user.name||'')}</p>
       <div class="onboard-tabs">
         <button class="tab ${mode==='existing'?'active':''}" data-action="onboard-mode" data-mode="existing">Vybrat existující školu</button>
         <button class="tab ${mode==='create'?'active':''}" data-action="onboard-mode" data-mode="create">Založit novou školu</button>
       </div>
       ${mode==='existing'?existing:create}
-      <p class="tiny muted" style="margin-top:14px">V produkční verzi žádost o připojení schvaluje administrátor vybrané školy. Tento lokální prototyp schválení po výběru simuluje.</p>
+      <div style="margin-top:14px"><button class="btn ghost" data-action="logout">Odhlásit se</button></div>
     </div></section>`;
   }
 
@@ -11607,15 +11893,18 @@ body::after{
     if(e.target.id==='staffroom-input' && e.key==='Enter' && !e.shiftKey){
       e.preventDefault();
       sendStaffroomMessage();
+    }else if(e.key==='Enter' && ['auth-email','auth-password','auth-password-confirm','auth-name'].includes(e.target.id)){
+      e.preventDefault();
+      void submitSupabaseAuth();
+    }else if(e.key==='Enter' && e.target.id==='school-search'){
+      e.preventDefault();
+      void searchSchoolsSupabase();
     }
   });
 
   app.addEventListener('input',e=>{
     if(e.target.id==='school-search'){
       state.ui.schoolSearch=e.target.value;
-      const pos=e.target.selectionStart;
-      renderOnboarding();
-      const n=document.getElementById('school-search'); if(n){n.focus(); try{n.setSelectionRange(pos,pos)}catch(_){}}
     }else if(e.target.id==='admin-teacher-search'){
       state.ui.adminTeacherSearch=e.target.value;
       const pos=e.target.selectionStart;
@@ -11666,25 +11955,15 @@ body::after{
     }
     else {
       playSfx(actionSfx(action));
-      if(action==='login'){state.authenticated=true;state.authProvider=btn.dataset.provider;saveState();render();}
+      if(action==='auth-mode'){authUiMode=btn.dataset.mode==='register'?'register':'login';setAuthMessage('');renderLogin();}
+    else if(action==='auth-submit'){void submitSupabaseAuth();}
     else if(action==='onboard-mode'){state.ui.onboardingMode=btn.dataset.mode;state.ui.selectedSchoolId=null;saveState();render();}
+    else if(action==='search-schools'){void searchSchoolsSupabase();}
     else if(action==='select-school'){state.ui.selectedSchoolId=btn.dataset.id;saveState();render();}
-    else if(action==='join-selected-school'){
-      const sc=(state.schoolDirectory||[]).find(x=>x.id===state.ui.selectedSchoolId); if(!sc)return toast('Nejdřív vyber školu.','error');
-      restoreOrCreateSchoolWorkspace(sc);
-      state.onboardingDone=true;
-      const dir=(state.schoolDirectory||[]).find(s=>s.id===sc.id);
-      if(dir && Number.isFinite(Number(dir.teacherCount))) dir.teacherCount=Number(dir.teacherCount)+1;
-      saveState();toast('V demo režimu bylo členství schváleno automaticky.');render();
-    }
-    else if(action==='create-school-onboarding'){
-      const name=document.getElementById('school-name').value.trim(), city=document.getElementById('school-city').value.trim(), address=document.getElementById('school-address').value.trim(), year=document.getElementById('school-year').value.trim()||'2026/2027';
-      if(!name||!city)return toast('Vyplň název školy a město.','error');
-      const id=uid('school'); const sc={id,name,city,address,schoolYear:year,avatar:'▦',teacherCount:1};
-      if(state.user.schoolId) archiveCurrentSchool(false);
-      resetActiveSchoolWorkspace();
-      state.schoolDirectory.push(sc);state.school={id,name,city,address,avatarType:'preset',avatar:'▦',schoolYear:year,teachers:[{id:state.user.id,name:state.user.name,nickname:state.user.nickname||'',email:'',avatar:state.user.avatar||'px:cyan',approved:true,active:true,role:'admin',examsCompleted:0,passesUsed:0,studentCount:0,lockerEnabledRate:state.settings.lockersEnabled?100:0,lockerAppearances:0}]};state.user.schoolId=id;state.user.role='admin';state.onboardingDone=true;saveState();toast('Nová škola založena. Jsi její administrátor.');render();
-    }
+    else if(action==='join-selected-school'){void requestJoinSchoolSupabase();}
+    else if(action==='create-school-onboarding'){void createSchoolSupabase();}
+    else if(action==='refresh-membership'){void (async()=>{try{await refreshSupabaseMembership();saveState();render();if(state.onboardingDone)toast('Členství je schválené.');else toast('Žádost stále čeká na schválení.','warn');}catch(err){toast(authErrorText(err),'error');}})();}
+    else if(action==='cancel-membership'){void cancelPendingMembershipSupabase();}
     else if(action==='finish-onboarding'){state.onboardingDone=true;saveState();render();}
     else if(action==='go-home'){
       if(state.activeExam){modal({title:'Odejít z probíhajícího zkoušení?',body:'<p>Zkoušení zůstane uložené a lze se k němu vrátit. Opravdu přejít domů?</p>',actions:[{label:'Ne',className:'secondary'},{label:'Ano',className:'primary',onClick:()=>{state.route='home';renderHome();}}]});}
@@ -12023,6 +12302,10 @@ body::after{
   }
 
   render();
+  initSupabaseAuth().finally(()=>{
+    appDataReady=true;
+    if(state.splashSeen) render();
+  });
 })();
 
   </script>

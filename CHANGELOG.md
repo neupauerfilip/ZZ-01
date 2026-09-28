@@ -1,3 +1,23 @@
+# ZZ-01_SUPABASE_AUTH — skutečné účty a připojení ke škole
+
+- nahrazeno původní simulované přihlášení skutečným Supabase Auth
+- přidána registrace učitele pomocí e-mailu a hesla
+- přidáno skutečné přihlášení a odhlášení uživatele
+- relace uživatele zůstává uložená mezi návštěvami aplikace přes Supabase session
+- po přihlášení se načítá profil uživatele z tabulky `profiles`
+- aplikace rozlišuje stav bez školy, čekající žádost a schválené členství
+- přidáno bezpečné vyhledávání existujících škol přes RPC `search_schools`
+- žádost o vstup do školy se ukládá jako skutečné členství `teacher / pending`
+- čekající učitel může stav členství zkontrolovat nebo žádost zrušit
+- založení nové školy používá RPC `create_school`; zakladatel se stane schváleným adminem
+- přidáno RPC `my_school_memberships`, které vrací pouze členství aktuálního uživatele
+- pomocné bezpečnostní funkce byly přesunuty do neveřejného schématu `private`
+- frontend používá Supabase Project URL a publishable key; žádný secret/service-role klíč není součástí aplikace
+- lokální datová vrstva Zkouškomatu zůstává zachována pro další postupnou migraci tříd a ostatních dat
+- Google a Microsoft OAuth zatím nejsou aktivní; následují až po ověření základního e-mailového přihlášení
+
+---
+
 # ZZ-01_BACKEND_FOUNDATION — příprava na účty a databázi
 
 - přidána centrální datová vrstva `dataStore`; aplikace už nenačítá ani neukládá stav přímo přes jednotlivá volání `localStorage`
