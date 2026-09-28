@@ -1,3 +1,13 @@
+# ZZ-01_SUPABASE_TEACHER_APPROVAL
+
+- potvrzovací e-mail po registraci směřuje na veřejnou GitHub Pages verzi Zkouškomatu
+- Správa učitelů načítá skutečná členství školy ze Supabase
+- administrátor může skutečně schválit nebo zamítnout čekající žádost
+- administrátor může skutečně odebrat schváleného učitele ze školy
+- zamítnutý učitel může později požádat o vstup znovu
+- oprávnění učitele se ukládají do `school_memberships.permissions` a načítají se po přihlášení
+- přidána migrace `005_teacher_membership_admin.sql`
+
 # ZZ-01_SUPABASE_AUTH — skutečné účty a připojení ke škole
 
 - nahrazeno původní simulované přihlášení skutečným Supabase Auth

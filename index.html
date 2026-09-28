@@ -5828,6 +5828,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   /* SUPABASE AUTH / SCHOOL FOUNDATION */
   const SUPABASE_URL='https://xgdwffzabigacfetfrob.supabase.co';
   const SUPABASE_PUBLISHABLE_KEY='sb_publishable_kbAdv_yjzJmHlou2hFWRXQ_OQL9zB9I';
+  const APP_PUBLIC_URL='https://neupauerfilip.github.io/ZZ-01/';
   const supabaseClient=(window.supabase&&typeof window.supabase.createClient==='function')
     ? window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{
         auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}
@@ -5865,7 +5866,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       teacherCount:Number(row.teacher_count||0)
     };
   }
-  function ensureCurrentTeacherForRemoteMembership(role='teacher'){
+  function ensureCurrentTeacherForRemoteMembership(role='teacher',remotePermissions={}){
     if(!state.school) return;
     if(!Array.isArray(state.school.teachers)) state.school.teachers=[];
     let me=state.school.teachers.find(t=>t.id===state.user.id);
@@ -5880,6 +5881,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     me.role=role==='admin'?'admin':'teacher';
     me.approved=true;
     me.active=true;
+    me.permissions={...defaultTeacherPermissions(),...(me.permissions||{}),...((remotePermissions&&typeof remotePermissions==='object')?remotePermissions:{})};
     state.user.role=me.role;
   }
   async function refreshSupabaseMembership(){
@@ -5903,7 +5905,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       }
       state.user.schoolId=sc.id;
       state.user.role=approved.role==='admin'?'admin':'teacher';
-      ensureCurrentTeacherForRemoteMembership(state.user.role);
+      ensureCurrentTeacherForRemoteMembership(state.user.role,approved.permissions||{});
       state.onboardingDone=true;
     }else{
       state.onboardingDone=false;
@@ -5911,6 +5913,94 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       state.user.role='teacher';
     }
   }
+  async function refreshSupabaseSchoolTeachers(){
+    if(!supabaseClient||!state.school?.id||!state.user?.id) return [];
+    state.ui=state.ui||{};
+    state.ui.remoteTeachersLoading=true;
+    try{
+      const {data:memberships,error:membershipError}=await supabaseClient
+        .from('school_memberships')
+        .select('user_id,role,status,permissions,created_at,approved_at,approved_by')
+        .eq('school_id',state.school.id)
+        .order('created_at',{ascending:true});
+      if(membershipError) throw membershipError;
+      const rows=Array.isArray(memberships)?memberships:[];
+      const ids=[...new Set(rows.map(m=>m.user_id).filter(Boolean))];
+      let profiles=[];
+      if(ids.length){
+        const {data,error}=await supabaseClient
+          .from('profiles')
+          .select('id,display_name,nickname,avatar')
+          .in('id',ids);
+        if(error) throw error;
+        profiles=Array.isArray(data)?data:[];
+      }
+      const profileById=new Map(profiles.map(x=>[x.id,x]));
+      const oldById=new Map((state.school.teachers||[]).map(x=>[x.id,x]));
+      const remote=rows.map(m=>{
+        const pr=profileById.get(m.user_id)||{};
+        const old=oldById.get(m.user_id)||{};
+        const membershipPermissions=(m.permissions&&typeof m.permissions==='object')?m.permissions:{};
+        return {
+          ...old,
+          id:m.user_id,
+          name:pr.display_name||old.name||'Učitel',
+          nickname:pr.nickname||old.nickname||'',
+          avatar:pr.avatar||old.avatar||'px:cyan',
+          email:old.email||'',
+          role:m.role==='admin'?'admin':'teacher',
+          approved:m.status==='approved',
+          active:true,
+          membershipStatus:m.status,
+          remoteMembership:true,
+          permissions:{...defaultTeacherPermissions(),...(old.permissions||{}),...membershipPermissions},
+          examsCompleted:Number(old.examsCompleted||0),
+          passesUsed:Number(old.passesUsed||0),
+          studentCount:Number(old.studentCount||0),
+          lockerEnabledRate:Number(old.lockerEnabledRate||0),
+          lockerAppearances:Number(old.lockerAppearances||0)
+        };
+      });
+      state.ui.remoteSchoolTeachers=remote;
+      state.ui.remoteTeachersLoaded=true;
+      const testIds=new Set(['u_me','test_teacher','test_boss']);
+      const testAccounts=(state.school.teachers||[]).filter(t=>testIds.has(t.id) && !remote.some(r=>r.id===t.id));
+      state.school.teachers=[...remote,...testAccounts];
+      saveState();
+      return remote;
+    }finally{
+      state.ui.remoteTeachersLoading=false;
+    }
+  }
+
+  async function setSupabaseTeacherMembershipStatus(userId,status){
+    if(!supabaseClient||state.user.role!=='admin'||!state.school?.id) return;
+    const patch={
+      status,
+      approved_at:status==='approved'?new Date().toISOString():null,
+      approved_by:status==='approved'?state.user.id:null
+    };
+    const {error}=await supabaseClient
+      .from('school_memberships')
+      .update(patch)
+      .eq('school_id',state.school.id)
+      .eq('user_id',userId);
+    if(error) throw error;
+    await refreshSupabaseSchoolTeachers();
+  }
+
+  async function removeSupabaseTeacherMembership(userId){
+    if(!supabaseClient||state.user.role!=='admin'||!state.school?.id) return;
+    const {error}=await supabaseClient
+      .from('school_memberships')
+      .delete()
+      .eq('school_id',state.school.id)
+      .eq('user_id',userId);
+    if(error) throw error;
+    if(state.school.bossTeacherId===userId) state.school.bossTeacherId=null;
+    await refreshSupabaseSchoolTeachers();
+  }
+
   async function applySupabaseSession(session){
     if(!session?.user) return;
     const u=session.user;
@@ -5984,7 +6074,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     authUiBusy=true; setAuthMessage(''); renderLogin();
     try{
       if(authUiMode==='register'){
-        const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{display_name:displayName}}});
+        const {data,error}=await supabaseClient.auth.signUp({email,password,options:{emailRedirectTo:APP_PUBLIC_URL,data:{display_name:displayName}}});
         if(error) throw error;
         if(data?.session){
           await applySupabaseSession(data.session);
@@ -6044,7 +6134,8 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   async function requestJoinSchoolSupabase(){
     const schoolId=state.ui.selectedSchoolId;
     if(!schoolId) return toast('Nejdřív vyber školu.','error');
-    const {error}=await supabaseClient.from('school_memberships').insert({school_id:schoolId,user_id:state.user.id,role:'teacher',status:'pending'});
+    const membershipRequest={school_id:schoolId,user_id:state.user.id,role:'teacher',status:'pending',approved_at:null,approved_by:null};
+    const {error}=await supabaseClient.from('school_memberships').upsert(membershipRequest,{onConflict:'school_id,user_id'});
     if(error) return toast(authErrorText(error),'error');
     await refreshSupabaseMembership();
     saveState();
@@ -7238,9 +7329,21 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     </section></div>`;
     document.getElementById('permissions-cancel').onclick=closeModal;
     document.getElementById('permissions-save').onclick=()=>{
-      t.permissions=t.permissions||{};
-      modalRoot.querySelectorAll('[data-permission]').forEach(ch=>t.permissions[ch.dataset.permission]=!!ch.checked);
-      saveState();closeModal();toast('Práva učitele uložena.');render();
+      const nextPermissions={...defaultTeacherPermissions()};
+      modalRoot.querySelectorAll('[data-permission]').forEach(ch=>nextPermissions[ch.dataset.permission]=!!ch.checked);
+      t.permissions=nextPermissions;
+      if(state.authProvider==='supabase'&&t.remoteMembership){
+        void (async()=>{
+          try{
+            const {error}=await supabaseClient.from('school_memberships').update({permissions:nextPermissions}).eq('school_id',state.school.id).eq('user_id',t.id);
+            if(error) throw error;
+            await refreshSupabaseSchoolTeachers();
+            saveState();closeModal();toast('Práva učitele uložena.');renderAdmin();
+          }catch(err){toast(authErrorText(err),'error');}
+        })();
+      }else{
+        saveState();closeModal();toast('Práva učitele uložena.');render();
+      }
     };
   }
 
@@ -11460,7 +11563,9 @@ body::after{
     }
 
     const search=(state.ui.adminTeacherSearch||'').trim().toLowerCase();
-    const teachers=(state.school.teachers||[])
+    const remoteTeacherMode=state.authProvider==='supabase' && Array.isArray(state.ui.remoteSchoolTeachers);
+    const teacherSource=remoteTeacherMode?state.ui.remoteSchoolTeachers:(state.school.teachers||[]);
+    const teachers=teacherSource
       .filter(t=>t.active!==false)
       .filter(t=>!search || `${t.name} ${t.email||''}`.toLowerCase().includes(search));
 
@@ -11473,12 +11578,12 @@ body::after{
     let body='';
 
     if(section==='teachers' && (mayManageTeachers||adminOnly)){
-      const bossCandidates=(state.school.teachers||[]).filter(t=>t.active!==false && t.approved!==false && t.role!=='admin');
+      const bossCandidates=teacherSource.filter(t=>t.active!==false && t.approved!==false && t.role!=='admin');
 
       body=`<section class="pixel-frame card">
         <div class="section-title">
           <div><h2>Učitelé a účty</h2><div class="tiny muted">Členství je navázané na účet / e-mail, ne jen na textové jméno.</div></div>
-          ${mayManageTeachers?'<button class="btn primary" data-action="add-teacher">+ Pozvat účet učitele</button>':''}
+          ${mayManageTeachers?(state.authProvider==='supabase'?'<button class="btn primary" data-action="refresh-teachers">↻ Obnovit žádosti</button>':'<button class="btn primary" data-action="add-teacher">+ Pozvat účet učitele</button>'):''}
         </div>
 
         ${adminOnly?`<div class="boss-panel">
@@ -11495,6 +11600,8 @@ body::after{
           </div>
         </div>`:''}
 
+        ${state.authProvider==='supabase'?`<div class="settings-note" style="margin-top:12px">Nový učitel si vytvoří vlastní účet, vyhledá tuto školu a odešle žádost. Tady ji administrátor schválí nebo zamítne.</div>`:''}
+
         <label style="margin-top:14px">Hledat učitele
           <input id="admin-teacher-search" value="${esc(state.ui.adminTeacherSearch||'')}" placeholder="Jméno nebo e-mail účtu">
         </label>
@@ -11502,7 +11609,8 @@ body::after{
         <div class="list admin-list" style="margin-top:10px">
           ${teachers.length?teachers.map(t=>{
             const isAdmin=t.role==='admin' || (t.id===state.user.id && state.user.role==='admin');
-            const status=t.approved===false?'Čeká na schválení / přijetí pozvánky':'Aktivní účet';
+            const membershipStatus=t.membershipStatus||(t.approved===false?'pending':'approved');
+            const status=membershipStatus==='pending'?'Čeká na schválení':membershipStatus==='rejected'?'Žádost zamítnuta':'Aktivní účet';
             return `<div class="list-item teacher-row">
               <div>
                 <div class="teacher-name-with-avatar">${avatarMarkup(t.avatar,'sm')}<div><div class="student-name">${esc(t.name)} ${state.school.bossTeacherId===t.id?'<span class="boss-badge">ŠÉFOVÁ</span>':''}</div>
@@ -11511,9 +11619,10 @@ body::after{
                 <div class="permission-summary">${isAdmin?'<span class="permission-chip on">Všechna práva</span>':permissionSummary(t)}</div>
               </div>
               <div class="teacher-actions">
-                ${t.approved===false && mayManageTeachers?`<button class="btn secondary" data-action="approve-teacher" data-id="${t.id}">Schválit</button>`:''}
-                ${adminOnly && !isAdmin?`<button class="btn secondary" data-action="teacher-permissions" data-id="${t.id}">Práva</button>`:''}
-                ${mayManageTeachers && t.id!==state.user.id && !isAdmin?`<button class="btn danger" data-action="remove-teacher" data-id="${t.id}">Odebrat účet</button>`:''}
+                ${membershipStatus!=='approved' && mayManageTeachers?`<button class="btn secondary" data-action="approve-teacher" data-id="${t.id}">Schválit</button>`:''}
+                ${membershipStatus==='pending' && mayManageTeachers?`<button class="btn danger" data-action="reject-teacher" data-id="${t.id}">Zamítnout</button>`:''}
+                ${adminOnly && !isAdmin && membershipStatus==='approved'?`<button class="btn secondary" data-action="teacher-permissions" data-id="${t.id}">Práva</button>`:''}
+                ${mayManageTeachers && t.id!==state.user.id && !isAdmin && membershipStatus==='approved'?`<button class="btn danger" data-action="remove-teacher" data-id="${t.id}">Odebrat účet</button>`:''}
               </div>
             </div>`;
           }).join(''):'<div class="empty-state">Žádný učitel neodpovídá filtru.</div>'}
@@ -11929,7 +12038,7 @@ body::after{
       'add-student':'manageStudents','rename-student':'manageStudents','remove-student':'manageStudents',
       'add-subject':'manageSubjects','edit-subject':'manageSubjects','delete-subject':'manageSubjects',
       'add-topic':'manageSubjects','edit-topic':'manageSubjects','delete-topic':'manageSubjects',
-      'add-teacher':'manageTeachers','approve-teacher':'manageTeachers','remove-teacher':'manageTeachers',
+      'add-teacher':'manageTeachers','approve-teacher':'manageTeachers','reject-teacher':'manageTeachers','remove-teacher':'manageTeachers',
       'toggle-game-scoring':'manageGameScoring','save-game-settings':'manageGameScoring',
       'add-game-challenge':'manageGameScoring','toggle-game-challenge':'manageGameScoring',
       'delete-game-challenge':'manageGameScoring','end-game-season':'manageGameScoring'
@@ -11970,7 +12079,13 @@ body::after{
       else{state.route='home';saveState();render();}
     }
     else if(action==='settings'){state.route='settings';saveState();render();}
-    else if(action==='admin-section'){state.ui.adminSection=btn.dataset.section||'teachers';state.route='admin';saveState();render();}
+    else if(action==='admin-section'){
+      state.ui.adminSection=btn.dataset.section||'teachers';state.route='admin';saveState();render();
+      if(state.ui.adminSection==='teachers'&&state.authProvider==='supabase'){
+        void (async()=>{try{await refreshSupabaseSchoolTeachers();renderAdmin();}catch(err){toast(authErrorText(err),'error');}})();
+      }
+    }
+    else if(action==='refresh-teachers'){void (async()=>{try{await refreshSupabaseSchoolTeachers();renderAdmin();toast('Seznam žádostí obnoven.');}catch(err){toast(authErrorText(err),'error');}})();}
     else if(action==='teacher-permissions') openTeacherPermissions(btn.dataset.id);
     else if(action==='save-boss-select'){
       if(state.user.role!=='admin')return;
@@ -12237,6 +12352,9 @@ body::after{
       ]});
     }
     else if(action==='add-teacher'){
+      if(state.authProvider==='supabase'){
+        return toast('Učitel si vytvoří vlastní účet a odešle žádost o vstup do školy.','warn');
+      }
       modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal">
         <h2 class="pixel-title">Pozvat účet učitele</h2>
         <p class="muted">Členství se váže na účet. V produkční verzi se propojí s Google/Microsoft účtem podle e-mailu; lokální prototyp tuto vazbu simuluje.</p>
@@ -12258,10 +12376,28 @@ body::after{
         saveState();closeModal();toast('Pozvánka k účtu učitele vytvořena.');render();
       };
     }
-    else if(action==='approve-teacher'){const t=state.school.teachers.find(x=>x.id===btn.dataset.id);if(t){t.approved=true;saveState();toast('Učitel schválen.');render();}}
+    else if(action==='approve-teacher'){
+      if(state.authProvider==='supabase'){
+        void (async()=>{try{await setSupabaseTeacherMembershipStatus(btn.dataset.id,'approved');toast('Učitel schválen.');renderAdmin();}catch(err){toast(authErrorText(err),'error');}})();
+      }else{
+        const t=state.school.teachers.find(x=>x.id===btn.dataset.id);if(t){t.approved=true;saveState();toast('Učitel schválen.');render();}
+      }
+    }
+    else if(action==='reject-teacher'){
+      if(state.authProvider!=='supabase')return;
+      const t=(state.ui.remoteSchoolTeachers||[]).find(x=>x.id===btn.dataset.id);
+      modal({title:'Zamítnout žádost?',body:`<p>Žádost učitele <strong>${esc(t?.name||'Učitel')}</strong> bude zamítnuta. Učitel může později požádat znovu.</p>`,actions:[{label:'Ne',className:'secondary'},{label:'Ano, zamítnout',className:'danger',onClick:()=>{void (async()=>{try{await setSupabaseTeacherMembershipStatus(btn.dataset.id,'rejected');toast('Žádost zamítnuta.');renderAdmin();}catch(err){toast(authErrorText(err),'error');}})();}}]});
+    }
     else if(action==='remove-teacher'){
-      const t=state.school.teachers.find(x=>x.id===btn.dataset.id); if(!t)return;
-      modal({title:'Odebrat učitele ze školy?',body:`<p><strong>${esc(t.name)}</strong> ztratí přístup k této škole. Historie jeho předchozích zkoušení zůstane zachována.</p>`,actions:[{label:'Ne',className:'secondary'},{label:'Ano, odebrat',className:'danger',onClick:()=>{t.active=false;t.approved=false;t.removedAt=now();if(state.school.bossTeacherId===t.id)state.school.bossTeacherId=null;saveState();toast('Učitel odebrán ze školy.');render();}}]});
+      const source=state.authProvider==='supabase'?(state.ui.remoteSchoolTeachers||[]):(state.school.teachers||[]);
+      const t=source.find(x=>x.id===btn.dataset.id); if(!t)return;
+      modal({title:'Odebrat učitele ze školy?',body:`<p><strong>${esc(t.name)}</strong> ztratí přístup k této škole. Historie jeho předchozích zkoušení zůstane zachována.</p>`,actions:[{label:'Ne',className:'secondary'},{label:'Ano, odebrat',className:'danger',onClick:()=>{
+        if(state.authProvider==='supabase'){
+          void (async()=>{try{await removeSupabaseTeacherMembership(t.id);toast('Učitel odebrán ze školy.');renderAdmin();}catch(err){toast(authErrorText(err),'error');}})();
+        }else{
+          t.active=false;t.approved=false;t.removedAt=now();if(state.school.bossTeacherId===t.id)state.school.bossTeacherId=null;saveState();toast('Učitel odebrán ze školy.');render();
+        }
+      }}]});
     }
     else if(action==='save-school'){state.school.name=document.getElementById('admin-school-name').value.trim()||state.school.name;state.school.avatar=document.getElementById('school-avatar').value;saveState();toast('Profil školy uložen.');render();}
     }
