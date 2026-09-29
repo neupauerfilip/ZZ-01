@@ -1,14 +1,13 @@
-ZZ-01 — oprava synchronizace předmětů
+ZZ-01 — přímá synchronizace předmětů
 
-Změny:
-- vytvoření předmětu čeká na okamžitou synchronizaci do Supabase
-- úprava předmětu čeká na okamžitou synchronizaci do Supabase
-- odebrání předmětu okamžitě aktualizuje serverové vazby
-- při chybě serveru změna zůstane bezpečně uložena lokálně
-- tlačítko při ukládání přejde do stavu „Ukládám…“
-- JavaScript ověřen pomocí node --check
+Oprava:
+- vytvoření, úprava a odebrání předmětu už nejsou závislé na obecné synchronizaci školní struktury,
+- předměty se ukládají přímo do Supabase tabulek subjects, teacher_subjects a teacher_class_subjects,
+- serverový teacher_id se bere z aktuální Supabase session, ne z lokálního testovacího režimu,
+- po úspěšném zápisu se školní struktura znovu načte ze serveru,
+- při chybě zůstane změna lokálně a aplikace ji označí jako nesynchronizovanou.
 
 Použití:
-1. Přepiš index.html v kořeni projektu tímto souborem.
-2. GitHub Desktop -> Commit: fix: okamžitá synchronizace předmětů přes Supabase
+1. Přepiš index.html v kořeni projektu.
+2. Commit: fix: přímá synchronizace předmětů do Supabase
 3. Push origin
