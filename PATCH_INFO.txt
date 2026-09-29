@@ -1,14 +1,14 @@
-ZZ-01 – patch skřínky / inventář / animace
+ZZ-01 — oprava synchronizace předmětů
+
+Změny:
+- vytvoření předmětu čeká na okamžitou synchronizaci do Supabase
+- úprava předmětu čeká na okamžitou synchronizaci do Supabase
+- odebrání předmětu okamžitě aktualizuje serverové vazby
+- při chybě serveru změna zůstane bezpečně uložena lokálně
+- tlačítko při ukládání přejde do stavu „Ukládám…“
+- JavaScript ověřen pomocí node --check
 
 Použití:
-1. Rozbal ZIP.
-2. Obsah složky nakopíruj do kořene aktuálního projektu ZZ-01.
-3. Potvrď sloučení složek a nahrazení index.html.
-4. Ostatní původní assety projektu zůstanou beze změny.
-
-Patch obsahuje:
-- nový index.html
-- assets/locker/ – kompletní grafika skříněk a šesti nálezů
-- assets/audio/ – zvuky animace skříňky a jednotlivých nálezů
-
-Základ: uživatelem nahraný aktuální projekt ZZ-01.zip z 27. 9. 2026.
+1. Přepiš index.html v kořeni projektu tímto souborem.
+2. GitHub Desktop -> Commit: fix: okamžitá synchronizace předmětů přes Supabase
+3. Push origin
