@@ -1,15 +1,12 @@
-ZZ-01 — SYNC V2
+ZZ-01 — plný index.html po staru
 
-Co opravuje:
-- první načtení školy je server-first,
-- background synchronizace už plošně nemaže předměty ani vazby předmět–třída,
-- explicitní vytvoření/upravení/odebrání předmětu používá rozdílovou synchronizaci,
-- teacher_class_assignments vkládá jen chybějící vazby místo opakovaného UPSERTu.
+Obsahuje:
+- SYNC V2 školní struktury
+- synchronizaci historie zkoušení a známek do Supabase
+- migrace 009_exam_history už je nasazená v Supabase
 
 Použití:
 1. Rozbal ZIP.
-2. Zkopíruj apply_sync_v2.bat a apply_sync_v2.ps1 do kořene projektu ZZ-01 vedle index.html.
-3. Spusť apply_sync_v2.bat.
-4. V GitHub Desktop zkontroluj změnu index.html.
-5. Commit: stabilizace synchronizace školní struktury
-6. Push origin.
+2. Soubor index.html překopíruj do kořenové složky projektu ZZ-01 a potvrď nahrazení.
+3. GitHub Desktop -> Commit: historie zkouseni a znamky v Supabase
+4. Push origin.

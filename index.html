@@ -6042,6 +6042,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     }
     return true;
   }
+
   async function fetchRemoteSchoolStructureRows(){
     if(!remoteSchoolStructureEnabled()) return null;
     const schoolId=state.school.id;
@@ -6233,6 +6234,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       if(can('manageSubjects')){
         await syncCurrentTeacherSubjectsDirect({allowDeletes:false});
       }
+
       state.ui=state.ui||{};
       state.ui.schoolStructureDirty=false;
       state.ui.schoolStructureRemoteSchoolId=schoolId;
@@ -6327,6 +6329,167 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     }
   }
 
+  // EXAM HISTORY SYNC V1 — append-only server history, local/offline fallback.
+  let remoteExamHistorySyncBusy=false;
+  let remoteExamHistorySyncQueued=false;
+  let remoteExamHistoryTimer=null;
+
+  function examHistoryIso(value){
+    const n=Number(value||0);
+    if(!Number.isFinite(n)||n<=0)return null;
+    const d=new Date(n);
+    return Number.isNaN(d.getTime())?null:d.toISOString();
+  }
+
+  function scheduleSupabaseExamHistorySync(delay=300){
+    if(!remoteSchoolStructureEnabled()) return;
+    if(remoteExamHistoryTimer) clearTimeout(remoteExamHistoryTimer);
+    remoteExamHistoryTimer=setTimeout(()=>{
+      remoteExamHistoryTimer=null;
+      void syncSupabaseExamHistory().catch(err=>console.error('Exam history sync failed',err));
+    },delay);
+  }
+
+  async function syncSupabaseExamHistory(){
+    if(!remoteSchoolStructureEnabled()) return false;
+    if(remoteExamHistorySyncBusy){ remoteExamHistorySyncQueued=true; return false; }
+    remoteExamHistorySyncBusy=true;
+    try{
+      const schoolId=state.school.id;
+      const {data:sessionData,error:sessionError}=await supabaseClient.auth.getSession();
+      if(sessionError) throw sessionError;
+      const teacherId=sessionData?.session?.user?.id;
+      if(!teacherId) throw new Error('Chybí přihlášený Supabase uživatel.');
+
+      const [classesRes,studentsRes,subjectsRes,existingRes]=await Promise.all([
+        supabaseClient.from('school_classes').select('id,client_key,display_name,school_year').eq('school_id',schoolId),
+        supabaseClient.from('students').select('id,client_key,display_name').eq('school_id',schoolId),
+        supabaseClient.from('subjects').select('id,name').eq('school_id',schoolId),
+        supabaseClient.from('exam_history').select('client_key').eq('school_id',schoolId)
+      ]);
+      const failed=[classesRes,studentsRes,subjectsRes,existingRes].find(r=>r.error);
+      if(failed) throw failed.error;
+
+      const classMap=new Map((classesRes.data||[]).map(r=>[r.client_key,r]));
+      const studentMap=new Map((studentsRes.data||[]).map(r=>[r.client_key,r]));
+      const subjectMap=new Map((subjectsRes.data||[]).map(r=>[r.name,r]));
+      const existingKeys=new Set((existingRes.data||[]).map(r=>r.client_key));
+      const teacherName=String(state.user?.name||teacherNameById(teacherId)||'Učitel');
+
+      const localRows=(state.history||[]).filter(h=>
+        h && h.id && h.teacherId===teacherId && (h.completed===true || h.passUsed===true) && !existingKeys.has(h.id)
+      );
+
+      if(localRows.length){
+        const rows=localRows.map(h=>{
+          const localClass=classById(h.classId), remoteClass=classMap.get(h.classId);
+          const localStudent=studentById(h.studentId), remoteStudent=studentMap.get(h.studentId);
+          const remoteSubject=subjectMap.get(String(h.subject||''));
+          return {
+            school_id:schoolId,
+            client_key:h.id,
+            teacher_id:teacherId,
+            student_id:remoteStudent?.id||null,
+            class_id:remoteClass?.id||null,
+            subject_id:remoteSubject?.id||null,
+            teacher_name_snapshot:h.teacherNameSnapshot||teacherName,
+            student_name_snapshot:h.studentNameSnapshot||localStudent?.name||'',
+            class_name_snapshot:h.classNameSnapshot||localClass?.displayName||'',
+            subject_name_snapshot:String(h.subject||''),
+            school_year_snapshot:String(h.schoolYear||localClass?.schoolYear||''),
+            semester:h.semester?String(h.semester):null,
+            occurred_at:examHistoryIso(h.at)||new Date().toISOString(),
+            started_at:examHistoryIso(h.startedAt),
+            ended_at:examHistoryIso(h.endedAt),
+            topic:String(h.topic||''),
+            grade:h.grade===null||h.grade===undefined?null:Number(h.grade),
+            completed:h.completed===true,
+            no_grade_status:h.noGradeStatus||null,
+            note:String(h.note||''),
+            pass_used:h.passUsed===true,
+            locker_appeared:h.lockerAppeared===true,
+            locker_result_id:h.lockerResultId||null,
+            locker_result_name:String(h.lockerResultName||''),
+            locker_points_delta:Number(h.lockerPointsDelta||0),
+            teacher_positive_delta:Number(h.teacherPositiveDelta||0),
+            teacher_penalty_delta:Number(h.teacherPenaltyDelta||0),
+            student_positive_delta:Number(h.studentPositiveDelta||0),
+            locker_time_bonus_minutes:Number(h.lockerTimeBonusMinutes||0),
+            custom_topic_used:h.customTopicUsed===true,
+            metadata:{source:'zz01-web',schema:1}
+          };
+        });
+        const {error}=await supabaseClient.from('exam_history').insert(rows);
+        if(error) throw error;
+      }
+
+      const {data:remoteHistory,error:historyError}=await supabaseClient.from('exam_history')
+        .select('id,school_id,client_key,teacher_id,student_id,class_id,subject_id,teacher_name_snapshot,student_name_snapshot,class_name_snapshot,subject_name_snapshot,school_year_snapshot,semester,occurred_at,started_at,ended_at,topic,grade,completed,no_grade_status,note,pass_used,locker_appeared,locker_result_id,locker_result_name,locker_points_delta,teacher_positive_delta,teacher_penalty_delta,student_positive_delta,locker_time_bonus_minutes,custom_topic_used,metadata,created_at')
+        .eq('school_id',schoolId)
+        .order('occurred_at',{ascending:true});
+      if(historyError) throw historyError;
+
+      const classKeyByRemoteId=new Map((classesRes.data||[]).map(r=>[r.id,r.client_key]));
+      const studentKeyByRemoteId=new Map((studentsRes.data||[]).map(r=>[r.id,r.client_key]));
+      const subjectNameByRemoteId=new Map((subjectsRes.data||[]).map(r=>[r.id,r.name]));
+
+      const mapped=(remoteHistory||[]).map(r=>({
+        id:r.client_key,
+        remoteId:r.id,
+        remoteHistory:true,
+        teacherId:r.teacher_id||'',
+        studentId:r.student_id?studentKeyByRemoteId.get(r.student_id)||'':'',
+        classId:r.class_id?classKeyByRemoteId.get(r.class_id)||'':'',
+        subject:r.subject_name_snapshot||subjectNameByRemoteId.get(r.subject_id)||'',
+        schoolYear:r.school_year_snapshot||'',
+        semester:r.semester||'1',
+        at:r.occurred_at?new Date(r.occurred_at).getTime():0,
+        startedAt:r.started_at?new Date(r.started_at).getTime():null,
+        endedAt:r.ended_at?new Date(r.ended_at).getTime():null,
+        topic:r.topic||'',
+        grade:r.grade===null?null:Number(r.grade),
+        completed:r.completed===true,
+        noGradeStatus:r.no_grade_status||null,
+        note:r.note||'',
+        passUsed:r.pass_used===true,
+        lockerAppeared:r.locker_appeared===true,
+        lockerResultId:r.locker_result_id||null,
+        lockerResultName:r.locker_result_name||'',
+        lockerPointsDelta:Number(r.locker_points_delta||0),
+        teacherPositiveDelta:Number(r.teacher_positive_delta||0),
+        teacherPenaltyDelta:Number(r.teacher_penalty_delta||0),
+        studentPositiveDelta:Number(r.student_positive_delta||0),
+        lockerTimeBonusMinutes:Number(r.locker_time_bonus_minutes||0),
+        customTopicUsed:r.custom_topic_used===true,
+        teacherNameSnapshot:r.teacher_name_snapshot||'',
+        studentNameSnapshot:r.student_name_snapshot||'',
+        classNameSnapshot:r.class_name_snapshot||''
+      }));
+
+      const remoteKeys=new Set(mapped.map(h=>h.id));
+      const localOnly=(state.history||[]).filter(h=>h?.id && !remoteKeys.has(h.id));
+      state.history=[...mapped,...localOnly].sort((a,b)=>Number(a.at||0)-Number(b.at||0));
+      state.ui=state.ui||{};
+      state.ui.examHistoryRemoteSchoolId=schoolId;
+      state.ui.examHistoryLastSyncAt=now();
+      state.ui.examHistorySyncError=false;
+      syncCurrentTeacherStats();
+      dataStore.saveRaw(JSON.stringify({...state,splashSeen:true}));
+      return true;
+    }catch(err){
+      console.error('Exam history sync failed',err);
+      state.ui=state.ui||{};
+      state.ui.examHistorySyncError=true;
+      return false;
+    }finally{
+      remoteExamHistorySyncBusy=false;
+      if(remoteExamHistorySyncQueued){
+        remoteExamHistorySyncQueued=false;
+        scheduleSupabaseExamHistorySync(150);
+      }
+    }
+  }
+
   async function initializeSupabaseSchoolStructure(){
     if(!remoteSchoolStructureEnabled()) return;
     state.ui=state.ui||{};
@@ -6336,12 +6499,14 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     // Nejdřív načteme server, aby stará lokální kopie nemohla přepsat školní strukturu.
     if(firstForSchool){
       await pullSupabaseSchoolStructure();
+      await syncSupabaseExamHistory();
       return;
     }
 
     // U známé školy můžeme dorovnat lokální přídavky; background sync nic plošně nemaže.
     if(state.ui.schoolStructureDirty===true) await syncSupabaseSchoolStructure();
     await pullSupabaseSchoolStructure();
+    await syncSupabaseExamHistory();
   }
 
   async function refreshSupabaseSchoolTeachers(){
@@ -7345,7 +7510,8 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     addSubjectInventory(student,subjectName,'passCount',-1);
     const studentPositiveDelta=addStudentPositivePoints(student,1);
     const teacherDelta=applyTeacherLockerPoints({penalty:1});
-    state.history.push({id:uid('hist'),teacherId:state.user.id,studentId:student.id,classId:state.examFlow?.classId||'',subject:subjectName,schoolYear:classById(state.examFlow?.classId)?.schoolYear||'',at:now(),completed:false,passUsed:true,lockerAppeared:!!lockerAppeared,lockerResultId:lockerItem?.id||null,lockerResultName:lockerItem?.name||'',lockerPointsDelta:0,teacherPositiveDelta:0,teacherPenaltyDelta:teacherDelta.penalty,studentPositiveDelta,topic:'',grade:null});
+    const passRecord={id:uid('hist'),teacherId:state.user.id,studentId:student.id,classId:state.examFlow?.classId||'',subject:subjectName,schoolYear:classById(state.examFlow?.classId)?.schoolYear||'',at:now(),completed:false,passUsed:true,lockerAppeared:!!lockerAppeared,lockerResultId:lockerItem?.id||null,lockerResultName:lockerItem?.name||'',lockerPointsDelta:0,teacherPositiveDelta:0,teacherPenaltyDelta:teacherDelta.penalty,studentPositiveDelta,topic:'',grade:null,teacherNameSnapshot:state.user.name||'',studentNameSnapshot:student.name||'',classNameSnapshot:classById(state.examFlow?.classId)?.displayName||''};
+    state.history.push(passRecord); scheduleSupabaseExamHistorySync();
     syncCurrentTeacherStats(); return true;
   }
 
@@ -10530,7 +10696,9 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       lockerPointsDelta:Number(e.lockerPointsDelta||0),teacherPositiveDelta:Number(e.teacherPositiveDelta||0),teacherPenaltyDelta:Number(e.teacherPenaltyDelta||0),
       studentPositiveDelta:Number(e.studentPositiveDelta||0),lockerTimeBonusMinutes:Number(e.lockerTimeBonusMinutes||0),customTopicUsed:!!e.customTopicUsed
     };
+    record.teacherNameSnapshot=state.user.name||''; record.studentNameSnapshot=s.name||''; record.classNameSnapshot=c.displayName||'';
     state.history.push(record);
+    scheduleSupabaseExamHistorySync();
     s.examsCountPeriod=(s.examsCountPeriod||0)+1;
     s.lastExamAt=endedAt;
     Object.keys(s.ruleStates||{}).forEach(rid=>{ if(!ruleById(rid)?.system) s.ruleStates[rid]=false; });
@@ -11851,7 +12019,7 @@ body::after{
   function renderHistory(){
     const filterClass=state.ui.historyClass||'';
     const entries=state.history.filter(h=>!filterClass||h.classId===filterClass).slice().sort((a,b)=>b.at-a.at);
-    const rows=entries.map(h=>{const s=studentById(h.studentId),c=classById(h.classId);return `<tr><td>${fmtDate(h.at)}</td><td>${esc(s?.name||'—')}</td><td>${esc(c?.displayName||'—')}</td><td>${esc(h.schoolYear||'—')}</td><td>${esc(h.subject||'—')}</td><td>${esc(h.topic||'—')}</td><td>${h.passUsed?'Propustka':h.noGradeStatus?esc(h.noGradeStatus):h.grade??'—'}</td></tr>`;}).join('');
+    const rows=entries.map(h=>{const s=studentById(h.studentId),c=classById(h.classId),studentName=s?.name||h.studentNameSnapshot||'—',className=c?.displayName||h.classNameSnapshot||'—';return `<tr><td>${fmtDate(h.at)}</td><td>${esc(studentName)}</td><td>${esc(className)}</td><td>${esc(h.schoolYear||'—')}</td><td>${esc(h.subject||'—')}</td><td>${esc(h.topic||'—')}</td><td>${h.passUsed?'Propustka':h.noGradeStatus?esc(h.noGradeStatus):h.grade??'—'}</td></tr>`;}).join('');
     const content=`<div class="section-title"><h1 class="pixel-title">Historie</h1></div><section class="pixel-frame card"><label>Filtrovat třídu<select id="history-class"><option value="">Všechny třídy</option>${state.classes.map(c=>`<option value="${c.id}" ${filterClass===c.id?'selected':''}>${esc(c.displayName)} — ${esc(c.schoolYear)}</option>`).join('')}</select></label><div class="table-wrap" style="margin-top:12px"><table><thead><tr><th>Datum</th><th>Žák</th><th>Třída</th><th>Školní rok</th><th>Předmět</th><th>Téma</th><th>Výsledek</th></tr></thead><tbody>${rows||'<tr><td colspan="7">Zatím tu nejsou žádné záznamy.</td></tr>'}</tbody></table></div></section>`;
     app.innerHTML=layout(content,'Historie');
   }
