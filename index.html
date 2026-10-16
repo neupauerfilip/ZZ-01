@@ -13170,7 +13170,7 @@ body::after{
         </section>
         <section class="pixel-frame card" style="grid-column:1/-1">
           <h2>Třídy a školní rok</h2>
-          <div class="list">${state.classes.map(c=>`<div class="list-item"><div><strong>${esc(c.displayName)}</strong><div class="meta">${esc(c.schoolYear)} · interní ID ${esc(c.id)}</div></div><button class="btn secondary" data-action="open-class" data-id="${c.id}">Spravovat</button></div>`).join('')}</div>
+          <div class="list">${state.classes.map(c=>{const studentCount=(c.studentIds||[]).length;const teacherCount=(c.teacherIds||[]).length;return `<div class="list-item"><div><strong>${esc(c.displayName)}</strong><div class="meta">Školní rok ${esc(c.schoolYear)} · ${studentCount} ${studentCount===1?'žák':'žáků'} · ${teacherCount} ${teacherCount===1?'učitel':'učitelé'}</div></div><button class="btn secondary" data-action="open-class" data-id="${c.id}">Spravovat</button></div>`;}).join('')}</div>
         </section>
       </div>`;
 
