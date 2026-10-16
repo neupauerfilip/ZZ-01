@@ -5952,7 +5952,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   let remoteSchoolStructureTimer=null;
 
   function remoteSchoolStructureEnabled(){
-    return !!(supabaseClient && state?.authenticated && state?.authProvider==='supabase' && state?.onboardingDone && state?.school?.id && state?.user?.id && state?.user?.role!=='student' && state?.user?.role!=='student_pending' && navigator.onLine);
+    return !!(supabaseClient && state?.authenticated && state?.authProvider==='supabase' && state?.onboardingDone && state?.school?.id && state?.user?.id && !isLocalTestIdentity(state.user.id) && state?.user?.role!=='student' && state?.user?.role!=='student_pending' && navigator.onLine);
   }
   function markSchoolStructureDirty(){
     if(remoteSchoolStructureHydrating || !state) return;
@@ -7329,6 +7329,15 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     state.ui=state.ui||{};
     state.ui.studentPortalSessionToken='';
     await refreshSupabaseMembership();
+    state.ui.supabaseIdentity={
+      id:state.user.id,
+      email:state.user.email||'',
+      name:state.user.name||'Učitel',
+      nickname:state.user.nickname||'',
+      avatar:state.user.avatar||'px:cyan',
+      role:state.user.role||'teacher',
+      schoolId:state.user.schoolId||null
+    };
     if(state.onboardingDone) await initializeSupabaseSchoolStructure();
     saveState();
   }
@@ -8619,21 +8628,47 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     return (state.school.teachers||[]).find(t=>t.id===state.user.id)||null;
   }
 
-  function switchTestIdentity(teacherId){
+  function isLocalTestIdentity(userId=state.user?.id){
+    return userId==='test_teacher' || userId==='test_boss';
+  }
+
+  async function switchTestIdentity(teacherId){
+    state.ui=state.ui||{};
+
+    const leavingTestBoss=state.user.id==='test_boss' && teacherId!=='test_boss';
+    if(leavingTestBoss && Object.prototype.hasOwnProperty.call(state.ui,'testPreviousBossTeacherId')){
+      state.school.bossTeacherId=state.ui.testPreviousBossTeacherId||null;
+      delete state.ui.testPreviousBossTeacherId;
+    }
+
+    // V cloudovém režimu znamená Administrátor skutečný přihlášený Supabase účet.
+    // Legacy ID u_me patří jen lokálnímu/offline testovacímu režimu.
+    if(teacherId==='u_me' && state.authProvider==='supabase'){
+      try{
+        const {data,error}=await supabaseClient.auth.getSession();
+        if(error) throw error;
+        if(!data?.session) throw new Error('Přihlášený účet nebyl nalezen.');
+        await applySupabaseSession(data.session);
+        state.examFlow=null;
+        state.activeExam=null;
+        state.route='settings';
+        saveState();
+        if(state.user.role==='admin') toast(`Přepnuto na: ${state.user.name} · Administrátor.`);
+        else toast('Přihlášený účet není administrátor této školy.','error');
+        render();
+      }catch(err){
+        toast(authErrorText(err),'error');
+      }
+      return;
+    }
+
     const target=(state.school.teachers||[]).find(t=>t.id===teacherId && t.active!==false);
     if(!target) return toast('Testovací účet nebyl nalezen.','error');
 
     // Uložíme případné změny profilu právě používaného účtu.
     syncCurrentTeacherProfile();
 
-    const leavingTestBoss=state.user.id==='test_boss' && teacherId!=='test_boss';
-    if(leavingTestBoss && Object.prototype.hasOwnProperty.call(state.ui||{},'testPreviousBossTeacherId')){
-      state.school.bossTeacherId=state.ui.testPreviousBossTeacherId||null;
-      delete state.ui.testPreviousBossTeacherId;
-    }
-
     if(teacherId==='test_boss' && state.user.id!=='test_boss'){
-      state.ui=state.ui||{};
       state.ui.testPreviousBossTeacherId=state.school.bossTeacherId||'';
       state.school.bossTeacherId='test_boss';
     }
@@ -12884,6 +12919,12 @@ body::after{
     const configuredLockers=lockerItems();
     const activeLockerCount=configuredLockers.filter(x=>x.active!==false).length;
     const lockerProbability=Math.min(100,Math.max(0,Number(state.settings.lockerProbability)||0));
+    const cloudIdentity=state.authProvider==='supabase' ? (state.ui?.supabaseIdentity||null) : null;
+    const adminIdentityId=cloudIdentity?.id||'u_me';
+    const adminTeacher=(state.school.teachers||[]).find(t=>t.id===adminIdentityId)||null;
+    const adminDisplayName=cloudIdentity?.name||adminTeacher?.name||'Hlavní účet';
+    const adminAvatar=cloudIdentity?.avatar||adminTeacher?.avatar||'px:cyan';
+    const adminIsActive=!isLocalTestIdentity(state.user.id) && state.user.id===adminIdentityId;
     const content=`<section class="settings-screen fidelity-h13">
       <div class="settings-hero">
         <div>
@@ -12974,9 +13015,9 @@ body::after{
           <div class="settings-card-head"><h2>Testovací režim</h2><span class="settings-card-icon">TST</span></div>
           <p class="settings-note" style="margin-top:0">Dočasné přepínání uživatele pro ověření sdílených tříd a oprávnění. Všichni používají stejná lokální data školy.</p>
           <div class="test-user-grid">
-            <button class="test-user-btn ${state.user.id==='u_me'?'active':''}" data-action="switch-test-user" data-user="u_me">
-              ${avatarMarkup((state.school.teachers||[]).find(t=>t.id==='u_me')?.avatar||'px:cyan','md')}
-              <span><strong>Administrátor</strong><small>${esc((state.school.teachers||[]).find(t=>t.id==='u_me')?.name||'Hlavní účet')}</small></span>
+            <button class="test-user-btn ${adminIsActive?'active':''}" data-action="switch-test-user" data-user="u_me">
+              ${avatarMarkup(adminAvatar,'md')}
+              <span><strong>Administrátor</strong><small>${esc(adminDisplayName)}</small></span>
             </button>
             <button class="test-user-btn ${state.user.id==='test_teacher'?'active':''}" data-action="switch-test-user" data-user="test_teacher">
               ${avatarMarkup((state.school.teachers||[]).find(t=>t.id==='test_teacher')?.avatar||'av:m02','md')}
@@ -13867,7 +13908,7 @@ body::after{
     else if(action==='teacher-score-view'){state.ui.teacherScoreView=btn.dataset.view;saveState();render();}
     else if(action==='teacher-carpet') showTeacherCarpet(btn.dataset.teacher||currentTeacherId());
     else if(action==='boss-points-manager') showBossPointsManager();
-    else if(action==='switch-test-user') switchTestIdentity(btn.dataset.user||'u_me');
+    else if(action==='switch-test-user') void switchTestIdentity(btn.dataset.user||'u_me');
     else if(action==='save-settings'){
       state.user.name=document.getElementById('profile-name').value.trim()||state.user.name;state.user.nickname=document.getElementById('profile-nick').value.trim();syncCurrentTeacherProfile();state.settings.timerMinutes=Math.max(1,Number(document.getElementById('timer-min').value)||5);state.settings.protectionHours=Math.max(0,Number(document.getElementById('protect-hours').value)||0);state.settings.lockerProbability=Math.min(100,Math.max(0,Number(document.getElementById('locker-prob').value)||0));state.settings.lockersEnabled=document.getElementById('locker-enabled').checked;const wantNotify=document.getElementById('notify-enabled').checked;requestNotifications(wantNotify);
       const staffroomNotify=!!document.getElementById('staffroom-notify-settings')?.checked;
