@@ -1,0 +1,4 @@
+-- Produkční migrace už byla aplikována do Supabase.
+-- Přidává víceotázekové ABCD testy pro celou školu.
+-- Každá správně zodpovězená otázka = +1 kladný bod do student_game_wallets.
+-- Nové RPC: create_student_learning_test(...), student_submit_learning_test(...).
