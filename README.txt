@@ -1,12 +1,15 @@
-ZZ-01 – Student V4
+ZZ-01 STUDENT V5 — ZPRÁVY A CHODBA
 
-Změny:
-- opravené písmeno ů v bitmapovém menu (Můj profil)
-- studentské avatary používají stejný detailní pixel-art styl jako učitelské avatary
-- správce vlastní místnosti v Chodbě může přímo přidávat žáky
-- vyhledávání žáka podle jména
-- filtr podle třídy
-- backend RPC pro seznam kandidátů a přidání člena je už nasazený v Supabase
+- robustní oprava ů v Můj profil (Unicode NFC)
+- studentské avatary mají stejný rámeček a rozměry jako učitelské avatary
+- správa členů vlastní místnosti je v samostatném otevíracím okně
+- hledání studentů podle jména + filtr třídy
+- bohatá sada emotikonů v soukromých i místnostních zprávách
+- horní ikona obálky v žákovském i učitelském rozhraní
+- počítadlo nepřečtených zpráv
+- učitel má samostatnou obrazovku Soukromé zprávy
+- volitelné systémové notifikace při nové zprávě
+- polling nepřečtených zpráv každých 15 s při otevřené aplikaci
 
-Stačí nahradit index.html v repozitáři.
-Používané avatarové PNG soubory už v repozitáři existují.
+Backendové RPC a tabulky pro nepřečtené zprávy jsou už nasazené v Supabase.
+Stačí nahradit index.html.

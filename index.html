@@ -3679,6 +3679,7 @@ body.student-home-mode .student-portal-wrap{width:min(940px,100%);padding-top:14
 
 </style>
   <title>Zkouškomat ZZ-01</title>
+<!-- ZZ01-STUDENT-V5-MESSAGES-20261016 -->
 
 <style>
 /* H1.5 — menu menší, pozadí viditelnější a lépe přizpůsobené viewportu */
@@ -5932,6 +5933,66 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 
 @media(max-width:820px){.student-avatar-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.hall-layout,.hall-room-grid,.teacher-hall-layout{grid-template-columns:1fr}.hall-directory{max-height:380px}.hall-messages{height:320px}.student-profile-hero{grid-template-columns:auto 1fr!important}.student-profile-hero .student-id-card{grid-column:1/-1}}
 @media(max-width:520px){.student-avatar-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.hall-compose{grid-template-columns:1fr}.hall-room-card{align-items:flex-start;flex-direction:column}.student-home-card[data-view="hallway"]{grid-column:auto}.student-home-screen .home-card h2.zz01-menu-label{--menu-cell:.112em;--menu-gap:.016em;font-size:clamp(1rem,4.25vw,1.32rem)!important}.student-home-screen .home-card h2.zz01-menu-label .zz01-menu-word{gap:.045em}}
+
+/* STUDENT V5 — zprávy, obálka, emoji a čistší správa členů */
+.student-avatar-wrap{
+  border:2px solid var(--cyan)!important;
+  background:#0b1b25!important;
+  box-shadow:none!important;
+}
+.student-avatar-wrap.avatar-sm{width:30px!important;height:30px!important}
+.student-avatar-wrap.avatar-md{width:42px!important;height:42px!important}
+.student-avatar-wrap.avatar-lg{width:74px!important;height:74px!important;border-width:3px!important}
+.student-avatar-wrap.avatar-xl{width:92px!important;height:92px!important;border-width:4px!important;box-shadow:6px 6px 0 #02070d!important}
+.student-avatar-img{object-fit:cover!important}
+
+.nav-mail-btn{position:relative;color:var(--cyan)!important;display:grid!important;place-items:center!important}
+.nav-mail-btn svg{width:25px;height:25px;display:block}
+.nav-mail-badge{position:absolute;right:-7px;top:-8px;min-width:22px;height:22px;padding:0 5px;display:grid;place-items:center;border:2px solid #fff4dc;background:#e84a3a;color:#fff;font-family:var(--pixel);font-size:.58rem;line-height:1;box-shadow:2px 2px 0 #02070d}
+.nav-mail-badge[hidden]{display:none!important}
+
+.hall-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.hall-toolbar .hall-tabs{margin-bottom:0}
+.hall-notify-toggle{display:flex;align-items:center;gap:8px;color:#bfeef0;font-size:.72rem;background:#061b29;border:2px solid #155e70;padding:8px 10px}
+.hall-notify-toggle input{width:18px;height:18px;margin:0}
+
+.hall-room-open-clean .hall-room-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.hall-room-chat-wide{display:block}
+.hall-room-open-clean .hall-messages{height:390px}
+
+.hall-emoji-picker{margin-top:8px;border:2px solid #155e70;background:#061722}
+.hall-emoji-picker>summary{cursor:pointer;list-style:none;padding:7px 10px;color:#20e7eb;font-family:var(--pixel);font-size:.64rem;user-select:none}
+.hall-emoji-picker>summary::-webkit-details-marker{display:none}
+.hall-emoji-picker>summary::before{content:'▶ ';color:#ff9b15}
+.hall-emoji-picker[open]>summary::before{content:'▼ '}
+.hall-emoji-grid{display:grid;grid-template-columns:repeat(10,minmax(32px,1fr));gap:4px;padding:8px;border-top:2px solid #155e70;max-height:190px;overflow:auto}
+.hall-emoji-btn{min-height:34px;border:1px solid #155e70;background:#082331;color:#fff;font-size:1.08rem;cursor:pointer;padding:2px}
+.hall-emoji-btn:hover{border-color:#ff9b15;background:#30210d}
+
+.hall-members-modal{width:min(860px,96vw);max-height:90vh}
+.hall-members-modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;border-bottom:2px solid #126c80;padding-bottom:10px;margin-bottom:12px}
+.hall-members-modal-head h2{margin:3px 0 0}
+.hall-member-modal-section{margin-top:14px;border:2px solid #155e70;background:#061722;padding:10px}
+.hall-member-modal-section h3{margin:0 0 8px;color:#fff4dc}
+.hall-member-modal-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:9px;align-items:center;padding:8px;border-bottom:1px dashed #174858}
+.hall-member-modal-row:last-child{border-bottom:0}
+.hall-member-modal-row.pending{background:#2a220d}
+.hall-member-modal-row>span{display:flex;flex-direction:column;gap:2px}
+.hall-member-modal-row small{color:#80cdd2}
+.hall-member-modal-row .row{justify-content:flex-end}
+.hall-candidate-list{max-height:340px}
+
+.teacher-private-messages-screen{max-width:1050px;margin:0 auto}
+.teacher-private-messages-screen .staffroom-student-hall{margin-top:8px}
+
+@media(max-width:760px){
+  .hall-emoji-grid{grid-template-columns:repeat(7,minmax(32px,1fr))}
+  .hall-member-modal-row{grid-template-columns:auto minmax(0,1fr)}
+  .hall-member-modal-row>.btn,.hall-member-modal-row>.row{grid-column:1/-1;width:100%}
+  .hall-member-modal-row .row .btn{flex:1}
+  .hall-room-open-clean .hall-room-actions{width:100%;justify-content:flex-start}
+}
+
 </style>
 </head>
 <body>
@@ -9603,7 +9664,8 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         <div class="nav-actions">
           ${backButton}
           <div class="session-chip" title="Aktuálně přihlášený uživatel"><span class="session-label">Přihlášen:</span><span class="session-role">${esc(userRoleLabel())}</span><span class="session-name">(${esc(currentUserName)})</span></div>
-          <button class="icon-btn audio-toggle-btn nav-music-btn ${state.settings.musicEnabled===false?'is-off':''}" data-action="toggle-music" aria-pressed="${state.settings.musicEnabled!==false}" aria-label="${state.settings.musicEnabled===false?'Zapnout hudbu':'Vypnout hudbu'}" title="Hudba: ${state.settings.musicEnabled===false?'vypnuta':'zapnuta'}"><img src="assets/ui/nav-music-note.png" alt="" aria-hidden="true"></button>
+          ${privateMailButton('private-messages')}
+          <button class="icon-btn audio-toggle-btn nav-music-btn ${state.settings.musicEnabled===false?'is-off':''} ${state.settings.musicEnabled===false?'is-off':''}" data-action="toggle-music" aria-pressed="${state.settings.musicEnabled!==false}" aria-label="${state.settings.musicEnabled===false?'Zapnout hudbu':'Vypnout hudbu'}" title="Hudba: ${state.settings.musicEnabled===false?'vypnuta':'zapnuta'}"><img src="assets/ui/nav-music-note.png" alt="" aria-hidden="true"></button>
           <button class="icon-btn audio-toggle-btn nav-sfx-btn ${state.settings.sfxEnabled===false?'is-off':''}" data-action="toggle-sfx" aria-pressed="${state.settings.sfxEnabled!==false}" aria-label="${state.settings.sfxEnabled===false?'Zapnout systémové zvuky':'Vypnout systémové zvuky'}" title="Systémové zvuky: ${state.settings.sfxEnabled===false?'vypnuty':'zapnuty'}"><img src="assets/ui/nav-sfx-speaker.png" alt="" aria-hidden="true"></button>
           <button class="icon-btn nav-home-btn" data-action="go-home" aria-label="Domů" title="Domů"><img src="assets/ui/nav-home.png" alt="" aria-hidden="true"></button>
           <button class="icon-btn nav-profile-btn" data-action="settings" aria-label="Můj profil a nastavení" title="Můj profil a nastavení"><img src="assets/ui/nav-profile.png" alt="" aria-hidden="true"></button>
@@ -9811,7 +9873,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     }
 
     // Jednoúrovňové obrazovky se vracejí do hlavního menu.
-    if(['classes','subjects','grades','scoring','history','wheel','settings','admin','help','staffroom','exam-result'].includes(state.route)){
+    if(['classes','subjects','grades','scoring','history','wheel','settings','admin','help','staffroom','messages','exam-result'].includes(state.route)){
       state.route='home';
       saveState();
       return render();
@@ -9933,7 +9995,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 
   function studentAvatarMarkup(value,size='md'){
     const p=studentAvatarPreset(value);
-    return `<span class="student-avatar-wrap avatar-${size}" title="${esc(p.label)}"><img class="student-avatar-img" src="${p.src}" alt="${esc(p.label)}"></span>`;
+    return `<span class="teacher-avatar-wrap student-avatar-wrap avatar-${size}" title="${esc(p.label)}"><img class="teacher-avatar-img student-avatar-img" src="${p.src}" alt="${esc(p.label)}"></span>`;
   }
 
   async function setStudentPortalAvatar(value){
@@ -9951,6 +10013,99 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     state.ui.studentHall=state.ui.studentHall||{tab:'direct',directory:[],rooms:[],directMessages:[],roomMessages:[],roomMembers:[],roomCandidates:[],loaded:false,loading:false,selectedPeerKind:'',selectedPeerId:'',selectedRoomId:''};
     if(!Array.isArray(state.ui.studentHall.roomCandidates))state.ui.studentHall.roomCandidates=[];
     return state.ui.studentHall;
+  }
+
+  const HALL_EMOJIS=[
+    '😀','😃','😄','😁','😂','🤣','😊','🙂','😉','😍','🥰','😎','🤓','🤔','😅','😬','🙄','😴','😭','😤',
+    '👍','👎','👏','🙌','🤝','👌','✌️','🤟','💪','🙏','👀','🫡','❤️','🧡','💛','💚','💙','💜','🖤','🤍',
+    '🔥','✨','⭐','💯','✅','❌','⚠️','❓','❗','🎉','🎯','🏆','🥇','📚','✏️','🧠','💡','☕','🍕','🎮',
+    '⚽','🏀','🚲','🛹','🎸','🎧','🤘','😈','👻','💀','🚀','🧩','🔧','🔩','📐','📝','⏰','😂','🙃','🤦'
+  ];
+
+  function hallEmojiPicker(targetId){
+    return `<details class="hall-emoji-picker"><summary>😊 Emotikony</summary><div class="hall-emoji-grid">${HALL_EMOJIS.map(x=>`<button type="button" class="hall-emoji-btn" data-action="hall-emoji" data-target="${esc(targetId)}" data-emoji="${esc(x)}" title="${esc(x)}">${x}</button>`).join('')}</div></details>`;
+  }
+
+  function hallUnreadCount(){return Math.max(0,Number(state.ui?.hallUnreadCount||0));}
+  function hallNotificationEnabled(){return state.settings?.hallNotificationsEnabled===true;}
+  let hallUnreadPollTimer=null;
+
+  async function setHallNotifications(enable){
+    state.settings=state.settings||{};
+    state.settings.hallNotificationsEnabled=!!enable;
+    saveState();
+    if(!enable){toast('Upozornění na soukromé zprávy vypnuta.');return false;}
+    if(!('Notification' in window)){toast('Prohlížeč systémová upozornění nepodporuje.','warn');return false;}
+    if(Notification.permission==='granted'){toast('Upozornění na nové zprávy zapnuta.');return true;}
+    if(Notification.permission==='denied'){toast('Notifikace jsou v prohlížeči zablokované.','warn');return false;}
+    try{
+      const p=await Notification.requestPermission();
+      toast(p==='granted'?'Upozornění na nové zprávy zapnuta.':'Upozornění nebyla povolena.',p==='granted'?'':'warn');
+      return p==='granted';
+    }catch(_){return false;}
+  }
+
+  function showHallNotification(delta){
+    if(delta<=0)return;
+    const label=delta===1?'Máš novou zprávu.':`Máš ${delta} nové zprávy.`;
+    const inStudentHall=state.user?.role==='student'&&state.ui?.studentPortalView==='hallway';
+    const inTeacherMessages=state.user?.role!=='student'&&state.route==='messages';
+    if(document.visibilityState==='visible'&&!inStudentHall&&!inTeacherMessages)toast(label);
+    if(!hallNotificationEnabled())return;
+    if(!('Notification' in window)||Notification.permission!=='granted')return;
+    if(document.visibilityState==='visible'&&(inStudentHall||inTeacherMessages))return;
+    try{new Notification('Zkouškomat · Nová zpráva',{body:label});}catch(_){}
+  }
+
+  function updateHallUnreadBadge(){
+    const n=hallUnreadCount();
+    document.querySelectorAll('[data-hall-unread-badge]').forEach(el=>{
+      el.textContent=String(Math.min(99,n));
+      el.hidden=n<=0;
+    });
+  }
+
+  async function refreshHallUnread({notify=false}={}){
+    if(!supabaseClient||!state.authenticated)return;
+    const previous=hallUnreadCount();
+    try{
+      let row=null;
+      if(state.user?.role==='student'){
+        const token=studentPortalSessionToken();if(!token)return;
+        const {data,error}=await supabaseClient.rpc('student_hall_unread_summary',{p_session_token:token});
+        if(error)throw error;row=studentPortalRows(data)[0]||{};
+        state.ui=state.ui||{};
+        state.ui.hallUnreadCount=Number(row.total_unread||0);
+        state.ui.hallDirectUnread=Number(row.direct_unread||0);
+        state.ui.hallRoomUnread=Number(row.room_unread||0);
+      }else if(state.authProvider==='supabase'&&state.school?.id){
+        const {data,error}=await supabaseClient.rpc('teacher_hall_unread_summary',{p_school_id:state.school.id});
+        if(error)throw error;row=studentPortalRows(data)[0]||{};
+        state.ui=state.ui||{};
+        state.ui.hallUnreadCount=Number(row.total_unread||0);
+        state.ui.hallDirectUnread=Number(row.total_unread||0);
+        state.ui.hallRoomUnread=0;
+      }else return;
+      const next=hallUnreadCount();
+      updateHallUnreadBadge();
+      if(notify&&next>previous)showHallNotification(next-previous);
+    }catch(err){console.warn('Hall unread refresh failed',err);}
+  }
+
+  function stopHallUnreadPolling(){
+    if(hallUnreadPollTimer){clearInterval(hallUnreadPollTimer);hallUnreadPollTimer=null;}
+  }
+
+  function startHallUnreadPolling(){
+    stopHallUnreadPolling();
+    if(!state.authenticated)return;
+    void refreshHallUnread({notify:false});
+    hallUnreadPollTimer=setInterval(()=>void refreshHallUnread({notify:true}),15000);
+  }
+
+  function privateMailButton(action){
+    const unread=hallUnreadCount();
+    return `<button class="icon-btn nav-mail-btn" data-action="${action}" aria-label="Soukromé zprávy" title="Soukromé zprávy"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 7h24v18H4z" fill="none" stroke="currentColor" stroke-width="3"/><path d="M5 9l11 9L27 9" fill="none" stroke="currentColor" stroke-width="3"/></svg><span class="nav-mail-badge" data-hall-unread-badge ${unread>0?'':'hidden'}>${Math.min(99,unread)}</span></button>`;
   }
 
   async function refreshStudentHallway({renderAfter=true}={}){
@@ -9980,6 +10135,8 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     try{
       const {data,error}=await supabaseClient.rpc('student_hall_direct_messages',{p_session_token:studentPortalSessionToken(),p_peer_kind:kind,p_peer_id:id});
       if(error)throw error;hall.directMessages=studentPortalRows(data);
+      await supabaseClient.rpc('student_hall_mark_read',{p_session_token:studentPortalSessionToken(),p_target_type:kind==='teacher'?'direct_teacher':'direct_student',p_target_id:id});
+      await refreshHallUnread({notify:false});
     }catch(err){toast(authErrorText(err),'error');hall.directMessages=[];}
     if(renderAfter){saveState();renderStudentPortal();}
   }
@@ -10005,6 +10162,8 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       ]);
       if(mRes.error)throw mRes.error;if(uRes.error)throw uRes.error;
       hall.roomMessages=studentPortalRows(mRes.data);hall.roomMembers=studentPortalRows(uRes.data);
+      await supabaseClient.rpc('student_hall_mark_read',{p_session_token:studentPortalSessionToken(),p_target_type:'room',p_target_id:roomId});
+      await refreshHallUnread({notify:false});
       const room=(hall.rooms||[]).find(r=>String(r.room_id)===String(roomId));
       if(room?.room_kind==='custom'&&room?.my_role==='owner'){
         const cRes=await supabaseClient.rpc('student_hall_room_candidates',{p_session_token:studentPortalSessionToken(),p_room_id:roomId});
@@ -10037,16 +10196,51 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   }
 
   async function manageStudentHallMember(roomId,memberId,action){
-    try{const {error}=await supabaseClient.rpc('student_hall_manage_member',{p_session_token:studentPortalSessionToken(),p_room_id:roomId,p_member_student_id:memberId,p_action:action});if(error)throw error;await refreshStudentHallway({renderAfter:false});await loadStudentHallRoom(roomId,{renderAfter:false});saveState();renderStudentPortal();toast(action==='approve'?'Vstup schválen.':action==='kick'?'Člen odebrán.':'Žádost zamítnuta.');}catch(err){toast(authErrorText(err),'error');}
+    const keepModal=!!document.getElementById('student-hall-members-modal');
+    try{
+      const {error}=await supabaseClient.rpc('student_hall_manage_member',{p_session_token:studentPortalSessionToken(),p_room_id:roomId,p_member_student_id:memberId,p_action:action});
+      if(error)throw error;
+      await refreshStudentHallway({renderAfter:false});
+      await loadStudentHallRoom(roomId,{renderAfter:false});
+      saveState();renderStudentPortal();
+      if(keepModal)await openStudentHallMembersModal(roomId);
+      toast(action==='approve'?'Vstup schválen.':action==='kick'?'Člen odebrán.':'Žádost zamítnuta.');
+    }catch(err){toast(authErrorText(err),'error');}
   }
 
   async function addStudentHallMember(roomId,memberId){
+    const keepModal=!!document.getElementById('student-hall-members-modal');
     try{
       const {error}=await supabaseClient.rpc('student_hall_add_member',{p_session_token:studentPortalSessionToken(),p_room_id:roomId,p_member_student_id:memberId});
       if(error)throw error;
       await refreshStudentHallway({renderAfter:false});
       await loadStudentHallRoom(roomId,{renderAfter:false});
-      saveState();renderStudentPortal();toast('Žák přidán do místnosti.');
+      saveState();renderStudentPortal();
+      if(keepModal)await openStudentHallMembersModal(roomId);
+      toast('Žák přidán do místnosti.');
+    }catch(err){toast(authErrorText(err),'error');}
+  }
+
+  async function openStudentHallMembersModal(roomId){
+    try{
+      await loadStudentHallRoom(roomId,{renderAfter:false});
+      const hall=studentHallState();
+      const room=(hall.rooms||[]).find(r=>String(r.room_id)===String(roomId));
+      if(!room)return toast('Místnost nebyla nalezena.','error');
+      const owner=room.my_role==='owner';
+      const members=Array.isArray(hall.roomMembers)?hall.roomMembers:[];
+      const candidates=owner&&room.room_kind==='custom'&&Array.isArray(hall.roomCandidates)?hall.roomCandidates:[];
+      const approved=members.filter(m=>m.status==='approved');
+      const pending=members.filter(m=>m.status==='pending');
+      const classNames=[...new Set(candidates.flatMap(c=>String(c.class_names||'').split(',').map(x=>x.trim()).filter(Boolean)))].sort((a,b)=>a.localeCompare(b,'cs'));
+      const memberRows=approved.map(m=>`<div class="hall-member-modal-row">${studentAvatarMarkup(m.avatar,'sm')}<span><strong>${esc(m.student_name)}</strong><small>${m.role==='owner'?'správce':'člen'}</small></span>${owner&&m.role!=='owner'?`<button class="btn danger" data-action="student-hall-member" data-room="${room.room_id}" data-member="${m.student_id}" data-member-action="kick">Odebrat</button>`:''}</div>`).join('');
+      const pendingRows=pending.map(m=>`<div class="hall-member-modal-row pending">${studentAvatarMarkup(m.avatar,'sm')}<span><strong>${esc(m.student_name)}</strong><small>žádost o vstup</small></span><div class="row"><button class="btn success" data-action="student-hall-member" data-room="${room.room_id}" data-member="${m.student_id}" data-member-action="approve">Přijmout</button><button class="btn danger" data-action="student-hall-member" data-room="${room.room_id}" data-member="${m.student_id}" data-member-action="reject">Zamítnout</button></div></div>`).join('');
+      const candidateRows=candidates.map(c=>{
+        const cls=String(c.class_names||'');const dataClasses=cls.split(',').map(x=>x.trim()).filter(Boolean).join('|');
+        return `<div class="hall-candidate" data-hall-candidate data-name="${esc(String(c.student_name||'').toLocaleLowerCase('cs-CZ'))}" data-classes="${esc(dataClasses)}">${studentAvatarMarkup(c.avatar,'sm')}<span><strong>${esc(c.student_name)}</strong><small>${esc(cls||'bez aktivní třídy')}</small></span><button class="btn primary" data-action="student-hall-add-member" data-room="${room.room_id}" data-member="${c.student_id}">Přidat</button></div>`;
+      }).join('');
+      modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal hall-members-modal" id="student-hall-members-modal"><div class="hall-members-modal-head"><div><div class="student-kicker">CHODBA · ČLENOVÉ MÍSTNOSTI</div><h2>${esc(room.room_name)}</h2></div><button class="btn ghost" id="hall-members-close">Zavřít</button></div><div class="hall-member-modal-section"><h3>Členové · ${approved.length}</h3>${memberRows||'<div class="empty">Místnost zatím nemá další členy.</div>'}</div>${owner&&pending.length?`<div class="hall-member-modal-section"><h3>Čekající žádosti · ${pending.length}</h3>${pendingRows}</div>`:''}${owner&&room.room_kind==='custom'?`<div class="hall-member-modal-section"><div class="student-panel-head"><div><h3>Přidat studenty</h3><span>Vyhledej žáka nebo filtruj podle třídy.</span></div><span>${candidates.length} dostupných</span></div><div class="hall-member-filter"><input id="student-hall-member-search" placeholder="Hledat podle jména…" autocomplete="off"><select id="student-hall-member-class"><option value="">Všechny třídy</option>${classNames.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('')}</select></div><div class="hall-candidate-list">${candidateRows||'<div class="tiny muted">Všichni dostupní žáci už jsou členy místnosti.</div>'}</div></div>`:''}</section></div>`;
+      document.getElementById('hall-members-close').onclick=closeModal;
     }catch(err){toast(authErrorText(err),'error');}
   }
 
@@ -10082,7 +10276,8 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     const hall=studentHallState();
     if(!hall.loaded&&!hall.loading)queueMicrotask(()=>void refreshStudentHallway());
     if(hall.loading&&!hall.loaded)return `<section class="student-panel"><div class="empty">Načítám Chodbu…</div></section>`;
-    const dir=Array.isArray(hall.directory)?hall.directory:[];const rooms=Array.isArray(hall.rooms)?hall.rooms:[];
+    const dir=Array.isArray(hall.directory)?hall.directory:[];
+    const rooms=Array.isArray(hall.rooms)?hall.rooms:[];
     const peer=dir.find(x=>String(x.person_id)===String(hall.selectedPeerId)&&x.person_kind===hall.selectedPeerKind)||null;
     const room=rooms.find(x=>String(x.room_id)===String(hall.selectedRoomId))||null;
     const classes=[...new Map(dir.map(x=>[String(x.class_id||''),x.class_name||'Bez třídy'])).entries()];
@@ -10090,7 +10285,8 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       const people=dir.filter(x=>String(x.class_id||'')===cid);
       return `<section class="hall-directory-class"><h3>${esc(cname)}</h3><div class="hall-people">${people.map(p=>`<button class="hall-person ${peer&&peer.person_kind===p.person_kind&&String(peer.person_id)===String(p.person_id)?'active':''}" data-action="student-hall-peer" data-kind="${p.person_kind}" data-id="${p.person_id}">${p.person_kind==='student'?studentAvatarMarkup(p.avatar,'sm'):avatarMarkup(p.avatar,'sm')}<span><strong>${esc(p.person_name)}</strong><small>${p.person_kind==='teacher'?'učitel':'žák'}</small></span></button>`).join('')}</div></section>`;
     }).join('');
-    const directPanel=peer?`<section class="hall-chat-panel"><div class="hall-chat-head"><div>${peer.person_kind==='student'?studentAvatarMarkup(peer.avatar,'md'):avatarMarkup(peer.avatar,'md')}</div><div><h2>${esc(peer.person_name)}</h2><span>${esc(peer.class_name||'')} · ${peer.person_kind==='teacher'?'učitel':'žák'}</span></div></div><div class="hall-messages">${studentHallMessageList(hall.directMessages)}</div><div class="hall-compose"><textarea id="student-hall-direct-input" maxlength="1000" placeholder="Napiš soukromou zprávu…"></textarea><button class="btn primary" data-action="student-hall-send-direct">Odeslat</button></div></section>`:`<section class="hall-chat-panel"><div class="hall-empty">Vyber spolužáka nebo učitele.</div></section>`;
+
+    const directPanel=peer?`<section class="hall-chat-panel"><div class="hall-chat-head"><div>${peer.person_kind==='student'?studentAvatarMarkup(peer.avatar,'md'):avatarMarkup(peer.avatar,'md')}</div><div><h2>${esc(peer.person_name)}</h2><span>${esc(peer.class_name||'')} · ${peer.person_kind==='teacher'?'učitel':'žák'}</span></div></div><div class="hall-messages">${studentHallMessageList(hall.directMessages)}</div>${hallEmojiPicker('student-hall-direct-input')}<div class="hall-compose"><textarea id="student-hall-direct-input" maxlength="1000" placeholder="Napiš soukromou zprávu…"></textarea><button class="btn primary" data-action="student-hall-send-direct">Odeslat</button></div></section>`:`<section class="hall-chat-panel"><div class="hall-empty">Vyber spolužáka nebo učitele.</div></section>`;
 
     const roomCards=rooms.map(r=>{
       let action='';
@@ -10102,25 +10298,12 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 
     let roomPanel='';
     if(room&&room.can_enter){
-      const owner=room.my_role==='owner';const members=Array.isArray(hall.roomMembers)?hall.roomMembers:[];
-      const memberHtml=members.map(m=>`<div class="hall-member ${m.status==='pending'?'pending':''}">${studentAvatarMarkup(m.avatar,'sm')}<span><strong>${esc(m.student_name)}</strong><small>${m.role==='owner'?'správce':m.status==='pending'?'čeká na vstup':'člen'}</small></span>${owner&&m.role!=='owner'?(m.status==='pending'?`<button class="btn success" data-action="student-hall-member" data-room="${room.room_id}" data-member="${m.student_id}" data-member-action="approve">Přijmout</button><button class="btn danger" data-action="student-hall-member" data-room="${room.room_id}" data-member="${m.student_id}" data-member-action="reject">Zamítnout</button>`:`<button class="btn danger" data-action="student-hall-member" data-room="${room.room_id}" data-member="${m.student_id}" data-member-action="kick">Vyhodit</button>`):''}</div>`).join('');
-
-      let addMembers='';
-      if(owner&&room.room_kind==='custom'){
-        const candidates=Array.isArray(hall.roomCandidates)?hall.roomCandidates:[];
-        const classNames=[...new Set(candidates.flatMap(c=>String(c.class_names||'').split(',').map(x=>x.trim()).filter(Boolean)))].sort((a,b)=>a.localeCompare(b,'cs'));
-        const candidateHtml=candidates.map(c=>{
-          const cls=String(c.class_names||'');
-          const dataClasses=cls.split(',').map(x=>x.trim()).filter(Boolean).join('|');
-          return `<div class="hall-candidate" data-hall-candidate data-name="${esc(String(c.student_name||'').toLocaleLowerCase('cs-CZ'))}" data-classes="${esc(dataClasses)}">${studentAvatarMarkup(c.avatar,'sm')}<span><strong>${esc(c.student_name)}</strong><small>${esc(cls||'bez aktivní třídy')}</small></span><button class="btn primary" data-action="student-hall-add-member" data-room="${room.room_id}" data-member="${c.student_id}">Přidat</button></div>`;
-        }).join('');
-        addMembers=`<section class="hall-add-members"><div class="student-panel-head"><div><h3>Přidat studenty</h3><span>Správce může přidat žáka přímo do místnosti.</span></div><span>${candidates.length} dostupných</span></div><div class="hall-member-filter"><input id="student-hall-member-search" placeholder="Hledat podle jména…" autocomplete="off"><select id="student-hall-member-class"><option value="">Všechny třídy</option>${classNames.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('')}</select></div><div class="hall-candidate-list">${candidateHtml||'<div class="tiny muted">Všichni dostupní žáci už jsou členy místnosti.</div>'}</div></section>`;
-      }
-
-      roomPanel=`<section class="hall-room-open"><div class="hall-chat-head"><div class="hall-room-icon">#</div><div><h2>${esc(room.room_name)}</h2><span>${room.room_kind==='class'?'Třídní místnost':'Vlastní místnost'} · ${Number(room.member_count||0)} členů</span></div><div class="hall-room-actions">${room.room_kind==='custom'?(owner?`<button class="btn danger" data-action="student-hall-delete-room" data-id="${room.room_id}" data-name="${esc(room.room_name)}">Smazat místnost</button>`:`<button class="btn ghost" data-action="student-hall-leave-room" data-id="${room.room_id}">Opustit</button>`):''}</div></div><div class="hall-room-grid"><div><div class="hall-messages">${studentHallMessageList(hall.roomMessages)}</div><div class="hall-compose"><textarea id="student-hall-room-input" maxlength="1000" placeholder="Napiš zprávu do místnosti…"></textarea><button class="btn primary" data-action="student-hall-send-room">Odeslat</button></div></div><aside class="hall-members"><h3>Členové</h3>${memberHtml||'<div class="tiny muted">Nikdo další tu zatím není.</div>'}${addMembers}</aside></div></section>`;
+      const owner=room.my_role==='owner';
+      roomPanel=`<section class="hall-room-open hall-room-open-clean"><div class="hall-chat-head"><div class="hall-room-icon">#</div><div><h2>${esc(room.room_name)}</h2><span>${room.room_kind==='class'?'Třídní místnost':'Vlastní místnost'} · ${Number(room.member_count||0)} členů</span></div><div class="hall-room-actions"><button class="btn secondary" data-action="student-hall-members-modal" data-id="${room.room_id}">${owner?'Spravovat členy':'Členové'} (${Number(room.member_count||0)})</button>${room.room_kind==='custom'?(owner?`<button class="btn danger" data-action="student-hall-delete-room" data-id="${room.room_id}" data-name="${esc(room.room_name)}">Smazat místnost</button>`:`<button class="btn ghost" data-action="student-hall-leave-room" data-id="${room.room_id}">Opustit</button>`):''}</div></div><div class="hall-room-chat-wide"><div class="hall-messages">${studentHallMessageList(hall.roomMessages)}</div>${hallEmojiPicker('student-hall-room-input')}<div class="hall-compose"><textarea id="student-hall-room-input" maxlength="1000" placeholder="Napiš zprávu do místnosti…"></textarea><button class="btn primary" data-action="student-hall-send-room">Odeslat</button></div></div></section>`;
     }
 
-    return `<div class="hall-tabs"><button class="btn ${hall.tab==='direct'?'primary':'secondary'}" data-action="student-hall-tab" data-tab="direct">Soukromé zprávy</button><button class="btn ${hall.tab==='rooms'?'primary':'secondary'}" data-action="student-hall-tab" data-tab="rooms">Místnosti</button><button class="btn ghost" data-action="student-hall-refresh">Obnovit</button></div>${hall.tab==='direct'?`<div class="hall-layout"><aside class="hall-directory"><div class="student-panel-head"><h2>Komu napsat</h2><span>podle tříd</span></div>${dirHtml||'<div class="empty">V tvých třídách zatím nejsou další uživatelé.</div>'}</aside>${directPanel}</div>`:`<section class="student-panel"><div class="student-panel-head"><div><h2>Místnosti</h2><span>Třídní místnosti jsou automatické. Vlastní místnosti mají správce.</span></div><button class="btn primary" data-action="student-hall-create-room">+ Vytvořit místnost</button></div><div class="hall-room-list">${roomCards||'<div class="empty">Žádné místnosti.</div>'}</div></section>${roomPanel}`}`;
+    const notifyOn=hallNotificationEnabled();
+    return `<div class="hall-toolbar"><div class="hall-tabs"><button class="btn ${hall.tab==='direct'?'primary':'secondary'}" data-action="student-hall-tab" data-tab="direct">Soukromé zprávy</button><button class="btn ${hall.tab==='rooms'?'primary':'secondary'}" data-action="student-hall-tab" data-tab="rooms">Místnosti</button><button class="btn ghost" data-action="student-hall-refresh">Obnovit</button></div><label class="hall-notify-toggle"><input id="hall-notify-toggle" type="checkbox" ${notifyOn?'checked':''}> Upozornění na nové zprávy</label></div>${hall.tab==='direct'?`<div class="hall-layout"><aside class="hall-directory"><div class="student-panel-head"><h2>Komu napsat</h2><span>podle tříd</span></div>${dirHtml||'<div class="empty">V tvých třídách zatím nejsou další uživatelé.</div>'}</aside>${directPanel}</div>`:`<section class="student-panel"><div class="student-panel-head"><div><h2>Místnosti</h2><span>Třídní místnosti jsou automatické. Vlastní místnosti mají správce.</span></div><button class="btn primary" data-action="student-hall-create-room">+ Vytvořit místnost</button></div><div class="hall-room-list">${roomCards||'<div class="empty">Žádné místnosti.</div>'}</div></section>${roomPanel}`}`;
   }
 
   function teacherHallState(){
@@ -10129,22 +10312,28 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 
   async function refreshTeacherHallContacts({renderAfter=true}={}){
     if(!supabaseClient||state.authProvider!=='supabase'||!state.school?.id)return;const h=teacherHallState();if(h.loading)return;h.loading=true;
-    try{const {data,error}=await supabaseClient.rpc('teacher_hall_student_contacts',{p_school_id:state.school.id});if(error)throw error;h.contacts=studentPortalRows(data);h.loaded=true;if(h.selectedStudentId&&h.contacts.some(x=>String(x.student_id)===String(h.selectedStudentId)))await loadTeacherHallStudent(h.selectedStudentId,{renderAfter:false});}catch(err){toast(authErrorText(err),'error');}finally{h.loading=false;if(renderAfter&&state.route==='staffroom')renderStaffroom();}
+    try{const {data,error}=await supabaseClient.rpc('teacher_hall_student_contacts',{p_school_id:state.school.id});if(error)throw error;h.contacts=studentPortalRows(data);h.loaded=true;if(h.selectedStudentId&&h.contacts.some(x=>String(x.student_id)===String(h.selectedStudentId)))await loadTeacherHallStudent(h.selectedStudentId,{renderAfter:false});}catch(err){toast(authErrorText(err),'error');}finally{h.loading=false;if(renderAfter){if(state.route==='messages')renderTeacherMessages();else if(state.route==='staffroom')renderStaffroom();}}
   }
 
   async function loadTeacherHallStudent(studentId,{renderAfter=true}={}){
-    const h=teacherHallState();h.selectedStudentId=studentId;try{const {data,error}=await supabaseClient.rpc('teacher_hall_direct_messages',{p_school_id:state.school.id,p_student_id:studentId});if(error)throw error;h.messages=studentPortalRows(data);}catch(err){toast(authErrorText(err),'error');h.messages=[];}if(renderAfter){saveState();renderStaffroom();}
+    const h=teacherHallState();h.selectedStudentId=studentId;try{const {data,error}=await supabaseClient.rpc('teacher_hall_direct_messages',{p_school_id:state.school.id,p_student_id:studentId});if(error)throw error;h.messages=studentPortalRows(data);await supabaseClient.rpc('teacher_hall_mark_read',{p_school_id:state.school.id,p_student_id:studentId});await refreshHallUnread({notify:false});}catch(err){toast(authErrorText(err),'error');h.messages=[];}if(renderAfter){saveState();if(state.route==='messages')renderTeacherMessages();else renderStaffroom();}
   }
 
   async function sendTeacherHallMessage(){
     const h=teacherHallState();const body=String(document.getElementById('teacher-hall-input')?.value||'').trim();if(!h.selectedStudentId)return toast('Vyber žáka.','warn');if(!body)return toast('Napiš zprávu.','warn');
-    try{const {error}=await supabaseClient.rpc('teacher_hall_send_direct',{p_school_id:state.school.id,p_student_id:h.selectedStudentId,p_body:body});if(error)throw error;await loadTeacherHallStudent(h.selectedStudentId,{renderAfter:false});await refreshTeacherHallContacts({renderAfter:false});saveState();renderStaffroom();}catch(err){toast(authErrorText(err),'error');}
+    try{const {error}=await supabaseClient.rpc('teacher_hall_send_direct',{p_school_id:state.school.id,p_student_id:h.selectedStudentId,p_body:body});if(error)throw error;await loadTeacherHallStudent(h.selectedStudentId,{renderAfter:false});await refreshTeacherHallContacts({renderAfter:false});saveState();if(state.route==='messages')renderTeacherMessages();else renderStaffroom();}catch(err){toast(authErrorText(err),'error');}
   }
 
   function renderTeacherHallPanel(){
     const h=teacherHallState();if(!h.loaded&&!h.loading)queueMicrotask(()=>void refreshTeacherHallContacts());
     const selected=h.contacts.find(x=>String(x.student_id)===String(h.selectedStudentId))||null;
-    return `<section class="staffroom-student-hall"><div class="section-title"><div><div class="staffroom-kicker">CHODBA</div><h2>Soukromé zprávy se žáky</h2><div class="tiny muted">Učitel může psát žákům ze svých tříd. Žák odpovídá ve své Chodbě.</div></div><button class="btn secondary" data-action="teacher-hall-refresh">Obnovit</button></div><div class="teacher-hall-layout"><aside class="teacher-hall-contacts">${h.loading&&!h.loaded?'<div class="empty">Načítám…</div>':h.contacts.map(c=>`<button class="teacher-hall-contact ${selected&&String(selected.student_id)===String(c.student_id)?'active':''}" data-action="teacher-hall-select" data-id="${c.student_id}">${studentAvatarMarkup(c.avatar,'sm')}<span><strong>${esc(c.student_name)}</strong><small>${esc(c.class_names||'')}</small></span>${c.last_message_at?`<time>${esc(fmtDate(c.last_message_at))}</time>`:''}</button>`).join('')||'<div class="empty">Ve tvých třídách zatím nejsou žádní žáci.</div>'}</aside><section class="teacher-hall-chat">${selected?`<div class="hall-chat-head">${studentAvatarMarkup(selected.avatar,'md')}<div><h3>${esc(selected.student_name)}</h3><span>${esc(selected.class_names||'')}</span></div></div><div class="hall-messages">${studentHallMessageList(h.messages,true)}</div><div class="hall-compose"><textarea id="teacher-hall-input" maxlength="1000" placeholder="Napiš zprávu žákovi…"></textarea><button class="btn primary" data-action="teacher-hall-send">Odeslat</button></div>`:'<div class="hall-empty">Vyber žáka vlevo.</div>'}</section></div></section>`;
+    return `<section class="staffroom-student-hall"><div class="section-title"><div><div class="staffroom-kicker">SOUKROMÉ ZPRÁVY</div><h2>Žáci</h2><div class="tiny muted">Tady uvidíš soukromé zprávy od žáků a můžeš jim odpovědět.</div></div><button class="btn secondary" data-action="teacher-hall-refresh">Obnovit</button></div><div class="teacher-hall-layout"><aside class="teacher-hall-contacts">${h.loading&&!h.loaded?'<div class="empty">Načítám…</div>':h.contacts.map(c=>`<button class="teacher-hall-contact ${selected&&String(selected.student_id)===String(c.student_id)?'active':''}" data-action="teacher-hall-select" data-id="${c.student_id}">${studentAvatarMarkup(c.avatar,'sm')}<span><strong>${esc(c.student_name)}</strong><small>${esc(c.class_names||'')}</small></span>${c.last_message_at?`<time>${esc(fmtDate(c.last_message_at))}</time>`:''}</button>`).join('')||'<div class="empty">Ve tvých třídách zatím nejsou žádní žáci.</div>'}</aside><section class="teacher-hall-chat">${selected?`<div class="hall-chat-head">${studentAvatarMarkup(selected.avatar,'md')}<div><h3>${esc(selected.student_name)}</h3><span>${esc(selected.class_names||'')}</span></div></div><div class="hall-messages">${studentHallMessageList(h.messages,true)}</div>${hallEmojiPicker('teacher-hall-input')}<div class="hall-compose"><textarea id="teacher-hall-input" maxlength="1000" placeholder="Napiš zprávu žákovi…"></textarea><button class="btn primary" data-action="teacher-hall-send">Odeslat</button></div>`:'<div class="hall-empty">Vyber žáka vlevo.</div>'}</section></div></section>`;
+  }
+
+  function renderTeacherMessages(){
+    const notifyOn=hallNotificationEnabled();
+    const content=`<section class="teacher-private-messages-screen"><div class="section-title"><div><div class="staffroom-kicker">OBÁLKA</div><h1 class="pixel-title">Soukromé zprávy</h1><div class="tiny muted">Zprávy mezi učitelem a žáky ze svých tříd.</div></div><label class="hall-notify-toggle"><input id="hall-notify-toggle" type="checkbox" ${notifyOn?'checked':''}> Upozornění na nové zprávy</label></div>${renderTeacherHallPanel()}</section>`;
+    app.innerHTML=layout(content,'Soukromé zprávy');
   }
 
   function studentPortalLayout(body){
@@ -10162,6 +10351,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
           <div class="student-header-stat"><span>SCORING</span><strong class="point-value ${pointTone(score)}">${formatSignedNumber(score)} b.</strong></div>
           <div class="student-header-stat credits"><span>KREDITY</span><strong>${credits}</strong></div>
           <div class="session-chip student-session-chip">${studentAvatarMarkup(account.avatar||'student:s01','sm')}<span class="session-role">žák</span><span class="session-name">(${esc(name)})</span></div>
+          ${privateMailButton('student-private-messages')}
           <button class="btn secondary student-refresh-btn" data-action="student-refresh">Obnovit</button>
           <button class="icon-btn account-exit nav-logout-btn" data-action="logout" aria-label="Odhlásit se" title="Odhlásit se"><img src="assets/ui/nav-logout-door.png" alt="" aria-hidden="true"></button>
         </div>
@@ -10350,7 +10540,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
           ${studentHomeCard('results','home-grades.png','Moje výsledky','Známky, zkoušení a historie')}
           ${studentHomeCard('inventory','home-subjects.png','Inventář','Propustky, taháky a další vybavení')}
           ${studentHomeCard('profile','home-student-profile.svg','Můj profil','Avatar, škola, třídy a účet')}
-          ${studentHomeCard('hallway','home-hallway-chat.svg','Chodba','Soukromé zprávy, třídní a vlastní místnosti')}
+          ${studentHomeCard('hallway','home-hallway-chat.svg','Chodba','Soukromé zprávy, třídní a vlastní místnosti',hallUnreadCount()?String(hallUnreadCount()):'')}
         </div>
         <div class="arcade-footer student-home-footer"><span>Školní výzvy dávají kredity.</span><span class="footer-sep"></span><span>Kredity → scoring nebo hodnocení učitelů.</span><span class="footer-sep"></span><span>ZZ-01</span></div>
       </section>`;
@@ -10973,7 +11163,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     return `<span class="zz01-menu-glyph${ch==='/'?' zz01-menu-slash':''}" aria-hidden="true">${pixels}${accent}</span>`;
   }
   function menuPixelText(text){
-    return String(text||'').split(/\s+/).filter(Boolean).map(word=>`<span class="zz01-menu-word">${[...word].map(menuPixelGlyph).join('')}</span>`).join('');
+    return String(text||'').normalize('NFC').split(/\s+/).filter(Boolean).map(word=>`<span class="zz01-menu-word">${[...word].map(menuPixelGlyph).join('')}</span>`).join('');
   }
 
   function homeCard(action,icon,title,desc,unread=0){
@@ -14077,7 +14267,8 @@ body::after{
     queueMicrotask(syncBackgroundMusic);
     queueMicrotask(syncFooterSchool);
     if(!state.splashSeen) return renderSplash();
-    if(!state.authenticated) return renderLogin();
+    if(!state.authenticated){stopHallUnreadPolling();return renderLogin();}
+    queueMicrotask(startHallUnreadPolling);
     if(state.user?.role==='student') return renderStudentPortal();
     if(!state.onboardingDone) return renderOnboarding();
     if(!state.activeExam) queueMicrotask(showPendingBossFeedback);
@@ -14097,6 +14288,7 @@ body::after{
     if(state.route==='settings') return renderSettings();
     if(state.route==='admin') return renderAdmin();
     if(state.route==='staffroom') return renderStaffroom();
+    if(state.route==='messages') return renderTeacherMessages();
     if(state.route==='help') return renderHelp();
     state.route='home'; renderHome();
   }
@@ -14479,6 +14671,8 @@ body::after{
       filterStudentHallCandidates();
     }else if(e.target.id==='staffroom-notify-toggle'){
       setStaffroomNotifications(e.target.checked).then(()=>{ if(state.route==='staffroom')renderStaffroom(); });
+    }else if(e.target.id==='hall-notify-toggle'){
+      void setHallNotifications(e.target.checked);
     }
   });
 
@@ -14565,6 +14759,8 @@ body::after{
     else if(action==='student-avatar-set'){void setStudentPortalAvatar(btn.dataset.avatar);}
     else if(action==='student-hall-tab'){const h=studentHallState();h.tab=btn.dataset.tab==='rooms'?'rooms':'direct';saveState();renderStudentPortal();}
     else if(action==='student-hall-refresh'){void refreshStudentHallway();}
+    else if(action==='student-private-messages'){const h=studentHallState();h.tab=Number(state.ui?.hallDirectUnread||0)>0?'direct':(Number(state.ui?.hallRoomUnread||0)>0?'rooms':'direct');state.ui.studentPortalView='hallway';saveState();renderStudentPortal();void refreshStudentHallway();}
+    else if(action==='private-messages'){state.route='messages';saveState();renderTeacherMessages();void refreshTeacherHallContacts();}
     else if(action==='student-hall-peer'){void loadStudentHallPeer(btn.dataset.kind,btn.dataset.id);}
     else if(action==='student-hall-send-direct'){void sendStudentHallDirect();}
     else if(action==='student-hall-create-room'){openStudentHallCreateRoom();}
@@ -14573,6 +14769,11 @@ body::after{
     else if(action==='student-hall-send-room'){void sendStudentHallRoom();}
     else if(action==='student-hall-member'){void manageStudentHallMember(btn.dataset.room,btn.dataset.member,btn.dataset.memberAction);}
     else if(action==='student-hall-add-member'){void addStudentHallMember(btn.dataset.room,btn.dataset.member);}
+    else if(action==='student-hall-members-modal'){void openStudentHallMembersModal(btn.dataset.id);}
+    else if(action==='hall-emoji'){
+      const input=document.getElementById(btn.dataset.target||'');
+      if(input){const emoji=btn.dataset.emoji||'';const start=input.selectionStart??input.value.length;const end=input.selectionEnd??input.value.length;input.value=input.value.slice(0,start)+emoji+input.value.slice(end);input.focus();try{input.setSelectionRange(start+emoji.length,start+emoji.length)}catch(_){}}
+    }
     else if(action==='student-hall-leave-room'){void leaveStudentHallRoom(btn.dataset.id);}
     else if(action==='student-hall-delete-room'){confirmDeleteStudentHallRoom(btn.dataset.id,btn.dataset.name);}
     else if(action==='onboard-mode'){state.ui.onboardingMode=btn.dataset.mode;state.ui.selectedSchoolId=null;saveState();render();}
