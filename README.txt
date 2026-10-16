@@ -1,8 +1,9 @@
-ZZ-01 – nové žákovské hlavní menu
+ZZ-01 – sjednocení celkového scoringu žáka
 
-- stejné HTML/CSS tlačítka jako v učitelském hlavním menu
-- vlastní studentské pozadí assets/ui/student-home-bg.png
-- Školní výzvy, Scoring, Kreditní centrum, Moje výsledky, Inventář, Můj profil
-- odměny za testy se v UI jmenují kredity
-- Kreditní centrum spojuje použití kreditů do scoringu a hodnocení učitelů
-- detailní obrazovky mají návrat do hlavního menu
+- celkový scoring je dlouhodobý: trestné body ho snižují, body z testů ho zvyšují
+- scoring může být záporný, nulový i kladný
+- např. -18 + 20 bodů z testů = +2
+- po zkoušení se může resetovat pouze aktuální stav pravidel, ne celkový scoring
+- žák i učitel vidí stejný celkový scoring
+- pořadí třídy, školy a podium se počítají z celkového scoringu
+- backendová změna je již aplikována v Supabase
