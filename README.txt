@@ -1,8 +1,8 @@
-ZZ-01 – kladný i záporný žákovský scoring
+ZZ-01 – nové žákovské hlavní menu
 
-- body z testů nejsou samostatný scoring
-- žák je může přidat do stejného celkového scoringu, který vidí učitelé
-- scoring může být záporný, nulový i kladný
-- např. -3 + 5 testových bodů = +2
-- body lze místo toho použít na hodnocení učitele
-- backendová změna byla aplikována do Supabase
+- stejné HTML/CSS tlačítka jako v učitelském hlavním menu
+- vlastní studentské pozadí assets/ui/student-home-bg.png
+- Školní výzvy, Scoring, Kreditní centrum, Moje výsledky, Inventář, Můj profil
+- odměny za testy se v UI jmenují kredity
+- Kreditní centrum spojuje použití kreditů do scoringu a hodnocení učitelů
+- detailní obrazovky mají návrat do hlavního menu
