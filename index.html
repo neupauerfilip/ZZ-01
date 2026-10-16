@@ -10205,7 +10205,6 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     const rows=Array.isArray(state.ui?.teacherStudentChallenges)?state.ui.teacherStudentChallenges:[];
     const loading=!!state.ui?.teacherStudentChallengesLoading;
     if(!state.ui?.teacherStudentChallengesLoaded&&!loading)queueMicrotask(()=>void refreshTeacherStudentChallenges());
-    const classes=classesForCurrentTeacher().filter(c=>c.remoteId).slice().sort((a,b)=>String(a.displayName||'').localeCompare(String(b.displayName||''),'cs',{numeric:true}));
     const letters=['A','B','C','D'];
     const list=rows.map(ch=>{
       const isAbcd=ch.challenge_type==='abcd';
@@ -10214,10 +10213,10 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       const optionList=isAbcd?`<div class="teacher-abcd-preview">${letters.map((letter,i)=>`<div class="${correct===letter?'correct':''}"><strong>${letter}</strong> ${esc(options[i]||'')}</div>`).join('')}</div>`:'';
       return `<div class="teacher-student-challenge-row ${ch.active?'':'inactive'}"><div><strong>${esc(ch.title||'Výzva')} <span class="badge">${isAbcd?'ABCD':'TEXT'}</span></strong><div class="tiny muted">${esc(ch.class_name||'Celá škola')} · +${Number(ch.reward_points||0)} b. · pokusy ${Number(ch.attempts||0)} · správně ${Number(ch.correct_answers||0)}</div><div class="teacher-challenge-prompt">${esc(ch.prompt||'')}</div>${optionList}<div class="tiny muted">Správná odpověď: <strong>${esc(ch.answer||'')}</strong></div></div><button class="btn ${ch.active?'danger':'primary'}" data-action="toggle-student-learning-challenge" data-id="${ch.challenge_id}" data-active="${ch.active?'0':'1'}">${ch.active?'Vypnout':'Zapnout'}</button></div>`;
     }).join('');
-    const content=`<section class="pack-a-screen"><div class="pack-a-hero"><div><div class="pack-a-kicker">HERNÍ OBSAH PRO ŽÁKY</div><h1>Žákovské výzvy</h1><p>Hádanky a testy za kladné body. Nově můžeš vytvořit i klasický test se čtyřmi odpověďmi A–D.</p></div></div>
-      <section class="pixel-frame card student-challenge-admin-form"><h2>Nová výzva</h2><div class="student-challenge-admin-grid"><label>Typ výzvy<select id="teacher-challenge-type"><option value="abcd" selected>Test ABCD</option><option value="text">Krátká odpověď</option></select></label><label>Pro koho<select id="teacher-challenge-class"><option value="">Celá škola</option>${classes.map(c=>`<option value="${c.remoteId}">${esc(c.displayName)} — ${esc(c.schoolYear||'')}</option>`).join('')}</select></label><label>Název<input id="teacher-challenge-title" maxlength="80" placeholder="Např. Test týdne"></label><label>Odměna<input id="teacher-challenge-reward" type="number" min="1" max="20" value="3"></label><label class="wide">Otázka / zadání<textarea id="teacher-challenge-prompt" maxlength="1000" placeholder="Napiš otázku…"></textarea></label><div id="teacher-challenge-abcd" class="wide"><div class="teacher-abcd-options"><label>A<input id="teacher-challenge-option-a" maxlength="200" placeholder="Možnost A"></label><label>B<input id="teacher-challenge-option-b" maxlength="200" placeholder="Možnost B"></label><label>C<input id="teacher-challenge-option-c" maxlength="200" placeholder="Možnost C"></label><label>D<input id="teacher-challenge-option-d" maxlength="200" placeholder="Možnost D"></label></div><label style="margin-top:10px">Správná možnost<select id="teacher-challenge-correct"><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select></label></div><label id="teacher-challenge-text" class="wide" hidden>Správná odpověď<input id="teacher-challenge-answer" maxlength="200" placeholder="Krátká textová odpověď"></label></div><div class="tiny muted">Žák má na výzvu jeden pokus. U ABCD testu vybere jednu ze čtyř možností.</div><button class="btn primary" data-action="create-student-learning-challenge">Publikovat výzvu</button></section>
-      <section class="pixel-frame card"><div class="section-title"><div><h2>Moje výzvy</h2><div class="tiny muted">Aktivní výzvy se zobrazují žákům v jejich portálu.</div></div><button class="btn secondary" data-action="refresh-student-learning-challenges">Obnovit</button></div>${loading?'<div class="empty">Načítám…</div>':`<div class="teacher-student-challenge-list">${list||'<div class="empty">Zatím jsi nevytvořil(a) žádnou výzvu.</div>'}</div>`}</section>
-      <div class="arcade-footer"><span>ŽÁKOVSKÉ VÝZVY</span><span>ZZ-01</span></div></section>`;
+    const content=`<section class="pack-a-screen"><div class="pack-a-hero"><div><div class="pack-a-kicker">UČITELSKÝ PROFIL · DOBROVOLNÝ OBSAH</div><h1>Testy a hádanky pro žáky</h1><p>Každý učitel může vytvořit dobrovolný ABCD test nebo hádanku. Po publikování se výzva zobrazí všem žákům školy.</p></div></div>
+      <section class="pixel-frame card student-challenge-admin-form"><div class="section-title"><div><h2>Nový test / hádanka</h2><div class="tiny muted">Publikace: <strong>všichni žáci školy</strong>. Žák má na jednu výzvu jeden pokus.</div></div><span class="badge">CELÁ ŠKOLA</span></div><div class="student-challenge-admin-grid"><label>Typ výzvy<select id="teacher-challenge-type"><option value="abcd" selected>Test ABCD</option><option value="text">Hádanka / krátká odpověď</option></select></label><label>Odměna<input id="teacher-challenge-reward" type="number" min="1" max="20" value="3"></label><label class="wide">Název<input id="teacher-challenge-title" maxlength="80" placeholder="Např. Test týdne"></label><label class="wide">Otázka / zadání<textarea id="teacher-challenge-prompt" maxlength="1000" placeholder="Napiš otázku nebo hádanku…"></textarea></label><div id="teacher-challenge-abcd" class="wide"><div class="teacher-abcd-options"><label>A<input id="teacher-challenge-option-a" maxlength="200" placeholder="Možnost A"></label><label>B<input id="teacher-challenge-option-b" maxlength="200" placeholder="Možnost B"></label><label>C<input id="teacher-challenge-option-c" maxlength="200" placeholder="Možnost C"></label><label>D<input id="teacher-challenge-option-d" maxlength="200" placeholder="Možnost D"></label></div><label style="margin-top:10px">Správná možnost<select id="teacher-challenge-correct"><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select></label></div><label id="teacher-challenge-text" class="wide" hidden>Správná odpověď<input id="teacher-challenge-answer" maxlength="200" placeholder="Krátká textová odpověď"></label></div><div class="tiny muted">Správná odpověď přidá žákovi kladné body do herní peněženky. Ty pak může použít ve scoringu nebo na hodnocení učitelů.</div><button class="btn primary" data-action="create-student-learning-challenge">Publikovat celé škole</button></section>
+      <section class="pixel-frame card"><div class="section-title"><div><h2>Moje publikované testy a hádanky</h2><div class="tiny muted">Vidíš své výzvy; administrátor může spravovat i školní obsah. Starší výzvy cílené na třídu zůstávají zachované.</div></div><button class="btn secondary" data-action="refresh-student-learning-challenges">Obnovit</button></div>${loading?'<div class="empty">Načítám…</div>':`<div class="teacher-student-challenge-list">${list||'<div class="empty">Zatím jsi nevytvořil(a) žádný test ani hádanku.</div>'}</div>`}</section>
+      <div class="arcade-footer"><span>TESTY A HÁDANKY</span><span>ZZ-01</span></div></section>`;
     app.innerHTML=layout(content,'Žákovské výzvy');
   }
 
@@ -10234,7 +10233,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     const title=String(document.getElementById('teacher-challenge-title')?.value||'').trim();
     const prompt=String(document.getElementById('teacher-challenge-prompt')?.value||'').trim();
     const reward=Math.trunc(Number(document.getElementById('teacher-challenge-reward')?.value||0));
-    const classId=String(document.getElementById('teacher-challenge-class')?.value||'').trim()||null;
+    const classId=null; // Profil učitele publikuje nové výzvy všem žákům školy.
     if(title.length<3||prompt.length<3||reward<1||reward>20)return toast('Vyplň název, otázku a odměnu 1–20 bodů.','error');
     try{
       let error=null;
@@ -10275,7 +10274,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         ${homeCard('subjects','▤','Moje předměty','Předměty a jejich témata ke zkoušení')}
         ${homeCard('grades','▥','Známkování','Třída + předmět → známky → tisk / Excel')}
         ${homeCard('scoring','▲','Scoring / Přehledy','Žáci, celá škola a učitelé')}
-        ${homeCard('student-challenges','◆','Žákovské výzvy','Hádanky a krátké testy za kladné body')}
+        ${homeCard('student-challenges','◆','Testy a hádanky','Dobrovolné výzvy pro všechny žáky školy')}
         ${homeCard('staffroom','☕','Sborovna','Jednoduchý společný chat učitelů',staffroomUnreadCount())}
         ${homeCard('help','?','Nápověda','Jak Zkouškomat funguje a co může která role')}
       </div>
@@ -13229,6 +13228,10 @@ body::after{
           </div>
           <div class="settings-fields"><label>Jméno<input id="profile-name" value="${esc(state.user.name)}"></label><label>Přezdívka<input id="profile-nick" value="${esc(state.user.nickname)}"></label></div>
           <div class="settings-note">Vlastní obrázek se automaticky ořízne na čtverec a zmenší, aby zbytečně nezabíral místo.</div>
+          <div class="pixel-inset" style="margin-top:14px;padding:14px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center">
+            <div><strong>Testy a hádanky pro žáky</strong><div class="tiny muted" style="margin-top:5px">Každý schválený učitel může vytvořit dobrovolný ABCD test nebo hádanku. Nové výzvy se publikují všem žákům školy.</div></div>
+            <button class="btn primary" data-action="student-challenges">Vytvořit test / hádanku</button>
+          </div>
         </section>
 
         <section class="settings-card">
