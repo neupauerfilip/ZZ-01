@@ -5799,7 +5799,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 .student-panel{border:4px solid #14dce4;background:linear-gradient(180deg,#082838,#051923);box-shadow:inset 0 0 0 3px #064f65,6px 6px 0 #02070d;padding:14px}.student-panel-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px}.student-panel-head h2{margin:0;color:#fff5df;font-family:var(--pixel);font-size:1rem}.student-panel-head span{color:#20eef2;font-size:.72rem;font-weight:900}.student-inventory-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.student-inventory-card{padding:12px;border:3px solid #0b7d93;background:#061925}.student-inventory-card>strong{display:block;margin-bottom:9px;color:#fff4df}.student-inventory-card>div{display:flex;justify-content:space-between;padding:5px 0;border-top:1px solid #0d5362;color:#bcd7d8}.student-inventory-card b{color:#ffb316}.student-note{padding:12px;border:2px dashed #0d8296;color:#9fc3c5;text-align:center;font-size:.72rem}.student-topbar .btn{min-height:40px}
 @media(max-width:760px){.student-hero{grid-template-columns:1fr}.student-id-card{justify-self:start}.student-kpis{grid-template-columns:1fr 1fr}.student-inventory-grid{grid-template-columns:1fr}.student-topbar{align-items:flex-start}.student-topbar .nav-actions{flex-wrap:wrap}}
 </style>
-</head>
+\n<style id="zz01-student-test-compact-main">\n/* Kompaktní žákovský test: více otázek na obrazovce, malé volby, jasné potvrzení. */\n.student-open-test{margin-top:12px!important}\n.student-open-test-head{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:12px!important;align-items:start!important;padding-bottom:9px!important;margin-bottom:8px!important;border-bottom:2px solid #0b6f7c!important}\n.student-open-test-head h2{margin:2px 0 2px!important;font-size:1.05rem!important}\n.student-open-test-head p{margin:0!important;color:#91b7bf!important;font-size:.72rem!important}\n.student-test-question-list{display:grid!important;gap:6px!important}\n.student-test-question-row{border:2px solid #155f6d!important;background:#051c27!important;padding:7px 8px!important;box-shadow:2px 2px 0 #010a10!important}\n.student-test-question-row:focus-within{border-color:#26dfe8!important}\n.student-test-question-row.done{border-color:#416c74!important;background:#071a21!important}\n.student-test-qline{display:grid!important;grid-template-columns:30px minmax(0,1fr) auto!important;gap:7px!important;align-items:center!important;margin-bottom:6px!important}\n.student-test-qnum{display:grid!important;place-items:center!important;width:26px!important;height:26px!important;border:1px solid #1593a3!important;color:#36e3ec!important;font-family:var(--pixel)!important;font-size:.67rem!important}\n.student-test-qprompt{min-width:0!important;color:#fff4da!important;font-size:.86rem!important;line-height:1.25!important}\n.student-test-point{white-space:nowrap!important;color:#ffd15b!important;font-family:var(--pixel)!important;font-size:.61rem!important}\n.student-test-choices{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:5px!important}\n.student-test-choice{position:relative!important;display:grid!important;grid-template-columns:28px minmax(0,1fr) 18px!important;align-items:center!important;gap:6px!important;min-height:36px!important;padding:4px 6px!important;margin:0!important;border:1px solid #1a6672!important;background:#031821!important;color:#e7f8fa!important;cursor:pointer!important;user-select:none!important;transition:border-color .08s,background .08s,box-shadow .08s!important}\n.student-test-choice:hover{border-color:#26cbd6!important;background:#06222d!important}\n.student-test-choice input{position:absolute!important;opacity:0!important;width:1px!important;height:1px!important;margin:0!important;pointer-events:none!important}\n.student-test-choice-letter{display:grid!important;place-items:center!important;width:26px!important;height:26px!important;border:1px solid #1b9eac!important;background:#082833!important;color:#fff2d3!important;font-family:var(--pixel)!important;font-size:.68rem!important}\n.student-test-choice-text{min-width:0!important;overflow-wrap:anywhere!important;font-size:.78rem!important;line-height:1.2!important}\n.student-test-choice-check{opacity:0!important;color:#171006!important;font-weight:900!important;text-align:center!important}\n.student-test-choice:has(input:checked){border:2px solid #ff9b13!important;background:#322106!important;box-shadow:inset 0 0 0 1px #7f4500!important;padding:3px 5px!important}\n.student-test-choice:has(input:checked) .student-test-choice-letter{border-color:#fff0a0!important;background:#ff8c0b!important;color:#171006!important}\n.student-test-choice:has(input:checked) .student-test-choice-check{opacity:1!important;color:#ffd56c!important}\n.student-test-submit-bar{position:sticky!important;bottom:8px!important;z-index:8!important;margin-top:10px!important;padding:8px 10px!important;border:2px solid #ff9c18!important;background:rgba(36,25,10,.97)!important;display:flex!important;justify-content:space-between!important;gap:10px!important;align-items:center!important;box-shadow:0 4px 0 #01080d!important}\n.student-test-submit-bar>div{font-size:.72rem!important;color:#e8d7b2!important}.student-test-submit-bar strong{color:#fff2d4!important}.student-test-submit-bar span{color:#b79b6f!important}\n.student-test-submit-bar .btn{min-height:38px!important;padding:7px 12px!important}\n.student-test-submit-bar .btn:disabled{opacity:.42!important;filter:saturate(.4)!important;cursor:not-allowed!important}\n.student-test-review-answer{margin-top:3px!important;padding:5px 7px!important;border-left:2px solid #2fcbd6!important;background:#041a22!important;color:#bfeaf0!important;font-size:.75rem!important}\n.student-test-picker-row{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:8px!important;align-items:end!important}\n.student-test-picker-row select{min-height:42px!important}\n@media(max-width:900px){.student-test-choices{grid-template-columns:repeat(2,minmax(0,1fr))!important}}\n@media(max-width:560px){.student-open-test-head,.student-test-picker-row{grid-template-columns:1fr!important}.student-test-choices{grid-template-columns:1fr!important}.student-test-qline{grid-template-columns:28px minmax(0,1fr)!important}.student-test-point{grid-column:2!important}.student-test-submit-bar{position:static!important;align-items:stretch!important;flex-direction:column!important}.student-test-submit-bar .btn{width:100%!important}}\n</style>\n</head>
 <body>
   <div class="crt-overlay" aria-hidden="true"></div>
   <div id="app" class="app-shell" aria-live="polite"></div>
@@ -9797,22 +9797,47 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     }catch(err){toast(authErrorText(err),'error');}
   }
 
+  function updateStudentTestAnswerProgress(challengeId){
+    const challenge=(state.studentPortal?.challenges||[]).find(ch=>String(ch.challenge_id)===String(challengeId));
+    if(!challenge||challenge.challenge_type!=='test')return;
+    const total=Array.isArray(challenge.questions)?challenge.questions.length:0;
+    const answered=document.querySelectorAll(`input[data-test-answer="${challengeId}"]:checked`).length;
+    const progress=document.getElementById('student-test-progress');
+    if(progress)progress.textContent=`Odpovězeno ${answered}/${total}`;
+    const submit=document.querySelector(`[data-action="student-challenge-submit"][data-id="${challengeId}"]`);
+    if(submit)submit.disabled=answered!==total || total===0;
+  }
+
+  async function submitStudentLearningTestAnswers(challengeId,answers,total){
+    try{
+      closeModal();
+      const {data,error}=await supabaseClient.rpc('student_submit_learning_test',{p_session_token:studentPortalSessionToken(),p_challenge_id:challengeId,p_answers:answers});
+      if(error)throw error;
+      const row=studentPortalRows(data)[0]||{};
+      await refreshStudentPortal();saveState();render();
+      toast(`Test hotový: ${Number(row.correct_count||0)}/${Number(row.total_questions||total)} správně · +${Number(row.points_awarded||0)} b.`);
+    }catch(err){toast(authErrorText(err),'error');}
+  }
+
   async function submitStudentLearningChallenge(challengeId){
     const challenge=(state.studentPortal?.challenges||[]).find(ch=>ch.challenge_id===challengeId)||null;
     if(!challenge)return;
-    try{
-      if(challenge.challenge_type==='test'){
-        const questions=Array.isArray(challenge.questions)?challenge.questions:[];
-        const answers=questions.map((_,i)=>String(document.querySelector(`input[name="student-test-${challengeId}-${i}"]:checked`)?.value||'').trim().toUpperCase());
-        if(!questions.length||answers.some(x=>!x))return toast('Odpověz na všechny otázky testu.','warn');
-        const {data,error}=await supabaseClient.rpc('student_submit_learning_test',{p_session_token:studentPortalSessionToken(),p_challenge_id:challengeId,p_answers:answers});
-        if(error)throw error;
-        const row=studentPortalRows(data)[0]||{};
-        await refreshStudentPortal();saveState();render();
-        toast(`Test hotový: ${Number(row.correct_count||0)}/${Number(row.total_questions||questions.length)} správně · +${Number(row.points_awarded||0)} b.`);
-        return;
-      }
+    if(challenge.challenge_type==='test'){
+      const questions=Array.isArray(challenge.questions)?challenge.questions:[];
+      const answers=questions.map((_,i)=>String(document.querySelector(`input[name="student-test-${challengeId}-${i}"]:checked`)?.value||'').trim().toUpperCase());
+      if(!questions.length||answers.some(x=>!x))return toast('Odpověz na všechny otázky testu.','warn');
+      modal({
+        title:'Odevzdat celý test?',
+        body:`<p>Máš vyplněno <strong>${questions.length}/${questions.length}</strong> otázek.</p><p class="muted">Po potvrzení už odpovědi nepůjdou změnit. Za každou správnou odpověď získáš +1 bod.</p>`,
+        actions:[
+          {label:'Ještě zkontrolovat',className:'secondary'},
+          {label:'Ano, odevzdat test',className:'primary',onClick:()=>{void submitStudentLearningTestAnswers(challengeId,answers,questions.length);}}
+        ]
+      });
+      return;
+    }
 
+    try{
       let answer='';
       if(challenge.challenge_type==='abcd'){
         const selected=document.querySelector(`input[name="student-challenge-choice-${challengeId}"]:checked`);
@@ -9901,12 +9926,12 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
           if(done){
             const correct=String(q.correct||'').toUpperCase();
             const correctText=letters.includes(correct)?String(opts[letters.indexOf(correct)]||''):'';
-            return `<section class="student-test-question-card done"><div class="student-test-question-head"><span>OTÁZKA ${i+1}/${total}</span></div><h3>${esc(q.prompt||'Otázka')}</h3><div class="student-test-review-answer">Správná odpověď: <strong>${esc(correct)}${correctText?` — ${esc(correctText)}`:''}</strong></div></section>`;
+            return `<section class="student-test-question-row done"><div class="student-test-qline"><span class="student-test-qnum">${i+1}.</span><strong class="student-test-qprompt">${esc(q.prompt||'Otázka')}</strong><span class="student-test-point">+1 b.</span></div><div class="student-test-review-answer">Správná odpověď: <strong>${esc(correct)}${correctText?` — ${esc(correctText)}`:''}</strong></div></section>`;
           }
-          return `<section class="student-test-question-card"><div class="student-test-question-head"><span>OTÁZKA ${i+1}/${total}</span><span>+1 BOD</span></div><h3>${esc(q.prompt||'Otázka')}</h3><div class="student-test-options">${letters.map((letter,oi)=>`<label class="student-test-option"><input type="radio" name="student-test-${selected.challenge_id}-${i}" value="${letter}"><span class="student-test-letter">${letter}</span><span class="student-test-option-text">${esc(opts[oi]||'')}</span></label>`).join('')}</div></section>`;
+          return `<section class="student-test-question-row"><div class="student-test-qline"><span class="student-test-qnum">${i+1}.</span><strong class="student-test-qprompt">${esc(q.prompt||'Otázka')}</strong><span class="student-test-point">+1 b.</span></div><div class="student-test-choices">${letters.map((letter,oi)=>`<label class="student-test-choice"><input type="radio" data-test-answer="${selected.challenge_id}" name="student-test-${selected.challenge_id}-${i}" value="${letter}"><span class="student-test-choice-letter">${letter}</span><span class="student-test-choice-text">${esc(opts[oi]||'')}</span><span class="student-test-choice-check">✓</span></label>`).join('')}</div></section>`;
         }).join('');
         const result=done?`<div class="student-test-result ${gained>0?'success':'neutral'}"><strong>${Number(selected.correct_count||0)}/${total} správně</strong><span>+${gained} bodů</span></div>`:'';
-        opened=`<section class="student-panel student-open-test"><div class="student-open-test-head"><div><div class="student-kicker">DOBROVOLNÝ TEST · ${esc(selected.teacher_name||'Učitel')}</div><h2>${esc(selected.title||'Test')}</h2><p>${total} otázek · každá správná odpověď = +1 bod · jeden pokus</p></div><button class="btn secondary" data-action="student-test-close">Zavřít test</button></div>${result}<div class="student-test-question-list">${questionHtml}</div>${done?'':`<div class="student-test-submit-bar"><div>Vyplň všechny otázky a potom test odevzdej.</div><button class="btn primary" data-action="student-challenge-submit" data-id="${selected.challenge_id}">Odevzdat celý test</button></div>`}</section>`;
+        opened=`<section class="student-panel student-open-test"><div class="student-open-test-head"><div><div class="student-kicker">DOBROVOLNÝ TEST · ${esc(selected.teacher_name||'Učitel')}</div><h2>${esc(selected.title||'Test')}</h2><p>${total} otázek · každá správná odpověď = +1 bod · odpověď můžeš před odevzdáním změnit</p></div><button class="btn secondary" data-action="student-test-close">Zavřít test</button></div>${result}<div class="student-test-question-list">${questionHtml}</div>${done?'':`<div class="student-test-submit-bar"><div><strong id="student-test-progress">Odpovězeno 0/${total}</strong><span> Odevzdání ještě jednou potvrdíš.</span></div><button class="btn primary" data-action="student-challenge-submit" data-id="${selected.challenge_id}" disabled>Odevzdat celý test</button></div>`}</section>`;
       }
 
       const selector=tests.length?`<section class="student-panel student-test-picker"><div class="student-panel-head"><div><h2>Dobrovolné testy</h2><span>Vyber test, který chceš otevřít</span></div><span>${tests.filter(t=>!t.attempted).length} k vyplnění</span></div><div class="student-test-picker-row"><select id="student-test-select"><option value="">— Vyber test —</option>${selectorOptions}</select><button class="btn primary" data-action="student-test-open">Otevřít test</button></div><div class="student-test-picker-help">U každého testu vidíš autora. Testy nejsou povinné a neovlivňují klasifikaci.</div></section>`:`<section class="student-panel"><div class="empty">Učitelé zatím nevložili žádný aktivní test.</div></section>`;
@@ -13939,6 +13964,8 @@ body::after{
         if(p)p.textContent=present; if(a)a.textContent=absent;
         const go=document.querySelector('.exam-roster-footer .exam-continue'); if(go)go.disabled=!present;
       }else renderPreserveScroll();
+    }else if(e.target.matches('input[data-test-answer]')){
+      updateStudentTestAnswerProgress(e.target.dataset.testAnswer);
     }else if(e.target.id==='only-points'){
       state.ui.onlyPoints=e.target.checked; render();
     }else if(e.target.id==='wheel-subject'){

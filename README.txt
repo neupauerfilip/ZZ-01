@@ -1,15 +1,14 @@
-ZZ-01 – dobrovolné testy, výběr testu a čistší žákovská stránka
+ZZ-01 – kompaktní žákovské testy + oprava hodnocení učitelů
 
-Změny:
-- položka Testy byla odstraněna z hlavního menu učitele
-- testy jsou dostupné pouze z Nastavení → Můj profil → Dobrovolné testy pro žáky
-- učitel vytváří pouze víceotázekové ABCD testy
-- každá správná odpověď = +1 kladný bod
-- test se publikuje všem žákům školy
-- žák na kartě Testy nejdřív vybírá test ze seznamu a až potom se test otevře
-- u každého testu je uveden jeho autor
-- otázky a odpovědi jsou zobrazené jako samostatné přehledné karty
-- textové hádanky jsou v této verzi skryté
-- získané body lze použít do žákovského scoringu nebo na hodnocení učitele
+Frontend:
+- otázky jsou kompaktní řádky
+- odpovědi A–D jsou vedle sebe na desktopu, 2x2 na menších displejích
+- výrazné zvýraznění zvolené odpovědi
+- odevzdání je povoleno až po vyplnění všech otázek
+- před finálním odevzdáním se zobrazí potvrzovací dialog
+- průběžně se ukazuje počet zodpovězených otázek
 
-Backendové změny pro zobrazení pouze testů byly již aplikovány do produkčního Supabase projektu.
+Backend:
+- v Supabase byla opravena chyba "column reference available_points is ambiguous"
+  ve funkci student_cast_teacher_feedback
+- stejným způsobem byla preventivně opravena i funkce student_invest_game_score
