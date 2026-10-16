@@ -5821,6 +5821,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     }
   };
   const APP_VERSION = 'ZZ-01 / EXAM SCENE E / BAKED FRAMES';
+  // STUDENT POINTS SYNC V1 active.
   // SYNC V2: server-first bootstrap + differential teacher subject links.
   const app = document.getElementById('app');
   const toastRoot = document.getElementById('toast-root');
@@ -5957,7 +5958,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     remoteSchoolStructureTimer=setTimeout(()=>{remoteSchoolStructureTimer=null;void syncSupabaseSchoolStructure();},delay);
   }
   function localStudentDefaults(){
-    return {active:true,ruleStates:{},collectedPoints:0,positivePoints:0,lockerPointAdjust:0,subjectInventories:{},passCount:0,cheatCount:0,coffeeCount:0,cheatSheetCount:0,examsCountPeriod:0,lastExamAt:0};
+    return {active:true,ruleStates:{},collectedPoints:0,positivePoints:0,lockerPointAdjust:0,pointBalance:null,subjectInventories:{},passCount:0,cheatCount:0,coffeeCount:0,cheatSheetCount:0,examsCountPeriod:0,lastExamAt:0};
   }
   function remoteClassByClientKey(rows){ return new Map((rows||[]).map(r=>[r.client_key,r])); }
   function remoteStudentByClientKey(rows){ return new Map((rows||[]).map(r=>[r.client_key,r])); }
@@ -6490,6 +6491,203 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     }
   }
 
+  // STUDENT POINTS SYNC V1 — append-only state snapshots in Supabase.
+  let remoteStudentPointSyncBusy=false;
+  let remoteStudentPointSyncQueued=false;
+  let remoteStudentPointTimer=null;
+
+  function pointSnapshotContext(student,{classId=null,subject=null}={}){
+    const candidateClassId=classId??state.activeExam?.classId??state.examFlow?.classId??classesForStudent(student?.id||'')?.[0]?.id??'';
+    const candidateSubject=subject??state.activeExam?.subject??state.examFlow?.subject??'';
+    return {classId:String(candidateClassId||''),subject:String(candidateSubject||'')};
+  }
+
+  function pointSnapshotMeaningful(student){
+    if(!student)return false;
+    return Number(student.collectedPoints||0)!==0
+      || Number(student.positivePoints||0)!==0
+      || Number(student.lockerPointAdjust||0)!==0
+      || currentPointBalance(student)!==0
+      || Object.values(student.ruleStates||{}).some(Boolean);
+  }
+
+  function scheduleSupabaseStudentPointSync(delay=250){
+    if(!remoteSchoolStructureEnabled()) return;
+    if(remoteStudentPointTimer) clearTimeout(remoteStudentPointTimer);
+    remoteStudentPointTimer=setTimeout(()=>{
+      remoteStudentPointTimer=null;
+      void syncSupabaseStudentPoints().catch(err=>console.error('Student point sync failed',err));
+    },delay);
+  }
+
+  function queueStudentPointSnapshot(student,reason='point_update',context={}){
+    if(!student)return null;
+    state.ui=state.ui||{};
+    state.ui.pendingStudentPointSnapshots=Array.isArray(state.ui.pendingStudentPointSnapshots)?state.ui.pendingStudentPointSnapshots:[];
+    const ctx=pointSnapshotContext(student,context);
+    const snapshot={
+      id:uid('pt'),
+      teacherId:state.user?.id||'',
+      studentId:student.id,
+      at:now(),
+      reason:String(reason||'point_update'),
+      classId:ctx.classId,
+      subject:ctx.subject,
+      pointBalance:Math.trunc(Number(currentPointBalance(student))||0),
+      collectedPoints:Number(student.collectedPoints||0),
+      positivePoints:Math.max(0,Number(student.positivePoints||0)),
+      lockerPointAdjust:Number(student.lockerPointAdjust||0),
+      ruleStates:{...(student.ruleStates||{})}
+    };
+    state.ui.pendingStudentPointSnapshots.push(snapshot);
+    saveState();
+    scheduleSupabaseStudentPointSync();
+    return snapshot;
+  }
+
+  async function pushPendingStudentPointSnapshots(){
+    if(!remoteSchoolStructureEnabled()) return true;
+    state.ui=state.ui||{};
+    const pending=Array.isArray(state.ui.pendingStudentPointSnapshots)?state.ui.pendingStudentPointSnapshots:[];
+    if(!pending.length)return true;
+
+    const schoolId=state.school.id;
+    const {data:sessionData,error:sessionError}=await supabaseClient.auth.getSession();
+    if(sessionError) throw sessionError;
+    const teacherId=sessionData?.session?.user?.id;
+    if(!teacherId) throw new Error('Chybí přihlášený Supabase uživatel.');
+
+    const mine=pending.filter(x=>x?.teacherId===teacherId);
+    if(!mine.length)return true;
+
+    const [studentsRes,classesRes,subjectsRes,existingRes]=await Promise.all([
+      supabaseClient.from('students').select('id,client_key').eq('school_id',schoolId),
+      supabaseClient.from('school_classes').select('id,client_key').eq('school_id',schoolId),
+      supabaseClient.from('subjects').select('id,name').eq('school_id',schoolId),
+      supabaseClient.from('student_point_events').select('client_key').eq('school_id',schoolId)
+    ]);
+    const failed=[studentsRes,classesRes,subjectsRes,existingRes].find(r=>r.error);
+    if(failed) throw failed.error;
+
+    const studentMap=new Map((studentsRes.data||[]).map(r=>[r.client_key,r.id]));
+    const classMap=new Map((classesRes.data||[]).map(r=>[r.client_key,r.id]));
+    const subjectMap=new Map((subjectsRes.data||[]).map(r=>[r.name,r.id]));
+    const existingKeys=new Set((existingRes.data||[]).map(r=>r.client_key).filter(Boolean));
+    const completedKeys=new Set(mine.filter(x=>existingKeys.has(x.id)).map(x=>x.id));
+    const syncable=mine.filter(x=>!existingKeys.has(x.id) && studentMap.has(x.studentId));
+
+    if(syncable.length){
+      const rows=syncable.map(x=>({
+        school_id:schoolId,
+        client_key:x.id,
+        student_id:studentMap.get(x.studentId),
+        class_id:x.classId?classMap.get(x.classId)||null:null,
+        subject_id:x.subject?subjectMap.get(x.subject)||null:null,
+        points:Math.trunc(Number(x.pointBalance)||0),
+        source:String(x.reason||'point_update'),
+        note:'',
+        metadata:{
+          snapshot_version:1,
+          point_balance:Math.trunc(Number(x.pointBalance)||0),
+          collected_points:Number(x.collectedPoints||0),
+          positive_points:Math.max(0,Number(x.positivePoints||0)),
+          locker_point_adjust:Number(x.lockerPointAdjust||0),
+          rule_states:(x.ruleStates&&typeof x.ruleStates==='object')?x.ruleStates:{},
+          local_student_key:x.studentId
+        },
+        created_by:teacherId,
+        occurred_at:examHistoryIso(x.at)||new Date().toISOString()
+      }));
+      const {error}=await supabaseClient.from('student_point_events').insert(rows);
+      if(error) throw error;
+      syncable.forEach(x=>completedKeys.add(x.id));
+    }
+
+    if(completedKeys.size){
+      state.ui.pendingStudentPointSnapshots=pending.filter(x=>!completedKeys.has(x.id));
+      saveState();
+    }
+    return true;
+  }
+
+  async function pullSupabaseStudentPoints(){
+    if(!remoteSchoolStructureEnabled()) return new Set();
+    const schoolId=state.school.id;
+    const [eventsRes,studentsRes]=await Promise.all([
+      supabaseClient.from('student_point_events')
+        .select('client_key,student_id,points,source,metadata,created_by,occurred_at,created_at')
+        .eq('school_id',schoolId)
+        .order('occurred_at',{ascending:true})
+        .order('created_at',{ascending:true}),
+      supabaseClient.from('students').select('id,client_key').eq('school_id',schoolId)
+    ]);
+    if(eventsRes.error) throw eventsRes.error;
+    if(studentsRes.error) throw studentsRes.error;
+
+    const localKeyByRemoteId=new Map((studentsRes.data||[]).map(r=>[r.id,r.client_key]));
+    const latestByLocalKey=new Map();
+    (eventsRes.data||[]).forEach(row=>{
+      const meta=(row.metadata&&typeof row.metadata==='object')?row.metadata:{};
+      if(Number(meta.snapshot_version)!==1)return;
+      const localKey=localKeyByRemoteId.get(row.student_id)||meta.local_student_key;
+      if(localKey)latestByLocalKey.set(localKey,row);
+    });
+
+    latestByLocalKey.forEach((row,localKey)=>{
+      const student=studentById(localKey); if(!student)return;
+      const meta=(row.metadata&&typeof row.metadata==='object')?row.metadata:{};
+      student.pointBalance=Math.trunc(Number(meta.point_balance??row.points)||0);
+      student.collectedPoints=Number(meta.collected_points||0);
+      student.positivePoints=Math.max(0,Number(meta.positive_points||0));
+      student.lockerPointAdjust=Number(meta.locker_point_adjust||0);
+      student.ruleStates=(meta.rule_states&&typeof meta.rule_states==='object'&&!Array.isArray(meta.rule_states))?{...meta.rule_states}:{};
+      student.pointStateRemoteAt=Date.parse(row.occurred_at||row.created_at||'')||0;
+    });
+
+    state.ui=state.ui||{};
+    state.ui.studentPointsRemoteSchoolId=schoolId;
+    state.ui.studentPointsLastSyncAt=now();
+    state.ui.studentPointsSyncError=false;
+    saveState();
+    return new Set(latestByLocalKey.keys());
+  }
+
+  async function syncSupabaseStudentPoints({bootstrap=false}={}){
+    if(!remoteSchoolStructureEnabled()) return false;
+    if(remoteStudentPointSyncBusy){remoteStudentPointSyncQueued=true;return false;}
+    remoteStudentPointSyncBusy=true;
+    try{
+      await pushPendingStudentPointSnapshots();
+      let remoteKeys=await pullSupabaseStudentPoints();
+
+      if(bootstrap){
+        let queued=false;
+        for(const student of state.students||[]){
+          if(remoteKeys.has(student.id) || !pointSnapshotMeaningful(student))continue;
+          queueStudentPointSnapshot(student,'bootstrap');
+          queued=true;
+        }
+        if(queued){
+          await pushPendingStudentPointSnapshots();
+          remoteKeys=await pullSupabaseStudentPoints();
+        }
+      }
+      return true;
+    }catch(err){
+      console.error('Student point sync failed',err);
+      state.ui=state.ui||{};
+      state.ui.studentPointsSyncError=true;
+      saveState();
+      return false;
+    }finally{
+      remoteStudentPointSyncBusy=false;
+      if(remoteStudentPointSyncQueued){
+        remoteStudentPointSyncQueued=false;
+        scheduleSupabaseStudentPointSync(150);
+      }
+    }
+  }
+
   async function initializeSupabaseSchoolStructure(){
     if(!remoteSchoolStructureEnabled()) return;
     state.ui=state.ui||{};
@@ -6500,6 +6698,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     if(firstForSchool){
       await pullSupabaseSchoolStructure();
       await syncSupabaseExamHistory();
+      await syncSupabaseStudentPoints({bootstrap:true});
       return;
     }
 
@@ -6507,6 +6706,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     if(state.ui.schoolStructureDirty===true) await syncSupabaseSchoolStructure();
     await pullSupabaseSchoolStructure();
     await syncSupabaseExamHistory();
+    await syncSupabaseStudentPoints({bootstrap:true});
   }
 
   async function refreshSupabaseSchoolTeachers(){
@@ -6850,7 +7050,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   const demoStudents = () => [
     'Adam Král','Barbora Malá','Cyril Novotný','Daniela Pokorná','Eliška Svobodová','Filip Horák','Gabriela Černá','Hynek Dvořák','Irena Veselá','Jakub Beneš','Karolína Blažková','Lukáš Procházka'
   ].map((name,i)=>({
-    id:`st_${i+1}`,name,active:true,ruleStates:{},collectedPoints:0,positivePoints:0,lockerPointAdjust:0,subjectInventories:{},passCount:0,cheatCount:0,coffeeCount:0,cheatSheetCount:0,examsCountPeriod:i%3,lastExamAt:0
+    id:`st_${i+1}`,name,active:true,ruleStates:{},collectedPoints:0,positivePoints:0,lockerPointAdjust:0,pointBalance:null,subjectInventories:{},passCount:0,cheatCount:0,coffeeCount:0,cheatSheetCount:0,examsCountPeriod:i%3,lastExamAt:0
   }));
 
   const demoSchoolDirectory = () => [
@@ -7452,7 +7652,9 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     },0);
   }
   function currentPointBalance(student){
-    return baseRulePoints(student)+Number(student.lockerPointAdjust||0);
+    const explicit=student?.pointBalance;
+    if(explicit!==undefined&&explicit!==null&&Number.isFinite(Number(explicit)))return Number(explicit);
+    return baseRulePoints(student)+Number(student?.lockerPointAdjust||0);
   }
   function currentPenaltyPoints(student){
     return Math.max(0,-currentPointBalance(student));
@@ -7461,15 +7663,32 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   function currentPoints(student){
     return currentPenaltyPoints(student);
   }
-  function applyLockerPoints(student,delta){
+  function setStudentRuleState(student,rule,active,reason='rule_toggle'){
+    if(!student||!rule)return false;
+    student.ruleStates=student.ruleStates||{};
+    const was=!!student.ruleStates[rule.id];
+    const next=!!active;
+    if(was===next)return false;
     const before=currentPointBalance(student);
-    student.lockerPointAdjust=Number(student.lockerPointAdjust||0)+Number(delta||0);
+    student.ruleStates[rule.id]=next;
+    const delta=next?Number(rule.points||0):-Number(rule.points||0);
+    student.pointBalance=before+delta;
+    if(next)student.collectedPoints=Number(student.collectedPoints||0)+Number(rule.points||0);
+    queueStudentPointSnapshot(student,reason);
+    return true;
+  }
+  function applyLockerPoints(student,delta){
+    const before=currentPointBalance(student),change=Number(delta||0);
+    student.lockerPointAdjust=Number(student.lockerPointAdjust||0)+change;
+    student.pointBalance=before+change;
     const after=currentPointBalance(student);
+    if(after!==before)queueStudentPointSnapshot(student,'locker_adjust');
     return {before,after,applied:after-before};
   }
   function addStudentPositivePoints(student,delta=1){
     const amount=Math.max(0,Number(delta||0));
     student.positivePoints=Math.max(0,Number(student.positivePoints||0)+amount);
+    if(amount>0)queueStudentPointSnapshot(student,'positive_points');
     return amount;
   }
   function currentTeacherRecord(){ return state.school?.teachers?.find(t=>t.id===state.user.id)||null; }
@@ -9857,12 +10076,11 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     if(was && r.system){
       modal({title:'Potvrzení odevzdání',body:`<p>Opravdu žák <strong>${esc(s.name)}</strong> práci odevzdal?</p>`,actions:[
         {label:'Ne',className:'secondary'},
-        {label:'Ano',className:'primary',onClick:()=>{s.ruleStates[r.id]=false;saveState();toast('Pravidlo označeno jako vyřešené.');renderPreserveScroll();}}
+        {label:'Ano',className:'primary',onClick:()=>{setStudentRuleState(s,r,false,'system_rule_resolved');saveState();toast('Pravidlo označeno jako vyřešené.');renderPreserveScroll();}}
       ]});
       return;
     }
-    s.ruleStates[r.id]=!was;
-    if(!was)s.collectedPoints+=(Number(r.points)||0);
+    setStudentRuleState(s,r,!was,'rule_toggle');
     saveState();
     renderPreserveScroll();
   }
@@ -10701,8 +10919,15 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     scheduleSupabaseExamHistorySync();
     s.examsCountPeriod=(s.examsCountPeriod||0)+1;
     s.lastExamAt=endedAt;
-    Object.keys(s.ruleStates||{}).forEach(rid=>{ if(!ruleById(rid)?.system) s.ruleStates[rid]=false; });
+    const pointBalanceBeforeExamReset=currentPointBalance(s);
+    const lockerAdjustBeforeExamReset=Number(s.lockerPointAdjust||0);
+    let rulesResetAfterExam=false;
+    Object.keys(s.ruleStates||{}).forEach(rid=>{ if(s.ruleStates[rid]&&!ruleById(rid)?.system){s.ruleStates[rid]=false;rulesResetAfterExam=true;} });
     s.lockerPointAdjust=0;
+    s.pointBalance=baseRulePoints(s);
+    if(rulesResetAfterExam||lockerAdjustBeforeExamReset!==0||s.pointBalance!==pointBalanceBeforeExamReset){
+      queueStudentPointSnapshot(s,'exam_reset',{classId:c.id,subject:e.subject});
+    }
 
     state.ui.lastExamResult={
       recordId:record.id,
@@ -12315,12 +12540,11 @@ body::after{
     if(was && r.system){
       modal({title:'Potvrzení odevzdání',body:`<p>Opravdu žák <strong>${esc(s.name)}</strong> práci odevzdal?</p>`,actions:[
         {label:'Ne',className:'secondary',onClick:()=>showStudentRules(studentId)},
-        {label:'Ano',className:'primary',onClick:()=>{s.ruleStates[ruleId]=false;saveState();toast('Pravidlo označeno jako vyřešené.');showStudentRules(studentId);}}
+        {label:'Ano',className:'primary',onClick:()=>{setStudentRuleState(s,r,false,'system_rule_resolved');saveState();toast('Pravidlo označeno jako vyřešené.');showStudentRules(studentId);}}
       ]});
       return;
     }
-    s.ruleStates[ruleId]=!was;
-    if(!was){ s.collectedPoints+=(Number(r.points)||0); }
+    setStudentRuleState(s,r,!was,'rule_toggle');
     button?.classList.toggle('on',!was);
     saveState();
     showStudentRules(studentId);
@@ -12386,9 +12610,17 @@ body::after{
           {label:'Zpět',className:'secondary',onClick:()=>editRuleModal(id,{name,description,points:signedPoints})},
           {label:'Potvrdit',className:signedPoints<0?'danger':'primary',onClick:()=>{
             if(r){
+              const oldPoints=Number(r.points||0);
+              const affected=(state.students||[]).filter(s=>s.ruleStates?.[r.id]).map(s=>({student:s,before:currentPointBalance(s)}));
               r.name=name;
               r.description=description;
               r.points=signedPoints;
+              if(signedPoints!==oldPoints){
+                affected.forEach(({student,before})=>{
+                  student.pointBalance=before+(signedPoints-oldPoints);
+                  queueStudentPointSnapshot(student,'rule_value_changed');
+                });
+              }
             }else{
               state.rules.push({id:uid('rule'),name,description,points:signedPoints,editable:true,deletable:true,active:true,system:false});
             }
@@ -12403,7 +12635,13 @@ body::after{
 
   function deleteRule(id){
     const r=ruleById(id); if(!r||!r.deletable) return;
-    modal({title:'Smazat pravidlo?',body:`<p>Pravidlo <strong>${esc(r.name)}</strong> bude odstraněno z aktuální sady. Historické nasbírané body se nemažou.</p>`,actions:[{label:'Ne',className:'secondary',onClick:showRulesManager},{label:'Ano, smazat',className:'danger',onClick:()=>{state.rules=state.rules.filter(x=>x.id!==id);state.students.forEach(s=>delete s.ruleStates[id]);saveState();showRulesManager();}}]});
+    modal({title:'Smazat pravidlo?',body:`<p>Pravidlo <strong>${esc(r.name)}</strong> bude odstraněno z aktuální sady. Historické nasbírané body se nemažou.</p>`,actions:[{label:'Ne',className:'secondary',onClick:showRulesManager},{label:'Ano, smazat',className:'danger',onClick:()=>{
+      const affected=(state.students||[]).filter(s=>s.ruleStates?.[id]).map(s=>({student:s,before:currentPointBalance(s)}));
+      state.rules=state.rules.filter(x=>x.id!==id);
+      state.students.forEach(s=>delete s.ruleStates[id]);
+      affected.forEach(({student,before})=>{student.pointBalance=before-Number(r.points||0);queueStudentPointSnapshot(student,'rule_deleted');});
+      saveState();showRulesManager();
+    }}]});
   }
 
   function showOtherStudentChooser(){
@@ -12576,7 +12814,7 @@ body::after{
       const name=document.getElementById('new-student-name').value.trim();
       if(!name)return toast('Zadej jméno žáka.','error');
       const createBtn=document.getElementById('create-student');if(createBtn){createBtn.disabled=true;createBtn.textContent='Ukládám…';}
-      const st={id:uid('st'),name,active:true,ruleStates:{},collectedPoints:0,positivePoints:0,lockerPointAdjust:0,subjectInventories:{},passCount:0,cheatCount:0,coffeeCount:0,cheatSheetCount:0,examsCountPeriod:0,lastExamAt:0};
+      const st={id:uid('st'),name,active:true,ruleStates:{},collectedPoints:0,positivePoints:0,lockerPointAdjust:0,pointBalance:null,subjectInventories:{},passCount:0,cheatCount:0,coffeeCount:0,cheatSheetCount:0,examsCountPeriod:0,lastExamAt:0};
       state.students.push(st);c.studentIds.push(st.id);noteEnrollmentAdded(c.id,st.id);saveState();closeModal();render();
       if(remoteSchoolStructureEnabled()){
         await syncSupabaseSchoolStructure();
@@ -12608,7 +12846,7 @@ body::after{
   }
 
   function cleanSlate(){
-    modal({title:'POZOR! Čistý štít',body:'<p>Čistý štít vynuluje aktuální bodování a stav období. Používej ho pouze při přechodu do nového pololetí nebo školního roku.</p><p><strong>Historie zkoušení zůstane zachována.</strong></p><p>Opravdu pokračovat?</p>',actions:[{label:'Ne',className:'secondary'},{label:'Ano, čistý štít',className:'danger',onClick:()=>{state.students.forEach(s=>{s.collectedPoints=0;s.examsCountPeriod=0;s.ruleStates={};s.lockerPointAdjust=0;s.lastExamAt=0;});saveState();toast('Čistý štít dokončen.','warn');render();}}]});
+    modal({title:'POZOR! Čistý štít',body:'<p>Čistý štít vynuluje aktuální bodování a stav období. Používej ho pouze při přechodu do nového pololetí nebo školního roku.</p><p><strong>Historie zkoušení zůstane zachována.</strong></p><p>Opravdu pokračovat?</p>',actions:[{label:'Ne',className:'secondary'},{label:'Ano, čistý štít',className:'danger',onClick:()=>{state.students.forEach(s=>{s.collectedPoints=0;s.examsCountPeriod=0;s.ruleStates={};s.lockerPointAdjust=0;s.pointBalance=0;s.lastExamAt=0;queueStudentPointSnapshot(s,'clean_slate');});saveState();toast('Čistý štít dokončen.','warn');render();}}]});
   }
 
   function requestNotifications(enable){

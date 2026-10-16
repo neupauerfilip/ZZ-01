@@ -1,12 +1,18 @@
-ZZ-01 — plný index.html po staru
-
-Obsahuje:
-- SYNC V2 školní struktury
-- synchronizaci historie zkoušení a známek do Supabase
-- migrace 009_exam_history už je nasazená v Supabase
+ZZ-01 — BODY ŽÁKŮ V SUPABASE
 
 Použití:
 1. Rozbal ZIP.
-2. Soubor index.html překopíruj do kořenové složky projektu ZZ-01 a potvrď nahrazení.
-3. GitHub Desktop -> Commit: historie zkouseni a znamky v Supabase
+2. Překopíruj index.html do kořene projektu ZZ-01 a potvrď nahrazení.
+3. GitHub Desktop: commit „body zaku v Supabase“.
 4. Push origin.
+5. Na GitHub Pages proveď Ctrl+F5.
+
+Co verze přidává:
+- synchronizaci aktuální bodové bilance žáků přes student_point_events,
+- synchronizaci pochvalných a nasbíraných bodů,
+- synchronizaci aktivních pravidel,
+- zachycení změn ze skříňky a propustky,
+- synchronizaci Čistého štítu,
+- offline frontu změn a deduplikaci pomocí client_key.
+
+Backendová migrace 010_student_point_snapshots už je nasazená.
