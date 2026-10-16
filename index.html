@@ -5954,7 +5954,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     if(low.includes('student_session_missing')||low.includes('student_portal_load_failed')) return 'Žákovské přihlášení se nepodařilo dokončit.';
     if(low.includes('challenge_not_available')) return 'Tato výzva už není dostupná.';
     if(low.includes('challenge_already_attempted')) return 'Tuto výzvu už jsi zkusil(a).';
-    if(low.includes('not_enough_game_points')) return 'Nemáš dost kladných bodů z výzev.';
+    if(low.includes('not_enough_game_points')) return 'Nemáš dost kladných bodů z testů.';
     if(low.includes('invalid_point_amount')) return 'Zadej platný počet bodů.';
     if(low.includes('teacher_feedback_already_voted')) return 'Tohoto učitele jsi v tomto týdnu už ohodnotil(a).';
     if(low.includes('teacher_feedback_not_allowed')) return 'Tohoto učitele teď nemůžeš hodnotit.';
@@ -9831,7 +9831,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   function studentScoreTable(rows,{limit=20}={}){
     const list=(rows||[]).slice().sort((a,b)=>Number(a.rank_position||0)-Number(b.rank_position||0)).slice(0,limit);
     if(!list.length)return '<div class="empty">Zatím tu není žádné pořadí.</div>';
-    return `<div class="table-wrap student-score-table"><table><thead><tr><th>#</th><th>Žák</th><th>Scoring</th></tr></thead><tbody>${list.map(r=>`<tr class="${r.is_me?'student-score-me':''}"><td>${Number(r.rank_position||0)}.</td><td>${esc(r.student_name||'Žák')}${r.is_me?' <span class="badge">TY</span>':''}</td><td><strong>${Number(r.score_points||0)} b.</strong></td></tr>`).join('')}</tbody></table></div>`;
+    return `<div class="table-wrap student-score-table"><table><thead><tr><th>#</th><th>Žák</th><th>Scoring</th></tr></thead><tbody>${list.map(r=>`<tr class="${r.is_me?'student-score-me':''}"><td>${Number(r.rank_position||0)}.</td><td>${esc(r.student_name||'Žák')}${r.is_me?' <span class="badge">TY</span>':''}</td><td><strong class="point-value ${pointTone(Number(r.score_points||0))}">${formatSignedNumber(Number(r.score_points||0))} b.</strong></td></tr>`).join('')}</tbody></table></div>`;
   }
 
   function studentSchoolPodium(rows){
@@ -9843,17 +9843,19 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     if(!ranked.length)return '';
     const order=[ranked[1],ranked[0],ranked[2]];
     const places=[2,1,3];
-    return `<section class="student-panel student-school-podium-wrap"><div class="student-panel-head"><h2>Stupně vítězů – celá škola</h2><span>TOP 3</span></div><div class="podium student-school-podium">${order.map((r,i)=>r?`<div class="podium-slot"><div class="podium-name">${esc(r.student_name||'Žák')}${r.is_me?' <span class="badge">TY</span>':''}</div><div class="podium-score">${Number(r.score_points||0)} b.</div><div class="podium-box">${places[i]}</div></div>`:'<div class="podium-slot"></div>').join('')}</div></section>`;
+    return `<section class="student-panel student-school-podium-wrap"><div class="student-panel-head"><h2>Stupně vítězů – celá škola</h2><span>TOP 3</span></div><div class="podium student-school-podium">${order.map((r,i)=>r?`<div class="podium-slot"><div class="podium-name">${esc(r.student_name||'Žák')}${r.is_me?' <span class="badge">TY</span>':''}</div><div class="podium-score">${formatSignedNumber(Number(r.score_points||0))} b.</div><div class="podium-box">${places[i]}</div></div>`:'<div class="podium-slot"></div>').join('')}</div></section>`;
   }
 
   function openStudentInvestScoreModal(){
     const available=Math.max(0,Number(state.studentPortal?.wallet?.available_points||0));
-    if(!available)return toast('Nemáš žádné kladné body k převedení.','warn');
-    modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">Převést body do scoringu</h2>
-      <p>Máš <strong>${available} kladných bodů</strong>. Kolik z nich chceš natrvalo převést do žákovského scoringu?</p>
-      <label>Počet bodů<input id="student-invest-points" type="number" min="1" max="${available}" value="${Math.min(available,5)}"></label>
-      <div class="tiny muted" style="margin-top:8px">Převedené body už nejdou použít na hodnocení učitelů.</div>
-      <div class="modal-actions"><button class="btn ghost" id="student-invest-cancel">Zrušit</button><button class="btn primary" id="student-invest-confirm">Převést</button></div>
+    const balance=Number(state.studentPortal?.point?.point_balance||0);
+    if(!available)return toast('Nemáš žádné kladné body z testů k použití.','warn');
+    modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">Použít body do scoringu</h2>
+      <p>Aktuální scoring je <strong>${formatSignedNumber(balance)} b.</strong> a k použití máš <strong>${available} kladných bodů z testů</strong>.</p>
+      <p>Každý použitý bod přidá do tvého celkového scoringu <strong>+1 bod</strong>. Pokud jsi v mínusu, nejdřív vyrovnává trestné body; potom můžeš pokračovat i do kladného scoringu.</p>
+      <label>Kolik bodů použít<input id="student-invest-points" type="number" min="1" max="${available}" value="${Math.min(available,5)}"></label>
+      <div class="tiny muted" style="margin-top:8px">Např. scoring −3 a použití 5 bodů = nový scoring +2. Použité body už nepůjdou utratit za hodnocení učitelů.</div>
+      <div class="modal-actions"><button class="btn ghost" id="student-invest-cancel">Zrušit</button><button class="btn primary" id="student-invest-confirm">Přidat do scoringu</button></div>
     </section></div>`;
     document.getElementById('student-invest-cancel').onclick=closeModal;
     document.getElementById('student-invest-confirm').onclick=()=>void investStudentGamePoints();
@@ -9868,7 +9870,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       if(error)throw error;
       closeModal();
       await refreshStudentPortal();
-      saveState();render();toast(`${points} b. převedeno do scoringu.`);
+      saveState();render();toast(`${points} b. přidáno do celkového scoringu.`);
     }catch(err){toast(authErrorText(err),'error');}
   }
 
@@ -9974,10 +9976,12 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       const classBlocks=classScopes.map(([id,name])=>{
         const rows=scoreboard.filter(r=>r.scope_type==='class'&&r.scope_id===id);
         const me=rows.find(r=>r.is_me);
-        return `<section class="student-panel"><div class="student-panel-head"><h2>${esc(name)}</h2><span>${me?`${Number(me.rank_position)}. místo · ${Number(me.score_points)} b.`:'třída'}</span></div>${studentScoreTable(rows)}</section>`;
+        return `<section class="student-panel"><div class="student-panel-head"><h2>${esc(name)}</h2><span>${me?`${Number(me.rank_position)}. místo · ${formatSignedNumber(Number(me.score_points||0))} b.`:'třída'}</span></div>${studentScoreTable(rows)}</section>`;
       }).join('');
-      tabBody=`<div class="student-game-kpis"><div><span>Kladné body k použití</span><strong>+${Number(wallet.available_points||0)} b.</strong></div><div><span>Body ve scoringu</span><strong>${Number(wallet.score_points||0)} b.</strong></div><div><span>Pořadí ve škole</span><strong>${meSchool?`${Number(meSchool.rank_position)}.`:'—'}</strong></div></div>
-        <section class="student-panel student-score-invest"><div><h2>Použít kladné body</h2><p>Body získané z dobrovolných testů můžeš převést do svého scoringu, nebo je utratit za hodnocení učitelů.</p></div><button class="btn primary" data-action="student-invest-score" ${Number(wallet.available_points||0)<=0?'disabled':''}>Převést do scoringu</button></section>
+      const currentBalance=Number(point.point_balance||0);
+      const availableForScore=Math.max(0,Number(wallet.available_points||0));
+      tabBody=`<div class="student-game-kpis"><div><span>Kladné body z testů</span><strong>+${availableForScore} b.</strong></div><div><span>Celkový scoring</span><strong class="point-value ${pointTone(currentBalance)}">${formatSignedNumber(currentBalance)} b.</strong></div><div><span>Pořadí ve škole</span><strong>${meSchool?`${Number(meSchool.rank_position)}.`:'—'}</strong></div></div>
+        <section class="student-panel student-score-invest"><div><h2>Použít body do scoringu</h2><p>Body z dobrovolných testů jsou tvoje herní měna. Můžeš je přidat do stejného scoringu, který vidí učitelé, nebo je utratit za hodnocení učitelů.</p><div class="tiny muted">Když jsi v mínusu, body nejdřív vyrovnávají trestné body. Po překročení nuly můžeš pokračovat do kladného scoringu.</div></div><button class="btn primary" data-action="student-invest-score" ${availableForScore<=0?'disabled':''}>Přidat do scoringu</button></section>
         ${classBlocks||'<section class="student-panel"><div class="empty">Nejsi v žádné aktivní třídě.</div></section>'}
         <section class="student-panel"><div class="student-panel-head"><h2>Celá škola</h2><span>${meSchool?`${Number(meSchool.rank_position)}. místo z ${schoolRows.length}`:`${schoolRows.length} žáků`}</span></div>${studentScoreTable(schoolRows,{limit:50})}</section>
         ${studentSchoolPodium(schoolRows)}`;
@@ -10035,7 +10039,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       <div class="student-hero"><div><div class="student-kicker">MŮJ PŘEHLED</div><h1>${esc(a.student_name||state.user.name||'Žák')}</h1><div class="student-school">${esc(a.school_name||'')} · ${esc(a.school_year||'')}${a.school_code?` · kód školy ${esc(a.school_code)}`:''}</div><div class="student-chips">${classChips}</div></div><div class="student-id-card">ZZ-01<br>STUDENT</div></div>
       <div class="student-game-tabs">${studentPortalTabButton('overview','Přehled')}${studentPortalTabButton('scoring','Scoring')}${studentPortalTabButton('challenges','Testy')}${studentPortalTabButton('teachers','Ohodnotit učitele')}</div>
       ${tabBody}
-      <div class="student-note">Dobrovolné testy, žákovský scoring a hodnocení učitelů jsou herní součást Zkouškomatu. Neovlivňují školní klasifikaci.</div>
+      <div class="student-note">Dobrovolné testy dávají kladné body, které lze přidat do celkového scoringu nebo použít na hodnocení učitelů. Neovlivňují školní klasifikaci.</div>
     </section>`;
     app.innerHTML=studentPortalLayout(body);
   }
@@ -10403,7 +10407,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     }).join('');
 
     const content=`<section class="pack-a-screen"><div class="pack-a-hero"><div><div class="pack-a-kicker">NASTAVENÍ PROFILU UČITELE · DOBROVOLNÉ TESTY</div><h1>Testy pro žáky</h1><p>Každý učitel může ze svého profilu vytvořit dobrovolný ABCD test pro všechny žáky školy.</p></div></div>
-      <section class="pixel-frame card student-challenge-admin-form"><div class="section-title"><div><h2>Nový test</h2><div class="tiny muted">Každá správná odpověď = <strong>+1 kladný bod</strong>. Žák získané body použije do scoringu nebo na hodnocení učitele.</div></div><span class="badge">CELÁ ŠKOLA</span></div>
+      <section class="pixel-frame card student-challenge-admin-form"><div class="section-title"><div><h2>Nový test</h2><div class="tiny muted">Každá správná odpověď = <strong>+1 kladný bod</strong>. Žák ho může přidat do svého celkového scoringu nebo použít na hodnocení učitele.</div></div><span class="badge">CELÁ ŠKOLA</span></div>
         <div class="student-challenge-admin-grid"><label class="wide">Název testu<input id="teacher-challenge-title" maxlength="80" placeholder="Např. Strojnický mini test"></label></div>
         <div id="teacher-test-builder"><div class="section-title" style="margin:8px 0"><div><h3 style="margin:0">Otázky testu</h3><div class="tiny muted">Počet otázek: <strong id="teacher-test-question-count">1</strong> · každá správná = +1 bod</div></div><button class="btn secondary" type="button" data-action="add-test-question">+ Přidat otázku</button></div><div id="teacher-test-questions">${teacherTestQuestionEditor(0)}</div></div>
         <div class="settings-note" style="margin:12px 0">Test se po publikování zobrazí všem žákům školy jako dobrovolný. Žák má na test jeden pokus.</div><button class="btn primary" data-action="create-student-learning-challenge">Publikovat test celé škole</button></section>
@@ -12130,7 +12134,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     syncCurrentTeacherStats();
     const tab=state.ui.scoreTab||'my';
     let body='';
-    const allStudents=state.students.slice().sort((a,b)=>Number(a.collectedPoints||0)-Number(b.collectedPoints||0));
+    const allStudents=state.students.slice().sort((a,b)=>currentPointBalance(b)-currentPointBalance(a) || Number(b.collectedPoints||0)-Number(a.collectedPoints||0) || String(a.name||'').localeCompare(String(b.name||''),'cs'));
     if(tab==='my'){
       const myClasses=classesForCurrentTeacher().slice().sort((a,b)=>{
         const y=String(b.schoolYear||'').localeCompare(String(a.schoolYear||''),'cs');
