@@ -5880,10 +5880,11 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     if(low.includes('school_student_login_code_not_set')) return 'Administrátor školy ještě nenastavil kód školy pro žákovské přihlášení.';
     if(low.includes('school_code_invalid')) return 'Kód školy má neplatný formát.';
     if(low.includes('school_code_taken')) return 'Tento kód školy už používá jiná škola. Zvol jiný.';
-    if(low.includes('student_username_invalid')) return 'Uživatelské jméno má neplatný formát.';
-    if(low.includes('student_username_taken_in_school')) return 'Toto uživatelské jméno už na této škole používá jiný žák.';
+    if(low.includes('student_username_invalid')) return 'Zadej jméno a příjmení pouze písmeny a mezerami.';
+    if(low.includes('student_name_mismatch')) return 'Jméno a příjmení neodpovídá žákovi, pro kterého byl vytvořen propojovací kód.';
+    if(low.includes('student_username_taken_in_school')) return 'Toto jméno už na škole používá jiný žák.';
     if(low.includes('student_pin_invalid')) return 'PIN musí mít 6 až 12 číslic.';
-    if(low.includes('student_login_invalid')) return 'Nesprávný kód školy, uživatelské jméno nebo PIN.';
+    if(low.includes('student_login_invalid')) return 'Nesprávný kód školy, jméno a příjmení nebo PIN.';
     if(low.includes('student_session_missing')||low.includes('student_portal_load_failed')) return 'Žákovské přihlášení se nepodařilo dokončit.';
     if(low.includes('admin_required')) return 'Tuto změnu může provést pouze administrátor školy.';
     return msg||'Operace se nepodařila.';
@@ -7109,12 +7110,12 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   async function submitStudentPortalAuth(){
     if(!supabaseClient||authUiBusy)return;
     const registering=authUiMode==='register';
-    const username=String(document.getElementById('student-auth-username')?.value||'').trim();
+    const username=String(document.getElementById('student-auth-username')?.value||'').trim().replace(/\s+/g,' ');
     const pin=String(document.getElementById('student-auth-pin')?.value||'').trim();
     const pinConfirm=String(document.getElementById('student-auth-pin-confirm')?.value||'').trim();
 
-    if(!/^[A-Za-z0-9._-]{3,32}$/.test(username)){
-      setAuthMessage('Uživatelské jméno musí mít 3–32 znaků a může obsahovat písmena, čísla, tečku, pomlčku nebo podtržítko.','error');
+    if(username.length>60 || !/^\p{L}{2,}(?: \p{L}{2,})+$/u.test(username)){
+      setAuthMessage('Zadej jméno a příjmení. Použij pouze písmena a mezery, bez čísel a speciálních znaků.','error');
       return renderLogin();
     }
     if(!/^[0-9]{6,12}$/.test(pin)){
@@ -7279,7 +7280,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">Propojovací kód</h2>
       <p>Student: <strong>${esc(student.name)}</strong></p>
       <div class="student-invite-code">${esc(safeCode)}</div>
-      <p class="tiny muted">Platnost: ${expiresAt?esc(fmtDate(expiresAt)):'7 dní'}. Student zvolí Žák → První aktivace, zadá tento kód, uživatelské jméno a vlastní PIN. Kód je určený pouze tomuto žákovi.</p>
+      <p class="tiny muted">Platnost: ${expiresAt?esc(fmtDate(expiresAt)):'7 dní'}. Student zvolí Žák → První aktivace, zadá tento kód, své jméno a příjmení a vlastní PIN. Jméno musí odpovídat jménu v seznamu žáků.</p>
       <div class="modal-actions"><button class="btn ghost" id="student-code-copy">Kopírovat kód</button><button class="btn secondary" id="student-account-close">Hotovo</button></div>
     </section></div>`;
     document.getElementById('student-account-close').onclick=closeModal;
@@ -9657,15 +9658,15 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 
     const studentForm=registering?`
       <label>Jednorázový kód od učitele<input id="student-auth-invite" autocomplete="one-time-code" maxlength="12" placeholder="Např. A1B2C3D4"></label>
-      <label>Uživatelské jméno<input id="student-auth-username" autocomplete="username" maxlength="32" placeholder="např. novak23"></label>
+      <label>Jméno a příjmení<input id="student-auth-username" autocomplete="name" maxlength="60" placeholder="např. Jakub Zelí"></label>
       <label>PIN<input id="student-auth-pin" type="password" inputmode="numeric" autocomplete="new-password" maxlength="12" placeholder="6–12 číslic"></label>
       <label>PIN znovu<input id="student-auth-pin-confirm" type="password" inputmode="numeric" autocomplete="new-password" maxlength="12" placeholder="Zopakuj PIN"></label>
-      <div class="tiny muted">Při první aktivaci použij jednorázový kód od učitele. Kód školy se pak zobrazí v žákovském účtu a používá se při dalších přihlášeních.</div>
+      <div class="tiny muted">Zadej jméno a příjmení přesně tak, jak tě má učitel v seznamu. Pouze písmena a mezery. Při první aktivaci použij jednorázový kód od učitele.</div>
     `:`
       <label>Kód školy<input id="student-auth-school-code" autocomplete="organization" maxlength="20" placeholder="Např. SPSRK"></label>
-      <label>Uživatelské jméno<input id="student-auth-username" autocomplete="username" maxlength="32" placeholder="např. novak23"></label>
+      <label>Jméno a příjmení<input id="student-auth-username" autocomplete="name" maxlength="60" placeholder="např. Jakub Zelí"></label>
       <label>PIN<input id="student-auth-pin" type="password" inputmode="numeric" autocomplete="current-password" maxlength="12" placeholder="6–12 číslic"></label>
-      <div class="tiny muted">Stejné uživatelské jméno může existovat na více školách. Rozlišuje ho kód školy.</div>
+      <div class="tiny muted">Přihlaš se svým jménem a příjmením tak, jak je má učitel v seznamu, a vlastním PINem.</div>
     `;
 
     app.innerHTML=`<section class="login-wrap"><div class="login-box pixel-frame">
@@ -9685,7 +9686,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         <button class="btn primary full" data-action="auth-submit" ${authUiBusy?'disabled':''}>${authUiBusy?'Pracuji…':registering?(studentMode?'Aktivovat žákovský účet':'Vytvořit učitelský účet'):'Přihlásit se'}</button>
       </div>
       <div class="auth-backend-badge">● Backend: Supabase · EU</div>
-      <p class="tiny muted" style="margin-top:12px">${studentMode?'Žák nepotřebuje e-mail. Přihlašuje se kódem školy, uživatelským jménem a PINem.':'Učitelský účet používá e-mail a heslo.'}</p>
+      <p class="tiny muted" style="margin-top:12px">${studentMode?'Žák nepotřebuje e-mail. Přihlašuje se kódem školy, jménem a příjmením a PINem.':'Učitelský účet používá e-mail a heslo.'}</p>
     </div></section>`;
   }
 

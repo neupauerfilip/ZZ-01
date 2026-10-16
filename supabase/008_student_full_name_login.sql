@@ -1,0 +1,4 @@
+-- Produkční změna už byla aplikována do Supabase projektu.
+-- Žák se přihlašuje kódem školy + jménem a příjmením + PINem.
+-- První aktivace ověřuje jméno proti žákovi svázanému s jednorázovým kódem.
+-- Duplicity stejného jména ve škole jsou povoleny a rozlišuje je PIN.

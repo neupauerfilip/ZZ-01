@@ -1,9 +1,7 @@
-ZZ-01 – oprava zobrazení tříd v administraci
+ZZ-01 – žákovské přihlášení jménem a příjmením
 
-Změny:
-- odstraněno technické „interní ID“ z přehledu tříd
-- místo něj se zobrazuje školní rok, počet žáků a počet učitelů
-- zachována předchozí oprava přepínání testovacích rolí na skutečného administrátora
-
-Doporučený commit:
-Zpřehlednění tříd v profilu školy – odstranění interních ID
+- místo libovolného uživatelského jména se používá skutečné jméno a příjmení
+- pouze písmena a mezery, bez čísel a speciálních znaků
+- první aktivace ověří jméno proti evidenci žáka
+- další přihlášení: kód školy + jméno a příjmení + PIN
+- backendová změna je už aplikovaná v Supabase
