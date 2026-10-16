@@ -1,0 +1,51 @@
+ZZ-01 – audit žákovského rozhraní a Supabase (V6)
+Datum: 16. 10. 2026
+
+OVĚŘENO
+- aktivace žákovského účtu přes jednorázový kód
+- přihlášení jménem + PINem a práce se session tokenem
+- session token je v DB uložen pouze jako SHA-256 hash; expirace 30 dní
+- odhlášení revokuje session
+- profil žáka + avatar
+- historie známek a zkoušení
+- inventář
+- celkový scoring a školní/třídní pořadí
+- kredity a peněženka
+- dobrovolné testy / challenge attempts
+- převod kreditů do scoringu
+- hodnocení učitele z kreditů
+- Chodba: adresář, soukromé zprávy, třídní místnosti, vlastní místnosti
+- správa členů vlastních místností
+- nepřečtené zprávy + read state
+- učitel ↔ žák a nově i učitel ↔ učitel v soukromých zprávách
+
+KONTROLY DATABÁZE
+- RLS je zapnuté na všech citlivých studentských tabulkách.
+- Tabulky bez přímých policies jsou záměrně dostupné pouze přes SECURITY DEFINER RPC s ověřením studentského session tokenu.
+- Všechny student-facing RPC používané ve V6 existují a mají pevný search_path.
+- Teacher-only RPC byly odebrány roli anon a ponechány pouze authenticated.
+- Nenalezeny osiřelé credentials, sessions ani wallets.
+- Nenalezeny duplicitní attempts pro stejný test a žáka.
+- Nenalezeny záporné hodnoty v walletu.
+- Platí earned_total - spent_total = available_points u všech walletů.
+- Nenalezeny chybějící automatické třídní místnosti.
+- Nenalezeny room-member vazby mezi různými školami.
+- Nenalezeny neplatné tvary sender/recipient u zpráv.
+- Nenalezeny neplatné student avatar IDs.
+
+NALEZENÁ A OPRAVENÁ BEZPEČNOSTNÍ VĚC
+- Několik teacher-only SECURITY DEFINER RPC bylo historicky executable i rolí anon.
+- V6 audit je odebral anon a nechal je pouze authenticated.
+- Studentské RPC zůstávají anon záměrně, protože studenti nepoužívají Supabase Auth; přístup je chráněn vlastním náhodným session tokenem.
+
+HISTORICKÁ POZNÁMKA
+- U jednoho testovacího účtu existují staré záznamy utracení kreditů z několika průběžných vývojových verzí, které se součtem neshodují s dnešním transakčním logem.
+- Samotný wallet je konzistentní a současné funkce kontrolují a zamykají dostupné kredity před každým utracením.
+- Historické záznamy nebyly automaticky mazány, aby nedošlo ke ztrátě testovací historie.
+
+FRONTEND V6
+- Node.js syntax check: OK
+- student direct messages: filtr Žáci/Učitelé + třída + hledání
+- teacher private messages: filtr Žáci/Učitelé + třída + hledání
+- teacher-to-teacher private messaging používá stejnou zprávovou tabulku a notifikační systém
+- pixelové ů v „Můj profil“ má nový samostatný ring glyph

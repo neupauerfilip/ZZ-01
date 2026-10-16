@@ -1,15 +1,8 @@
-ZZ-01 STUDENT V5 — ZPRÁVY A CHODBA
+ZZ-01 – Student V6 / soukromé zprávy a audit
 
-- robustní oprava ů v Můj profil (Unicode NFC)
-- studentské avatary mají stejný rámeček a rozměry jako učitelské avatary
-- správa členů vlastní místnosti je v samostatném otevíracím okně
-- hledání studentů podle jména + filtr třídy
-- bohatá sada emotikonů v soukromých i místnostních zprávách
-- horní ikona obálky v žákovském i učitelském rozhraní
-- počítadlo nepřečtených zpráv
-- učitel má samostatnou obrazovku Soukromé zprávy
-- volitelné systémové notifikace při nové zprávě
-- polling nepřečtených zpráv každých 15 s při otevřené aplikaci
-
-Backendové RPC a tabulky pro nepřečtené zprávy jsou už nasazené v Supabase.
-Stačí nahradit index.html.
+- žák: filtr Žáci/Učitelé, třída a hledání jména
+- učitel: soukromé zprávy žákům i učitelům, filtr Žáci/Učitelé, třída a hledání jména
+- učitel ↔ učitel funguje přes stejnou databázovou tabulku soukromých zpráv
+- nepřečtené zprávy učitele zahrnují zprávy od žáků i učitelů
+- opraven pixelový znak ů v „Můj profil“
+- backendové RPC a read-state změny jsou již nasazeny v Supabase
