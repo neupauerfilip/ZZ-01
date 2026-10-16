@@ -5886,6 +5886,13 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     if(low.includes('student_pin_invalid')) return 'PIN musí mít 6 až 12 číslic.';
     if(low.includes('student_login_invalid')) return 'Nesprávný kód školy, jméno a příjmení nebo PIN.';
     if(low.includes('student_session_missing')||low.includes('student_portal_load_failed')) return 'Žákovské přihlášení se nepodařilo dokončit.';
+    if(low.includes('challenge_not_available')) return 'Tato výzva už není dostupná.';
+    if(low.includes('challenge_already_attempted')) return 'Tuto výzvu už jsi zkusil(a).';
+    if(low.includes('not_enough_game_points')) return 'Nemáš dost kladných bodů z výzev.';
+    if(low.includes('invalid_point_amount')) return 'Zadej platný počet bodů.';
+    if(low.includes('teacher_feedback_already_voted')) return 'Tohoto učitele jsi v tomto týdnu už ohodnotil(a).';
+    if(low.includes('teacher_feedback_not_allowed')) return 'Tohoto učitele teď nemůžeš hodnotit.';
+    if(low.includes('challenge_class_not_assigned')) return 'Výzvu můžeš zadat jen své třídě nebo celé škole.';
     if(low.includes('admin_required')) return 'Tuto změnu může provést pouze administrátor školy.';
     return msg||'Operace se nepodařila.';
   }
@@ -7059,21 +7066,30 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     const resolvedAccount=studentPortalRows(accountRes.data)[0]||null;
     if(!resolvedAccount)return false;
 
-    const [historyRes,pointRes,inventoryRes]=await Promise.all([
+    const [historyRes,pointRes,inventoryRes,walletRes,scoreboardRes,challengesRes,teachersRes]=await Promise.all([
       supabaseClient.rpc('student_portal_history',{p_session_token:sessionToken}),
       supabaseClient.rpc('student_portal_points',{p_session_token:sessionToken}),
-      supabaseClient.rpc('student_portal_inventory',{p_session_token:sessionToken})
+      supabaseClient.rpc('student_portal_inventory',{p_session_token:sessionToken}),
+      supabaseClient.rpc('student_game_wallet',{p_session_token:sessionToken}),
+      supabaseClient.rpc('student_game_scoreboard',{p_session_token:sessionToken}),
+      supabaseClient.rpc('student_game_challenges',{p_session_token:sessionToken}),
+      supabaseClient.rpc('student_feedback_teachers',{p_session_token:sessionToken})
     ]);
-    const failed=[historyRes,pointRes,inventoryRes].find(r=>r.error);
+    const failed=[historyRes,pointRes,inventoryRes,walletRes,scoreboardRes,challengesRes,teachersRes].find(r=>r.error);
     if(failed)throw failed.error;
 
     state.ui=state.ui||{};
     state.ui.studentPortalSessionToken=sessionToken;
+    state.ui.studentPortalTab=state.ui.studentPortalTab||'overview';
     state.studentPortal={
       account:resolvedAccount,
       history:studentPortalRows(historyRes.data),
       point:studentPortalRows(pointRes.data)[0]||{point_balance:0,collected_points:0,positive_points:0,locker_point_adjust:0,source:'',occurred_at:null},
       inventory:studentPortalRows(inventoryRes.data),
+      wallet:studentPortalRows(walletRes.data)[0]||{available_points:0,score_points:0,earned_total:0,spent_total:0},
+      scoreboard:studentPortalRows(scoreboardRes.data),
+      challenges:studentPortalRows(challengesRes.data),
+      feedbackTeachers:studentPortalRows(teachersRes.data),
       loadedAt:now()
     };
     state.authenticated=true;
@@ -8788,8 +8804,25 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     return teacherBossBreakdown(teacherId).net;
   }
 
+  function teacherStudentFeedback(teacherId){
+    const map=state.ui?.teacherFeedbackScores||{};
+    return map[teacherId]||{positive_votes:0,negative_votes:0,net_score:0,total_votes:0};
+  }
+
+  async function refreshTeacherFeedbackScores({renderAfter=true}={}){
+    if(!supabaseClient||state.authProvider!=='supabase'||!state.school?.id)return;
+    try{
+      const {data,error}=await supabaseClient.rpc('school_teacher_feedback_scores',{p_school_id:state.school.id});
+      if(error)throw error;
+      state.ui=state.ui||{};
+      state.ui.teacherFeedbackScores=Object.fromEntries((data||[]).map(r=>[r.teacher_id,r]));
+      state.ui.teacherFeedbackScoresLoaded=true;
+      if(renderAfter&&state.route==='scoring')renderScoring();
+    }catch(err){console.warn('Teacher feedback scores failed',err);}
+  }
+
   function teacherGameScore(t){
-    return teacherScore(t)+teacherLockerNet(t)+teacherChallengePoints(t.id)+teacherBossPoints(t.id);
+    return teacherScore(t)+teacherLockerNet(t)+teacherChallengePoints(t.id)+teacherBossPoints(t.id)+Number(teacherStudentFeedback(t.id).net_score||0);
   }
 
   function completedChallengeDetails(teacherId){
@@ -9721,24 +9754,119 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       </header><main class="container pro-arcade-ui student-portal-wrap">${body}</main>`;
   }
 
+  function studentPortalTabButton(tab,label){
+    const active=(state.ui?.studentPortalTab||'overview')===tab;
+    return `<button class="student-game-tab ${active?'active':''}" data-action="student-portal-tab" data-tab="${tab}">${esc(label)}</button>`;
+  }
+
+  function studentScoreTable(rows,{limit=20}={}){
+    const list=(rows||[]).slice().sort((a,b)=>Number(a.rank_position||0)-Number(b.rank_position||0)).slice(0,limit);
+    if(!list.length)return '<div class="empty">Zatím tu není žádné pořadí.</div>';
+    return `<div class="table-wrap student-score-table"><table><thead><tr><th>#</th><th>Žák</th><th>Scoring</th></tr></thead><tbody>${list.map(r=>`<tr class="${r.is_me?'student-score-me':''}"><td>${Number(r.rank_position||0)}.</td><td>${esc(r.student_name||'Žák')}${r.is_me?' <span class="badge">TY</span>':''}</td><td><strong>${Number(r.score_points||0)} b.</strong></td></tr>`).join('')}</tbody></table></div>`;
+  }
+
+  function openStudentInvestScoreModal(){
+    const available=Math.max(0,Number(state.studentPortal?.wallet?.available_points||0));
+    if(!available)return toast('Nemáš žádné kladné body k převedení.','warn');
+    modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">Převést body do scoringu</h2>
+      <p>Máš <strong>${available} kladných bodů</strong>. Kolik z nich chceš natrvalo převést do žákovského scoringu?</p>
+      <label>Počet bodů<input id="student-invest-points" type="number" min="1" max="${available}" value="${Math.min(available,5)}"></label>
+      <div class="tiny muted" style="margin-top:8px">Převedené body už nejdou použít na hodnocení učitelů.</div>
+      <div class="modal-actions"><button class="btn ghost" id="student-invest-cancel">Zrušit</button><button class="btn primary" id="student-invest-confirm">Převést</button></div>
+    </section></div>`;
+    document.getElementById('student-invest-cancel').onclick=closeModal;
+    document.getElementById('student-invest-confirm').onclick=()=>void investStudentGamePoints();
+  }
+
+  async function investStudentGamePoints(){
+    const points=Math.trunc(Number(document.getElementById('student-invest-points')?.value||0));
+    const token=studentPortalSessionToken();
+    if(!token||points<=0)return toast('Zadej počet bodů.','error');
+    try{
+      const {error}=await supabaseClient.rpc('student_invest_game_score',{p_session_token:token,p_points:points});
+      if(error)throw error;
+      closeModal();
+      await refreshStudentPortal();
+      saveState();render();toast(`${points} b. převedeno do scoringu.`);
+    }catch(err){toast(authErrorText(err),'error');}
+  }
+
+  async function submitStudentLearningChallenge(challengeId){
+    const input=document.getElementById(`student-challenge-answer-${challengeId}`);
+    const answer=String(input?.value||'').trim();
+    if(!answer)return toast('Napiš odpověď.','warn');
+    try{
+      const {data,error}=await supabaseClient.rpc('student_submit_learning_challenge',{p_session_token:studentPortalSessionToken(),p_challenge_id:challengeId,p_answer:answer});
+      if(error)throw error;
+      const row=studentPortalRows(data)[0]||{};
+      await refreshStudentPortal();saveState();render();
+      toast(row.correct?`Správně! Získáváš +${Number(row.points_awarded||0)} b.`:'Tentokrát ne. Výzva je uzavřena.',row.correct?'':'warn');
+    }catch(err){toast(authErrorText(err),'error');}
+  }
+
+  async function castStudentTeacherFeedback(teacherId,value){
+    const teacher=(state.studentPortal?.feedbackTeachers||[]).find(t=>t.teacher_id===teacherId);
+    const label=teacher?.teacher_name||'učitele';
+    const tone=Number(value)>0?'kladně':'záporně';
+    modal({title:'Ohodnotit učitele?',body:`<p>Chceš ohodnotit <strong>${esc(label)}</strong> ${tone}?</p><p class="muted">Hlas stojí 1 kladný bod z výzev. Učitel uvidí pouze souhrnný počet hlasů, ne kdo hlasoval.</p>`,actions:[
+      {label:'Ne',className:'secondary'},
+      {label:Number(value)>0?'Ano, +1':'Ano, −1',className:Number(value)>0?'primary':'danger',onClick:()=>{void (async()=>{try{const {error}=await supabaseClient.rpc('student_cast_teacher_feedback',{p_session_token:studentPortalSessionToken(),p_teacher_id:teacherId,p_value:Number(value)>0?1:-1});if(error)throw error;await refreshStudentPortal();saveState();render();toast('Hodnocení bylo započítáno.');}catch(err){toast(authErrorText(err),'error');}})();}}
+    ]});
+  }
+
   function renderStudentPortal(){
     const portal=state.studentPortal;
     if(!portal?.account)return renderStudentLink();
     const a=portal.account;
     const point=portal.point||{};
+    const wallet=portal.wallet||{};
     const history=Array.isArray(portal.history)?portal.history:[];
     const inventory=Array.isArray(portal.inventory)?portal.inventory:[];
+    const scoreboard=Array.isArray(portal.scoreboard)?portal.scoreboard:[];
+    const challenges=Array.isArray(portal.challenges)?portal.challenges:[];
+    const feedbackTeachers=Array.isArray(portal.feedbackTeachers)?portal.feedbackTeachers:[];
     const classes=Array.isArray(a.classes)?a.classes:[];
     const grades=history.filter(h=>(h.grade!==null&&h.grade!==undefined)||h.no_grade_status);
     const classChips=classes.length?classes.map(c=>`<span class="student-chip">${esc(c.name)} · ${esc(c.schoolYear||'')}</span>`).join(''):'<span class="student-chip muted">Bez aktivní třídy</span>';
     const gradeRows=grades.map(h=>`<tr><td>${esc(fmtDate(h.occurred_at))}</td><td>${esc(h.subject_name||'—')}</td><td>${esc(h.topic||'—')}</td><td>${h.no_grade_status?esc(h.no_grade_status):`<strong>${esc(h.grade)}</strong>`}</td><td>${esc(h.note||'')}</td></tr>`).join('');
     const invRows=inventory.map(x=>`<div class="student-inventory-card"><strong>${esc(x.subject_name||'Předmět')}</strong><div><span>Propustka</span><b>${Number(x.pass_count||0)}×</b></div><div><span>Tahák</span><b>${Number(x.cheat_count||0)}×</b></div><div><span>Kafíčko</span><b>${Number(x.coffee_count||0)}×</b></div></div>`).join('');
+    const tab=state.ui?.studentPortalTab||'overview';
+
+    let tabBody='';
+    if(tab==='scoring'){
+      const schoolRows=scoreboard.filter(r=>r.scope_type==='school');
+      const meSchool=schoolRows.find(r=>r.is_me);
+      const classScopes=[...new Map(scoreboard.filter(r=>r.scope_type==='class').map(r=>[r.scope_id,r.scope_name])).entries()];
+      const classBlocks=classScopes.map(([id,name])=>{
+        const rows=scoreboard.filter(r=>r.scope_type==='class'&&r.scope_id===id);
+        const me=rows.find(r=>r.is_me);
+        return `<section class="student-panel"><div class="student-panel-head"><h2>${esc(name)}</h2><span>${me?`${Number(me.rank_position)}. místo · ${Number(me.score_points)} b.`:'třída'}</span></div>${studentScoreTable(rows)}</section>`;
+      }).join('');
+      tabBody=`<div class="student-game-kpis"><div><span>Kladné body k použití</span><strong>+${Number(wallet.available_points||0)} b.</strong></div><div><span>Body ve scoringu</span><strong>${Number(wallet.score_points||0)} b.</strong></div><div><span>Pořadí ve škole</span><strong>${meSchool?`${Number(meSchool.rank_position)}.`:'—'}</strong></div></div>
+        <section class="student-panel student-score-invest"><div><h2>Použít kladné body</h2><p>Body získané z hádanek a testů můžeš převést do svého scoringu, nebo je utratit za hodnocení učitelů.</p></div><button class="btn primary" data-action="student-invest-score" ${Number(wallet.available_points||0)<=0?'disabled':''}>Převést do scoringu</button></section>
+        ${classBlocks||'<section class="student-panel"><div class="empty">Nejsi v žádné aktivní třídě.</div></section>'}
+        <section class="student-panel"><div class="student-panel-head"><h2>Celá škola</h2><span>${meSchool?`${Number(meSchool.rank_position)}. místo z ${schoolRows.length}`:`${schoolRows.length} žáků`}</span></div>${studentScoreTable(schoolRows,{limit:50})}</section>`;
+    }else if(tab==='challenges'){
+      const cards=challenges.map(ch=>{
+        const done=!!ch.attempted;
+        const result=done?(ch.correct?`<span class="student-challenge-result success">SPRÁVNĚ · +${Number(ch.points_awarded||0)} b.</span>`:'<span class="student-challenge-result fail">NESPRÁVNĚ</span>'):'';
+        return `<article class="student-challenge-card ${done?'done':''}"><div class="student-challenge-head"><div><div class="student-kicker">${esc(ch.class_name||'CELÁ ŠKOLA')} · ${esc(ch.teacher_name||'Učitel')}</div><h3>${esc(ch.title||'Výzva')}</h3></div><strong class="student-reward">+${Number(ch.reward_points||0)} b.</strong></div><p>${esc(ch.prompt||'')}</p>${done?result:`<div class="student-challenge-answer"><input id="student-challenge-answer-${ch.challenge_id}" maxlength="200" placeholder="Tvoje odpověď"><button class="btn primary" data-action="student-challenge-submit" data-id="${ch.challenge_id}">Odeslat odpověď</button></div><div class="tiny muted">Na každou výzvu je v této verzi jeden pokus.</div>`}</article>`;
+      }).join('');
+      tabBody=`<div class="student-game-kpis"><div><span>Kladné body k použití</span><strong>+${Number(wallet.available_points||0)} b.</strong></div><div><span>Celkem získáno</span><strong>${Number(wallet.earned_total||0)} b.</strong></div><div><span>Výzvy</span><strong>${challenges.length}</strong></div></div><section class="student-panel"><div class="student-panel-head"><h2>Hádanky a testy</h2><span>za kladné body</span></div><div class="student-challenge-list">${cards||'<div class="empty">Učitelé zatím nevložili žádnou aktivní výzvu.</div>'}</div></section>`;
+    }else if(tab==='teachers'){
+      const cards=feedbackTeachers.map(t=>`<article class="student-teacher-rating"><div><h3>${esc(t.teacher_name||'Učitel')}</h3><div class="student-rating-total">Hlas žáků: <strong>${formatSignedNumber(Number(t.net_score||0))}</strong> · +${Number(t.positive_votes||0)} / −${Number(t.negative_votes||0)}</div><div class="tiny muted">${t.voted_this_period?'Tento týden už jsi hlasoval(a).':'Můžeš hlasovat jednou za týden.'}</div></div><div class="student-rating-actions"><button class="btn primary" data-action="student-feedback" data-teacher="${t.teacher_id}" data-value="1" ${t.voted_this_period||Number(wallet.available_points||0)<1?'disabled':''}>+1</button><button class="btn danger" data-action="student-feedback" data-teacher="${t.teacher_id}" data-value="-1" ${t.voted_this_period||Number(wallet.available_points||0)<1?'disabled':''}>−1</button></div></article>`).join('');
+      tabBody=`<div class="student-game-kpis"><div><span>Kladné body k použití</span><strong>+${Number(wallet.available_points||0)} b.</strong></div><div><span>Cena jednoho hlasu</span><strong>1 b.</strong></div><div><span>Hodnotitelní učitelé</span><strong>${feedbackTeachers.length}</strong></div></div><section class="student-panel"><div class="student-panel-head"><h2>Ohodnotit učitele</h2><span>bez komentářů</span></div><p class="muted">Za 1 kladný bod můžeš dát učiteli +1 nebo −1. Hlasovat lze u každého svého učitele jednou týdně. Učitelé vidí jen souhrn, ne jméno hlasujícího.</p><div class="student-teacher-rating-list">${cards||'<div class="empty">Pro tvoje třídy nejsou přiřazeni žádní učitelé k hodnocení.</div>'}</div></section>`;
+    }else{
+      tabBody=`<div class="student-kpis"><div><span>Aktuální bilance</span><strong class="point-value ${pointTone(Number(point.point_balance||0))}">${formatSignedNumber(Number(point.point_balance||0))} b.</strong></div><div><span>Nasbírané body</span><strong>${formatSignedNumber(Number(point.collected_points||0))} b.</strong></div><div><span>Pochvalné body</span><strong>+${Math.max(0,Number(point.positive_points||0))} b.</strong></div><div><span>Záznamů</span><strong>${grades.length}</strong></div></div>
+        <section class="student-panel"><div class="student-panel-head"><h2>Moje známky a zkoušení</h2><span>${grades.length} záznamů</span></div><div class="table-wrap"><table><thead><tr><th>Datum</th><th>Předmět</th><th>Téma</th><th>Výsledek</th><th>Poznámka</th></tr></thead><tbody>${gradeRows||'<tr><td colspan="5">Zatím tu nejsou žádné výsledky.</td></tr>'}</tbody></table></div></section>
+        <section class="student-panel"><div class="student-panel-head"><h2>Můj inventář</h2><span>podle předmětu</span></div>${invRows?`<div class="student-inventory-grid">${invRows}</div>`:'<div class="empty">V inventáři zatím nic není.</div>'}</section>`;
+    }
+
     const body=`<section class="student-portal">
       <div class="student-hero"><div><div class="student-kicker">MŮJ PŘEHLED</div><h1>${esc(a.student_name||state.user.name||'Žák')}</h1><div class="student-school">${esc(a.school_name||'')} · ${esc(a.school_year||'')}${a.school_code?` · kód školy ${esc(a.school_code)}`:''}</div><div class="student-chips">${classChips}</div></div><div class="student-id-card">ZZ-01<br>STUDENT</div></div>
-      <div class="student-kpis"><div><span>Aktuální bilance</span><strong class="point-value ${pointTone(Number(point.point_balance||0))}">${formatSignedNumber(Number(point.point_balance||0))} b.</strong></div><div><span>Nasbírané body</span><strong>${formatSignedNumber(Number(point.collected_points||0))} b.</strong></div><div><span>Pochvalné body</span><strong>+${Math.max(0,Number(point.positive_points||0))} b.</strong></div><div><span>Záznamů</span><strong>${grades.length}</strong></div></div>
-      <section class="student-panel"><div class="student-panel-head"><h2>Moje známky a zkoušení</h2><span>${grades.length} záznamů</span></div><div class="table-wrap"><table><thead><tr><th>Datum</th><th>Předmět</th><th>Téma</th><th>Výsledek</th><th>Poznámka</th></tr></thead><tbody>${gradeRows||'<tr><td colspan="5">Zatím tu nejsou žádné výsledky.</td></tr>'}</tbody></table></div></section>
-      <section class="student-panel"><div class="student-panel-head"><h2>Můj inventář</h2><span>podle předmětu</span></div>${invRows?`<div class="student-inventory-grid">${invRows}</div>`:'<div class="empty">V inventáři zatím nic není.</div>'}</section>
-      <div class="student-note">Zobrazuje se pouze tvůj vlastní žákovský profil. Data zadává a spravuje škola v Zkouškomatu.</div>
+      <div class="student-game-tabs">${studentPortalTabButton('overview','Přehled')}${studentPortalTabButton('scoring','Scoring')}${studentPortalTabButton('challenges','Výzvy')}${studentPortalTabButton('teachers','Ohodnotit učitele')}</div>
+      ${tabBody}
+      <div class="student-note">Výzvy a hodnocení učitelů jsou herní součást Zkouškomatu. Neovlivňují školní klasifikaci.</div>
     </section>`;
     app.innerHTML=studentPortalLayout(body);
   }
@@ -10028,6 +10156,55 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     renderStaffroom();
   }
 
+  async function refreshTeacherStudentChallenges({renderAfter=true}={}){
+    if(!supabaseClient||state.authProvider!=='supabase'||!state.school?.id)return;
+    state.ui=state.ui||{};
+    state.ui.teacherStudentChallengesLoading=true;
+    try{
+      const {data,error}=await supabaseClient.rpc('teacher_student_challenges',{p_school_id:state.school.id});
+      if(error)throw error;
+      state.ui.teacherStudentChallenges=Array.isArray(data)?data:[];
+      state.ui.teacherStudentChallengesLoaded=true;
+    }catch(err){toast(authErrorText(err),'error');}
+    finally{state.ui.teacherStudentChallengesLoading=false;if(renderAfter&&state.route==='student-challenges')renderStudentChallengesAdmin();}
+  }
+
+  function renderStudentChallengesAdmin(){
+    const rows=Array.isArray(state.ui?.teacherStudentChallenges)?state.ui.teacherStudentChallenges:[];
+    const loading=!!state.ui?.teacherStudentChallengesLoading;
+    if(!state.ui?.teacherStudentChallengesLoaded&&!loading)queueMicrotask(()=>void refreshTeacherStudentChallenges());
+    const classes=classesForCurrentTeacher().filter(c=>c.remoteId).slice().sort((a,b)=>String(a.displayName||'').localeCompare(String(b.displayName||''),'cs',{numeric:true}));
+    const list=rows.map(ch=>`<div class="teacher-student-challenge-row ${ch.active?'':'inactive'}"><div><strong>${esc(ch.title||'Výzva')}</strong><div class="tiny muted">${esc(ch.class_name||'Celá škola')} · +${Number(ch.reward_points||0)} b. · pokusy ${Number(ch.attempts||0)} · správně ${Number(ch.correct_answers||0)}</div><div class="teacher-challenge-prompt">${esc(ch.prompt||'')}</div><div class="tiny muted">Správná odpověď: <strong>${esc(ch.answer||'')}</strong></div></div><button class="btn ${ch.active?'danger':'primary'}" data-action="toggle-student-learning-challenge" data-id="${ch.challenge_id}" data-active="${ch.active?'0':'1'}">${ch.active?'Vypnout':'Zapnout'}</button></div>`).join('');
+    const content=`<section class="pack-a-screen"><div class="pack-a-hero"><div><div class="pack-a-kicker">HERNÍ OBSAH PRO ŽÁKY</div><h1>Žákovské výzvy</h1><p>Hádanky a krátké testy za kladné body. Žák body použije buď do svého scoringu, nebo na hodnocení učitelů.</p></div></div>
+      <section class="pixel-frame card student-challenge-admin-form"><h2>Nová výzva</h2><div class="student-challenge-admin-grid"><label>Název<input id="teacher-challenge-title" maxlength="80" placeholder="Např. Hádanka týdne"></label><label>Pro koho<select id="teacher-challenge-class"><option value="">Celá škola</option>${classes.map(c=>`<option value="${c.remoteId}">${esc(c.displayName)} — ${esc(c.schoolYear||'')}</option>`).join('')}</select></label><label class="wide">Otázka / zadání<textarea id="teacher-challenge-prompt" maxlength="1000" placeholder="Napiš zadání…"></textarea></label><label>Správná odpověď<input id="teacher-challenge-answer" maxlength="200" placeholder="Krátká textová odpověď"></label><label>Odměna<input id="teacher-challenge-reward" type="number" min="1" max="20" value="3"></label></div><div class="tiny muted">První verze používá krátkou textovou odpověď a jeden pokus na žáka.</div><button class="btn primary" data-action="create-student-learning-challenge">Publikovat výzvu</button></section>
+      <section class="pixel-frame card"><div class="section-title"><div><h2>Moje výzvy</h2><div class="tiny muted">Aktivní výzvy se zobrazují žákům v jejich portálu.</div></div><button class="btn secondary" data-action="refresh-student-learning-challenges">Obnovit</button></div>${loading?'<div class="empty">Načítám…</div>':`<div class="teacher-student-challenge-list">${list||'<div class="empty">Zatím jsi nevytvořil(a) žádnou výzvu.</div>'}</div>`}</section>
+      <div class="arcade-footer"><span>ŽÁKOVSKÉ VÝZVY</span><span>ZZ-01</span></div></section>`;
+    app.innerHTML=layout(content,'Žákovské výzvy');
+  }
+
+  async function createStudentLearningChallengeFromForm(){
+    const title=String(document.getElementById('teacher-challenge-title')?.value||'').trim();
+    const prompt=String(document.getElementById('teacher-challenge-prompt')?.value||'').trim();
+    const answer=String(document.getElementById('teacher-challenge-answer')?.value||'').trim();
+    const reward=Math.trunc(Number(document.getElementById('teacher-challenge-reward')?.value||0));
+    const classId=String(document.getElementById('teacher-challenge-class')?.value||'').trim()||null;
+    if(title.length<3||prompt.length<3||!answer||reward<1||reward>20)return toast('Vyplň název, zadání, správnou odpověď a odměnu 1–20 bodů.','error');
+    try{
+      const {error}=await supabaseClient.rpc('create_student_learning_challenge',{p_school_id:state.school.id,p_title:title,p_prompt:prompt,p_answer:answer,p_reward_points:reward,p_class_id:classId});
+      if(error)throw error;
+      toast('Výzva byla publikována.');
+      await refreshTeacherStudentChallenges({renderAfter:false});renderStudentChallengesAdmin();
+    }catch(err){toast(authErrorText(err),'error');}
+  }
+
+  async function toggleStudentLearningChallenge(id,active){
+    try{
+      const {error}=await supabaseClient.rpc('set_student_learning_challenge_active',{p_school_id:state.school.id,p_challenge_id:id,p_active:!!active});
+      if(error)throw error;
+      await refreshTeacherStudentChallenges({renderAfter:false});renderStudentChallengesAdmin();
+    }catch(err){toast(authErrorText(err),'error');}
+  }
+
   function renderHome(){
     syncCurrentTeacherStats();
     const content=`
@@ -10041,6 +10218,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         ${homeCard('subjects','▤','Moje předměty','Předměty a jejich témata ke zkoušení')}
         ${homeCard('grades','▥','Známkování','Třída + předmět → známky → tisk / Excel')}
         ${homeCard('scoring','▲','Scoring / Přehledy','Žáci, celá škola a učitelé')}
+        ${homeCard('student-challenges','◆','Žákovské výzvy','Hádanky a krátké testy za kladné body')}
         ${homeCard('staffroom','☕','Sborovna','Jednoduchý společný chat učitelů',staffroomUnreadCount())}
         ${homeCard('help','?','Nápověda','Jak Zkouškomat funguje a co může která role')}
       </div>
@@ -11767,6 +11945,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
             const base=teacherScore(t);
             const bonus=teacherChallengePoints(t.id);
             const boss=teacherBossBreakdown(t.id);
+            const feedback=teacherStudentFeedback(t.id);
             const total=teacherGameScore(t);
             const bossParts=[
               boss.positive?`+${boss.positive.toFixed(0)} pochv.`:'',
@@ -11775,7 +11954,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
             return `<div class="podium-slot">
               <div style="display:flex;justify-content:center">${avatarMarkup(t.avatar,'md')}</div>
               <div>${esc(t.nickname||t.name)} ${state.school.bossTeacherId===t.id?'<span class="boss-badge">ŠÉFOVÁ</span>':''}</div>
-              <div class="tiny muted">${base.toFixed(1)} + ${bonus.toFixed(0)} výzvy${bossParts?` · ${bossParts}`:''} = <strong>${total.toFixed(1)} b.</strong></div>
+              <div class="tiny muted">${base.toFixed(1)} + ${bonus.toFixed(0)} výzvy${bossParts?` · ${bossParts}`:''}${feedback.net_score?` · žáci ${formatSignedNumber(Number(feedback.net_score))}`:''} = <strong>${total.toFixed(1)} b.</strong></div>
               <div class="podium-box">${[2,1,3][i]}</div>
             </div>`;
           })():'<div></div>').join('')}</div>`
@@ -11786,6 +11965,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         const base=teacherScore(t);
         const bonus=teacherChallengePoints(t.id);
         const boss=teacherBossBreakdown(t.id);
+        const feedback=teacherStudentFeedback(t.id);
         const total=teacherGameScore(t);
         return `<tr>
           <td>${i+1}.</td>
@@ -11794,6 +11974,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
           <td>${bonus?`<span class="score-bonus">+${bonus.toFixed(0)}</span>`:'0'}</td>
           <td><span class="boss-delta positive">+${boss.positive.toFixed(0)}</span></td>
           <td><span class="boss-delta negative">${boss.negative.toFixed(0)}</span></td>
+          <td><span class="student-feedback-score">${formatSignedNumber(Number(feedback.net_score||0))}</span><div class="tiny muted">+${Number(feedback.positive_votes||0)} / −${Number(feedback.negative_votes||0)}</div></td>
           <td><strong>${total.toFixed(1)}</strong></td>
           <td>${st.completedExams}</td>
           <td>${st.passesUsed}</td>
@@ -11822,6 +12003,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
                 <th>Bonus výzvy</th>
                 <th>Pochvaly Šéfové +</th>
                 <th>Trestné Šéfové −</th>
+                <th>Hlas žáků</th>
                 <th>Celkem</th>
                 <th>Zkoušení</th>
                 <th>Propustky</th>
@@ -11830,7 +12012,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
                 <th>Výskyty</th>
               </tr>
             </thead>
-            <tbody>${scoreRows||'<tr><td colspan="12"><div class="empty">Zatím nejsou žádní učitelé ve scoringu.</div></td></tr>'}</tbody>
+            <tbody>${scoreRows||'<tr><td colspan="13"><div class="empty">Zatím nejsou žádní učitelé ve scoringu.</div></td></tr>'}</tbody>
           </table>
         </div>
       </div>`;
@@ -12636,6 +12818,10 @@ body::after{
   #app .brand-main.zz01-heading-rendered{font-size:.94rem!important;--zz-cell:.098em;--zz-gap:.023em}
   #app .topbar{clip-path:polygon(8px 0,calc(100% - 8px) 0,100% 8px,100% calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,0 calc(100% - 8px),0 8px)!important}
 }
+
+/* ZZ-01: žákovský herní scoring, výzvy a hodnocení učitelů */
+.student-game-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:14px 0}.student-game-tab{min-height:48px;border:2px solid #167d91;background:#061b27;color:#9bc5c9;font-weight:900}.student-game-tab.active{border-color:#ff9d13;background:#4b2b08;color:#fff3da;box-shadow:3px 3px 0 #02070d}.student-game-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px}.student-game-kpis>div{border:2px solid #19dce1;background:#082636;padding:13px}.student-game-kpis span{display:block;font-size:12px;color:#8ac2c8}.student-game-kpis strong{display:block;margin-top:5px;font-size:20px;color:#fff3da}.student-score-invest{display:flex;align-items:center;justify-content:space-between;gap:20px}.student-score-invest p{margin:4px 0 0;color:#9bc5c9}.student-score-me td{background:#163b42!important;color:#fff3da}.student-score-table .badge{font-size:9px;padding:2px 5px}.student-challenge-list,.student-teacher-rating-list,.teacher-student-challenge-list{display:grid;gap:10px}.student-challenge-card,.student-teacher-rating,.teacher-student-challenge-row{border:2px solid #176d80;background:#061b27;padding:14px}.student-challenge-card.done{opacity:.82}.student-challenge-head,.student-teacher-rating,.teacher-student-challenge-row{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}.student-challenge-head h3,.student-teacher-rating h3{margin:4px 0}.student-reward{color:#ffb416;font-size:18px}.student-challenge-answer{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:12px}.student-challenge-result{display:inline-block;margin-top:8px;padding:6px 9px;border:2px solid}.student-challenge-result.success{border-color:#39d98a;color:#9ff0c1}.student-challenge-result.fail{border-color:#ff5964;color:#ffadb3}.student-rating-actions{display:flex;gap:7px}.student-rating-total{color:#9bc5c9}.student-feedback-score{font-weight:900}.student-challenge-admin-form{margin-bottom:14px}.student-challenge-admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}.student-challenge-admin-grid .wide{grid-column:1/-1}.student-challenge-admin-grid textarea{min-height:100px}.teacher-student-challenge-row.inactive{opacity:.58}.teacher-challenge-prompt{margin:7px 0;color:#e9f7f7}.teacher-student-challenge-row>div{min-width:0}.teacher-student-challenge-row .btn{flex:0 0 auto}
+@media(max-width:760px){.student-game-tabs,.student-game-kpis{grid-template-columns:1fr 1fr}.student-score-invest,.student-challenge-head,.student-teacher-rating,.teacher-student-challenge-row{display:block}.student-score-invest .btn,.student-rating-actions{margin-top:10px}.student-challenge-answer,.student-challenge-admin-grid{grid-template-columns:1fr}.student-challenge-admin-grid .wide{grid-column:auto}}
 </style>
 </head><body><h1>${esc(state.school.name)} – klasifikační přehled</h1><div class="meta">${esc(c.displayName)} · ${esc(subject)} · ${semester}. pololetí · ${esc(c.schoolYear)} · učitel: ${esc(state.user.name)}</div><table><thead><tr><th>Žák</th>${dates.map(d=>`<th>${esc(d.split('-').reverse().join('. '))}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table><script>window.onload=()=>setTimeout(()=>window.print(),150)<\/script></body></html>`);
     w.document.close();
@@ -13231,6 +13417,7 @@ body::after{
     if(state.route==='subjects') return renderSubjects();
     if(state.route==='subject-detail') return renderSubjectDetail();
     if(state.route==='scoring') return renderScoring();
+    if(state.route==='student-challenges') return renderStudentChallengesAdmin();
     if(state.route==='history') return renderHistory();
     if(state.route==='settings') return renderSettings();
     if(state.route==='admin') return renderAdmin();
@@ -13686,6 +13873,10 @@ body::after{
     else if(action==='auth-account-type'){authAccountType=btn.dataset.type==='student'?'student':'teacher';setAuthMessage('');renderLogin();}
     else if(action==='auth-submit'){void submitSupabaseAuth();}
     else if(action==='student-refresh'){void refreshAndRenderStudentPortal();}
+    else if(action==='student-portal-tab'){state.ui=state.ui||{};state.ui.studentPortalTab=btn.dataset.tab||'overview';saveState();renderStudentPortal();}
+    else if(action==='student-invest-score'){openStudentInvestScoreModal();}
+    else if(action==='student-challenge-submit'){void submitStudentLearningChallenge(btn.dataset.id);}
+    else if(action==='student-feedback'){castStudentTeacherFeedback(btn.dataset.teacher,Number(btn.dataset.value));}
     else if(action==='onboard-mode'){state.ui.onboardingMode=btn.dataset.mode;state.ui.selectedSchoolId=null;saveState();render();}
     else if(action==='search-schools'){void searchSchoolsSupabase();}
     else if(action==='select-school'){state.ui.selectedSchoolId=btn.dataset.id;saveState();render();}
@@ -13726,7 +13917,11 @@ body::after{
     else if(action==='grades'){state.route='grades';saveState();render();}
     else if(action==='subjects'){state.route='subjects';saveState();render();}
     else if(action==='classes'){state.route='classes';saveState();render();if(remoteSchoolStructureEnabled())void (async()=>{const ok=await refreshSchoolStructureFromServer({pushDirty:true});if(ok&&state.route==='classes')render();})();}
-    else if(action==='scoring'){state.route='scoring';saveState();render();}
+    else if(action==='scoring'){state.route='scoring';saveState();render();void refreshTeacherFeedbackScores();}
+    else if(action==='student-challenges'){state.route='student-challenges';saveState();render();void refreshTeacherStudentChallenges();}
+    else if(action==='create-student-learning-challenge'){void createStudentLearningChallengeFromForm();}
+    else if(action==='refresh-student-learning-challenges'){void refreshTeacherStudentChallenges();}
+    else if(action==='toggle-student-learning-challenge'){void toggleStudentLearningChallenge(btn.dataset.id,btn.dataset.active==='1');}
     else if(action==='staffroom'){state.route='staffroom';saveState();render();}
     else if(action==='staffroom-send'){sendStaffroomMessage();}
     else if(action==='staffroom-emoji'){
@@ -13917,7 +14112,7 @@ body::after{
       btn.disabled=true;
       setTimeout(()=>{state.ui.wheelResult=items[Math.floor(Math.random()*items.length)];saveState();render();},2100);
     }
-    else if(action==='score-tab'){state.ui.scoreTab=btn.dataset.tab;saveState();render();}
+    else if(action==='score-tab'){state.ui.scoreTab=btn.dataset.tab;saveState();render();if(state.ui.scoreTab==='teachers')void refreshTeacherFeedbackScores();}
     else if(action==='teacher-score-view'){state.ui.teacherScoreView=btn.dataset.view;saveState();render();}
     else if(action==='teacher-carpet') showTeacherCarpet(btn.dataset.teacher||currentTeacherId());
     else if(action==='boss-points-manager') showBossPointsManager();
