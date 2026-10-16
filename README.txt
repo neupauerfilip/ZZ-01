@@ -1,9 +1,12 @@
-ZZ-01 – sjednocení celkového scoringu žáka
+ZZ-01 – Student V4
 
-- celkový scoring je dlouhodobý: trestné body ho snižují, body z testů ho zvyšují
-- scoring může být záporný, nulový i kladný
-- např. -18 + 20 bodů z testů = +2
-- po zkoušení se může resetovat pouze aktuální stav pravidel, ne celkový scoring
-- žák i učitel vidí stejný celkový scoring
-- pořadí třídy, školy a podium se počítají z celkového scoringu
-- backendová změna je již aplikována v Supabase
+Změny:
+- opravené písmeno ů v bitmapovém menu (Můj profil)
+- studentské avatary používají stejný detailní pixel-art styl jako učitelské avatary
+- správce vlastní místnosti v Chodbě může přímo přidávat žáky
+- vyhledávání žáka podle jména
+- filtr podle třídy
+- backend RPC pro seznam kandidátů a přidání člena je už nasazený v Supabase
+
+Stačí nahradit index.html v repozitáři.
+Používané avatarové PNG soubory už v repozitáři existují.
