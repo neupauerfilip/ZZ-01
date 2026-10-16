@@ -1,18 +1,8 @@
-ZZ-01 — BODY ŽÁKŮ V SUPABASE
+ZZ-01 – inventář/skříňky žáků v Supabase
 
-Použití:
-1. Rozbal ZIP.
-2. Překopíruj index.html do kořene projektu ZZ-01 a potvrď nahrazení.
-3. GitHub Desktop: commit „body zaku v Supabase“.
-4. Push origin.
-5. Na GitHub Pages proveď Ctrl+F5.
+1. Překopíruj index.html přes aktuální index.html v projektu.
+2. V GitHub Desktop udělej commit, např. "inventar zaku v Supabase".
+3. Push origin.
+4. Na GitHub Pages použij Ctrl+F5.
 
-Co verze přidává:
-- synchronizaci aktuální bodové bilance žáků přes student_point_events,
-- synchronizaci pochvalných a nasbíraných bodů,
-- synchronizaci aktivních pravidel,
-- zachycení změn ze skříňky a propustky,
-- synchronizaci Čistého štítu,
-- offline frontu změn a deduplikaci pomocí client_key.
-
-Backendová migrace 010_student_point_snapshots už je nasazená.
+Backendová migrace 011_student_inventory už je nasazená.

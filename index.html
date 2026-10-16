@@ -5822,6 +5822,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   };
   const APP_VERSION = 'ZZ-01 / EXAM SCENE E / BAKED FRAMES';
   // STUDENT POINTS SYNC V1 active.
+  // STUDENT INVENTORY SYNC V1 active.
   // SYNC V2: server-first bootstrap + differential teacher subject links.
   const app = document.getElementById('app');
   const toastRoot = document.getElementById('toast-root');
@@ -6688,6 +6689,208 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     }
   }
 
+
+  // STUDENT INVENTORY SYNC V1 — atomic server deltas + shared balances.
+  let remoteStudentInventorySyncBusy=false;
+  let remoteStudentInventorySyncQueued=false;
+  let remoteStudentInventoryTimer=null;
+  let remoteStudentInventoryHydrating=false;
+
+  function studentInventoryMeaningful(student){
+    const all=(student?.subjectInventories&&typeof student.subjectInventories==='object'&&!Array.isArray(student.subjectInventories))?student.subjectInventories:{};
+    return Object.values(all).some(inv=>Number(inv?.passCount||0)>0||Number(inv?.cheatCount||0)>0||Number(inv?.coffeeCount||0)>0);
+  }
+
+  function scheduleSupabaseStudentInventorySync(delay=250){
+    if(!remoteSchoolStructureEnabled()) return;
+    if(remoteStudentInventoryTimer) clearTimeout(remoteStudentInventoryTimer);
+    remoteStudentInventoryTimer=setTimeout(()=>{
+      remoteStudentInventoryTimer=null;
+      void syncSupabaseStudentInventory().catch(err=>console.error('Student inventory sync failed',err));
+    },delay);
+  }
+
+  function inventoryBootstrapClientKey(studentId,subject,itemKey){
+    return `invboot:${String(studentId||'')}:${String(itemKey||'')}:${encodeURIComponent(String(subject||''))}`;
+  }
+
+  function queueStudentInventoryDelta(student,subject,itemKey,delta,reason='inventory_update',{clientKey=null}={}){
+    if(remoteStudentInventoryHydrating||!student)return null;
+    const subjectKey=inventorySubjectKey(subject);
+    const change=Math.trunc(Number(delta)||0);
+    if(!subjectKey||!['passCount','cheatCount','coffeeCount'].includes(itemKey)||!change)return null;
+    state.ui=state.ui||{};
+    state.ui.pendingStudentInventoryEvents=Array.isArray(state.ui.pendingStudentInventoryEvents)?state.ui.pendingStudentInventoryEvents:[];
+    const ev={
+      id:clientKey||uid('inv'),
+      teacherId:state.user?.id||'',
+      studentId:student.id,
+      subject:subjectKey,
+      itemKey,
+      delta:change,
+      reason:String(reason||'inventory_update'),
+      at:now()
+    };
+    if(!state.ui.pendingStudentInventoryEvents.some(x=>x?.id===ev.id)) state.ui.pendingStudentInventoryEvents.push(ev);
+    saveState();
+    scheduleSupabaseStudentInventorySync();
+    return ev;
+  }
+
+  async function fetchSupabaseStudentInventoryState(){
+    if(!remoteSchoolStructureEnabled()) return {balances:[],localKeyByRemoteId:new Map(),remoteIdByLocalKey:new Map()};
+    const schoolId=state.school.id;
+    const [balancesRes,studentsRes]=await Promise.all([
+      supabaseClient.from('student_inventory_balances')
+        .select('school_id,student_id,subject_key,pass_count,cheat_count,coffee_count,updated_at')
+        .eq('school_id',schoolId)
+        .order('updated_at',{ascending:true}),
+      supabaseClient.from('students').select('id,client_key').eq('school_id',schoolId)
+    ]);
+    if(balancesRes.error) throw balancesRes.error;
+    if(studentsRes.error) throw studentsRes.error;
+    return {
+      balances:balancesRes.data||[],
+      localKeyByRemoteId:new Map((studentsRes.data||[]).map(r=>[r.id,r.client_key])),
+      remoteIdByLocalKey:new Map((studentsRes.data||[]).map(r=>[r.client_key,r.id]))
+    };
+  }
+
+  async function pushPendingStudentInventoryEvents(){
+    if(!remoteSchoolStructureEnabled()) return true;
+    state.ui=state.ui||{};
+    const pending=Array.isArray(state.ui.pendingStudentInventoryEvents)?state.ui.pendingStudentInventoryEvents:[];
+    if(!pending.length)return true;
+
+    const schoolId=state.school.id;
+    const {data:sessionData,error:sessionError}=await supabaseClient.auth.getSession();
+    if(sessionError) throw sessionError;
+    const teacherId=sessionData?.session?.user?.id;
+    if(!teacherId) throw new Error('Chybí přihlášený Supabase uživatel.');
+
+    const {remoteIdByLocalKey}=await fetchSupabaseStudentInventoryState();
+    const mine=pending.filter(x=>x?.teacherId===teacherId).slice().sort((a,b)=>Number(a.at||0)-Number(b.at||0));
+    if(!mine.length)return true;
+
+    const completed=new Set();
+    let conflict=false;
+    for(const ev of mine){
+      const remoteStudentId=remoteIdByLocalKey.get(ev.studentId);
+      if(!remoteStudentId)continue;
+      const {data,error}=await supabaseClient.rpc('apply_student_inventory_delta',{
+        p_school_id:schoolId,
+        p_student_id:remoteStudentId,
+        p_subject_key:String(ev.subject||''),
+        p_item_key:String(ev.itemKey||''),
+        p_delta:Math.trunc(Number(ev.delta)||0),
+        p_client_key:String(ev.id||''),
+        p_source:String(ev.reason||'inventory_update'),
+        p_occurred_at:examHistoryIso(ev.at)||new Date().toISOString()
+      });
+      if(error)throw error;
+      const result=Array.isArray(data)?data[0]:data;
+      if(result?.applied===false)conflict=true;
+      completed.add(ev.id);
+    }
+
+    if(completed.size){
+      state.ui.pendingStudentInventoryEvents=pending.filter(x=>!completed.has(x?.id));
+    }
+    state.ui.studentInventoryConflict=conflict;
+    saveState();
+    return true;
+  }
+
+  async function pullSupabaseStudentInventory(){
+    if(!remoteSchoolStructureEnabled()) return new Set();
+    const schoolId=state.school.id;
+    const {balances,localKeyByRemoteId}=await fetchSupabaseStudentInventoryState();
+    const remotePairs=new Set();
+    const byStudent=new Map();
+
+    balances.forEach(row=>{
+      const localKey=localKeyByRemoteId.get(row.student_id);
+      const subject=inventorySubjectKey(row.subject_key);
+      if(!localKey||!subject)return;
+      remotePairs.add(`${localKey}::${subject}`);
+      if(!byStudent.has(localKey))byStudent.set(localKey,{});
+      byStudent.get(localKey)[subject]={
+        passCount:Math.max(0,Number(row.pass_count||0)),
+        cheatCount:Math.max(0,Number(row.cheat_count||0)),
+        coffeeCount:Math.max(0,Number(row.coffee_count||0))
+      };
+    });
+
+    remoteStudentInventoryHydrating=true;
+    try{
+      for(const student of state.students||[]){
+        student.subjectInventories=byStudent.get(student.id)||{};
+      }
+    }finally{
+      remoteStudentInventoryHydrating=false;
+    }
+
+    state.ui=state.ui||{};
+    state.ui.studentInventoryRemoteSchoolId=schoolId;
+    state.ui.studentInventoryLastSyncAt=now();
+    state.ui.studentInventorySyncError=false;
+    saveState();
+    return remotePairs;
+  }
+
+  async function syncSupabaseStudentInventory({bootstrap=false}={}){
+    if(!remoteSchoolStructureEnabled()) return false;
+    if(remoteStudentInventorySyncBusy){remoteStudentInventorySyncQueued=true;return false;}
+    remoteStudentInventorySyncBusy=true;
+    try{
+      await pushPendingStudentInventoryEvents();
+
+      if(bootstrap){
+        const {balances,localKeyByRemoteId}=await fetchSupabaseStudentInventoryState();
+        const remotePairs=new Set();
+        balances.forEach(row=>{
+          const localKey=localKeyByRemoteId.get(row.student_id);
+          const subject=inventorySubjectKey(row.subject_key);
+          if(localKey&&subject)remotePairs.add(`${localKey}::${subject}`);
+        });
+
+        let queued=false;
+        for(const student of state.students||[]){
+          if(!studentInventoryMeaningful(student))continue;
+          const inventories=(student.subjectInventories&&typeof student.subjectInventories==='object'&&!Array.isArray(student.subjectInventories))?student.subjectInventories:{};
+          for(const [subject,raw] of Object.entries(inventories)){
+            const subjectKey=inventorySubjectKey(subject); if(!subjectKey)continue;
+            if(remotePairs.has(`${student.id}::${subjectKey}`))continue;
+            for(const itemKey of ['passCount','cheatCount','coffeeCount']){
+              const count=Math.max(0,Math.trunc(Number(raw?.[itemKey]||0)));
+              if(!count)continue;
+              queueStudentInventoryDelta(student,subjectKey,itemKey,count,'bootstrap',{
+                clientKey:inventoryBootstrapClientKey(student.id,subjectKey,itemKey)
+              });
+              queued=true;
+            }
+          }
+        }
+        if(queued)await pushPendingStudentInventoryEvents();
+      }
+
+      await pullSupabaseStudentInventory();
+      return true;
+    }catch(err){
+      console.error('Student inventory sync failed',err);
+      state.ui=state.ui||{};
+      state.ui.studentInventorySyncError=true;
+      saveState();
+      return false;
+    }finally{
+      remoteStudentInventorySyncBusy=false;
+      if(remoteStudentInventorySyncQueued){
+        remoteStudentInventorySyncQueued=false;
+        scheduleSupabaseStudentInventorySync(150);
+      }
+    }
+  }
+
   async function initializeSupabaseSchoolStructure(){
     if(!remoteSchoolStructureEnabled()) return;
     state.ui=state.ui||{};
@@ -6699,6 +6902,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       await pullSupabaseSchoolStructure();
       await syncSupabaseExamHistory();
       await syncSupabaseStudentPoints({bootstrap:true});
+      await syncSupabaseStudentInventory({bootstrap:true});
       return;
     }
 
@@ -6707,6 +6911,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     await pullSupabaseSchoolStructure();
     await syncSupabaseExamHistory();
     await syncSupabaseStudentPoints({bootstrap:true});
+    await syncSupabaseStudentInventory({bootstrap:true});
   }
 
   async function refreshSupabaseSchoolTeachers(){
@@ -7711,9 +7916,15 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     return inv;
   }
   function subjectInventoryCount(student,subject,key){ const inv=subjectInventory(student,subject,{create:false}); return Math.max(0,Number(inv?.[key]||0)); }
-  function addSubjectInventory(student,subject,key,delta=1){
-    const inv=subjectInventory(student,subject,{create:true}); if(!['passCount','cheatCount','coffeeCount'].includes(key)) return 0;
-    inv[key]=Math.max(0,Number(inv[key]||0)+Number(delta||0)); return inv[key];
+  function addSubjectInventory(student,subject,key,delta=1,reason='inventory_update'){
+    const subjectName=inventorySubjectKey(subject);
+    const inv=subjectInventory(student,subjectName,{create:true}); if(!['passCount','cheatCount','coffeeCount'].includes(key)) return 0;
+    const before=Math.max(0,Number(inv[key]||0));
+    const next=Math.max(0,before+Number(delta||0));
+    const applied=next-before;
+    inv[key]=next;
+    if(applied!==0)queueStudentInventoryDelta(student,subjectName,key,applied,reason);
+    return inv[key];
   }
   function applyStudentPenaltyDelta(student,delta){
     const d=Number(delta||0), before=currentPenaltyPoints(student);
@@ -7726,7 +7937,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     const subjectName=inventorySubjectKey(subject??state.examFlow?.subject??state.activeExam?.subject);
     const inv=subjectInventory(student,subjectName,{create:false});
     if(!student||!subjectName||Number(inv.passCount||0)<=0) return false;
-    addSubjectInventory(student,subjectName,'passCount',-1);
+    addSubjectInventory(student,subjectName,'passCount',-1,'pass_used');
     const studentPositiveDelta=addStudentPositivePoints(student,1);
     const teacherDelta=applyTeacherLockerPoints({penalty:1});
     const passRecord={id:uid('hist'),teacherId:state.user.id,studentId:student.id,classId:state.examFlow?.classId||'',subject:subjectName,schoolYear:classById(state.examFlow?.classId)?.schoolYear||'',at:now(),completed:false,passUsed:true,lockerAppeared:!!lockerAppeared,lockerResultId:lockerItem?.id||null,lockerResultName:lockerItem?.name||'',lockerPointsDelta:0,teacherPositiveDelta:0,teacherPenaltyDelta:teacherDelta.penalty,studentPositiveDelta,topic:'',grade:null,teacherNameSnapshot:state.user.name||'',studentNameSnapshot:student.name||'',classNameSnapshot:classById(state.examFlow?.classId)?.displayName||''};
@@ -10214,11 +10425,11 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     const inventorySubject=inventorySubjectKey(state.examFlow?.subject);
     let effectText=item.flavor||'Bez bodové změny.';
     if(item.kind==='pass'){
-      const count=addSubjectInventory(s,inventorySubject,'passCount',1);
+      const count=addSubjectInventory(s,inventorySubject,'passCount',1,'locker_found_pass');
       effectText=`${item.flavor||''} Pro předmět ${inventorySubject} je v inventáři teď ${count}× propustka.`.trim();
     }else if(item.kind==='examInventory'){
       const key=item.inventoryKey==='coffeeCount'?'coffeeCount':'cheatCount';
-      const count=addSubjectInventory(s,inventorySubject,key,1);
+      const count=addSubjectInventory(s,inventorySubject,key,1,key==='coffeeCount'?'locker_found_coffee':'locker_found_cheat');
       effectText=`${item.flavor||''} Pro předmět ${inventorySubject} je v inventáři žáka teď ${count}× ${item.name}.`.trim();
     }else if(item.kind==='teacherPenalty'){
       const delta=applyTeacherLockerPoints({penalty:Number(item.teacherPenalty||1)});
@@ -10738,7 +10949,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     modal({title,body,actions:[
       {label:'Zrušit',className:'secondary'},
       {label:isCoffee?'Použít kafíčko':'Použít tahák',className:'primary',onClick:()=>{
-        addSubjectInventory(student,subjectName,key,-1);
+        addSubjectInventory(student,subjectName,key,-1,isCoffee?'coffee_used':'cheat_used');
         if(isCoffee){
           const delta=applyTeacherLockerPoints({positive:1});
           e.teacherPositiveDelta=Math.max(0,Number(e.teacherPositiveDelta||0))+delta.positive;
