@@ -1,14 +1,11 @@
-ZZ-01 – kompaktní žákovské testy + oprava hodnocení učitelů
+ZZ-01 – kompaktní testy, rozdělování bodů učitelům a žákovské podium
 
-Frontend:
-- otázky jsou kompaktní řádky
-- odpovědi A–D jsou vedle sebe na desktopu, 2x2 na menších displejích
-- výrazné zvýraznění zvolené odpovědi
-- odevzdání je povoleno až po vyplnění všech otázek
-- před finálním odevzdáním se zobrazí potvrzovací dialog
-- průběžně se ukazuje počet zodpovězených otázek
-
-Backend:
-- v Supabase byla opravena chyba "column reference available_points is ambiguous"
-  ve funkci student_cast_teacher_feedback
-- stejným způsobem byla preventivně opravena i funkce student_invest_game_score
+Změny:
+- odpovědi v testu mají čtvereček s fajfkou ve stylu přítomnosti žáků
+- každá odpověď je kompaktní řádek; na desktopu jsou dvě možnosti vedle sebe
+- opravený CSS blok testu (předchozí verze obsahovala escapované znaky \n)
+- žák může učiteli přidělit libovolných 1–20 bodů v jednom kroku, kladně nebo záporně
+- stejného učitele lze ohodnotit opakovaně, dokud má žák body
+- přidělené body se odečítají z žákovy herní peněženky
+- ve školním žákovském scoringu jsou dole stupně vítězů TOP 3 ve stejném stylu jako u učitelů
+- backendová migrace pro variabilní hodnocení učitelů byla aplikována přímo v Supabase

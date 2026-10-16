@@ -5799,7 +5799,70 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 .student-panel{border:4px solid #14dce4;background:linear-gradient(180deg,#082838,#051923);box-shadow:inset 0 0 0 3px #064f65,6px 6px 0 #02070d;padding:14px}.student-panel-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px}.student-panel-head h2{margin:0;color:#fff5df;font-family:var(--pixel);font-size:1rem}.student-panel-head span{color:#20eef2;font-size:.72rem;font-weight:900}.student-inventory-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.student-inventory-card{padding:12px;border:3px solid #0b7d93;background:#061925}.student-inventory-card>strong{display:block;margin-bottom:9px;color:#fff4df}.student-inventory-card>div{display:flex;justify-content:space-between;padding:5px 0;border-top:1px solid #0d5362;color:#bcd7d8}.student-inventory-card b{color:#ffb316}.student-note{padding:12px;border:2px dashed #0d8296;color:#9fc3c5;text-align:center;font-size:.72rem}.student-topbar .btn{min-height:40px}
 @media(max-width:760px){.student-hero{grid-template-columns:1fr}.student-id-card{justify-self:start}.student-kpis{grid-template-columns:1fr 1fr}.student-inventory-grid{grid-template-columns:1fr}.student-topbar{align-items:flex-start}.student-topbar .nav-actions{flex-wrap:wrap}}
 </style>
-\n<style id="zz01-student-test-compact-main">\n/* Kompaktní žákovský test: více otázek na obrazovce, malé volby, jasné potvrzení. */\n.student-open-test{margin-top:12px!important}\n.student-open-test-head{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:12px!important;align-items:start!important;padding-bottom:9px!important;margin-bottom:8px!important;border-bottom:2px solid #0b6f7c!important}\n.student-open-test-head h2{margin:2px 0 2px!important;font-size:1.05rem!important}\n.student-open-test-head p{margin:0!important;color:#91b7bf!important;font-size:.72rem!important}\n.student-test-question-list{display:grid!important;gap:6px!important}\n.student-test-question-row{border:2px solid #155f6d!important;background:#051c27!important;padding:7px 8px!important;box-shadow:2px 2px 0 #010a10!important}\n.student-test-question-row:focus-within{border-color:#26dfe8!important}\n.student-test-question-row.done{border-color:#416c74!important;background:#071a21!important}\n.student-test-qline{display:grid!important;grid-template-columns:30px minmax(0,1fr) auto!important;gap:7px!important;align-items:center!important;margin-bottom:6px!important}\n.student-test-qnum{display:grid!important;place-items:center!important;width:26px!important;height:26px!important;border:1px solid #1593a3!important;color:#36e3ec!important;font-family:var(--pixel)!important;font-size:.67rem!important}\n.student-test-qprompt{min-width:0!important;color:#fff4da!important;font-size:.86rem!important;line-height:1.25!important}\n.student-test-point{white-space:nowrap!important;color:#ffd15b!important;font-family:var(--pixel)!important;font-size:.61rem!important}\n.student-test-choices{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:5px!important}\n.student-test-choice{position:relative!important;display:grid!important;grid-template-columns:28px minmax(0,1fr) 18px!important;align-items:center!important;gap:6px!important;min-height:36px!important;padding:4px 6px!important;margin:0!important;border:1px solid #1a6672!important;background:#031821!important;color:#e7f8fa!important;cursor:pointer!important;user-select:none!important;transition:border-color .08s,background .08s,box-shadow .08s!important}\n.student-test-choice:hover{border-color:#26cbd6!important;background:#06222d!important}\n.student-test-choice input{position:absolute!important;opacity:0!important;width:1px!important;height:1px!important;margin:0!important;pointer-events:none!important}\n.student-test-choice-letter{display:grid!important;place-items:center!important;width:26px!important;height:26px!important;border:1px solid #1b9eac!important;background:#082833!important;color:#fff2d3!important;font-family:var(--pixel)!important;font-size:.68rem!important}\n.student-test-choice-text{min-width:0!important;overflow-wrap:anywhere!important;font-size:.78rem!important;line-height:1.2!important}\n.student-test-choice-check{opacity:0!important;color:#171006!important;font-weight:900!important;text-align:center!important}\n.student-test-choice:has(input:checked){border:2px solid #ff9b13!important;background:#322106!important;box-shadow:inset 0 0 0 1px #7f4500!important;padding:3px 5px!important}\n.student-test-choice:has(input:checked) .student-test-choice-letter{border-color:#fff0a0!important;background:#ff8c0b!important;color:#171006!important}\n.student-test-choice:has(input:checked) .student-test-choice-check{opacity:1!important;color:#ffd56c!important}\n.student-test-submit-bar{position:sticky!important;bottom:8px!important;z-index:8!important;margin-top:10px!important;padding:8px 10px!important;border:2px solid #ff9c18!important;background:rgba(36,25,10,.97)!important;display:flex!important;justify-content:space-between!important;gap:10px!important;align-items:center!important;box-shadow:0 4px 0 #01080d!important}\n.student-test-submit-bar>div{font-size:.72rem!important;color:#e8d7b2!important}.student-test-submit-bar strong{color:#fff2d4!important}.student-test-submit-bar span{color:#b79b6f!important}\n.student-test-submit-bar .btn{min-height:38px!important;padding:7px 12px!important}\n.student-test-submit-bar .btn:disabled{opacity:.42!important;filter:saturate(.4)!important;cursor:not-allowed!important}\n.student-test-review-answer{margin-top:3px!important;padding:5px 7px!important;border-left:2px solid #2fcbd6!important;background:#041a22!important;color:#bfeaf0!important;font-size:.75rem!important}\n.student-test-picker-row{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:8px!important;align-items:end!important}\n.student-test-picker-row select{min-height:42px!important}\n@media(max-width:900px){.student-test-choices{grid-template-columns:repeat(2,minmax(0,1fr))!important}}\n@media(max-width:560px){.student-open-test-head,.student-test-picker-row{grid-template-columns:1fr!important}.student-test-choices{grid-template-columns:1fr!important}.student-test-qline{grid-template-columns:28px minmax(0,1fr)!important}.student-test-point{grid-column:2!important}.student-test-submit-bar{position:static!important;align-items:stretch!important;flex-direction:column!important}.student-test-submit-bar .btn{width:100%!important}}\n</style>\n</head>
+
+<style id="zz01-student-test-compact-main">
+/* Kompaktní žákovský test + rozdělování bodů učitelům + žákovské podium. */
+.student-open-test{margin-top:12px!important}
+.student-open-test-head{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:12px!important;align-items:start!important;padding-bottom:9px!important;margin-bottom:8px!important;border-bottom:2px solid #0b6f7c!important}
+.student-open-test-head h2{margin:2px 0 2px!important;font-size:1.05rem!important}
+.student-open-test-head p{margin:0!important;color:#91b7bf!important;font-size:.72rem!important}
+.student-test-question-list{display:grid!important;gap:6px!important}
+.student-test-question-row{border:2px solid #155f6d!important;background:#051c27!important;padding:7px 8px!important;box-shadow:2px 2px 0 #010a10!important}
+.student-test-question-row:focus-within{border-color:#26dfe8!important}
+.student-test-question-row.done{border-color:#416c74!important;background:#071a21!important}
+.student-test-qline{display:grid!important;grid-template-columns:30px minmax(0,1fr) auto!important;gap:7px!important;align-items:center!important;margin-bottom:6px!important}
+.student-test-qnum{display:grid!important;place-items:center!important;width:26px!important;height:26px!important;border:1px solid #1593a3!important;color:#36e3ec!important;font-family:var(--pixel)!important;font-size:.67rem!important}
+.student-test-qprompt{min-width:0!important;color:#fff4da!important;font-size:.86rem!important;line-height:1.25!important}
+.student-test-point{white-space:nowrap!important;color:#ffd15b!important;font-family:var(--pixel)!important;font-size:.61rem!important}
+
+/* Každá odpověď je kompaktní řádek. Vlevo je stejný čtvereček s fajfkou jako u přítomnosti. */
+.student-test-choices{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:5px!important}
+.student-test-choice{position:relative!important;display:grid!important;grid-template-columns:30px 24px minmax(0,1fr)!important;align-items:center!important;gap:7px!important;min-height:38px!important;padding:4px 7px!important;margin:0!important;border:2px solid #165d68!important;background:#031821!important;color:#e7f8fa!important;cursor:pointer!important;user-select:none!important;transition:border-color .08s,background .08s,box-shadow .08s!important}
+.student-test-choice:hover{border-color:#18d9e5!important;background:#06222d!important}
+.student-test-choice input{position:absolute!important;opacity:0!important;width:1px!important;height:1px!important;margin:0!important;pointer-events:none!important}
+.student-test-choice-box{width:28px!important;height:28px!important;border:3px solid #fff4d5!important;background:#071421!important;display:grid!important;place-content:center!important;box-shadow:inset 0 0 0 1px #142b37,2px 2px 0 #010913!important}
+.student-test-choice-box::after{content:"";width:8px;height:16px;border:solid #32ef45;border-width:0 5px 5px 0;transform:rotate(45deg) scale(0);transform-origin:center;margin-top:-3px}
+.student-test-choice-letter{display:grid!important;place-items:center!important;width:22px!important;height:22px!important;border:1px solid #1b9eac!important;background:#082833!important;color:#fff2d3!important;font-family:var(--pixel)!important;font-size:.64rem!important}
+.student-test-choice-text{min-width:0!important;overflow-wrap:anywhere!important;font-size:.8rem!important;line-height:1.2!important}
+.student-test-choice:has(input:checked){border-color:#ff9b13!important;background:#322106!important;box-shadow:inset 0 0 0 1px #7f4500!important}
+.student-test-choice:has(input:checked) .student-test-choice-box{border-color:#fff0a0!important;background:#0b191d!important}
+.student-test-choice:has(input:checked) .student-test-choice-box::after{transform:rotate(45deg) scale(1)}
+.student-test-choice:has(input:checked) .student-test-choice-letter{border-color:#fff0a0!important;background:#ff8c0b!important;color:#171006!important}
+.student-test-submit-bar{position:sticky!important;bottom:8px!important;z-index:8!important;margin-top:10px!important;padding:8px 10px!important;border:2px solid #ff9c18!important;background:rgba(36,25,10,.97)!important;display:flex!important;justify-content:space-between!important;gap:10px!important;align-items:center!important;box-shadow:0 4px 0 #01080d!important}
+.student-test-submit-bar>div{font-size:.72rem!important;color:#e8d7b2!important}.student-test-submit-bar strong{color:#fff2d4!important}.student-test-submit-bar span{color:#b79b6f!important}
+.student-test-submit-bar .btn{min-height:38px!important;padding:7px 12px!important}
+.student-test-submit-bar .btn:disabled{opacity:.42!important;filter:saturate(.4)!important;cursor:not-allowed!important}
+.student-test-review-answer{margin-top:3px!important;padding:5px 7px!important;border-left:2px solid #2fcbd6!important;background:#041a22!important;color:#bfeaf0!important;font-size:.75rem!important}
+.student-test-picker-row{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:8px!important;align-items:end!important}
+.student-test-picker-row select{min-height:42px!important}
+
+/* Rozdělování kladných bodů učitelům. */
+.student-teacher-rating{align-items:center!important}
+.student-rating-allocator{display:grid;grid-template-columns:92px auto auto;gap:7px;align-items:end;min-width:310px}
+.student-rating-allocator label{margin:0!important;color:#9bc5c9!important;font-size:.7rem!important}
+.student-rating-allocator input{min-height:40px!important;padding:7px 8px!important;text-align:center!important}
+.student-rating-allocator .btn{min-height:40px!important;padding:7px 11px!important;white-space:nowrap!important}
+
+/* Stupně vítězů v žákovském školním scoringu – stejné bedýnky jako u učitelů. */
+.student-school-podium-wrap{margin-top:14px}
+.student-school-podium{min-height:220px!important;margin-top:8px!important}
+.student-school-podium .podium-slot>div:not(.podium-box){min-height:20px}
+.student-school-podium .podium-name{font-weight:900;color:#fff3da;overflow-wrap:anywhere}
+.student-school-podium .podium-score{color:#34e7ef;font-size:.75rem}
+.student-school-podium .podium-box{font-family:var(--pixel);align-items:flex-start}
+
+@media(max-width:760px){
+  .student-test-choices{grid-template-columns:1fr!important}
+  .student-rating-allocator{grid-template-columns:1fr 1fr;min-width:0;width:100%;margin-top:10px}
+  .student-rating-allocator label{grid-column:1/-1}
+  .student-teacher-rating{display:block!important}
+}
+@media(max-width:560px){
+  .student-open-test-head,.student-test-picker-row{grid-template-columns:1fr!important}
+  .student-test-qline{grid-template-columns:28px minmax(0,1fr)!important}.student-test-point{grid-column:2!important}
+  .student-test-submit-bar{position:static!important;align-items:stretch!important;flex-direction:column!important}.student-test-submit-bar .btn{width:100%!important}
+}
+</style>\n</head>
 <body>
   <div class="crt-overlay" aria-hidden="true"></div>
   <div id="app" class="app-shell" aria-live="polite"></div>
@@ -9771,6 +9834,18 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     return `<div class="table-wrap student-score-table"><table><thead><tr><th>#</th><th>Žák</th><th>Scoring</th></tr></thead><tbody>${list.map(r=>`<tr class="${r.is_me?'student-score-me':''}"><td>${Number(r.rank_position||0)}.</td><td>${esc(r.student_name||'Žák')}${r.is_me?' <span class="badge">TY</span>':''}</td><td><strong>${Number(r.score_points||0)} b.</strong></td></tr>`).join('')}</tbody></table></div>`;
   }
 
+  function studentSchoolPodium(rows){
+    const ranked=(rows||[]).slice().sort((a,b)=>
+      Number(a.rank_position||999)-Number(b.rank_position||999) ||
+      Number(b.score_points||0)-Number(a.score_points||0) ||
+      String(a.student_name||'').localeCompare(String(b.student_name||''),'cs')
+    ).slice(0,3);
+    if(!ranked.length)return '';
+    const order=[ranked[1],ranked[0],ranked[2]];
+    const places=[2,1,3];
+    return `<section class="student-panel student-school-podium-wrap"><div class="student-panel-head"><h2>Stupně vítězů – celá škola</h2><span>TOP 3</span></div><div class="podium student-school-podium">${order.map((r,i)=>r?`<div class="podium-slot"><div class="podium-name">${esc(r.student_name||'Žák')}${r.is_me?' <span class="badge">TY</span>':''}</div><div class="podium-score">${Number(r.score_points||0)} b.</div><div class="podium-box">${places[i]}</div></div>`:'<div class="podium-slot"></div>').join('')}</div></section>`;
+  }
+
   function openStudentInvestScoreModal(){
     const available=Math.max(0,Number(state.studentPortal?.wallet?.available_points||0));
     if(!available)return toast('Nemáš žádné kladné body k převedení.','warn');
@@ -9856,13 +9931,20 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     }catch(err){toast(authErrorText(err),'error');}
   }
 
-  async function castStudentTeacherFeedback(teacherId,value){
+  async function castStudentTeacherFeedback(teacherId,direction){
     const teacher=(state.studentPortal?.feedbackTeachers||[]).find(t=>t.teacher_id===teacherId);
     const label=teacher?.teacher_name||'učitele';
-    const tone=Number(value)>0?'kladně':'záporně';
-    modal({title:'Ohodnotit učitele?',body:`<p>Chceš ohodnotit <strong>${esc(label)}</strong> ${tone}?</p><p class="muted">Hlas stojí 1 kladný bod z výzev. Učitel uvidí pouze souhrnný počet hlasů, ne kdo hlasoval.</p>`,actions:[
+    const available=Math.max(0,Number(state.studentPortal?.wallet?.available_points||0));
+    const input=document.getElementById(`student-feedback-amount-${teacherId}`);
+    const amount=Math.trunc(Number(input?.value||0));
+    if(amount<1||amount>20)return toast('Zadej 1 až 20 bodů.','warn');
+    if(amount>available)return toast(`Máš k dispozici jen ${available} bodů.`,'warn');
+    const sign=Number(direction)>=0?1:-1;
+    const signed=sign*amount;
+    const tone=sign>0?'kladně':'záporně';
+    modal({title:'Přidělit body učiteli?',body:`<p>Chceš učitele <strong>${esc(label)}</strong> ohodnotit ${tone} o <strong>${sign>0?'+':''}${signed} bodů</strong>?</p><p class="muted">Z tvé zásoby se spotřebuje ${amount} kladných bodů. Učitel uvidí pouze souhrn, ne kdo body přidělil.</p>`,actions:[
       {label:'Ne',className:'secondary'},
-      {label:Number(value)>0?'Ano, +1':'Ano, −1',className:Number(value)>0?'primary':'danger',onClick:()=>{void (async()=>{try{const {error}=await supabaseClient.rpc('student_cast_teacher_feedback',{p_session_token:studentPortalSessionToken(),p_teacher_id:teacherId,p_value:Number(value)>0?1:-1});if(error)throw error;await refreshStudentPortal();saveState();render();toast('Hodnocení bylo započítáno.');}catch(err){toast(authErrorText(err),'error');}})();}}
+      {label:sign>0?`Ano, +${amount}`:`Ano, −${amount}`,className:sign>0?'primary':'danger',onClick:()=>{void (async()=>{try{const {error}=await supabaseClient.rpc('student_cast_teacher_feedback',{p_session_token:studentPortalSessionToken(),p_teacher_id:teacherId,p_value:signed});if(error)throw error;await refreshStudentPortal();saveState();render();toast(`Učiteli bylo přiděleno ${sign>0?'+':''}${signed} bodů.`);}catch(err){toast(authErrorText(err),'error');}})();}}
     ]});
   }
 
@@ -9897,7 +9979,8 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       tabBody=`<div class="student-game-kpis"><div><span>Kladné body k použití</span><strong>+${Number(wallet.available_points||0)} b.</strong></div><div><span>Body ve scoringu</span><strong>${Number(wallet.score_points||0)} b.</strong></div><div><span>Pořadí ve škole</span><strong>${meSchool?`${Number(meSchool.rank_position)}.`:'—'}</strong></div></div>
         <section class="student-panel student-score-invest"><div><h2>Použít kladné body</h2><p>Body získané z dobrovolných testů můžeš převést do svého scoringu, nebo je utratit za hodnocení učitelů.</p></div><button class="btn primary" data-action="student-invest-score" ${Number(wallet.available_points||0)<=0?'disabled':''}>Převést do scoringu</button></section>
         ${classBlocks||'<section class="student-panel"><div class="empty">Nejsi v žádné aktivní třídě.</div></section>'}
-        <section class="student-panel"><div class="student-panel-head"><h2>Celá škola</h2><span>${meSchool?`${Number(meSchool.rank_position)}. místo z ${schoolRows.length}`:`${schoolRows.length} žáků`}</span></div>${studentScoreTable(schoolRows,{limit:50})}</section>`;
+        <section class="student-panel"><div class="student-panel-head"><h2>Celá škola</h2><span>${meSchool?`${Number(meSchool.rank_position)}. místo z ${schoolRows.length}`:`${schoolRows.length} žáků`}</span></div>${studentScoreTable(schoolRows,{limit:50})}</section>
+        ${studentSchoolPodium(schoolRows)}`;
     }else if(tab==='challenges'){
       const tests=challenges
         .filter(ch=>ch.challenge_type==='test')
@@ -9928,7 +10011,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
             const correctText=letters.includes(correct)?String(opts[letters.indexOf(correct)]||''):'';
             return `<section class="student-test-question-row done"><div class="student-test-qline"><span class="student-test-qnum">${i+1}.</span><strong class="student-test-qprompt">${esc(q.prompt||'Otázka')}</strong><span class="student-test-point">+1 b.</span></div><div class="student-test-review-answer">Správná odpověď: <strong>${esc(correct)}${correctText?` — ${esc(correctText)}`:''}</strong></div></section>`;
           }
-          return `<section class="student-test-question-row"><div class="student-test-qline"><span class="student-test-qnum">${i+1}.</span><strong class="student-test-qprompt">${esc(q.prompt||'Otázka')}</strong><span class="student-test-point">+1 b.</span></div><div class="student-test-choices">${letters.map((letter,oi)=>`<label class="student-test-choice"><input type="radio" data-test-answer="${selected.challenge_id}" name="student-test-${selected.challenge_id}-${i}" value="${letter}"><span class="student-test-choice-letter">${letter}</span><span class="student-test-choice-text">${esc(opts[oi]||'')}</span><span class="student-test-choice-check">✓</span></label>`).join('')}</div></section>`;
+          return `<section class="student-test-question-row"><div class="student-test-qline"><span class="student-test-qnum">${i+1}.</span><strong class="student-test-qprompt">${esc(q.prompt||'Otázka')}</strong><span class="student-test-point">+1 b.</span></div><div class="student-test-choices">${letters.map((letter,oi)=>`<label class="student-test-choice"><input type="radio" data-test-answer="${selected.challenge_id}" name="student-test-${selected.challenge_id}-${i}" value="${letter}"><span class="student-test-choice-box" aria-hidden="true"></span><span class="student-test-choice-letter">${letter}</span><span class="student-test-choice-text">${esc(opts[oi]||'')}</span></label>`).join('')}</div></section>`;
         }).join('');
         const result=done?`<div class="student-test-result ${gained>0?'success':'neutral'}"><strong>${Number(selected.correct_count||0)}/${total} správně</strong><span>+${gained} bodů</span></div>`:'';
         opened=`<section class="student-panel student-open-test"><div class="student-open-test-head"><div><div class="student-kicker">DOBROVOLNÝ TEST · ${esc(selected.teacher_name||'Učitel')}</div><h2>${esc(selected.title||'Test')}</h2><p>${total} otázek · každá správná odpověď = +1 bod · odpověď můžeš před odevzdáním změnit</p></div><button class="btn secondary" data-action="student-test-close">Zavřít test</button></div>${result}<div class="student-test-question-list">${questionHtml}</div>${done?'':`<div class="student-test-submit-bar"><div><strong id="student-test-progress">Odpovězeno 0/${total}</strong><span> Odevzdání ještě jednou potvrdíš.</span></div><button class="btn primary" data-action="student-challenge-submit" data-id="${selected.challenge_id}" disabled>Odevzdat celý test</button></div>`}</section>`;
@@ -9938,8 +10021,10 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 
       tabBody=`<div class="student-game-kpis"><div><span>Kladné body k použití</span><strong>+${Number(wallet.available_points||0)} b.</strong></div><div><span>Celkem získáno</span><strong>${Number(wallet.earned_total||0)} b.</strong></div><div><span>Testy k dispozici</span><strong>${tests.length}</strong></div></div>${selector}${opened}`;
     }else if(tab==='teachers'){
-      const cards=feedbackTeachers.map(t=>`<article class="student-teacher-rating"><div><h3>${esc(t.teacher_name||'Učitel')}</h3><div class="student-rating-total">Hlas žáků: <strong>${formatSignedNumber(Number(t.net_score||0))}</strong> · +${Number(t.positive_votes||0)} / −${Number(t.negative_votes||0)}</div><div class="tiny muted">${t.voted_this_period?'Tento týden už jsi hlasoval(a).':'Můžeš hlasovat jednou za týden.'}</div></div><div class="student-rating-actions"><button class="btn primary" data-action="student-feedback" data-teacher="${t.teacher_id}" data-value="1" ${t.voted_this_period||Number(wallet.available_points||0)<1?'disabled':''}>+1</button><button class="btn danger" data-action="student-feedback" data-teacher="${t.teacher_id}" data-value="-1" ${t.voted_this_period||Number(wallet.available_points||0)<1?'disabled':''}>−1</button></div></article>`).join('');
-      tabBody=`<div class="student-game-kpis"><div><span>Kladné body k použití</span><strong>+${Number(wallet.available_points||0)} b.</strong></div><div><span>Cena jednoho hlasu</span><strong>1 b.</strong></div><div><span>Hodnotitelní učitelé</span><strong>${feedbackTeachers.length}</strong></div></div><section class="student-panel"><div class="student-panel-head"><h2>Ohodnotit učitele</h2><span>bez komentářů</span></div><p class="muted">Za 1 kladný bod můžeš dát učiteli +1 nebo −1. Hlasovat lze u každého svého učitele jednou týdně. Učitelé vidí jen souhrn, ne jméno hlasujícího.</p><div class="student-teacher-rating-list">${cards||'<div class="empty">Pro tvoje třídy nejsou přiřazeni žádní učitelé k hodnocení.</div>'}</div></section>`;
+      const availableFeedbackPoints=Math.max(0,Number(wallet.available_points||0));
+      const maxFeedbackPoints=Math.min(20,availableFeedbackPoints);
+      const cards=feedbackTeachers.map(t=>`<article class="student-teacher-rating"><div><h3>${esc(t.teacher_name||'Učitel')}</h3><div class="student-rating-total">Hlas žáků: <strong>${formatSignedNumber(Number(t.net_score||0))}</strong> · přiděleno +${Number(t.positive_votes||0)} / −${Number(t.negative_votes||0)}</div><div class="tiny muted">Body můžeš tomuto učiteli přidělit opakovaně. Každé přidělení spotřebuje stejný počet tvých kladných bodů.</div></div><div class="student-rating-allocator"><label>Kolik bodů<input id="student-feedback-amount-${t.teacher_id}" type="number" min="1" max="${Math.max(1,maxFeedbackPoints)}" value="${maxFeedbackPoints?Math.min(5,maxFeedbackPoints):1}" ${maxFeedbackPoints<1?'disabled':''}></label><button class="btn primary" data-action="student-feedback" data-teacher="${t.teacher_id}" data-value="1" ${maxFeedbackPoints<1?'disabled':''}>Přidělit +</button><button class="btn danger" data-action="student-feedback" data-teacher="${t.teacher_id}" data-value="-1" ${maxFeedbackPoints<1?'disabled':''}>Přidělit −</button></div></article>`).join('');
+      tabBody=`<div class="student-game-kpis"><div><span>Kladné body k rozdělení</span><strong>+${availableFeedbackPoints} b.</strong></div><div><span>Max. najednou</span><strong>20 b.</strong></div><div><span>Hodnotitelní učitelé</span><strong>${feedbackTeachers.length}</strong></div></div><section class="student-panel"><div class="student-panel-head"><h2>Ohodnotit učitele</h2><span>bez komentářů</span></div><p class="muted">Vyber, kolik svých kladných bodů chceš učiteli přidělit, a zvol + nebo −. Najednou můžeš přidělit nejvýše 20 bodů; pokud chceš, můžeš stejnému učiteli přidělit body znovu. Učitelé vidí jen souhrn, ne jméno žáka.</p><div class="student-teacher-rating-list">${cards||'<div class="empty">Pro tvoje třídy nejsou přiřazeni žádní učitelé k hodnocení.</div>'}</div></section>`;
     }else{
       tabBody=`<div class="student-kpis"><div><span>Aktuální bilance</span><strong class="point-value ${pointTone(Number(point.point_balance||0))}">${formatSignedNumber(Number(point.point_balance||0))} b.</strong></div><div><span>Nasbírané body</span><strong>${formatSignedNumber(Number(point.collected_points||0))} b.</strong></div><div><span>Pochvalné body</span><strong>+${Math.max(0,Number(point.positive_points||0))} b.</strong></div><div><span>Záznamů</span><strong>${grades.length}</strong></div></div>
         <section class="student-panel"><div class="student-panel-head"><h2>Moje známky a zkoušení</h2><span>${grades.length} záznamů</span></div><div class="table-wrap"><table><thead><tr><th>Datum</th><th>Předmět</th><th>Téma</th><th>Výsledek</th><th>Poznámka</th></tr></thead><tbody>${gradeRows||'<tr><td colspan="5">Zatím tu nejsou žádné výsledky.</td></tr>'}</tbody></table></div></section>
@@ -9950,7 +10035,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       <div class="student-hero"><div><div class="student-kicker">MŮJ PŘEHLED</div><h1>${esc(a.student_name||state.user.name||'Žák')}</h1><div class="student-school">${esc(a.school_name||'')} · ${esc(a.school_year||'')}${a.school_code?` · kód školy ${esc(a.school_code)}`:''}</div><div class="student-chips">${classChips}</div></div><div class="student-id-card">ZZ-01<br>STUDENT</div></div>
       <div class="student-game-tabs">${studentPortalTabButton('overview','Přehled')}${studentPortalTabButton('scoring','Scoring')}${studentPortalTabButton('challenges','Testy')}${studentPortalTabButton('teachers','Ohodnotit učitele')}</div>
       ${tabBody}
-      <div class="student-note">Dobrovolné testy a hodnocení učitelů jsou herní součást Zkouškomatu. Neovlivňují školní klasifikaci.</div>
+      <div class="student-note">Dobrovolné testy, žákovský scoring a hodnocení učitelů jsou herní součást Zkouškomatu. Neovlivňují školní klasifikaci.</div>
     </section>`;
     app.innerHTML=studentPortalLayout(body);
   }
