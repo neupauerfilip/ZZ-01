@@ -5921,6 +5921,26 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 .student-home-who{display:grid!important;grid-template-columns:auto 1fr!important;align-items:center!important;gap:10px!important}
 .student-home-who>span{display:flex;flex-direction:column;gap:3px}.student-home-who small{font-family:var(--pixel);color:var(--arcade-cyan);font-size:.62rem}.student-home-who strong{font-size:.88rem}
 
+
+/* V7: odesílatel nepřečtené soukromé zprávy */
+.hall-person{grid-template-columns:auto minmax(0,1fr) auto!important}
+.hall-person.has-unread,.teacher-hall-contact.has-unread{
+  border-color:var(--orange)!important;
+  background:linear-gradient(90deg,rgba(255,145,20,.16),rgba(7,29,43,.98) 42%)!important;
+  box-shadow:inset 5px 0 0 var(--orange),3px 3px 0 #02070d;
+}
+.hall-tab-unread{display:inline-grid!important;place-items:center!important;min-width:20px;height:20px;margin-left:5px;padding:0 5px;border:2px solid #ffe0a4;background:#b93a28;color:#fff!important;font-family:var(--pixel)!important;font-size:.55rem!important;line-height:1!important;box-shadow:1px 1px 0 #02070d;vertical-align:middle}
+.hall-contact-unread{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  min-width:58px!important;padding:5px 7px!important;border:2px solid var(--orange)!important;
+  background:#4b2908!important;color:#fff4dc!important;font-family:var(--pixel)!important;
+  font-size:.55rem!important;line-height:1!important;white-space:nowrap!important;
+  box-shadow:2px 2px 0 #02070d;
+}
+.hall-contact-status{display:flex;flex-direction:column;align-items:flex-end;gap:5px;justify-content:center}
+.hall-contact-status time{font-size:.58rem;color:#7dbcc3;white-space:nowrap}
+@media(max-width:620px){.hall-contact-status time{display:none}.hall-contact-unread{min-width:48px!important;font-size:.5rem!important}}
+
 .student-avatar-wrap{display:inline-grid;place-items:center;overflow:hidden;border:2px solid #20e7eb;background:#061a28;box-shadow:2px 2px 0 #02070d;flex:0 0 auto}.student-avatar-wrap.avatar-sm{width:36px;height:36px}.student-avatar-wrap.avatar-md{width:54px;height:54px}.student-avatar-wrap.avatar-lg{width:68px;height:68px}.student-avatar-wrap.avatar-xl{width:108px;height:108px;border-width:4px}.student-avatar-img{width:100%;height:100%;object-fit:cover;image-rendering:pixelated;image-rendering:crisp-edges;display:block}
 .student-session-chip{gap:8px!important}.student-session-chip .student-avatar-wrap{box-shadow:none}
 .student-profile-hero{display:grid!important;grid-template-columns:auto minmax(0,1fr) auto!important;align-items:center!important}.student-profile-avatar-main{display:grid;place-items:center}
@@ -10010,8 +10030,9 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 
   function studentHallState(){
     state.ui=state.ui||{};
-    state.ui.studentHall=state.ui.studentHall||{tab:'direct',directory:[],rooms:[],directMessages:[],roomMessages:[],roomMembers:[],roomCandidates:[],loaded:false,loading:false,selectedPeerKind:'',selectedPeerId:'',selectedRoomId:'',contactKind:'student',contactClass:'',contactSearch:''};
+    state.ui.studentHall=state.ui.studentHall||{tab:'direct',directory:[],rooms:[],directMessages:[],roomMessages:[],roomMembers:[],roomCandidates:[],unreadPeers:[],loaded:false,loading:false,selectedPeerKind:'',selectedPeerId:'',selectedRoomId:'',contactKind:'student',contactClass:'',contactSearch:''};
     if(!Array.isArray(state.ui.studentHall.roomCandidates))state.ui.studentHall.roomCandidates=[];
+    if(!Array.isArray(state.ui.studentHall.unreadPeers))state.ui.studentHall.unreadPeers=[];
     if(!['student','teacher'].includes(state.ui.studentHall.contactKind))state.ui.studentHall.contactKind='student';
     state.ui.studentHall.contactClass=String(state.ui.studentHall.contactClass||'');
     state.ui.studentHall.contactSearch=String(state.ui.studentHall.contactSearch||'');
@@ -10118,12 +10139,19 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     hall.loading=true;
     try{
       const token=studentPortalSessionToken();
-      const [dirRes,roomsRes]=await Promise.all([
+      const [dirRes,roomsRes,unreadRes]=await Promise.all([
         supabaseClient.rpc('student_hall_directory',{p_session_token:token}),
-        supabaseClient.rpc('student_hall_rooms',{p_session_token:token})
+        supabaseClient.rpc('student_hall_rooms',{p_session_token:token}),
+        supabaseClient.rpc('student_hall_unread_peers',{p_session_token:token})
       ]);
-      if(dirRes.error)throw dirRes.error;if(roomsRes.error)throw roomsRes.error;
-      hall.directory=studentPortalRows(dirRes.data);
+      if(dirRes.error)throw dirRes.error;if(roomsRes.error)throw roomsRes.error;if(unreadRes.error)throw unreadRes.error;
+      hall.unreadPeers=studentPortalRows(unreadRes.data);
+      if(!hall.selectedPeerId&&hall.unreadPeers.length&&state.ui?.studentPortalView==='hallway')hall.contactKind=hall.unreadPeers[0].person_kind==='teacher'?'teacher':'student';
+      const unreadMap=new Map(hall.unreadPeers.map(x=>[`${x.person_kind}:${x.person_id}`,x]));
+      hall.directory=studentPortalRows(dirRes.data).map(row=>{
+        const unread=unreadMap.get(`${row.person_kind}:${row.person_id}`)||{};
+        return {...row,unread_count:Number(unread.unread_count||0),unread_last_message_at:unread.last_message_at||''};
+      });
       hall.rooms=studentPortalRows(roomsRes.data);
       hall.loaded=true;
       if(hall.selectedPeerKind&&hall.selectedPeerId)await loadStudentHallPeer(hall.selectedPeerKind,hall.selectedPeerId,{renderAfter:false});
@@ -10139,6 +10167,8 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       const {data,error}=await supabaseClient.rpc('student_hall_direct_messages',{p_session_token:studentPortalSessionToken(),p_peer_kind:kind,p_peer_id:id});
       if(error)throw error;hall.directMessages=studentPortalRows(data);
       await supabaseClient.rpc('student_hall_mark_read',{p_session_token:studentPortalSessionToken(),p_target_type:kind==='teacher'?'direct_teacher':'direct_student',p_target_id:id});
+      hall.unreadPeers=(hall.unreadPeers||[]).filter(x=>!(x.person_kind===kind&&String(x.person_id)===String(id)));
+      hall.directory=(hall.directory||[]).map(x=>(x.person_kind===kind&&String(x.person_id)===String(id))?{...x,unread_count:0,unread_last_message_at:''}:x);
       await refreshHallUnread({notify:false});
     }catch(err){toast(authErrorText(err),'error');hall.directMessages=[];}
     if(renderAfter){saveState();renderStudentPortal();}
@@ -10301,8 +10331,14 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       if(hall.contactClass&&!p.classIds.includes(String(hall.contactClass)))return false;
       if(searchNorm&&!String(p.person_name||'').toLocaleLowerCase('cs-CZ').includes(searchNorm))return false;
       return true;
-    }).sort((a,b)=>String(a.person_name||'').localeCompare(String(b.person_name||''),'cs'));
-    const dirHtml=filteredContacts.map(p=>`<button class="hall-person ${peer&&peer.person_kind===p.person_kind&&String(peer.person_id)===String(p.person_id)?'active':''}" data-action="student-hall-peer" data-kind="${p.person_kind}" data-id="${p.person_id}">${p.person_kind==='student'?studentAvatarMarkup(p.avatar,'sm'):avatarMarkup(p.avatar,'sm')}<span><strong>${esc(p.person_name)}</strong><small>${esc(p.classNames.join(', ')||(p.person_kind==='teacher'?'učitel':'žák'))}</small></span></button>`).join('');
+    }).sort((a,b)=>{
+      const unreadDiff=Number(b.unread_count||0)-Number(a.unread_count||0);
+      if(unreadDiff)return unreadDiff;
+      const timeDiff=String(b.unread_last_message_at||'').localeCompare(String(a.unread_last_message_at||''));
+      if(timeDiff)return timeDiff;
+      return String(a.person_name||'').localeCompare(String(b.person_name||''),'cs');
+    });
+    const dirHtml=filteredContacts.map(p=>{const unread=Number(p.unread_count||0);return `<button class="hall-person ${unread>0?'has-unread':''} ${peer&&peer.person_kind===p.person_kind&&String(peer.person_id)===String(p.person_id)?'active':''}" data-action="student-hall-peer" data-kind="${p.person_kind}" data-id="${p.person_id}">${p.person_kind==='student'?studentAvatarMarkup(p.avatar,'sm'):avatarMarkup(p.avatar,'sm')}<span><strong>${esc(p.person_name)}</strong><small>${esc(p.classNames.join(', ')||(p.person_kind==='teacher'?'učitel':'žák'))}</small></span>${unread>0?`<span class="hall-contact-unread">NOVÁ ${unread}</span>`:''}</button>`;}).join('');
 
     const directPanel=peer?`<section class="hall-chat-panel"><div class="hall-chat-head"><div>${peer.person_kind==='student'?studentAvatarMarkup(peer.avatar,'md'):avatarMarkup(peer.avatar,'md')}</div><div><h2>${esc(peer.person_name)}</h2><span>${esc(peer.classNames.join(', '))}${peer.classNames.length?' · ':''}${peer.person_kind==='teacher'?'učitel':'žák'}</span></div></div><div class="hall-messages">${studentHallMessageList(hall.directMessages)}</div>${hallEmojiPicker('student-hall-direct-input')}<div class="hall-compose"><textarea id="student-hall-direct-input" maxlength="1000" placeholder="Napiš soukromou zprávu…"></textarea><button class="btn primary" data-action="student-hall-send-direct">Odeslat</button></div></section>`:`<section class="hall-chat-panel"><div class="hall-empty">Vyber ${hall.contactKind==='teacher'?'učitele':'žáka'}, kterému chceš napsat.</div></section>`;
 
@@ -10321,13 +10357,16 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     }
 
     const notifyOn=hallNotificationEnabled();
-    return `<div class="hall-toolbar"><div class="hall-tabs"><button class="btn ${hall.tab==='direct'?'primary':'secondary'}" data-action="student-hall-tab" data-tab="direct">Soukromé zprávy</button><button class="btn ${hall.tab==='rooms'?'primary':'secondary'}" data-action="student-hall-tab" data-tab="rooms">Místnosti</button><button class="btn ghost" data-action="student-hall-refresh">Obnovit</button></div><label class="hall-notify-toggle"><input id="hall-notify-toggle" type="checkbox" ${notifyOn?'checked':''}> Upozornění na nové zprávy</label></div>${hall.tab==='direct'?`<div class="hall-layout"><aside class="hall-directory"><div class="student-panel-head"><h2>Komu napsat</h2><span>${hall.contactKind==='teacher'?'učitelé':'žáci'}</span></div><div class="hall-contact-filters"><div class="hall-person-type-tabs"><button class="btn ${hall.contactKind==='student'?'primary':'secondary'}" data-action="student-hall-kind" data-kind="student">Žáci</button><button class="btn ${hall.contactKind==='teacher'?'primary':'secondary'}" data-action="student-hall-kind" data-kind="teacher">Učitelé</button></div><select id="student-hall-contact-class"><option value="">Všechny moje třídy</option>${classOptions.map(([id,name])=>`<option value="${esc(id)}" ${String(hall.contactClass)===String(id)?'selected':''}>${esc(name)}</option>`).join('')}</select><input id="student-hall-contact-search" value="${esc(hall.contactSearch||'')}" placeholder="Hledat podle jména…" autocomplete="off"></div><div class="hall-people hall-filtered-people">${dirHtml||`<div class="empty compact">Žádní ${hall.contactKind==='teacher'?'učitelé':'žáci'} neodpovídají filtru.</div>`}</div></aside>${directPanel}</div>`:`<section class="student-panel"><div class="student-panel-head"><div><h2>Místnosti</h2><span>Třídní místnosti jsou automatické. Vlastní místnosti mají správce.</span></div><button class="btn primary" data-action="student-hall-create-room">+ Vytvořit místnost</button></div><div class="hall-room-list">${roomCards||'<div class="empty">Žádné místnosti.</div>'}</div></section>${roomPanel}`}`;
+    const unreadStudents=(hall.unreadPeers||[]).filter(x=>x.person_kind==='student').reduce((n,x)=>n+Number(x.unread_count||0),0);
+    const unreadTeachers=(hall.unreadPeers||[]).filter(x=>x.person_kind==='teacher').reduce((n,x)=>n+Number(x.unread_count||0),0);
+    return `<div class="hall-toolbar"><div class="hall-tabs"><button class="btn ${hall.tab==='direct'?'primary':'secondary'}" data-action="student-hall-tab" data-tab="direct">Soukromé zprávy</button><button class="btn ${hall.tab==='rooms'?'primary':'secondary'}" data-action="student-hall-tab" data-tab="rooms">Místnosti</button><button class="btn ghost" data-action="student-hall-refresh">Obnovit</button></div><label class="hall-notify-toggle"><input id="hall-notify-toggle" type="checkbox" ${notifyOn?'checked':''}> Upozornění na nové zprávy</label></div>${hall.tab==='direct'?`<div class="hall-layout"><aside class="hall-directory"><div class="student-panel-head"><h2>Komu napsat</h2><span>${hall.contactKind==='teacher'?'učitelé':'žáci'}</span></div><div class="hall-contact-filters"><div class="hall-person-type-tabs"><button class="btn ${hall.contactKind==='student'?'primary':'secondary'}" data-action="student-hall-kind" data-kind="student">Žáci${unreadStudents?` <span class="hall-tab-unread">${unreadStudents}</span>`:''}</button><button class="btn ${hall.contactKind==='teacher'?'primary':'secondary'}" data-action="student-hall-kind" data-kind="teacher">Učitelé${unreadTeachers?` <span class="hall-tab-unread">${unreadTeachers}</span>`:''}</button></div><select id="student-hall-contact-class"><option value="">Všechny moje třídy</option>${classOptions.map(([id,name])=>`<option value="${esc(id)}" ${String(hall.contactClass)===String(id)?'selected':''}>${esc(name)}</option>`).join('')}</select><input id="student-hall-contact-search" value="${esc(hall.contactSearch||'')}" placeholder="Hledat podle jména…" autocomplete="off"></div><div class="hall-people hall-filtered-people">${dirHtml||`<div class="empty compact">Žádní ${hall.contactKind==='teacher'?'učitelé':'žáci'} neodpovídají filtru.</div>`}</div></aside>${directPanel}</div>`:`<section class="student-panel"><div class="student-panel-head"><div><h2>Místnosti</h2><span>Třídní místnosti jsou automatické. Vlastní místnosti mají správce.</span></div><button class="btn primary" data-action="student-hall-create-room">+ Vytvořit místnost</button></div><div class="hall-room-list">${roomCards||'<div class="empty">Žádné místnosti.</div>'}</div></section>${roomPanel}`}`;
   }
 
   function teacherHallState(){
     state.ui=state.ui||{};
-    state.ui.teacherHall=state.ui.teacherHall||{contacts:[],messages:[],selectedPeerKind:'',selectedPeerId:'',loaded:false,loading:false,contactKind:'student',contactClass:'',contactSearch:''};
+    state.ui.teacherHall=state.ui.teacherHall||{contacts:[],messages:[],unreadPeers:[],selectedPeerKind:'',selectedPeerId:'',loaded:false,loading:false,contactKind:'student',contactClass:'',contactSearch:''};
     const h=state.ui.teacherHall;
+    if(!Array.isArray(h.unreadPeers))h.unreadPeers=[];
     if(!['student','teacher'].includes(h.contactKind))h.contactKind='student';
     h.contactClass=String(h.contactClass||'');
     h.contactSearch=String(h.contactSearch||'');
@@ -10340,9 +10379,18 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     if(!supabaseClient||state.authProvider!=='supabase'||!state.school?.id)return;
     const h=teacherHallState();if(h.loading)return;h.loading=true;
     try{
-      const {data,error}=await supabaseClient.rpc('teacher_private_directory',{p_school_id:state.school.id});
-      if(error)throw error;
-      h.contacts=studentPortalRows(data);h.loaded=true;
+      const [dirRes,unreadRes]=await Promise.all([
+        supabaseClient.rpc('teacher_private_directory',{p_school_id:state.school.id}),
+        supabaseClient.rpc('teacher_private_unread_peers',{p_school_id:state.school.id})
+      ]);
+      if(dirRes.error)throw dirRes.error;if(unreadRes.error)throw unreadRes.error;
+      h.unreadPeers=studentPortalRows(unreadRes.data);
+      if(!h.selectedPeerId&&h.unreadPeers.length&&state.route==='messages')h.contactKind=h.unreadPeers[0].person_kind==='teacher'?'teacher':'student';
+      const unreadMap=new Map(h.unreadPeers.map(x=>[`${x.person_kind}:${x.person_id}`,x]));
+      h.contacts=studentPortalRows(dirRes.data).map(row=>{
+        const unread=unreadMap.get(`${row.person_kind}:${row.person_id}`)||{};
+        return {...row,unread_count:Number(unread.unread_count||0),unread_last_message_at:unread.last_message_at||''};
+      });h.loaded=true;
       if(h.selectedPeerId&&h.contacts.some(x=>String(x.person_id)===String(h.selectedPeerId)&&x.person_kind===h.selectedPeerKind)){
         await loadTeacherHallPeer(h.selectedPeerKind,h.selectedPeerId,{renderAfter:false});
       }
@@ -10357,6 +10405,8 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       if(error)throw error;
       h.messages=studentPortalRows(data);
       await supabaseClient.rpc('teacher_private_mark_read',{p_school_id:state.school.id,p_peer_kind:kind,p_peer_id:id});
+      h.unreadPeers=(h.unreadPeers||[]).filter(x=>!(x.person_kind===kind&&String(x.person_id)===String(id)));
+      h.contacts=(h.contacts||[]).map(x=>(x.person_kind===kind&&String(x.person_id)===String(id))?{...x,unread_count:0,unread_last_message_at:''}:x);
       await refreshHallUnread({notify:false});
     }catch(err){toast(authErrorText(err),'error');h.messages=[];}
     if(renderAfter){saveState();if(state.route==='messages')renderTeacherMessages();else renderStaffroom();}
@@ -10382,16 +10432,24 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     const selected=h.contacts.find(x=>String(x.person_id)===String(h.selectedPeerId)&&x.person_kind===h.selectedPeerKind)||null;
     const classNames=[...new Set(h.contacts.flatMap(c=>String(c.class_names||'').split(',').map(x=>x.trim()).filter(Boolean)))].sort((a,b)=>a.localeCompare(b,'cs'));
     const search=String(h.contactSearch||'').trim().toLocaleLowerCase('cs-CZ');
+    const unreadStudents=(h.unreadPeers||[]).filter(x=>x.person_kind==='student').reduce((n,x)=>n+Number(x.unread_count||0),0);
+    const unreadTeachers=(h.unreadPeers||[]).filter(x=>x.person_kind==='teacher').reduce((n,x)=>n+Number(x.unread_count||0),0);
     const filtered=h.contacts.filter(c=>{
       if(c.person_kind!==h.contactKind)return false;
       const classes=String(c.class_names||'').split(',').map(x=>x.trim()).filter(Boolean);
       if(h.contactClass&&!classes.includes(h.contactClass))return false;
       if(search&&!String(c.person_name||'').toLocaleLowerCase('cs-CZ').includes(search))return false;
       return true;
+    }).sort((a,b)=>{
+      const unreadDiff=Number(b.unread_count||0)-Number(a.unread_count||0);
+      if(unreadDiff)return unreadDiff;
+      const timeDiff=String(b.last_message_at||'').localeCompare(String(a.last_message_at||''));
+      if(timeDiff)return timeDiff;
+      return String(a.person_name||'').localeCompare(String(b.person_name||''),'cs');
     });
-    const contactRows=filtered.map(c=>`<button class="teacher-hall-contact ${selected&&selected.person_kind===c.person_kind&&String(selected.person_id)===String(c.person_id)?'active':''}" data-action="teacher-hall-select" data-kind="${c.person_kind}" data-id="${c.person_id}">${c.person_kind==='student'?studentAvatarMarkup(c.avatar,'sm'):avatarMarkup(c.avatar,'sm')}<span><strong>${esc(c.person_name)}</strong><small>${esc(c.class_names||(c.person_kind==='teacher'?'učitel':'žák'))}</small></span>${c.last_message_at?`<time>${esc(fmtDate(c.last_message_at))}</time>`:''}</button>`).join('');
+    const contactRows=filtered.map(c=>{const unread=Number(c.unread_count||0);return `<button class="teacher-hall-contact ${unread>0?'has-unread':''} ${selected&&selected.person_kind===c.person_kind&&String(selected.person_id)===String(c.person_id)?'active':''}" data-action="teacher-hall-select" data-kind="${c.person_kind}" data-id="${c.person_id}">${c.person_kind==='student'?studentAvatarMarkup(c.avatar,'sm'):avatarMarkup(c.avatar,'sm')}<span><strong>${esc(c.person_name)}</strong><small>${esc(c.class_names||(c.person_kind==='teacher'?'učitel':'žák'))}</small></span><div class="hall-contact-status">${unread>0?`<span class="hall-contact-unread">NOVÁ ${unread}</span>`:''}${c.last_message_at?`<time>${esc(fmtDate(c.last_message_at))}</time>`:''}</div></button>`;}).join('');
     const selectedAvatar=selected?(selected.person_kind==='student'?studentAvatarMarkup(selected.avatar,'md'):avatarMarkup(selected.avatar,'md')):'';
-    return `<section class="staffroom-student-hall teacher-private-panel"><div class="section-title"><div><div class="staffroom-kicker">SOUKROMÉ ZPRÁVY</div><h2>Adresář školy</h2><div class="tiny muted">Soukromě můžeš psát žákům svých tříd i ostatním učitelům školy.</div></div><button class="btn secondary" data-action="teacher-hall-refresh">Obnovit</button></div><div class="teacher-hall-layout"><aside class="teacher-hall-contacts"><div class="hall-contact-filters"><div class="hall-person-type-tabs"><button class="btn ${h.contactKind==='student'?'primary':'secondary'}" data-action="teacher-hall-kind" data-kind="student">Žáci</button><button class="btn ${h.contactKind==='teacher'?'primary':'secondary'}" data-action="teacher-hall-kind" data-kind="teacher">Učitelé</button></div><select id="teacher-hall-contact-class"><option value="">Všechny třídy</option>${classNames.map(n=>`<option value="${esc(n)}" ${h.contactClass===n?'selected':''}>${esc(n)}</option>`).join('')}</select><input id="teacher-hall-contact-search" value="${esc(h.contactSearch||'')}" placeholder="Hledat podle jména…" autocomplete="off"></div>${h.loading&&!h.loaded?'<div class="empty">Načítám…</div>':contactRows||`<div class="empty compact">Žádní ${h.contactKind==='teacher'?'učitelé':'žáci'} neodpovídají filtru.</div>`}</aside><section class="teacher-hall-chat">${selected?`<div class="hall-chat-head">${selectedAvatar}<div><h3>${esc(selected.person_name)}</h3><span>${esc(selected.class_names||'')}${selected.class_names?' · ':''}${selected.person_kind==='teacher'?'učitel':'žák'}</span></div></div><div class="hall-messages">${studentHallMessageList(h.messages,true)}</div>${hallEmojiPicker('teacher-hall-input')}<div class="hall-compose"><textarea id="teacher-hall-input" maxlength="1000" placeholder="Napiš soukromou zprávu…"></textarea><button class="btn primary" data-action="teacher-hall-send">Odeslat</button></div>`:'<div class="hall-empty">Vyber žáka nebo učitele vlevo.</div>'}</section></div></section>`;
+    return `<section class="staffroom-student-hall teacher-private-panel"><div class="section-title"><div><div class="staffroom-kicker">SOUKROMÉ ZPRÁVY</div><h2>Adresář školy</h2><div class="tiny muted">Soukromě můžeš psát žákům svých tříd i ostatním učitelům školy.</div></div><button class="btn secondary" data-action="teacher-hall-refresh">Obnovit</button></div><div class="teacher-hall-layout"><aside class="teacher-hall-contacts"><div class="hall-contact-filters"><div class="hall-person-type-tabs"><button class="btn ${h.contactKind==='student'?'primary':'secondary'}" data-action="teacher-hall-kind" data-kind="student">Žáci${unreadStudents?` <span class="hall-tab-unread">${unreadStudents}</span>`:''}</button><button class="btn ${h.contactKind==='teacher'?'primary':'secondary'}" data-action="teacher-hall-kind" data-kind="teacher">Učitelé${unreadTeachers?` <span class="hall-tab-unread">${unreadTeachers}</span>`:''}</button></div><select id="teacher-hall-contact-class"><option value="">Všechny třídy</option>${classNames.map(n=>`<option value="${esc(n)}" ${h.contactClass===n?'selected':''}>${esc(n)}</option>`).join('')}</select><input id="teacher-hall-contact-search" value="${esc(h.contactSearch||'')}" placeholder="Hledat podle jména…" autocomplete="off"></div>${h.loading&&!h.loaded?'<div class="empty">Načítám…</div>':contactRows||`<div class="empty compact">Žádní ${h.contactKind==='teacher'?'učitelé':'žáci'} neodpovídají filtru.</div>`}</aside><section class="teacher-hall-chat">${selected?`<div class="hall-chat-head">${selectedAvatar}<div><h3>${esc(selected.person_name)}</h3><span>${esc(selected.class_names||'')}${selected.class_names?' · ':''}${selected.person_kind==='teacher'?'učitel':'žák'}</span></div></div><div class="hall-messages">${studentHallMessageList(h.messages,true)}</div>${hallEmojiPicker('teacher-hall-input')}<div class="hall-compose"><textarea id="teacher-hall-input" maxlength="1000" placeholder="Napiš soukromou zprávu…"></textarea><button class="btn primary" data-action="teacher-hall-send">Odeslat</button></div>`:'<div class="hall-empty">Vyber žáka nebo učitele vlevo.</div>'}</section></div></section>`;
   }
 
   function renderTeacherMessages(){
@@ -10603,7 +10661,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
           ${studentHomeCard('credits','home-credits-exchange.svg','Kreditní centrum','Proměň kredity za body pro sebe nebo pro učitele',credits?String(credits):'')}
           ${studentHomeCard('results','home-grades.png','Moje výsledky','Známky, zkoušení a historie')}
           ${studentHomeCard('inventory','home-subjects.png','Inventář','Propustky, taháky a další vybavení')}
-          ${studentHomeCard('profile','home-student-profile.svg','Můj profil','Avatar, škola, třídy a účet')}
+          ${studentHomeCard('profile','home-student-profile.svg','Profil','Avatar, škola, třídy a účet')}
           ${studentHomeCard('hallway','home-hallway-chat.svg','Chodba','Soukromé zprávy, třídní a vlastní místnosti',hallUnreadCount()?String(hallUnreadCount()):'')}
         </div>
         <div class="arcade-footer student-home-footer"><span>Školní výzvy dávají kredity.</span><span class="footer-sep"></span><span>Kredity → scoring nebo hodnocení učitelů.</span><span class="footer-sep"></span><span>ZZ-01</span></div>
@@ -10655,7 +10713,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     }else if(view==='profile'){
       const avatar=a.avatar||'student:s01';
       const avatarGrid=studentAvatarPresets.map(p=>`<button class="student-avatar-choice ${p.id===avatar?'active':''}" data-action="student-avatar-set" data-avatar="${p.id}" title="${esc(p.label)}">${studentAvatarMarkup(p.id,'lg')}<span>${esc(p.label)}</span></button>`).join('');
-      body=`${studentPortalScreenNav('Můj profil')}<section class="student-portal student-subpage"><div class="student-hero student-profile-hero"><div class="student-profile-avatar-main">${studentAvatarMarkup(avatar,'xl')}</div><div><div class="student-kicker">ŽÁKOVSKÝ PROFIL</div><h1>${esc(a.student_name||state.user.name||'Žák')}</h1><div class="student-school">${esc(a.school_name||'')} · ${esc(a.school_year||'')}</div><div class="student-chips">${classChips}</div></div><div class="student-id-card">ZZ-01<br>STUDENT</div></div><div class="student-game-kpis"><div><span>Scoring</span><strong class="point-value ${pointTone(currentScore)}">${formatSignedNumber(currentScore)} b.</strong></div><div><span>Kredity</span><strong>${credits}</strong></div><div><span>Kód školy</span><strong>${esc(a.school_code||'—')}</strong></div></div><section class="student-panel"><div class="student-panel-head"><h2>Vyber si avatara</h2><span>30 postaviček</span></div><p class="muted">Avatar se zobrazuje v profilu a v Chodbě. Můžeš ho kdykoliv změnit.</p><div class="student-avatar-grid">${avatarGrid}</div></section><section class="student-panel"><div class="student-panel-head"><h2>Účet</h2><span>přihlášení žáka</span></div><div class="student-profile-grid"><div><span>Jméno a příjmení</span><strong>${esc(a.student_name||'—')}</strong></div><div><span>Škola</span><strong>${esc(a.school_name||'—')}</strong></div><div><span>Školní rok</span><strong>${esc(a.school_year||'—')}</strong></div><div><span>Třídy</span><strong>${classes.map(c=>esc(c.name)).join(', ')||'—'}</strong></div></div></section><section class="student-panel student-achievements-preview"><div class="student-panel-head"><h2>Achievementy</h2><span>PŘIPRAVUJEME</span></div><div class="student-achievement-locks"><div>🔒<strong>Výzvy</strong></div><div>🔒<strong>Scoring</strong></div><div>🔒<strong>Školní série</strong></div></div><p class="tiny muted">Později sem přidáme studentské achievementy a stupně podobně jako u učitelů.</p></section></section>`;
+      body=`${studentPortalScreenNav('Profil')}<section class="student-portal student-subpage"><div class="student-hero student-profile-hero"><div class="student-profile-avatar-main">${studentAvatarMarkup(avatar,'xl')}</div><div><div class="student-kicker">ŽÁKOVSKÝ PROFIL</div><h1>${esc(a.student_name||state.user.name||'Žák')}</h1><div class="student-school">${esc(a.school_name||'')} · ${esc(a.school_year||'')}</div><div class="student-chips">${classChips}</div></div><div class="student-id-card">ZZ-01<br>STUDENT</div></div><div class="student-game-kpis"><div><span>Scoring</span><strong class="point-value ${pointTone(currentScore)}">${formatSignedNumber(currentScore)} b.</strong></div><div><span>Kredity</span><strong>${credits}</strong></div><div><span>Kód školy</span><strong>${esc(a.school_code||'—')}</strong></div></div><section class="student-panel"><div class="student-panel-head"><h2>Vyber si avatara</h2><span>30 postaviček</span></div><p class="muted">Avatar se zobrazuje v profilu a v Chodbě. Můžeš ho kdykoliv změnit.</p><div class="student-avatar-grid">${avatarGrid}</div></section><section class="student-panel"><div class="student-panel-head"><h2>Účet</h2><span>přihlášení žáka</span></div><div class="student-profile-grid"><div><span>Jméno a příjmení</span><strong>${esc(a.student_name||'—')}</strong></div><div><span>Škola</span><strong>${esc(a.school_name||'—')}</strong></div><div><span>Školní rok</span><strong>${esc(a.school_year||'—')}</strong></div><div><span>Třídy</span><strong>${classes.map(c=>esc(c.name)).join(', ')||'—'}</strong></div></div></section><section class="student-panel student-achievements-preview"><div class="student-panel-head"><h2>Achievementy</h2><span>PŘIPRAVUJEME</span></div><div class="student-achievement-locks"><div>🔒<strong>Výzvy</strong></div><div>🔒<strong>Scoring</strong></div><div>🔒<strong>Školní série</strong></div></div><p class="tiny muted">Později sem přidáme studentské achievementy a stupně podobně jako u učitelů.</p></section></section>`;
     }else if(view==='hallway'){
       body=`${studentPortalScreenNav('Chodba')}<section class="student-portal student-subpage"><div class="student-game-kpis"><div><span>Moje třídy</span><strong>${classes.length}</strong></div><div><span>Soukromé zprávy</span><strong>1 : 1</strong></div><div><span>Místnosti</span><strong>třídní + vlastní</strong></div></div>${renderStudentHallway()}</section>`;
     }else{
