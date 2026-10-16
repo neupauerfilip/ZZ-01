@@ -5875,6 +5875,17 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     if(low.includes('user_already_linked_to_student')) return 'Tento účet už je propojený s jiným žákem.';
     if(low.includes('teacher_account_cannot_claim_student')) return 'Učitelský účet nelze propojit jako žákovský.';
     if(low.includes('student_access_denied')) return 'Pro tohoto žáka nemáš oprávnění spravovat účet.';
+    if(low.includes('student_invite_required')) return 'Zadej jednorázový propojovací kód od učitele.';
+    if(low.includes('school_code_required')) return 'Zadej kód školy.';
+    if(low.includes('school_student_login_code_not_set')) return 'Administrátor školy ještě nenastavil kód školy pro žákovské přihlášení.';
+    if(low.includes('school_code_invalid')) return 'Kód školy má neplatný formát.';
+    if(low.includes('school_code_taken')) return 'Tento kód školy už používá jiná škola. Zvol jiný.';
+    if(low.includes('student_username_invalid')) return 'Uživatelské jméno má neplatný formát.';
+    if(low.includes('student_username_taken_in_school')) return 'Toto uživatelské jméno už na této škole používá jiný žák.';
+    if(low.includes('student_pin_invalid')) return 'PIN musí mít 6 až 12 číslic.';
+    if(low.includes('student_login_invalid')) return 'Nesprávný kód školy, uživatelské jméno nebo PIN.';
+    if(low.includes('student_session_missing')||low.includes('student_portal_load_failed')) return 'Žákovské přihlášení se nepodařilo dokončit.';
+    if(low.includes('admin_required')) return 'Tuto změnu může provést pouze administrátor školy.';
     return msg||'Operace se nepodařila.';
   }
   function remoteSchoolToLocal(row){
@@ -7025,24 +7036,38 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     return Array.isArray(data)?data:[];
   }
 
-  async function fetchStudentPortalAccount(){
-    if(!supabaseClient)return null;
-    const {data,error}=await supabaseClient.rpc('my_student_portal_account');
-    if(error)throw error;
-    return studentPortalRows(data)[0]||null;
+  function studentPortalSessionToken(){
+    state.ui=state.ui||{};
+    return String(state.ui.studentPortalSessionToken||'').trim();
   }
 
-  async function refreshStudentPortal({account=null}={}){
+  function clearStudentPortalSessionLocal(){
+    state.ui=state.ui||{};
+    state.ui.studentPortalSessionToken='';
+    state.studentPortal=null;
+    if(state.user?.role==='student') state.user.role='teacher';
+  }
+
+  async function refreshStudentPortal({token=null}={}){
     if(!supabaseClient)return false;
-    const resolvedAccount=account||await fetchStudentPortalAccount();
+    const sessionToken=String(token||studentPortalSessionToken()||'').trim();
+    if(!sessionToken)return false;
+
+    const accountRes=await supabaseClient.rpc('student_portal_me',{p_session_token:sessionToken});
+    if(accountRes.error)throw accountRes.error;
+    const resolvedAccount=studentPortalRows(accountRes.data)[0]||null;
     if(!resolvedAccount)return false;
+
     const [historyRes,pointRes,inventoryRes]=await Promise.all([
-      supabaseClient.rpc('my_student_exam_history'),
-      supabaseClient.rpc('my_student_point_state'),
-      supabaseClient.rpc('my_student_inventory')
+      supabaseClient.rpc('student_portal_history',{p_session_token:sessionToken}),
+      supabaseClient.rpc('student_portal_points',{p_session_token:sessionToken}),
+      supabaseClient.rpc('student_portal_inventory',{p_session_token:sessionToken})
     ]);
     const failed=[historyRes,pointRes,inventoryRes].find(r=>r.error);
     if(failed)throw failed.error;
+
+    state.ui=state.ui||{};
+    state.ui.studentPortalSessionToken=sessionToken;
     state.studentPortal={
       account:resolvedAccount,
       history:studentPortalRows(historyRes.data),
@@ -7050,6 +7075,13 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       inventory:studentPortalRows(inventoryRes.data),
       loadedAt:now()
     };
+    state.authenticated=true;
+    state.authProvider='student-pin';
+    state.user=state.user||{};
+    state.user.id=`student:${resolvedAccount.student_id||''}`;
+    state.user.name=resolvedAccount.student_name||'Žák';
+    state.user.nickname='';
+    state.user.email='';
     state.user.role='student';
     state.user.schoolId=resolvedAccount.school_id||null;
     state.onboardingDone=true;
@@ -7057,19 +7089,139 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     return true;
   }
 
-  async function claimStudentInvite(code){
-    const invite=String(code||'').trim().toUpperCase();
-    if(!invite)return toast('Zadej propojovací kód od učitele.','error');
+  async function restoreStudentPortalSession(){
+    const token=studentPortalSessionToken();
+    if(!token)return false;
     try{
-      const {error}=await supabaseClient.rpc('claim_student_invite',{p_code:invite});
-      if(error)throw error;
+      const ok=await refreshStudentPortal({token});
+      if(ok){saveState();return true;}
+    }catch(err){
+      console.warn('Student portal session restore failed',err);
+    }
+    clearStudentPortalSessionLocal();
+    state.authenticated=false;
+    state.authProvider=null;
+    state.onboardingDone=false;
+    saveState();
+    return false;
+  }
+
+  async function submitStudentPortalAuth(){
+    if(!supabaseClient||authUiBusy)return;
+    const registering=authUiMode==='register';
+    const username=String(document.getElementById('student-auth-username')?.value||'').trim();
+    const pin=String(document.getElementById('student-auth-pin')?.value||'').trim();
+    const pinConfirm=String(document.getElementById('student-auth-pin-confirm')?.value||'').trim();
+
+    if(!/^[A-Za-z0-9._-]{3,32}$/.test(username)){
+      setAuthMessage('Uživatelské jméno musí mít 3–32 znaků a může obsahovat písmena, čísla, tečku, pomlčku nebo podtržítko.','error');
+      return renderLogin();
+    }
+    if(!/^[0-9]{6,12}$/.test(pin)){
+      setAuthMessage('PIN musí mít 6 až 12 číslic.','error');
+      return renderLogin();
+    }
+    if(registering && pin!==pinConfirm){
+      setAuthMessage('PINy se neshodují.','error');
+      return renderLogin();
+    }
+
+    authUiBusy=true;setAuthMessage('');renderLogin();
+    try{
+      // Student používá vlastní portálovou relaci, proto nesmí zůstat současně přihlášený učitelský Supabase účet.
+      try{await supabaseClient.auth.signOut();}catch(_){}
+
+      let row=null;
+      if(registering){
+        const inviteCode=String(document.getElementById('student-auth-invite')?.value||'').trim().toUpperCase();
+        if(!inviteCode)throw new Error('student_invite_required');
+        const {data,error}=await supabaseClient.rpc('student_register_with_invite',{
+          p_invite_code:inviteCode,
+          p_username:username,
+          p_pin:pin
+        });
+        if(error)throw error;
+        row=studentPortalRows(data)[0]||null;
+      }else{
+        const schoolCode=String(document.getElementById('student-auth-school-code')?.value||'').trim().toUpperCase();
+        if(!schoolCode)throw new Error('school_code_required');
+        const {data,error}=await supabaseClient.rpc('student_portal_login',{
+          p_school_code:schoolCode,
+          p_username:username,
+          p_pin:pin
+        });
+        if(error)throw error;
+        row=studentPortalRows(data)[0]||null;
+      }
+
+      if(!row?.session_token)throw new Error('student_session_missing');
       state.ui=state.ui||{};
-      state.ui.pendingStudentInviteCode='';
-      const ok=await refreshStudentPortal();
-      if(!ok)throw new Error('student_link_missing_after_claim');
+      state.ui.studentPortalSessionToken=row.session_token;
+      const ok=await refreshStudentPortal({token:row.session_token});
+      if(!ok)throw new Error('student_portal_load_failed');
       saveState();
-      toast('Žákovský účet je propojený.');
+      setAuthMessage('');
       render();
+    }catch(err){
+      clearStudentPortalSessionLocal();
+      state.authenticated=false;
+      state.authProvider=null;
+      state.onboardingDone=false;
+      setAuthMessage(authErrorText(err),'error');
+      renderLogin();
+    }finally{
+      authUiBusy=false;
+      if(!state.authenticated)renderLogin();
+    }
+  }
+
+  async function logoutStudentPortal(){
+    const token=studentPortalSessionToken();
+    try{
+      if(token&&supabaseClient)await supabaseClient.rpc('student_portal_logout',{p_session_token:token});
+    }catch(err){console.warn('Student portal logout failed',err);}
+    clearStudentPortalSessionLocal();
+    state.authenticated=false;
+    state.onboardingDone=false;
+    state.authProvider=null;
+    state.user.schoolId=null;
+    state.route='home';
+    state.splashSeen=true;
+    saveState();
+    render();
+  }
+
+  async function refreshSchoolStudentLoginCode(){
+    if(!supabaseClient||state.user?.role!=='admin'||!state.school?.id)return '';
+    const {data,error}=await supabaseClient.rpc('get_school_student_login_code',{p_school_id:state.school.id});
+    if(error)throw error;
+    const row=studentPortalRows(data)[0]||{};
+    state.ui=state.ui||{};
+    state.ui.schoolStudentLoginCode=String(row.student_login_code||'');
+    state.ui.schoolStudentLoginCodeLoadedFor=state.school.id;
+    saveState();
+    return state.ui.schoolStudentLoginCode;
+  }
+
+  async function saveSchoolStudentLoginCode(){
+    if(!supabaseClient||state.user?.role!=='admin'||!state.school?.id)return;
+    const code=String(document.getElementById('admin-student-login-code')?.value||'').trim().toUpperCase();
+    if(!/^[A-Z0-9_-]{3,20}$/.test(code)){
+      return toast('Kód školy musí mít 3–20 znaků: A–Z, 0–9, pomlčka nebo podtržítko.','error');
+    }
+    try{
+      const {data,error}=await supabaseClient.rpc('set_school_student_login_code',{
+        p_school_id:state.school.id,
+        p_code:code
+      });
+      if(error)throw error;
+      const row=studentPortalRows(data)[0]||{};
+      state.ui=state.ui||{};
+      state.ui.schoolStudentLoginCode=String(row.student_login_code||code);
+      state.ui.schoolStudentLoginCodeLoadedFor=state.school.id;
+      saveState();
+      toast(`Kód školy pro žáky uložen: ${state.ui.schoolStudentLoginCode}`);
+      renderAdmin();
     }catch(err){
       toast(authErrorText(err),'error');
     }
@@ -7127,7 +7279,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     modalRoot.innerHTML=`<div class="modal-backdrop"><section class="modal"><h2 class="pixel-title">Propojovací kód</h2>
       <p>Student: <strong>${esc(student.name)}</strong></p>
       <div class="student-invite-code">${esc(safeCode)}</div>
-      <p class="tiny muted">Platnost: ${expiresAt?esc(fmtDate(expiresAt)):'7 dní'}. Kód je určený pouze tomuto žákovi.</p>
+      <p class="tiny muted">Platnost: ${expiresAt?esc(fmtDate(expiresAt)):'7 dní'}. Student zvolí Žák → První aktivace, zadá tento kód, uživatelské jméno a vlastní PIN. Kód je určený pouze tomuto žákovi.</p>
       <div class="modal-actions"><button class="btn ghost" id="student-code-copy">Kopírovat kód</button><button class="btn secondary" id="student-account-close">Hotovo</button></div>
     </section></div>`;
     document.getElementById('student-account-close').onclick=closeModal;
@@ -7140,6 +7292,12 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   async function createStudentInvite(localStudentId){
     const student=studentById(localStudentId); if(!student)return;
     try{
+      if(state.school?.id){
+        const {data:codeData,error:codeError}=await supabaseClient.rpc('get_school_student_login_code',{p_school_id:state.school.id});
+        if(codeError)throw codeError;
+        const schoolCode=studentPortalRows(codeData)[0]?.student_login_code||'';
+        if(!schoolCode)throw new Error('school_student_login_code_not_set');
+      }
       const remoteId=await ensureRemoteStudentId(localStudentId);
       if(!remoteId)throw new Error('Žák ještě není synchronizovaný se serverem.');
       const {data,error}=await supabaseClient.rpc('create_student_invite',{p_student_id:remoteId});
@@ -7163,46 +7321,18 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     state.user.email=u.email||'';
     const {data:profile,error:profileError}=await supabaseClient.from('profiles').select('id,display_name,nickname,avatar').eq('id',u.id).maybeSingle();
     if(profileError) console.warn('Profile load failed',profileError);
-    const fallbackName=u.user_metadata?.display_name||u.user_metadata?.full_name||String(u.email||'Uživatel').split('@')[0];
-    state.user.name=profile?.display_name||fallbackName||'Uživatel';
+    const fallbackName=u.user_metadata?.display_name||u.user_metadata?.full_name||String(u.email||'Učitel').split('@')[0];
+    state.user.name=profile?.display_name||fallbackName||'Učitel';
     state.user.nickname=profile?.nickname||'';
     state.user.avatar=profile?.avatar||state.user.avatar||'px:cyan';
-
-    const studentAccount=await fetchStudentPortalAccount();
-    if(studentAccount){
-      await refreshStudentPortal({account:studentAccount});
-      saveState();
-      return;
-    }
-
-    const intendedType=String(u.user_metadata?.account_type||authAccountType||'teacher');
-    if(intendedType==='student'){
-      state.user.role='student_pending';
-      state.user.schoolId=null;
-      state.onboardingDone=false;
-      state.studentPortal=null;
-      const pendingCode=String(state.ui?.pendingStudentInviteCode||'').trim();
-      if(pendingCode){
-        try{
-          const {error}=await supabaseClient.rpc('claim_student_invite',{p_code:pendingCode.toUpperCase()});
-          if(error)throw error;
-          state.ui.pendingStudentInviteCode='';
-          const claimed=await refreshStudentPortal();
-          if(claimed){saveState();return;}
-        }catch(err){
-          console.warn('Automatic student invite claim failed',err);
-          setAuthMessage(authErrorText(err),'warn');
-        }
-      }
-      saveState();
-      return;
-    }
-
     state.studentPortal=null;
+    state.ui=state.ui||{};
+    state.ui.studentPortalSessionToken='';
     await refreshSupabaseMembership();
     if(state.onboardingDone) await initializeSupabaseSchoolStructure();
     saveState();
   }
+
   async function initSupabaseAuth(){
     try{
       if(!supabaseClient){
@@ -7211,6 +7341,13 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         setAuthMessage('Supabase knihovna se nenačetla. Zkontroluj připojení k internetu.','error');
         return;
       }
+
+      // Žákovský portál používá vlastní serverovou relaci bez e-mailového účtu.
+      if(studentPortalSessionToken()){
+        const restored=await restoreStudentPortalSession();
+        if(restored)return;
+      }
+
       const {data,error}=await supabaseClient.auth.getSession();
       if(error) throw error;
       if(data?.session) await applySupabaseSession(data.session);
@@ -7223,6 +7360,8 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       supabaseClient.auth.onAuthStateChange((event,session)=>{
         setTimeout(async()=>{
           try{
+            // Pokud je aktivní žákovská relace, učitelský auth stav do ní nezasahuje.
+            if(studentPortalSessionToken())return;
             if(session) await applySupabaseSession(session);
             else if(event==='SIGNED_OUT'){
               state.authenticated=false;
@@ -7244,26 +7383,24 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       authInitialized=true;
     }
   }
+
   async function submitSupabaseAuth(){
+    if(authAccountType==='student')return submitStudentPortalAuth();
     if(!supabaseClient||authUiBusy) return;
     const email=String(document.getElementById('auth-email')?.value||'').trim().toLowerCase();
     const password=String(document.getElementById('auth-password')?.value||'');
     const displayName=String(document.getElementById('auth-name')?.value||'').trim();
     const confirmPassword=String(document.getElementById('auth-password-confirm')?.value||'');
-    const inviteCode=String(document.getElementById('auth-student-code')?.value||state.ui?.pendingStudentInviteCode||'').trim().toUpperCase();
     if(!email||!email.includes('@')) return setAuthMessage('Zadej platný e-mail.','error'),renderLogin();
     if(password.length<6) return setAuthMessage('Heslo musí mít alespoň 6 znaků.','error'),renderLogin();
     if(authUiMode==='register'){
       if(!displayName) return setAuthMessage('Zadej své jméno.','error'),renderLogin();
       if(password!==confirmPassword) return setAuthMessage('Hesla se neshodují.','error'),renderLogin();
-      if(authAccountType==='student'&&!inviteCode) return setAuthMessage('Zadej propojovací kód od učitele.','error'),renderLogin();
     }
     authUiBusy=true; setAuthMessage(''); renderLogin();
     try{
       if(authUiMode==='register'){
-        state.ui=state.ui||{};
-        if(authAccountType==='student'){state.ui.pendingStudentInviteCode=inviteCode;saveState();}
-        const {data,error}=await supabaseClient.auth.signUp({email,password,options:{emailRedirectTo:APP_PUBLIC_URL,data:{display_name:displayName,account_type:authAccountType}}});
+        const {data,error}=await supabaseClient.auth.signUp({email,password,options:{emailRedirectTo:APP_PUBLIC_URL,data:{display_name:displayName,account_type:'teacher'}}});
         if(error) throw error;
         if(data?.session){
           await applySupabaseSession(data.session);
@@ -7289,7 +7426,11 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       if(!state.authenticated) renderLogin();
     }
   }
+
   async function logoutSupabase(){
+    if(state.user?.role==='student'||studentPortalSessionToken()){
+      return logoutStudentPortal();
+    }
     try{ if(supabaseClient) await supabaseClient.auth.signOut(); }
     catch(err){ console.warn('Supabase sign out failed',err); }
     state.authenticated=false;
@@ -7305,6 +7446,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     saveState();
     render();
   }
+
   async function searchSchoolsSupabase(){
     if(!supabaseClient) return;
     const q=String(document.getElementById('school-search')?.value??state.ui.schoolSearch??'').trim();
@@ -9470,41 +9612,54 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     const registering=authUiMode==='register';
     const studentMode=authAccountType==='student';
     const status=authUiMessage?`<div class="auth-status ${authUiMessageType==='error'?'error':authUiMessageType==='warn'?'warn':''}">${esc(authUiMessage)}</div>`:'';
+
+    const teacherForm=`
+      ${registering?`<label>Jméno a příjmení<input id="auth-name" autocomplete="name" placeholder="Jan Novák"></label>`:''}
+      <label>E-mail<input id="auth-email" type="email" autocomplete="email" placeholder="ucitel@skola.cz"></label>
+      <label>Heslo<input id="auth-password" type="password" autocomplete="${registering?'new-password':'current-password'}" placeholder="Alespoň 6 znaků"></label>
+      ${registering?`<label>Heslo znovu<input id="auth-password-confirm" type="password" autocomplete="new-password" placeholder="Zopakuj heslo"></label>`:''}
+    `;
+
+    const studentForm=registering?`
+      <label>Jednorázový kód od učitele<input id="student-auth-invite" autocomplete="one-time-code" maxlength="12" placeholder="Např. A1B2C3D4"></label>
+      <label>Uživatelské jméno<input id="student-auth-username" autocomplete="username" maxlength="32" placeholder="např. novak23"></label>
+      <label>PIN<input id="student-auth-pin" type="password" inputmode="numeric" autocomplete="new-password" maxlength="12" placeholder="6–12 číslic"></label>
+      <label>PIN znovu<input id="student-auth-pin-confirm" type="password" inputmode="numeric" autocomplete="new-password" maxlength="12" placeholder="Zopakuj PIN"></label>
+      <div class="tiny muted">Při první aktivaci použij jednorázový kód od učitele. Kód školy se pak zobrazí v žákovském účtu a používá se při dalších přihlášeních.</div>
+    `:`
+      <label>Kód školy<input id="student-auth-school-code" autocomplete="organization" maxlength="20" placeholder="Např. SPSRK"></label>
+      <label>Uživatelské jméno<input id="student-auth-username" autocomplete="username" maxlength="32" placeholder="např. novak23"></label>
+      <label>PIN<input id="student-auth-pin" type="password" inputmode="numeric" autocomplete="current-password" maxlength="12" placeholder="6–12 číslic"></label>
+      <div class="tiny muted">Stejné uživatelské jméno může existovat na více školách. Rozlišuje ho kód školy.</div>
+    `;
+
     app.innerHTML=`<section class="login-wrap"><div class="login-box pixel-frame">
       <h1 class="pixel-title">Zkouškomat</h1>
-      <p class="muted">Přihlášení do ZZ-01 · Supabase</p>
+      <p class="muted">Přihlášení do ZZ-01</p>
       <div class="auth-tabs" style="margin-bottom:10px">
         <button class="tab ${!studentMode?'active':''}" data-action="auth-account-type" data-type="teacher">Učitel</button>
         <button class="tab ${studentMode?'active':''}" data-action="auth-account-type" data-type="student">Žák</button>
       </div>
       <div class="auth-tabs">
         <button class="tab ${!registering?'active':''}" data-action="auth-mode" data-mode="login">Přihlášení</button>
-        <button class="tab ${registering?'active':''}" data-action="auth-mode" data-mode="register">Registrace</button>
+        <button class="tab ${registering?'active':''}" data-action="auth-mode" data-mode="register">${studentMode?'První aktivace':'Registrace'}</button>
       </div>
       ${status}
       <div class="auth-form">
-        ${registering?`<label>Jméno a příjmení<input id="auth-name" autocomplete="name" placeholder="Jan Novák"></label>`:''}
-        <label>E-mail<input id="auth-email" type="email" autocomplete="email" placeholder="${studentMode?'student@skola.cz':'ucitel@skola.cz'}"></label>
-        <label>Heslo<input id="auth-password" type="password" autocomplete="${registering?'new-password':'current-password'}" placeholder="Alespoň 6 znaků"></label>
-        ${registering?`<label>Heslo znovu<input id="auth-password-confirm" type="password" autocomplete="new-password" placeholder="Zopakuj heslo"></label>`:''}
-        ${registering&&studentMode?`<label>Propojovací kód od učitele<input id="auth-student-code" autocomplete="one-time-code" maxlength="12" value="${esc(state.ui?.pendingStudentInviteCode||'')}" placeholder="Např. A1B2C3D4"></label><div class="tiny muted">Kód vytvoří učitel u tvého profilu ve třídě. Je jednorázový a platí 7 dní.</div>`:''}
-        <button class="btn primary full" data-action="auth-submit" ${authUiBusy?'disabled':''}>${authUiBusy?'Pracuji…':registering?(studentMode?'Vytvořit žákovský účet':'Vytvořit učitelský účet'):'Přihlásit se'}</button>
+        ${studentMode?studentForm:teacherForm}
+        <button class="btn primary full" data-action="auth-submit" ${authUiBusy?'disabled':''}>${authUiBusy?'Pracuji…':registering?(studentMode?'Aktivovat žákovský účet':'Vytvořit učitelský účet'):'Přihlásit se'}</button>
       </div>
       <div class="auth-backend-badge">● Backend: Supabase · EU</div>
-      <p class="tiny muted" style="margin-top:12px">${studentMode?'Žákovský účet po propojení zobrazí pouze vlastní výsledky, body a inventář.':'Učitelský účet se po přihlášení připojuje ke škole a pracovním třídám.'}</p>
+      <p class="tiny muted" style="margin-top:12px">${studentMode?'Žák nepotřebuje e-mail. Přihlašuje se kódem školy, uživatelským jménem a PINem.':'Učitelský účet používá e-mail a heslo.'}</p>
     </div></section>`;
   }
 
   function renderStudentLink(){
-    const status=authUiMessage?`<div class="auth-status ${authUiMessageType==='error'?'error':authUiMessageType==='warn'?'warn':''}">${esc(authUiMessage)}</div>`:'';
-    app.innerHTML=`<section class="login-wrap"><div class="login-box pixel-frame">
-      <h1 class="pixel-title">Propojit žákovský účet</h1>
-      <p class="muted">Přihlášen: ${esc(state.user.email||state.user.name||'')}</p>
-      ${status}
-      <p>Požádej učitele o jednorázový kód pro svůj profil ve třídě.</p>
-      <label>Propojovací kód<input id="student-claim-code" autocomplete="one-time-code" maxlength="12" value="${esc(state.ui?.pendingStudentInviteCode||'')}" placeholder="A1B2C3D4"></label>
-      <div class="row" style="margin-top:14px"><button class="btn primary" data-action="claim-student-code">Propojit účet</button><button class="btn secondary" data-action="logout">Odhlásit se</button></div>
-    </div></section>`;
+    authAccountType='student';
+    authUiMode='register';
+    state.authenticated=false;
+    state.onboardingDone=false;
+    return renderLogin();
   }
 
   function studentPortalLayout(body){
@@ -9531,7 +9686,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     const gradeRows=grades.map(h=>`<tr><td>${esc(fmtDate(h.occurred_at))}</td><td>${esc(h.subject_name||'—')}</td><td>${esc(h.topic||'—')}</td><td>${h.no_grade_status?esc(h.no_grade_status):`<strong>${esc(h.grade)}</strong>`}</td><td>${esc(h.note||'')}</td></tr>`).join('');
     const invRows=inventory.map(x=>`<div class="student-inventory-card"><strong>${esc(x.subject_name||'Předmět')}</strong><div><span>Propustka</span><b>${Number(x.pass_count||0)}×</b></div><div><span>Tahák</span><b>${Number(x.cheat_count||0)}×</b></div><div><span>Kafíčko</span><b>${Number(x.coffee_count||0)}×</b></div></div>`).join('');
     const body=`<section class="student-portal">
-      <div class="student-hero"><div><div class="student-kicker">MŮJ PŘEHLED</div><h1>${esc(a.student_name||state.user.name||'Žák')}</h1><div class="student-school">${esc(a.school_name||'')} · ${esc(a.school_year||'')}</div><div class="student-chips">${classChips}</div></div><div class="student-id-card">ZZ-01<br>STUDENT</div></div>
+      <div class="student-hero"><div><div class="student-kicker">MŮJ PŘEHLED</div><h1>${esc(a.student_name||state.user.name||'Žák')}</h1><div class="student-school">${esc(a.school_name||'')} · ${esc(a.school_year||'')}${a.school_code?` · kód školy ${esc(a.school_code)}`:''}</div><div class="student-chips">${classChips}</div></div><div class="student-id-card">ZZ-01<br>STUDENT</div></div>
       <div class="student-kpis"><div><span>Aktuální bilance</span><strong class="point-value ${pointTone(Number(point.point_balance||0))}">${formatSignedNumber(Number(point.point_balance||0))} b.</strong></div><div><span>Nasbírané body</span><strong>${formatSignedNumber(Number(point.collected_points||0))} b.</strong></div><div><span>Pochvalné body</span><strong>+${Math.max(0,Number(point.positive_points||0))} b.</strong></div><div><span>Záznamů</span><strong>${grades.length}</strong></div></div>
       <section class="student-panel"><div class="student-panel-head"><h2>Moje známky a zkoušení</h2><span>${grades.length} záznamů</span></div><div class="table-wrap"><table><thead><tr><th>Datum</th><th>Předmět</th><th>Téma</th><th>Výsledek</th><th>Poznámka</th></tr></thead><tbody>${gradeRows||'<tr><td colspan="5">Zatím tu nejsou žádné výsledky.</td></tr>'}</tbody></table></div></section>
       <section class="student-panel"><div class="student-panel-head"><h2>Můj inventář</h2><span>podle předmětu</span></div>${invRows?`<div class="student-inventory-grid">${invRows}</div>`:'<div class="empty">V inventáři zatím nic není.</div>'}</section>
@@ -9543,9 +9698,19 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   async function refreshAndRenderStudentPortal(){
     try{
       const ok=await refreshStudentPortal();
-      if(!ok){state.user.role='student_pending';state.onboardingDone=false;}
+      if(!ok){
+        clearStudentPortalSessionLocal();
+        state.authenticated=false;
+        state.onboardingDone=false;
+      }
       saveState();render();
-    }catch(err){toast(authErrorText(err),'error');}
+    }catch(err){
+      toast(authErrorText(err),'error');
+      clearStudentPortalSessionLocal();
+      state.authenticated=false;
+      state.onboardingDone=false;
+      saveState();render();
+    }
   }
 
   function renderOnboarding(){
@@ -12851,6 +13016,23 @@ body::after{
   function renderAdmin(){
     const section=state.ui.adminSection||'teachers';
     const adminOnly=state.user.role==='admin';
+
+    if(section==='school' && adminOnly){
+      state.ui=state.ui||{};
+      if(state.ui.schoolStudentLoginCodeLoadAttemptFor!==state.school?.id){
+        state.ui.schoolStudentLoginCodeLoadAttemptFor=state.school?.id||'';
+        queueMicrotask(async()=>{
+          try{
+            await refreshSchoolStudentLoginCode();
+            if(state.route==='admin'&&state.ui.adminSection==='school')renderAdmin();
+          }catch(err){
+            console.warn('School student login code load failed',err);
+            toast(authErrorText(err),'error');
+          }
+        });
+      }
+    }
+
     const mayManageTeachers=adminOnly||can('manageTeachers');
     const mayManageGame=adminOnly||can('manageGameScoring');
 
@@ -12927,6 +13109,7 @@ body::after{
       </section>`;
 
     }else if(section==='school' && adminOnly){
+      const studentLoginCode=String(state.ui?.schoolStudentLoginCode||'');
       body=`<div class="grid grid-2">
         <section class="pixel-frame card">
           <h2>Profil školy</h2>
@@ -12935,6 +13118,16 @@ body::after{
           <div class="row" style="margin-top:12px"><div class="avatar-chip">${esc(state.school.avatar)}</div><button class="btn primary" data-action="save-school">Uložit školu</button></div>
         </section>
         <section class="pixel-frame card">
+          <h2>Žákovské přihlášení</h2>
+          <p class="muted">Kód školy nastavuje administrátor. Žák ho pak používá spolu s uživatelským jménem a PINem.</p>
+          <label>Kód školy pro žáky
+            <input id="admin-student-login-code" maxlength="20" value="${esc(studentLoginCode)}" placeholder="Např. SPSRK">
+          </label>
+          <div class="tiny muted" style="margin-top:6px">3–20 znaků: A–Z, číslice, pomlčka nebo podtržítko. Kód musí být unikátní v celém Zkouškomatu.</div>
+          <div class="tiny" style="margin-top:6px;color:#ffcf7b">Pozor: změna kódu školy změní přihlašovací údaj všem žákům této školy.</div>
+          <button class="btn primary" style="margin-top:12px" data-action="save-student-school-code">Uložit kód školy</button>
+        </section>
+        <section class="pixel-frame card" style="grid-column:1/-1">
           <h2>Třídy a školní rok</h2>
           <div class="list">${state.classes.map(c=>`<div class="list-item"><div><strong>${esc(c.displayName)}</strong><div class="meta">${esc(c.schoolYear)} · interní ID ${esc(c.id)}</div></div><button class="btn secondary" data-action="open-class" data-id="${c.id}">Spravovat</button></div>`).join('')}</div>
         </section>
@@ -12971,7 +13164,6 @@ body::after{
     if(!state.splashSeen) return renderSplash();
     if(!state.authenticated) return renderLogin();
     if(state.user?.role==='student') return renderStudentPortal();
-    if(state.user?.role==='student_pending') return renderStudentLink();
     if(!state.onboardingDone) return renderOnboarding();
     if(!state.activeExam) queueMicrotask(showPendingBossFeedback);
     if(state.activeExam){ state.route='exam'; state.examFlow=state.examFlow||{stage:'exam'}; state.examFlow.stage='exam'; }
@@ -13374,9 +13566,7 @@ body::after{
     if(e.target.id==='staffroom-input' && e.key==='Enter' && !e.shiftKey){
       e.preventDefault();
       sendStaffroomMessage();
-    }else if(e.key==='Enter' && e.target.id==='student-claim-code'){
-      e.preventDefault(); void claimStudentInvite(e.target.value||'');
-    }else if(e.key==='Enter' && ['auth-email','auth-password','auth-password-confirm','auth-name','auth-student-code'].includes(e.target.id)){
+    }else if(e.key==='Enter' && ['auth-email','auth-password','auth-password-confirm','auth-name','student-auth-invite','student-auth-school-code','student-auth-username','student-auth-pin','student-auth-pin-confirm'].includes(e.target.id)){
       e.preventDefault();
       void submitSupabaseAuth();
     }else if(e.key==='Enter' && e.target.id==='school-search'){
@@ -13441,7 +13631,6 @@ body::after{
       if(action==='auth-mode'){authUiMode=btn.dataset.mode==='register'?'register':'login';setAuthMessage('');renderLogin();}
     else if(action==='auth-account-type'){authAccountType=btn.dataset.type==='student'?'student':'teacher';setAuthMessage('');renderLogin();}
     else if(action==='auth-submit'){void submitSupabaseAuth();}
-    else if(action==='claim-student-code'){void claimStudentInvite(document.getElementById('student-claim-code')?.value||'');}
     else if(action==='student-refresh'){void refreshAndRenderStudentPortal();}
     else if(action==='onboard-mode'){state.ui.onboardingMode=btn.dataset.mode;state.ui.selectedSchoolId=null;saveState();render();}
     else if(action==='search-schools'){void searchSchoolsSupabase();}
@@ -13457,11 +13646,16 @@ body::after{
     }
     else if(action==='settings'){state.route='settings';saveState();render();}
     else if(action==='admin-section'){
-      state.ui.adminSection=btn.dataset.section||'teachers';state.route='admin';saveState();render();
+      state.ui.adminSection=btn.dataset.section||'teachers';state.route='admin';
+      if(state.ui.adminSection==='school'){
+        state.ui.schoolStudentLoginCodeLoadAttemptFor='';
+      }
+      saveState();render();
       if(state.ui.adminSection==='teachers'&&state.authProvider==='supabase'){
         void (async()=>{try{await refreshSupabaseSchoolTeachers();renderAdmin();}catch(err){toast(authErrorText(err),'error');}})();
       }
     }
+    else if(action==='save-student-school-code'){void saveSchoolStudentLoginCode();}
     else if(action==='refresh-teachers'){void (async()=>{try{await refreshSupabaseSchoolTeachers();renderAdmin();toast('Seznam žádostí obnoven.');}catch(err){toast(authErrorText(err),'error');}})();}
     else if(action==='teacher-permissions') openTeacherPermissions(btn.dataset.id);
     else if(action==='save-boss-select'){

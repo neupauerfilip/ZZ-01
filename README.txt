@@ -1,15 +1,11 @@
-ZZ-01 – STUDENTSKÉ ÚČTY / PORTÁL
+ZZ-01 – studentské přihlášení bez e-mailu
 
-1. Překopíruj index.html přes současný index.html v projektu ZZ-01.
-2. V GitHub Desktop udělej commit, např.: studentske ucty a portal
+1. Přepiš v repozitáři stávající index.html tímto souborem.
+2. Commit např.: studentske prihlaseni bez emailu
 3. Push origin.
-4. Na GitHub Pages použij Ctrl+F5.
+4. Po nasazení dej na GitHub Pages Ctrl+F5.
+5. Administrátor: Správa školy > Profil školy > Kód školy pro žáky.
+6. Student – první aktivace: jednorázový kód od učitele + uživatelské jméno + PIN.
+7. Další přihlášení: kód školy + uživatelské jméno + PIN.
 
-Nová verze obsahuje:
-- přepínač Učitel / Žák na přihlášení,
-- jednorázový propojovací kód vytvořený učitelem u konkrétního žáka,
-- žákovský účet propojený se serverovým profilem žáka,
-- studentský přehled vlastních známek, bodů a inventáře,
-- oddělení studentského přístupu od učitelských školních tabulek.
-
-Backendová migrace 012_student_accounts_portal je již nasazená v Supabase.
+Poznámka: stejné uživatelské jméno může existovat na různých školách; unikátní je kombinace škola + uživatelské jméno.
