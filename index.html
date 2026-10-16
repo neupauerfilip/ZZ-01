@@ -5893,6 +5893,9 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     if(low.includes('teacher_feedback_already_voted')) return 'Tohoto učitele jsi v tomto týdnu už ohodnotil(a).';
     if(low.includes('teacher_feedback_not_allowed')) return 'Tohoto učitele teď nemůžeš hodnotit.';
     if(low.includes('challenge_class_not_assigned')) return 'Výzvu můžeš zadat jen své třídě nebo celé škole.';
+    if(low.includes('challenge_options_invalid')) return 'ABCD test musí mít vyplněné všechny čtyři možnosti.';
+    if(low.includes('challenge_correct_option_invalid')) return 'Vyber správnou odpověď A, B, C nebo D.';
+    if(low.includes('challenge_answer_invalid')) return 'Vyber jednu z odpovědí A–D.';
     if(low.includes('admin_required')) return 'Tuto změnu může provést pouze administrátor školy.';
     return msg||'Operace se nepodařila.';
   }
@@ -9792,9 +9795,17 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   }
 
   async function submitStudentLearningChallenge(challengeId){
-    const input=document.getElementById(`student-challenge-answer-${challengeId}`);
-    const answer=String(input?.value||'').trim();
-    if(!answer)return toast('Napiš odpověď.','warn');
+    const challenge=(state.studentPortal?.challenges||[]).find(ch=>ch.challenge_id===challengeId)||null;
+    let answer='';
+    if(challenge?.challenge_type==='abcd'){
+      const selected=document.querySelector(`input[name="student-challenge-choice-${challengeId}"]:checked`);
+      answer=String(selected?.value||'').trim().toUpperCase();
+      if(!answer)return toast('Vyber odpověď A, B, C nebo D.','warn');
+    }else{
+      const input=document.getElementById(`student-challenge-answer-${challengeId}`);
+      answer=String(input?.value||'').trim();
+      if(!answer)return toast('Napiš odpověď.','warn');
+    }
     try{
       const {data,error}=await supabaseClient.rpc('student_submit_learning_challenge',{p_session_token:studentPortalSessionToken(),p_challenge_id:challengeId,p_answer:answer});
       if(error)throw error;
@@ -9849,8 +9860,29 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     }else if(tab==='challenges'){
       const cards=challenges.map(ch=>{
         const done=!!ch.attempted;
-        const result=done?(ch.correct?`<span class="student-challenge-result success">SPRÁVNĚ · +${Number(ch.points_awarded||0)} b.</span>`:'<span class="student-challenge-result fail">NESPRÁVNĚ</span>'):'';
-        return `<article class="student-challenge-card ${done?'done':''}"><div class="student-challenge-head"><div><div class="student-kicker">${esc(ch.class_name||'CELÁ ŠKOLA')} · ${esc(ch.teacher_name||'Učitel')}</div><h3>${esc(ch.title||'Výzva')}</h3></div><strong class="student-reward">+${Number(ch.reward_points||0)} b.</strong></div><p>${esc(ch.prompt||'')}</p>${done?result:`<div class="student-challenge-answer"><input id="student-challenge-answer-${ch.challenge_id}" maxlength="200" placeholder="Tvoje odpověď"><button class="btn primary" data-action="student-challenge-submit" data-id="${ch.challenge_id}">Odeslat odpověď</button></div><div class="tiny muted">Na každou výzvu je v této verzi jeden pokus.</div>`}</article>`;
+        const isAbcd=ch.challenge_type==='abcd';
+        const options=Array.isArray(ch.options)?ch.options:[];
+        const letters=['A','B','C','D'];
+        const correctLetter=String(ch.correct_answer||'').toUpperCase();
+        const correctIndex=letters.indexOf(correctLetter);
+        const correctText=correctIndex>=0?String(options[correctIndex]||''):'';
+        const result=done
+          ? (ch.correct
+              ? `<span class="student-challenge-result success">SPRÁVNĚ · +${Number(ch.points_awarded||0)} b.</span>`
+              : `<span class="student-challenge-result fail">NESPRÁVNĚ</span>`)
+          : '';
+        const afterAnswer=done&&isAbcd&&correctLetter
+          ? `<div class="tiny muted student-correct-answer">Správná odpověď: <strong>${esc(correctLetter)}${correctText?` — ${esc(correctText)}`:''}</strong></div>`
+          : '';
+        let answerUi='';
+        if(!done){
+          if(isAbcd){
+            answerUi=`<div class="student-abcd-options">${letters.map((letter,i)=>`<label class="student-abcd-option"><input type="radio" name="student-challenge-choice-${ch.challenge_id}" value="${letter}"><span class="student-abcd-letter">${letter}</span><span>${esc(options[i]||'')}</span></label>`).join('')}</div><button class="btn primary student-abcd-submit" data-action="student-challenge-submit" data-id="${ch.challenge_id}">Odeslat odpověď</button>`;
+          }else{
+            answerUi=`<div class="student-challenge-answer"><input id="student-challenge-answer-${ch.challenge_id}" maxlength="200" placeholder="Tvoje odpověď"><button class="btn primary" data-action="student-challenge-submit" data-id="${ch.challenge_id}">Odeslat odpověď</button></div>`;
+          }
+        }
+        return `<article class="student-challenge-card ${done?'done':''}"><div class="student-challenge-head"><div><div class="student-kicker">${esc(ch.class_name||'CELÁ ŠKOLA')} · ${esc(ch.teacher_name||'Učitel')} · ${isAbcd?'ABCD TEST':'KRÁTKÁ ODPOVĚĎ'}</div><h3>${esc(ch.title||'Výzva')}</h3></div><strong class="student-reward">+${Number(ch.reward_points||0)} b.</strong></div><p>${esc(ch.prompt||'')}</p>${done?result:''}${afterAnswer}${answerUi}${!done?'<div class="tiny muted">Na každou výzvu je jeden pokus.</div>':''}</article>`;
       }).join('');
       tabBody=`<div class="student-game-kpis"><div><span>Kladné body k použití</span><strong>+${Number(wallet.available_points||0)} b.</strong></div><div><span>Celkem získáno</span><strong>${Number(wallet.earned_total||0)} b.</strong></div><div><span>Výzvy</span><strong>${challenges.length}</strong></div></div><section class="student-panel"><div class="student-panel-head"><h2>Hádanky a testy</h2><span>za kladné body</span></div><div class="student-challenge-list">${cards||'<div class="empty">Učitelé zatím nevložili žádnou aktivní výzvu.</div>'}</div></section>`;
     }else if(tab==='teachers'){
@@ -10174,25 +10206,50 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     const loading=!!state.ui?.teacherStudentChallengesLoading;
     if(!state.ui?.teacherStudentChallengesLoaded&&!loading)queueMicrotask(()=>void refreshTeacherStudentChallenges());
     const classes=classesForCurrentTeacher().filter(c=>c.remoteId).slice().sort((a,b)=>String(a.displayName||'').localeCompare(String(b.displayName||''),'cs',{numeric:true}));
-    const list=rows.map(ch=>`<div class="teacher-student-challenge-row ${ch.active?'':'inactive'}"><div><strong>${esc(ch.title||'Výzva')}</strong><div class="tiny muted">${esc(ch.class_name||'Celá škola')} · +${Number(ch.reward_points||0)} b. · pokusy ${Number(ch.attempts||0)} · správně ${Number(ch.correct_answers||0)}</div><div class="teacher-challenge-prompt">${esc(ch.prompt||'')}</div><div class="tiny muted">Správná odpověď: <strong>${esc(ch.answer||'')}</strong></div></div><button class="btn ${ch.active?'danger':'primary'}" data-action="toggle-student-learning-challenge" data-id="${ch.challenge_id}" data-active="${ch.active?'0':'1'}">${ch.active?'Vypnout':'Zapnout'}</button></div>`).join('');
-    const content=`<section class="pack-a-screen"><div class="pack-a-hero"><div><div class="pack-a-kicker">HERNÍ OBSAH PRO ŽÁKY</div><h1>Žákovské výzvy</h1><p>Hádanky a krátké testy za kladné body. Žák body použije buď do svého scoringu, nebo na hodnocení učitelů.</p></div></div>
-      <section class="pixel-frame card student-challenge-admin-form"><h2>Nová výzva</h2><div class="student-challenge-admin-grid"><label>Název<input id="teacher-challenge-title" maxlength="80" placeholder="Např. Hádanka týdne"></label><label>Pro koho<select id="teacher-challenge-class"><option value="">Celá škola</option>${classes.map(c=>`<option value="${c.remoteId}">${esc(c.displayName)} — ${esc(c.schoolYear||'')}</option>`).join('')}</select></label><label class="wide">Otázka / zadání<textarea id="teacher-challenge-prompt" maxlength="1000" placeholder="Napiš zadání…"></textarea></label><label>Správná odpověď<input id="teacher-challenge-answer" maxlength="200" placeholder="Krátká textová odpověď"></label><label>Odměna<input id="teacher-challenge-reward" type="number" min="1" max="20" value="3"></label></div><div class="tiny muted">První verze používá krátkou textovou odpověď a jeden pokus na žáka.</div><button class="btn primary" data-action="create-student-learning-challenge">Publikovat výzvu</button></section>
+    const letters=['A','B','C','D'];
+    const list=rows.map(ch=>{
+      const isAbcd=ch.challenge_type==='abcd';
+      const options=Array.isArray(ch.options)?ch.options:[];
+      const correct=String(ch.answer||'').toUpperCase();
+      const optionList=isAbcd?`<div class="teacher-abcd-preview">${letters.map((letter,i)=>`<div class="${correct===letter?'correct':''}"><strong>${letter}</strong> ${esc(options[i]||'')}</div>`).join('')}</div>`:'';
+      return `<div class="teacher-student-challenge-row ${ch.active?'':'inactive'}"><div><strong>${esc(ch.title||'Výzva')} <span class="badge">${isAbcd?'ABCD':'TEXT'}</span></strong><div class="tiny muted">${esc(ch.class_name||'Celá škola')} · +${Number(ch.reward_points||0)} b. · pokusy ${Number(ch.attempts||0)} · správně ${Number(ch.correct_answers||0)}</div><div class="teacher-challenge-prompt">${esc(ch.prompt||'')}</div>${optionList}<div class="tiny muted">Správná odpověď: <strong>${esc(ch.answer||'')}</strong></div></div><button class="btn ${ch.active?'danger':'primary'}" data-action="toggle-student-learning-challenge" data-id="${ch.challenge_id}" data-active="${ch.active?'0':'1'}">${ch.active?'Vypnout':'Zapnout'}</button></div>`;
+    }).join('');
+    const content=`<section class="pack-a-screen"><div class="pack-a-hero"><div><div class="pack-a-kicker">HERNÍ OBSAH PRO ŽÁKY</div><h1>Žákovské výzvy</h1><p>Hádanky a testy za kladné body. Nově můžeš vytvořit i klasický test se čtyřmi odpověďmi A–D.</p></div></div>
+      <section class="pixel-frame card student-challenge-admin-form"><h2>Nová výzva</h2><div class="student-challenge-admin-grid"><label>Typ výzvy<select id="teacher-challenge-type"><option value="abcd" selected>Test ABCD</option><option value="text">Krátká odpověď</option></select></label><label>Pro koho<select id="teacher-challenge-class"><option value="">Celá škola</option>${classes.map(c=>`<option value="${c.remoteId}">${esc(c.displayName)} — ${esc(c.schoolYear||'')}</option>`).join('')}</select></label><label>Název<input id="teacher-challenge-title" maxlength="80" placeholder="Např. Test týdne"></label><label>Odměna<input id="teacher-challenge-reward" type="number" min="1" max="20" value="3"></label><label class="wide">Otázka / zadání<textarea id="teacher-challenge-prompt" maxlength="1000" placeholder="Napiš otázku…"></textarea></label><div id="teacher-challenge-abcd" class="wide"><div class="teacher-abcd-options"><label>A<input id="teacher-challenge-option-a" maxlength="200" placeholder="Možnost A"></label><label>B<input id="teacher-challenge-option-b" maxlength="200" placeholder="Možnost B"></label><label>C<input id="teacher-challenge-option-c" maxlength="200" placeholder="Možnost C"></label><label>D<input id="teacher-challenge-option-d" maxlength="200" placeholder="Možnost D"></label></div><label style="margin-top:10px">Správná možnost<select id="teacher-challenge-correct"><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select></label></div><label id="teacher-challenge-text" class="wide" hidden>Správná odpověď<input id="teacher-challenge-answer" maxlength="200" placeholder="Krátká textová odpověď"></label></div><div class="tiny muted">Žák má na výzvu jeden pokus. U ABCD testu vybere jednu ze čtyř možností.</div><button class="btn primary" data-action="create-student-learning-challenge">Publikovat výzvu</button></section>
       <section class="pixel-frame card"><div class="section-title"><div><h2>Moje výzvy</h2><div class="tiny muted">Aktivní výzvy se zobrazují žákům v jejich portálu.</div></div><button class="btn secondary" data-action="refresh-student-learning-challenges">Obnovit</button></div>${loading?'<div class="empty">Načítám…</div>':`<div class="teacher-student-challenge-list">${list||'<div class="empty">Zatím jsi nevytvořil(a) žádnou výzvu.</div>'}</div>`}</section>
       <div class="arcade-footer"><span>ŽÁKOVSKÉ VÝZVY</span><span>ZZ-01</span></div></section>`;
     app.innerHTML=layout(content,'Žákovské výzvy');
   }
 
+  function toggleTeacherChallengeTypeFields(){
+    const type=String(document.getElementById('teacher-challenge-type')?.value||'abcd');
+    const abcd=document.getElementById('teacher-challenge-abcd');
+    const text=document.getElementById('teacher-challenge-text');
+    if(abcd)abcd.hidden=type!=='abcd';
+    if(text)text.hidden=type==='abcd';
+  }
+
   async function createStudentLearningChallengeFromForm(){
+    const type=String(document.getElementById('teacher-challenge-type')?.value||'abcd');
     const title=String(document.getElementById('teacher-challenge-title')?.value||'').trim();
     const prompt=String(document.getElementById('teacher-challenge-prompt')?.value||'').trim();
-    const answer=String(document.getElementById('teacher-challenge-answer')?.value||'').trim();
     const reward=Math.trunc(Number(document.getElementById('teacher-challenge-reward')?.value||0));
     const classId=String(document.getElementById('teacher-challenge-class')?.value||'').trim()||null;
-    if(title.length<3||prompt.length<3||!answer||reward<1||reward>20)return toast('Vyplň název, zadání, správnou odpověď a odměnu 1–20 bodů.','error');
+    if(title.length<3||prompt.length<3||reward<1||reward>20)return toast('Vyplň název, otázku a odměnu 1–20 bodů.','error');
     try{
-      const {error}=await supabaseClient.rpc('create_student_learning_challenge',{p_school_id:state.school.id,p_title:title,p_prompt:prompt,p_answer:answer,p_reward_points:reward,p_class_id:classId});
+      let error=null;
+      if(type==='abcd'){
+        const options=['a','b','c','d'].map(letter=>String(document.getElementById(`teacher-challenge-option-${letter}`)?.value||'').trim());
+        const correct=String(document.getElementById('teacher-challenge-correct')?.value||'A').toUpperCase();
+        if(options.some(x=>!x))return toast('Vyplň všechny čtyři možnosti A, B, C a D.','error');
+        ({error}=await supabaseClient.rpc('create_student_learning_quiz',{p_school_id:state.school.id,p_title:title,p_prompt:prompt,p_options:options,p_correct_option:correct,p_reward_points:reward,p_class_id:classId}));
+      }else{
+        const answer=String(document.getElementById('teacher-challenge-answer')?.value||'').trim();
+        if(!answer)return toast('Vyplň správnou odpověď.','error');
+        ({error}=await supabaseClient.rpc('create_student_learning_challenge',{p_school_id:state.school.id,p_title:title,p_prompt:prompt,p_answer:answer,p_reward_points:reward,p_class_id:classId}));
+      }
       if(error)throw error;
-      toast('Výzva byla publikována.');
+      toast(type==='abcd'?'ABCD test byl publikován.':'Výzva byla publikována.');
       await refreshTeacherStudentChallenges({renderAfter:false});renderStudentChallengesAdmin();
     }catch(err){toast(authErrorText(err),'error');}
   }
@@ -12820,8 +12877,8 @@ body::after{
 }
 
 /* ZZ-01: žákovský herní scoring, výzvy a hodnocení učitelů */
-.student-game-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:14px 0}.student-game-tab{min-height:48px;border:2px solid #167d91;background:#061b27;color:#9bc5c9;font-weight:900}.student-game-tab.active{border-color:#ff9d13;background:#4b2b08;color:#fff3da;box-shadow:3px 3px 0 #02070d}.student-game-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px}.student-game-kpis>div{border:2px solid #19dce1;background:#082636;padding:13px}.student-game-kpis span{display:block;font-size:12px;color:#8ac2c8}.student-game-kpis strong{display:block;margin-top:5px;font-size:20px;color:#fff3da}.student-score-invest{display:flex;align-items:center;justify-content:space-between;gap:20px}.student-score-invest p{margin:4px 0 0;color:#9bc5c9}.student-score-me td{background:#163b42!important;color:#fff3da}.student-score-table .badge{font-size:9px;padding:2px 5px}.student-challenge-list,.student-teacher-rating-list,.teacher-student-challenge-list{display:grid;gap:10px}.student-challenge-card,.student-teacher-rating,.teacher-student-challenge-row{border:2px solid #176d80;background:#061b27;padding:14px}.student-challenge-card.done{opacity:.82}.student-challenge-head,.student-teacher-rating,.teacher-student-challenge-row{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}.student-challenge-head h3,.student-teacher-rating h3{margin:4px 0}.student-reward{color:#ffb416;font-size:18px}.student-challenge-answer{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:12px}.student-challenge-result{display:inline-block;margin-top:8px;padding:6px 9px;border:2px solid}.student-challenge-result.success{border-color:#39d98a;color:#9ff0c1}.student-challenge-result.fail{border-color:#ff5964;color:#ffadb3}.student-rating-actions{display:flex;gap:7px}.student-rating-total{color:#9bc5c9}.student-feedback-score{font-weight:900}.student-challenge-admin-form{margin-bottom:14px}.student-challenge-admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}.student-challenge-admin-grid .wide{grid-column:1/-1}.student-challenge-admin-grid textarea{min-height:100px}.teacher-student-challenge-row.inactive{opacity:.58}.teacher-challenge-prompt{margin:7px 0;color:#e9f7f7}.teacher-student-challenge-row>div{min-width:0}.teacher-student-challenge-row .btn{flex:0 0 auto}
-@media(max-width:760px){.student-game-tabs,.student-game-kpis{grid-template-columns:1fr 1fr}.student-score-invest,.student-challenge-head,.student-teacher-rating,.teacher-student-challenge-row{display:block}.student-score-invest .btn,.student-rating-actions{margin-top:10px}.student-challenge-answer,.student-challenge-admin-grid{grid-template-columns:1fr}.student-challenge-admin-grid .wide{grid-column:auto}}
+.student-game-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:14px 0}.student-game-tab{min-height:48px;border:2px solid #167d91;background:#061b27;color:#9bc5c9;font-weight:900}.student-game-tab.active{border-color:#ff9d13;background:#4b2b08;color:#fff3da;box-shadow:3px 3px 0 #02070d}.student-game-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px}.student-game-kpis>div{border:2px solid #19dce1;background:#082636;padding:13px}.student-game-kpis span{display:block;font-size:12px;color:#8ac2c8}.student-game-kpis strong{display:block;margin-top:5px;font-size:20px;color:#fff3da}.student-score-invest{display:flex;align-items:center;justify-content:space-between;gap:20px}.student-score-invest p{margin:4px 0 0;color:#9bc5c9}.student-score-me td{background:#163b42!important;color:#fff3da}.student-score-table .badge{font-size:9px;padding:2px 5px}.student-challenge-list,.student-teacher-rating-list,.teacher-student-challenge-list{display:grid;gap:10px}.student-challenge-card,.student-teacher-rating,.teacher-student-challenge-row{border:2px solid #176d80;background:#061b27;padding:14px}.student-challenge-card.done{opacity:.82}.student-challenge-head,.student-teacher-rating,.teacher-student-challenge-row{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}.student-challenge-head h3,.student-teacher-rating h3{margin:4px 0}.student-reward{color:#ffb416;font-size:18px}.student-challenge-answer{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:12px}.student-challenge-result{display:inline-block;margin-top:8px;padding:6px 9px;border:2px solid}.student-challenge-result.success{border-color:#39d98a;color:#9ff0c1}.student-challenge-result.fail{border-color:#ff5964;color:#ffadb3}.student-rating-actions{display:flex;gap:7px}.student-rating-total{color:#9bc5c9}.student-feedback-score{font-weight:900}.student-challenge-admin-form{margin-bottom:14px}.student-challenge-admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}.student-challenge-admin-grid .wide{grid-column:1/-1}.student-challenge-admin-grid textarea{min-height:100px}.teacher-student-challenge-row.inactive{opacity:.58}.teacher-challenge-prompt{margin:7px 0;color:#e9f7f7}.teacher-student-challenge-row>div{min-width:0}.teacher-student-challenge-row .btn{flex:0 0 auto}.teacher-abcd-options{display:grid;grid-template-columns:1fr 1fr;gap:10px}.teacher-abcd-preview{display:grid;gap:4px;margin:8px 0;padding:8px;border:1px solid #176d80;background:#041722}.teacher-abcd-preview .correct{color:#9ff0c1}.student-abcd-options{display:grid;gap:8px;margin:12px 0}.student-abcd-option{display:grid;grid-template-columns:auto auto 1fr;align-items:center;gap:9px;border:2px solid #176d80;background:#041722;padding:10px;cursor:pointer}.student-abcd-option:has(input:checked){border-color:#ff9d13;background:#3b260d}.student-abcd-option input{width:18px;height:18px}.student-abcd-letter{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border:2px solid #19dce1;font-weight:900;color:#fff3da}.student-abcd-submit{margin-top:2px}.student-correct-answer{margin-top:8px}
+@media(max-width:760px){.student-game-tabs,.student-game-kpis{grid-template-columns:1fr 1fr}.student-score-invest,.student-challenge-head,.student-teacher-rating,.teacher-student-challenge-row{display:block}.student-score-invest .btn,.student-rating-actions{margin-top:10px}.student-challenge-answer,.student-challenge-admin-grid,.teacher-abcd-options{grid-template-columns:1fr}.student-challenge-admin-grid .wide{grid-column:auto}}
 </style>
 </head><body><h1>${esc(state.school.name)} – klasifikační přehled</h1><div class="meta">${esc(c.displayName)} · ${esc(subject)} · ${semester}. pololetí · ${esc(c.schoolYear)} · učitel: ${esc(state.user.name)}</div><table><thead><tr><th>Žák</th>${dates.map(d=>`<th>${esc(d.split('-').reverse().join('. '))}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table><script>window.onload=()=>setTimeout(()=>window.print(),150)<\/script></body></html>`);
     w.document.close();
@@ -13800,6 +13857,8 @@ body::after{
       state.ui.scoreClassId=e.target.value; saveState(); render();
     }else if(e.target.id==='staffroom-notify-toggle'){
       setStaffroomNotifications(e.target.checked).then(()=>{ if(state.route==='staffroom')renderStaffroom(); });
+    }else if(e.target.id==='teacher-challenge-type'){
+      toggleTeacherChallengeTypeFields();
     }
   });
 
