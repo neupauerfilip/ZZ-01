@@ -1,10 +1,15 @@
-ZZ-01 – víceotázekové testy v profilu učitele
+ZZ-01 – dobrovolné testy, výběr testu a čistší žákovská stránka
 
-- odstraněna položka Testy a hádanky z hlavního menu
-- vstup zůstává v Nastavení -> Můj profil u každého učitele
-- učitel přidává libovolný počet ABCD otázek (max. 50)
-- u každé otázky nastaví správnou možnost A/B/C/D
-- každá správně zodpovězená otázka = +1 kladný bod
-- body jdou do stejné herní peněženky a lze je použít do scoringu nebo na hodnocení učitelů
-- hádanka / krátká odpověď zůstává a dává +1 bod
-- testy a hádanky jsou dobrovolné a publikují se všem žákům školy
+Změny:
+- položka Testy byla odstraněna z hlavního menu učitele
+- testy jsou dostupné pouze z Nastavení → Můj profil → Dobrovolné testy pro žáky
+- učitel vytváří pouze víceotázekové ABCD testy
+- každá správná odpověď = +1 kladný bod
+- test se publikuje všem žákům školy
+- žák na kartě Testy nejdřív vybírá test ze seznamu a až potom se test otevře
+- u každého testu je uveden jeho autor
+- otázky a odpovědi jsou zobrazené jako samostatné přehledné karty
+- textové hádanky jsou v této verzi skryté
+- získané body lze použít do žákovského scoringu nebo na hodnocení učitele
+
+Backendové změny pro zobrazení pouze testů byly již aplikovány do produkčního Supabase projektu.

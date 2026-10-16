@@ -9870,52 +9870,48 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         return `<section class="student-panel"><div class="student-panel-head"><h2>${esc(name)}</h2><span>${me?`${Number(me.rank_position)}. místo · ${Number(me.score_points)} b.`:'třída'}</span></div>${studentScoreTable(rows)}</section>`;
       }).join('');
       tabBody=`<div class="student-game-kpis"><div><span>Kladné body k použití</span><strong>+${Number(wallet.available_points||0)} b.</strong></div><div><span>Body ve scoringu</span><strong>${Number(wallet.score_points||0)} b.</strong></div><div><span>Pořadí ve škole</span><strong>${meSchool?`${Number(meSchool.rank_position)}.`:'—'}</strong></div></div>
-        <section class="student-panel student-score-invest"><div><h2>Použít kladné body</h2><p>Body získané z hádanek a testů můžeš převést do svého scoringu, nebo je utratit za hodnocení učitelů.</p></div><button class="btn primary" data-action="student-invest-score" ${Number(wallet.available_points||0)<=0?'disabled':''}>Převést do scoringu</button></section>
+        <section class="student-panel student-score-invest"><div><h2>Použít kladné body</h2><p>Body získané z dobrovolných testů můžeš převést do svého scoringu, nebo je utratit za hodnocení učitelů.</p></div><button class="btn primary" data-action="student-invest-score" ${Number(wallet.available_points||0)<=0?'disabled':''}>Převést do scoringu</button></section>
         ${classBlocks||'<section class="student-panel"><div class="empty">Nejsi v žádné aktivní třídě.</div></section>'}
         <section class="student-panel"><div class="student-panel-head"><h2>Celá škola</h2><span>${meSchool?`${Number(meSchool.rank_position)}. místo z ${schoolRows.length}`:`${schoolRows.length} žáků`}</span></div>${studentScoreTable(schoolRows,{limit:50})}</section>`;
     }else if(tab==='challenges'){
-      const cards=challenges.map(ch=>{
-        const done=!!ch.attempted;
-        const isTest=ch.challenge_type==='test';
-        const isAbcd=ch.challenge_type==='abcd';
-        const options=Array.isArray(ch.options)?ch.options:[];
-        const questions=Array.isArray(ch.questions)?ch.questions:[];
-        const letters=['A','B','C','D'];
-        const total=isTest?Number(ch.total_questions||questions.length):1;
-        const gained=Number(ch.points_awarded||0);
-        let result='';
-        let answerUi='';
-        let body='';
+      const tests=challenges
+        .filter(ch=>ch.challenge_type==='test')
+        .slice()
+        .sort((a,b)=>(Number(a.attempted)-Number(b.attempted)) || String(a.teacher_name||'').localeCompare(String(b.teacher_name||''),'cs') || String(a.title||'').localeCompare(String(b.title||''),'cs'));
+      state.ui=state.ui||{};
+      const selectedId=String(state.ui.studentSelectedTestId||'');
+      const selected=tests.find(ch=>String(ch.challenge_id)===selectedId)||null;
+      if(selectedId&&!selected)state.ui.studentSelectedTestId='';
 
-        if(isTest){
-          if(done){
-            result=`<span class="student-challenge-result ${gained>0?'success':'fail'}">${Number(ch.correct_count||0)}/${total} SPRÁVNĚ · +${gained} b.</span>`;
-            body=`<div class="student-multi-test-review">${questions.map((q,i)=>{const opts=Array.isArray(q.options)?q.options:[];const correct=String(q.correct||'').toUpperCase();const correctText=letters.includes(correct)?String(opts[letters.indexOf(correct)]||''):'';return `<div class="student-multi-question done"><strong>${i+1}. ${esc(q.prompt||'Otázka')}</strong><div class="tiny muted">Správná odpověď: <strong>${esc(correct)}${correctText?` — ${esc(correctText)}`:''}</strong></div></div>`}).join('')}</div>`;
-          }else{
-            body=`<div class="student-multi-test">${questions.map((q,i)=>{const opts=Array.isArray(q.options)?q.options:[];return `<section class="student-multi-question"><strong>${i+1}. ${esc(q.prompt||'Otázka')}</strong><div class="student-abcd-options">${letters.map((letter,oi)=>`<label class="student-abcd-option"><input type="radio" name="student-test-${ch.challenge_id}-${i}" value="${letter}"><span class="student-abcd-letter">${letter}</span><span>${esc(opts[oi]||'')}</span></label>`).join('')}</div></section>`}).join('')}</div>`;
-            answerUi=`<button class="btn primary student-abcd-submit" data-action="student-challenge-submit" data-id="${ch.challenge_id}">Odevzdat celý test</button>`;
-          }
-        }else{
-          const correctLetter=String(ch.correct_answer||'').toUpperCase();
-          const correctIndex=letters.indexOf(correctLetter);
-          const correctText=correctIndex>=0?String(options[correctIndex]||''):'';
-          result=done?(ch.correct?`<span class="student-challenge-result success">SPRÁVNĚ · +${gained} b.</span>`:`<span class="student-challenge-result fail">NESPRÁVNĚ</span>`):'';
-          const afterAnswer=done&&isAbcd&&correctLetter?`<div class="tiny muted student-correct-answer">Správná odpověď: <strong>${esc(correctLetter)}${correctText?` — ${esc(correctText)}`:''}</strong></div>`:'';
-          body=`<p>${esc(ch.prompt||'')}</p>${afterAnswer}`;
-          if(!done){
-            if(isAbcd){
-              answerUi=`<div class="student-abcd-options">${letters.map((letter,i)=>`<label class="student-abcd-option"><input type="radio" name="student-challenge-choice-${ch.challenge_id}" value="${letter}"><span class="student-abcd-letter">${letter}</span><span>${esc(options[i]||'')}</span></label>`).join('')}</div><button class="btn primary student-abcd-submit" data-action="student-challenge-submit" data-id="${ch.challenge_id}">Odeslat odpověď</button>`;
-            }else{
-              answerUi=`<div class="student-challenge-answer"><input id="student-challenge-answer-${ch.challenge_id}" maxlength="200" placeholder="Tvoje odpověď"><button class="btn primary" data-action="student-challenge-submit" data-id="${ch.challenge_id}">Odeslat odpověď</button></div>`;
-            }
-          }
-        }
-
-        const kind=isTest?'TEST':isAbcd?'ABCD':'HÁDANKA';
-        const rewardLabel=isTest?`až +${total} b.`:'+1 b.';
-        return `<article class="student-challenge-card ${done?'done':''}"><div class="student-challenge-head"><div><div class="student-kicker">CELÁ ŠKOLA · ${esc(ch.teacher_name||'Učitel')} · ${kind}</div><h3>${esc(ch.title||'Výzva')}</h3></div><strong class="student-reward">${rewardLabel}</strong></div>${body}${done?result:''}${answerUi}${!done?`<div class="tiny muted">Dobrovolné · jeden pokus. Každá správná testová otázka přidá +1 bod.</div>`:''}</article>`;
+      const selectorOptions=tests.map(ch=>{
+        const total=Number(ch.total_questions||(Array.isArray(ch.questions)?ch.questions.length:0));
+        const status=ch.attempted?`HOTOVO ${Number(ch.correct_count||0)}/${total}`:`${total} otázek`;
+        return `<option value="${esc(ch.challenge_id)}" ${selected&&selected.challenge_id===ch.challenge_id?'selected':''}>${esc(ch.title||'Test')} — ${esc(ch.teacher_name||'Učitel')} — ${esc(status)}</option>`;
       }).join('');
-      tabBody=`<div class="student-game-kpis"><div><span>Kladné body k použití</span><strong>+${Number(wallet.available_points||0)} b.</strong></div><div><span>Celkem získáno</span><strong>${Number(wallet.earned_total||0)} b.</strong></div><div><span>Testy a hádanky</span><strong>${challenges.length}</strong></div></div><section class="student-panel"><div class="student-panel-head"><h2>Dobrovolné testy a hádanky</h2><span>za kladné body</span></div><div class="student-challenge-list">${cards||'<div class="empty">Učitelé zatím nevložili žádný aktivní test ani hádanku.</div>'}</div></section>`;
+
+      let opened='';
+      if(selected){
+        const done=!!selected.attempted;
+        const questions=Array.isArray(selected.questions)?selected.questions:[];
+        const letters=['A','B','C','D'];
+        const total=Number(selected.total_questions||questions.length);
+        const gained=Number(selected.points_awarded||0);
+        const questionHtml=questions.map((q,i)=>{
+          const opts=Array.isArray(q.options)?q.options:[];
+          if(done){
+            const correct=String(q.correct||'').toUpperCase();
+            const correctText=letters.includes(correct)?String(opts[letters.indexOf(correct)]||''):'';
+            return `<section class="student-test-question-card done"><div class="student-test-question-head"><span>OTÁZKA ${i+1}/${total}</span></div><h3>${esc(q.prompt||'Otázka')}</h3><div class="student-test-review-answer">Správná odpověď: <strong>${esc(correct)}${correctText?` — ${esc(correctText)}`:''}</strong></div></section>`;
+          }
+          return `<section class="student-test-question-card"><div class="student-test-question-head"><span>OTÁZKA ${i+1}/${total}</span><span>+1 BOD</span></div><h3>${esc(q.prompt||'Otázka')}</h3><div class="student-test-options">${letters.map((letter,oi)=>`<label class="student-test-option"><input type="radio" name="student-test-${selected.challenge_id}-${i}" value="${letter}"><span class="student-test-letter">${letter}</span><span class="student-test-option-text">${esc(opts[oi]||'')}</span></label>`).join('')}</div></section>`;
+        }).join('');
+        const result=done?`<div class="student-test-result ${gained>0?'success':'neutral'}"><strong>${Number(selected.correct_count||0)}/${total} správně</strong><span>+${gained} bodů</span></div>`:'';
+        opened=`<section class="student-panel student-open-test"><div class="student-open-test-head"><div><div class="student-kicker">DOBROVOLNÝ TEST · ${esc(selected.teacher_name||'Učitel')}</div><h2>${esc(selected.title||'Test')}</h2><p>${total} otázek · každá správná odpověď = +1 bod · jeden pokus</p></div><button class="btn secondary" data-action="student-test-close">Zavřít test</button></div>${result}<div class="student-test-question-list">${questionHtml}</div>${done?'':`<div class="student-test-submit-bar"><div>Vyplň všechny otázky a potom test odevzdej.</div><button class="btn primary" data-action="student-challenge-submit" data-id="${selected.challenge_id}">Odevzdat celý test</button></div>`}</section>`;
+      }
+
+      const selector=tests.length?`<section class="student-panel student-test-picker"><div class="student-panel-head"><div><h2>Dobrovolné testy</h2><span>Vyber test, který chceš otevřít</span></div><span>${tests.filter(t=>!t.attempted).length} k vyplnění</span></div><div class="student-test-picker-row"><select id="student-test-select"><option value="">— Vyber test —</option>${selectorOptions}</select><button class="btn primary" data-action="student-test-open">Otevřít test</button></div><div class="student-test-picker-help">U každého testu vidíš autora. Testy nejsou povinné a neovlivňují klasifikaci.</div></section>`:`<section class="student-panel"><div class="empty">Učitelé zatím nevložili žádný aktivní test.</div></section>`;
+
+      tabBody=`<div class="student-game-kpis"><div><span>Kladné body k použití</span><strong>+${Number(wallet.available_points||0)} b.</strong></div><div><span>Celkem získáno</span><strong>${Number(wallet.earned_total||0)} b.</strong></div><div><span>Testy k dispozici</span><strong>${tests.length}</strong></div></div>${selector}${opened}`;
     }else if(tab==='teachers'){
       const cards=feedbackTeachers.map(t=>`<article class="student-teacher-rating"><div><h3>${esc(t.teacher_name||'Učitel')}</h3><div class="student-rating-total">Hlas žáků: <strong>${formatSignedNumber(Number(t.net_score||0))}</strong> · +${Number(t.positive_votes||0)} / −${Number(t.negative_votes||0)}</div><div class="tiny muted">${t.voted_this_period?'Tento týden už jsi hlasoval(a).':'Můžeš hlasovat jednou za týden.'}</div></div><div class="student-rating-actions"><button class="btn primary" data-action="student-feedback" data-teacher="${t.teacher_id}" data-value="1" ${t.voted_this_period||Number(wallet.available_points||0)<1?'disabled':''}>+1</button><button class="btn danger" data-action="student-feedback" data-teacher="${t.teacher_id}" data-value="-1" ${t.voted_this_period||Number(wallet.available_points||0)<1?'disabled':''}>−1</button></div></article>`).join('');
       tabBody=`<div class="student-game-kpis"><div><span>Kladné body k použití</span><strong>+${Number(wallet.available_points||0)} b.</strong></div><div><span>Cena jednoho hlasu</span><strong>1 b.</strong></div><div><span>Hodnotitelní učitelé</span><strong>${feedbackTeachers.length}</strong></div></div><section class="student-panel"><div class="student-panel-head"><h2>Ohodnotit učitele</h2><span>bez komentářů</span></div><p class="muted">Za 1 kladný bod můžeš dát učiteli +1 nebo −1. Hlasovat lze u každého svého učitele jednou týdně. Učitelé vidí jen souhrn, ne jméno hlasujícího.</p><div class="student-teacher-rating-list">${cards||'<div class="empty">Pro tvoje třídy nejsou přiřazeni žádní učitelé k hodnocení.</div>'}</div></section>`;
@@ -9927,9 +9923,9 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 
     const body=`<section class="student-portal">
       <div class="student-hero"><div><div class="student-kicker">MŮJ PŘEHLED</div><h1>${esc(a.student_name||state.user.name||'Žák')}</h1><div class="student-school">${esc(a.school_name||'')} · ${esc(a.school_year||'')}${a.school_code?` · kód školy ${esc(a.school_code)}`:''}</div><div class="student-chips">${classChips}</div></div><div class="student-id-card">ZZ-01<br>STUDENT</div></div>
-      <div class="student-game-tabs">${studentPortalTabButton('overview','Přehled')}${studentPortalTabButton('scoring','Scoring')}${studentPortalTabButton('challenges','Výzvy')}${studentPortalTabButton('teachers','Ohodnotit učitele')}</div>
+      <div class="student-game-tabs">${studentPortalTabButton('overview','Přehled')}${studentPortalTabButton('scoring','Scoring')}${studentPortalTabButton('challenges','Testy')}${studentPortalTabButton('teachers','Ohodnotit učitele')}</div>
       ${tabBody}
-      <div class="student-note">Výzvy a hodnocení učitelů jsou herní součást Zkouškomatu. Neovlivňují školní klasifikaci.</div>
+      <div class="student-note">Dobrovolné testy a hodnocení učitelů jsou herní součást Zkouškomatu. Neovlivňují školní klasifikaci.</div>
     </section>`;
     app.innerHTML=studentPortalLayout(body);
   }
@@ -10285,69 +10281,39 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   }
 
   function renderStudentChallengesAdmin(){
-    const rows=Array.isArray(state.ui?.teacherStudentChallenges)?state.ui.teacherStudentChallenges:[];
+    const rows=(Array.isArray(state.ui?.teacherStudentChallenges)?state.ui.teacherStudentChallenges:[])
+      .filter(ch=>ch.challenge_type==='test');
     const loading=!!state.ui?.teacherStudentChallengesLoading;
     if(!state.ui?.teacherStudentChallengesLoaded&&!loading)queueMicrotask(()=>void refreshTeacherStudentChallenges());
     const letters=['A','B','C','D'];
     const list=rows.map(ch=>{
-      const isTest=ch.challenge_type==='test';
-      const isAbcd=ch.challenge_type==='abcd';
       const questions=Array.isArray(ch.questions)?ch.questions:[];
-      const options=Array.isArray(ch.options)?ch.options:[];
-      const correct=String(ch.answer||'').toUpperCase();
-      let preview='';
-      if(isTest){
-        preview=`<div class="teacher-test-preview">${questions.map((q,i)=>{const opts=Array.isArray(q.options)?q.options:[];const ans=String(q.correct||'').toUpperCase();return `<div><strong>${i+1}. ${esc(q.prompt||'Otázka')}</strong><div class="tiny muted">Správně: ${esc(ans)}${letters.includes(ans)?` — ${esc(opts[letters.indexOf(ans)]||'')}`:''}</div></div>`}).join('')}</div>`;
-      }else if(isAbcd){
-        preview=`<div class="teacher-abcd-preview">${letters.map((letter,i)=>`<div class="${correct===letter?'correct':''}"><strong>${letter}</strong> ${esc(options[i]||'')}</div>`).join('')}</div>`;
-      }else{
-        preview=`<div class="teacher-challenge-prompt">${esc(ch.prompt||'')}</div><div class="tiny muted">Správná odpověď: <strong>${esc(ch.answer||'')}</strong></div>`;
-      }
-      const label=isTest?'TEST':isAbcd?'ABCD':'HÁDANKA';
-      const maxPoints=isTest?questions.length:Number(ch.reward_points||1);
-      return `<div class="teacher-student-challenge-row ${ch.active?'':'inactive'}"><div><strong>${esc(ch.title||'Výzva')} <span class="badge">${label}</span></strong><div class="tiny muted">Celá škola · max. +${maxPoints} b. · pokusy ${Number(ch.attempts||0)} · rozdané body ${Number(ch.awarded_points||0)}</div>${preview}</div><button class="btn ${ch.active?'danger':'primary'}" data-action="toggle-student-learning-challenge" data-id="${ch.challenge_id}" data-active="${ch.active?'0':'1'}">${ch.active?'Vypnout':'Zapnout'}</button></div>`;
+      const preview=`<details class="teacher-test-details"><summary>${questions.length} otázek · zobrazit řešení</summary><div class="teacher-test-preview">${questions.map((q,i)=>{const opts=Array.isArray(q.options)?q.options:[];const ans=String(q.correct||'').toUpperCase();return `<div><strong>${i+1}. ${esc(q.prompt||'Otázka')}</strong><div class="tiny muted">Správně: ${esc(ans)}${letters.includes(ans)?` — ${esc(opts[letters.indexOf(ans)]||'')}`:''}</div></div>`}).join('')}</div></details>`;
+      return `<div class="teacher-student-challenge-row ${ch.active?'':'inactive'}"><div><strong>${esc(ch.title||'Test')} <span class="badge">TEST</span></strong><div class="tiny muted">Celá škola · ${questions.length} otázek · max. +${questions.length} b. · pokusy ${Number(ch.attempts||0)} · rozdané body ${Number(ch.awarded_points||0)}</div>${preview}</div><button class="btn ${ch.active?'danger':'primary'}" data-action="toggle-student-learning-challenge" data-id="${ch.challenge_id}" data-active="${ch.active?'0':'1'}">${ch.active?'Vypnout':'Zapnout'}</button></div>`;
     }).join('');
 
-    const content=`<section class="pack-a-screen"><div class="pack-a-hero"><div><div class="pack-a-kicker">NASTAVENÍ PROFILU UČITELE · DOBROVOLNÝ OBSAH</div><h1>Testy a hádanky pro žáky</h1><p>Tato část je dostupná z profilu každého učitele. Nový obsah se po publikování zobrazí dobrovolně všem žákům školy.</p></div></div>
-      <section class="pixel-frame card student-challenge-admin-form"><div class="section-title"><div><h2>Nový test / hádanka</h2><div class="tiny muted">Každá správně zodpovězená testová otázka = <strong>+1 kladný bod</strong>. Správná hádanka = +1 bod.</div></div><span class="badge">CELÁ ŠKOLA</span></div>
-        <div class="student-challenge-admin-grid"><label>Typ<select id="teacher-challenge-type"><option value="test" selected>Test ABCD – více otázek</option><option value="text">Hádanka / krátká odpověď</option></select></label><label>Název<input id="teacher-challenge-title" maxlength="80" placeholder="Např. Strojnický mini test"></label></div>
+    const content=`<section class="pack-a-screen"><div class="pack-a-hero"><div><div class="pack-a-kicker">NASTAVENÍ PROFILU UČITELE · DOBROVOLNÉ TESTY</div><h1>Testy pro žáky</h1><p>Každý učitel může ze svého profilu vytvořit dobrovolný ABCD test pro všechny žáky školy.</p></div></div>
+      <section class="pixel-frame card student-challenge-admin-form"><div class="section-title"><div><h2>Nový test</h2><div class="tiny muted">Každá správná odpověď = <strong>+1 kladný bod</strong>. Žák získané body použije do scoringu nebo na hodnocení učitele.</div></div><span class="badge">CELÁ ŠKOLA</span></div>
+        <div class="student-challenge-admin-grid"><label class="wide">Název testu<input id="teacher-challenge-title" maxlength="80" placeholder="Např. Strojnický mini test"></label></div>
         <div id="teacher-test-builder"><div class="section-title" style="margin:8px 0"><div><h3 style="margin:0">Otázky testu</h3><div class="tiny muted">Počet otázek: <strong id="teacher-test-question-count">1</strong> · každá správná = +1 bod</div></div><button class="btn secondary" type="button" data-action="add-test-question">+ Přidat otázku</button></div><div id="teacher-test-questions">${teacherTestQuestionEditor(0)}</div></div>
-        <div id="teacher-riddle-builder" hidden><label>Zadání hádanky<textarea id="teacher-challenge-prompt" maxlength="1000" placeholder="Napiš hádanku nebo otázku…"></textarea></label><label style="margin-top:10px">Správná odpověď<input id="teacher-challenge-answer" maxlength="200" placeholder="Krátká textová odpověď"></label><div class="tiny muted" style="margin-top:7px">Správná odpověď = +1 kladný bod.</div></div>
-        <div class="settings-note" style="margin:12px 0">Získané body zůstávají žákovi k dispozici. Může je převést do svého scoringu nebo je použít na hodnocení učitele.</div><button class="btn primary" data-action="create-student-learning-challenge">Publikovat celé škole</button></section>
-      <section class="pixel-frame card"><div class="section-title"><div><h2>Moje publikované testy a hádanky</h2><div class="tiny muted">Učitel vidí vlastní obsah; administrátor může spravovat školní obsah. Starší výzvy zůstávají zachované.</div></div><button class="btn secondary" data-action="refresh-student-learning-challenges">Obnovit</button></div>${loading?'<div class="empty">Načítám…</div>':`<div class="teacher-student-challenge-list">${list||'<div class="empty">Zatím jsi nevytvořil(a) žádný test ani hádanku.</div>'}</div>`}</section>
-      <div class="arcade-footer"><span>TESTY A HÁDANKY</span><span>ZZ-01</span></div></section>`;
-    app.innerHTML=layout(content,'Testy a hádanky');
-    queueMicrotask(()=>{toggleTeacherChallengeTypeFields();renumberTeacherTestQuestions();});
-  }
-
-  function toggleTeacherChallengeTypeFields(){
-    const type=String(document.getElementById('teacher-challenge-type')?.value||'test');
-    const test=document.getElementById('teacher-test-builder');
-    const riddle=document.getElementById('teacher-riddle-builder');
-    if(test)test.hidden=type!=='test';
-    if(riddle)riddle.hidden=type==='test';
+        <div class="settings-note" style="margin:12px 0">Test se po publikování zobrazí všem žákům školy jako dobrovolný. Žák má na test jeden pokus.</div><button class="btn primary" data-action="create-student-learning-challenge">Publikovat test celé škole</button></section>
+      <section class="pixel-frame card"><div class="section-title"><div><h2>Moje publikované testy</h2><div class="tiny muted">Zobrazené jsou pouze automaticky vyhodnocované ABCD testy.</div></div><button class="btn secondary" data-action="refresh-student-learning-challenges">Obnovit</button></div>${loading?'<div class="empty">Načítám…</div>':`<div class="teacher-student-challenge-list">${list||'<div class="empty">Zatím jsi nevytvořil(a) žádný test.</div>'}</div>`}</section>
+      <div class="arcade-footer"><span>DOBROVOLNÉ TESTY</span><span>ZZ-01</span></div></section>`;
+    app.innerHTML=layout(content,'Testy pro žáky');
+    queueMicrotask(()=>renumberTeacherTestQuestions());
   }
 
   async function createStudentLearningChallengeFromForm(){
-    const type=String(document.getElementById('teacher-challenge-type')?.value||'test');
     const title=String(document.getElementById('teacher-challenge-title')?.value||'').trim();
     if(title.length<3)return toast('Zadej název alespoň na 3 znaky.','error');
+    const questions=collectTeacherTestQuestions();
+    if(!questions.length)return toast('Přidej alespoň jednu otázku.','error');
+    const bad=questions.find(q=>!q.prompt||q.options.some(x=>!x)||!['A','B','C','D'].includes(q.correct));
+    if(bad)return toast('U každé otázky vyplň zadání, všechny možnosti A–D a správnou odpověď.','error');
     try{
-      let error=null;
-      if(type==='test'){
-        const questions=collectTeacherTestQuestions();
-        if(!questions.length)return toast('Přidej alespoň jednu otázku.','error');
-        const bad=questions.find(q=>!q.prompt||q.options.some(x=>!x)||!['A','B','C','D'].includes(q.correct));
-        if(bad)return toast('U každé otázky vyplň zadání, všechny možnosti A–D a správnou odpověď.','error');
-        ({error}=await supabaseClient.rpc('create_student_learning_test',{p_school_id:state.school.id,p_title:title,p_questions:questions}));
-      }else{
-        const prompt=String(document.getElementById('teacher-challenge-prompt')?.value||'').trim();
-        const answer=String(document.getElementById('teacher-challenge-answer')?.value||'').trim();
-        if(prompt.length<3||!answer)return toast('Vyplň zadání hádanky i správnou odpověď.','error');
-        ({error}=await supabaseClient.rpc('create_student_learning_challenge',{p_school_id:state.school.id,p_title:title,p_prompt:prompt,p_answer:answer,p_reward_points:1,p_class_id:null}));
-      }
+      const {error}=await supabaseClient.rpc('create_student_learning_test',{p_school_id:state.school.id,p_title:title,p_questions:questions});
       if(error)throw error;
-      toast(type==='test'?'Test byl publikován celé škole.':'Hádanka byla publikována celé škole.');
+      toast(`Test publikován celé škole · ${questions.length} otázek.`);
       await refreshTeacherStudentChallenges({renderAfter:false});renderStudentChallengesAdmin();
     }catch(err){toast(authErrorText(err),'error');}
   }
@@ -12978,6 +12944,36 @@ body::after{
 .teacher-test-question{border:2px solid #176d80;background:#041722;padding:14px;margin:10px 0}.teacher-test-question-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.teacher-test-question textarea{min-height:74px}.teacher-test-remove{padding:6px 10px}.teacher-test-preview{display:grid;gap:8px;margin:9px 0}.teacher-test-preview>div{border-left:3px solid #176d80;padding-left:9px}.student-multi-test{display:grid;gap:14px;margin-top:12px}.student-multi-question{border:2px solid #176d80;background:#041722;padding:12px}.student-multi-question.done{margin-top:8px}.student-multi-test-review{display:grid;gap:8px;margin:10px 0}
 @media(max-width:760px){.student-game-tabs,.student-game-kpis{grid-template-columns:1fr 1fr}.student-score-invest,.student-challenge-head,.student-teacher-rating,.teacher-student-challenge-row{display:block}.student-score-invest .btn,.student-rating-actions{margin-top:10px}.student-challenge-answer,.student-challenge-admin-grid,.teacher-abcd-options{grid-template-columns:1fr}.student-challenge-admin-grid .wide{grid-column:auto}}
 </style>
+
+<style id="zz01-student-test-cleanup">
+.student-test-picker{margin-top:14px}
+.student-test-picker .student-panel-head>div{display:grid;gap:3px}
+.student-test-picker-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end;margin-top:12px}
+.student-test-picker-row select{width:100%;min-height:48px;background:#061f2b;color:#effbff;border:2px solid #17dce8;padding:8px 10px;font:inherit}
+.student-test-picker-help{margin-top:8px;color:#85adb5;font-size:.75rem}
+.student-open-test{margin-top:14px}
+.student-open-test-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:start;border-bottom:2px solid #0b6f7c;padding-bottom:12px;margin-bottom:14px}
+.student-open-test-head h2{margin:3px 0 4px}.student-open-test-head p{margin:0;color:#91b7bf}
+.student-test-question-list{display:grid;gap:14px}
+.student-test-question-card{padding:16px;border:2px solid #117d89;background:#062532;box-shadow:3px 3px 0 #010b11}
+.student-test-question-card.done{border-color:#527c83;background:#0a2028}
+.student-test-question-head{display:flex;justify-content:space-between;gap:10px;margin-bottom:8px;color:#3de8ef;font-family:var(--pixel);font-size:.68rem;letter-spacing:.04em}
+.student-test-question-card h3{margin:0 0 12px;font-size:1rem;line-height:1.5;color:#fff4d9}
+.student-test-options{display:grid;gap:8px}
+.student-test-option{position:relative;display:grid;grid-template-columns:42px minmax(0,1fr);align-items:center;gap:10px;min-height:48px;padding:7px 10px;border:2px solid #165d68;background:#041b26;cursor:pointer;color:#ecfbff}
+.student-test-option:hover{border-color:#18d9e5;background:#072a37}
+.student-test-option input{position:absolute!important;opacity:0!important;width:1px!important;height:1px!important;pointer-events:none!important;margin:0!important}
+.student-test-letter{display:grid;place-items:center;width:34px;height:34px;border:2px solid #18d9e5;background:#082d3b;color:#fff4d9;font-family:var(--pixel);font-weight:700}
+.student-test-option:has(input:checked){border-color:#ff9c18;background:#302009;box-shadow:inset 0 0 0 2px #a94e00}
+.student-test-option:has(input:checked) .student-test-letter{border-color:#fff0a6;background:#ff8c0b;color:#171006}
+.student-test-option-text{line-height:1.35}
+.student-test-submit-bar{margin-top:16px;padding:12px;border:2px solid #ff9c18;background:#24190a;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.student-test-result{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:14px;padding:12px;border:2px solid #2fcbd6;background:#08242e}
+.student-test-result.success{border-color:#4dd789}.student-test-result strong{font-size:1.1rem}.student-test-result span{font-family:var(--pixel);color:#ffd95b}
+.student-test-review-answer{margin-top:8px;padding:8px 10px;border-left:3px solid #2fcbd6;background:#041a22;color:#bfeaf0}
+.teacher-test-details{margin-top:10px}.teacher-test-details summary{cursor:pointer;color:#33e6ee;font-weight:700}.teacher-test-details[open] summary{margin-bottom:8px}
+@media(max-width:680px){.student-test-picker-row,.student-open-test-head{grid-template-columns:1fr}.student-test-submit-bar{align-items:stretch;flex-direction:column}.student-test-option{grid-template-columns:36px minmax(0,1fr)}}
+</style>
 </head><body><h1>${esc(state.school.name)} – klasifikační přehled</h1><div class="meta">${esc(c.displayName)} · ${esc(subject)} · ${semester}. pololetí · ${esc(c.schoolYear)} · učitel: ${esc(state.user.name)}</div><table><thead><tr><th>Žák</th>${dates.map(d=>`<th>${esc(d.split('-').reverse().join('. '))}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table><script>window.onload=()=>setTimeout(()=>window.print(),150)<\/script></body></html>`);
     w.document.close();
   }
@@ -13328,8 +13324,8 @@ body::after{
           <div class="settings-fields"><label>Jméno<input id="profile-name" value="${esc(state.user.name)}"></label><label>Přezdívka<input id="profile-nick" value="${esc(state.user.nickname)}"></label></div>
           <div class="settings-note">Vlastní obrázek se automaticky ořízne na čtverec a zmenší, aby zbytečně nezabíral místo.</div>
           <div class="pixel-inset" style="margin-top:14px;padding:14px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center">
-            <div><strong>Testy a hádanky pro žáky</strong><div class="tiny muted" style="margin-top:5px">Každý schválený učitel může ve svém profilu vytvářet dobrovolné testy s více otázkami nebo hádanky. Publikují se všem žákům školy.</div></div>
-            <button class="btn primary" data-action="student-challenges">Spravovat testy / hádanky</button>
+            <div><strong>Dobrovolné testy pro žáky</strong><div class="tiny muted" style="margin-top:5px">Každý schválený učitel může ve svém profilu vytvářet víceotázekové ABCD testy. Publikují se všem žákům školy.</div></div>
+            <button class="btn primary" data-action="student-challenges">Spravovat testy</button>
           </div>
         </section>
 
@@ -13959,8 +13955,6 @@ body::after{
       state.ui.scoreClassId=e.target.value; saveState(); render();
     }else if(e.target.id==='staffroom-notify-toggle'){
       setStaffroomNotifications(e.target.checked).then(()=>{ if(state.route==='staffroom')renderStaffroom(); });
-    }else if(e.target.id==='teacher-challenge-type'){
-      toggleTeacherChallengeTypeFields();
     }
   });
 
@@ -14035,6 +14029,8 @@ body::after{
     else if(action==='auth-submit'){void submitSupabaseAuth();}
     else if(action==='student-refresh'){void refreshAndRenderStudentPortal();}
     else if(action==='student-portal-tab'){state.ui=state.ui||{};state.ui.studentPortalTab=btn.dataset.tab||'overview';saveState();renderStudentPortal();}
+    else if(action==='student-test-open'){const id=String(document.getElementById('student-test-select')?.value||'');if(!id)return toast('Vyber test.','warn');state.ui=state.ui||{};state.ui.studentSelectedTestId=id;saveState();renderStudentPortal();}
+    else if(action==='student-test-close'){state.ui=state.ui||{};state.ui.studentSelectedTestId='';saveState();renderStudentPortal();}
     else if(action==='student-invest-score'){openStudentInvestScoreModal();}
     else if(action==='student-challenge-submit'){void submitStudentLearningChallenge(btn.dataset.id);}
     else if(action==='student-feedback'){castStudentTeacherFeedback(btn.dataset.teacher,Number(btn.dataset.value));}
