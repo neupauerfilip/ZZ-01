@@ -5,3 +5,5 @@ ZZ-01 – žákovské přihlášení jménem a příjmením
 - první aktivace ověří jméno proti evidenci žáka
 - další přihlášení: kód školy + jméno a příjmení + PIN
 - backendová změna je už aplikovaná v Supabase
+
+Oprava: propojovací kód a kód školy se načtou před překreslením formuláře, takže se při odeslání neztratí.

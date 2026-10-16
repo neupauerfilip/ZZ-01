@@ -7113,7 +7113,23 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     const username=String(document.getElementById('student-auth-username')?.value||'').trim().replace(/\s+/g,' ');
     const pin=String(document.getElementById('student-auth-pin')?.value||'').trim();
     const pinConfirm=String(document.getElementById('student-auth-pin-confirm')?.value||'').trim();
+    // Hodnoty z těchto polí musíme uložit PŘED překreslením přihlašovacího formuláře.
+    // renderLogin() vytvoří nové prázdné inputy; čtení až po něm způsobovalo ztrátu kódu.
+    const inviteCode=registering
+      ?String(document.getElementById('student-auth-invite')?.value||'').trim().toUpperCase()
+      :'';
+    const schoolCode=!registering
+      ?String(document.getElementById('student-auth-school-code')?.value||'').trim().toUpperCase()
+      :'';
 
+    if(registering && !inviteCode){
+      setAuthMessage('Zadej jednorázový propojovací kód od učitele.','error');
+      return renderLogin();
+    }
+    if(!registering && !schoolCode){
+      setAuthMessage('Zadej kód školy.','error');
+      return renderLogin();
+    }
     if(username.length>60 || !/^\p{L}{2,}(?: \p{L}{2,})+$/u.test(username)){
       setAuthMessage('Zadej jméno a příjmení. Použij pouze písmena a mezery, bez čísel a speciálních znaků.','error');
       return renderLogin();
@@ -7134,8 +7150,6 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 
       let row=null;
       if(registering){
-        const inviteCode=String(document.getElementById('student-auth-invite')?.value||'').trim().toUpperCase();
-        if(!inviteCode)throw new Error('student_invite_required');
         const {data,error}=await supabaseClient.rpc('student_register_with_invite',{
           p_invite_code:inviteCode,
           p_username:username,
@@ -7144,8 +7158,6 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         if(error)throw error;
         row=studentPortalRows(data)[0]||null;
       }else{
-        const schoolCode=String(document.getElementById('student-auth-school-code')?.value||'').trim().toUpperCase();
-        if(!schoolCode)throw new Error('school_code_required');
         const {data,error}=await supabaseClient.rpc('student_portal_login',{
           p_school_code:schoolCode,
           p_username:username,
