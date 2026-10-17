@@ -5971,7 +5971,6 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 
 
 /* ===== STUDENT ACHIEVEMENTS V2 — kabinet + strom jako u učitelů ===== */
-.student-home-card[data-view="achievements"]{grid-column:1/-1}
 .student-achievement-hub{display:grid;gap:14px}
 .student-achievement-hub .game-toolbar{margin:0 0 4px}
 .student-achievement-hub-note{border:2px dashed #1f7182;background:#061823;padding:10px 12px;color:#9ecbd0;font-size:.78rem;line-height:1.45}
@@ -6030,7 +6029,6 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 .student-profile-trophy small{font-size:.62rem;color:#87b7be;text-align:center}
 .student-achievement-kpi-accent{color:#ffe06b!important}
 @media(max-width:760px){
-  .student-home-card[data-view="achievements"]{grid-column:auto}
   .student-achievement-profile-preview{grid-template-columns:repeat(2,minmax(0,1fr))}
   .student-achievement-branch .trophy-branch-head{grid-template-columns:auto minmax(0,1fr)}
   .student-achievement-branch .trophy-branch-head>.badge,.student-achievement-branch .trophy-branch-head>.student-achievement-special-mark{grid-column:1/-1;justify-self:start}
@@ -11001,7 +10999,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         </div>
         <div class="home-grid student-home-grid">
           ${studentHomeCard('challenges','home-exam.png','Školní výzvy','Dobrovolné testy a výzvy → získávej kredity',unfinishedTests?String(unfinishedTests):'')}
-          ${studentHomeCard('scoring','home-scoring.png','Scoring','Žebříčky, trofeje, kabinet a postup')}
+          ${studentHomeCard('scoring','home-scoring.png','Scoring','Žebříčky, postup a trofeje')}
           ${studentHomeCard('credits','home-credits-exchange.svg','Kreditní centrum','Proměň kredity za body pro sebe nebo pro učitele',credits?String(credits):'')}
           ${studentHomeCard('results','home-grades.png','Moje výsledky','Známky, zkoušení a historie')}
           ${studentHomeCard('inventory','home-subjects.png','Inventář','Propustky, taháky a další vybavení')}
@@ -11015,7 +11013,6 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     }
 
     if(view==='scoring'){
-      const scoringView=state.ui.studentScoringView==='trophies'?'trophies':'ranking';
       const classScopes=[...new Map(scoreboard.filter(r=>r.scope_type==='class').map(r=>[r.scope_id,r.scope_name])).entries()];
       const classBlocks=classScopes.map(([id,name])=>{
         const rows=scoreboard.filter(r=>r.scope_type==='class'&&r.scope_id===id);
@@ -11028,18 +11025,15 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       const achSpecial=achItems.filter(x=>x.def.special&&x.st.unlocked).length;
       const next=achItems.filter(x=>!x.st.unlocked||(!x.def.special&&x.st.tier<4)).filter(x=>!x.def.secret).sort((a,b)=>b.st.progress-a.st.progress)[0];
       const trophyView=state.ui.studentTrophyView==='list'?'list':'cabinet';
-      const scoringTabs=`<div class="game-toolbar"><button class="btn ${scoringView==='ranking'?'primary':'secondary'}" data-action="student-scoring-view" data-view="ranking">Žebříčky</button><button class="btn ${scoringView==='trophies'?'primary':'secondary'}" data-action="student-scoring-view" data-view="trophies">Trofeje <span class="tiny">${achUnlocked}/${STUDENT_ACHIEVEMENT_DEFS.length}</span></button></div>`;
       const rankingBody=`<div class="student-game-kpis"><div><span>Celkový scoring</span><strong class="point-value ${pointTone(currentScore)}">${formatSignedNumber(currentScore)} b.</strong></div><div><span>Pořadí ve škole</span><strong>${meSchool?`${Number(meSchool.rank_position)}.`:'—'}</strong></div><div><span>Kredity k použití</span><strong>${credits}</strong></div></div>
         ${classBlocks||'<section class="student-panel"><div class="empty">Nejsi v žádné aktivní třídě.</div></section>'}
         <section class="student-panel"><div class="student-panel-head"><h2>Celá škola</h2><span>${meSchool?`${Number(meSchool.rank_position)}. místo z ${schoolRows.length}`:`${schoolRows.length} žáků`}</span></div>${studentScoreTable(schoolRows,{limit:50})}</section>
         ${studentSchoolPodium(schoolRows)}`;
-      const trophiesBody=`<div class="student-game-kpis"><div><span>Odemčeno</span><strong class="student-achievement-kpi-accent">${achUnlocked} / ${STUDENT_ACHIEVEMENT_DEFS.length}</strong></div><div><span>Diamanty</span><strong>${achDiamond}</strong></div><div><span>Speciální</span><strong>${achSpecial}</strong></div></div>
-        <div class="game-toolbar"><button class="btn ${trophyView==='cabinet'?'primary':'secondary'}" data-action="student-trophy-view" data-view="cabinet">Kabinet trofejí</button><button class="btn ${trophyView==='list'?'primary':'secondary'}" data-action="student-trophy-view" data-view="list">Seznam trofejí</button></div>
-        <div class="student-achievement-hub-note">${next?`Nejblíž máš k <strong>${esc(next.def.title)}</strong> · ${esc(next.st.nextText)}.`:'Veřejné trofeje máš dokončené. Tajné se zobrazují až po odemčení.'}</div>
+      const trophiesBody=`<section class="student-achievement-hub"><section class="student-panel"><div class="student-panel-head"><h2>Trofeje</h2><span>${achUnlocked} / ${STUDENT_ACHIEVEMENT_DEFS.length} odemčeno</span></div><div class="student-game-kpis"><div><span>Odemčeno</span><strong class="student-achievement-kpi-accent">${achUnlocked}</strong></div><div><span>Diamanty</span><strong>${achDiamond}</strong></div><div><span>Speciální</span><strong>${achSpecial}</strong></div></div><div class="game-toolbar"><button class="btn ${trophyView==='cabinet'?'primary':'secondary'}" data-action="student-trophy-view" data-view="cabinet">Kabinet trofejí</button><button class="btn ${trophyView==='list'?'primary':'secondary'}" data-action="student-trophy-view" data-view="list">Seznam trofejí</button></div><div class="student-achievement-hub-note">${next?`Nejblíž máš k <strong>${esc(next.def.title)}</strong> · ${esc(next.st.nextText)}.`:'Veřejné trofeje máš dokončené. Tajné se zobrazují až po odemčení.'}</div></section>
         ${trophyView==='list'
           ? `<section class="student-panel"><div class="student-panel-head"><h2>Seznam trofejí</h2><span>${STUDENT_ACHIEVEMENT_DEFS.filter(x=>!x.secret).length} veřejných</span></div><p class="muted">Tady vidíš všechny veřejné trofeje, jejich podmínky, aktuální stupeň a postup. Tajná trofej se objeví až po odemčení.</p>${renderStudentTrophyList()}</section>`
-          : `<section class="student-panel"><div class="student-panel-head"><h2>Kabinet trofejí</h2><span>trvalá sbírka</span></div><p class="muted">Trofeje jsou součástí Scoringu. Získané trofeje zůstávají v kabinetu a stupňované trofeje postupují z bronzu přes stříbro a zlato až na diamant.</p>${renderStudentAchievementCabinet()}</section>`}`;
-      body=`${studentPortalScreenNav('Scoring')}<section class="student-portal student-subpage ${scoringView==='trophies'?'student-achievement-hub':''}">${scoringTabs}${scoringView==='trophies'?trophiesBody:rankingBody}</section>`;
+          : `<section class="student-panel"><div class="student-panel-head"><h2>Kabinet trofejí</h2><span>trvalá sbírka</span></div><p class="muted">Trofeje jsou přímo součástí Scoringu. Získané trofeje zůstávají v kabinetu a stupňované trofeje postupují z bronzu přes stříbro a zlato až na diamant.</p>${renderStudentAchievementCabinet()}</section>`}</section>`;
+      body=`${studentPortalScreenNav('Scoring')}<section class="student-portal student-subpage">${rankingBody}${trophiesBody}</section>`;
     }else if(view==='challenges'){
       const tests=challenges.filter(ch=>ch.challenge_type==='test').slice().sort((a,b)=>(Number(a.attempted)-Number(b.attempted)) || String(a.teacher_name||'').localeCompare(String(b.teacher_name||''),'cs') || String(a.title||'').localeCompare(String(b.title||''),'cs'));
       const selectedId=String(state.ui.studentSelectedTestId||'');
@@ -11069,7 +11063,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       body=`${studentPortalScreenNav('Inventář')}<section class="student-portal student-subpage"><section class="student-panel"><div class="student-panel-head"><h2>Můj inventář</h2><span>podle předmětu</span></div>${invRows?`<div class="student-inventory-grid">${invRows}</div>`:'<div class="empty">V inventáři zatím nic není.</div>'}</section></section>`;
     }else if(view==='achievements'){
       state.ui.studentPortalView='scoring';
-      state.ui.studentScoringView='trophies';
+      
       saveState();
       return renderStudentPortal();
     }else if(view==='profile'){
@@ -15265,12 +15259,11 @@ body::after{
     else if(action==='auth-account-type'){authAccountType=btn.dataset.type==='student'?'student':'teacher';setAuthMessage('');renderLogin();}
     else if(action==='auth-submit'){void submitSupabaseAuth();}
     else if(action==='student-refresh'){void refreshAndRenderStudentPortal();}
-    else if(action==='student-menu-view'){state.ui=state.ui||{};const nextView=btn.dataset.view||'home';if(nextView==='achievements'){state.ui.studentPortalView='scoring';state.ui.studentScoringView='trophies';}else{state.ui.studentPortalView=nextView;}if(state.ui.studentPortalView!=='challenges')state.ui.studentSelectedTestId='';saveState();renderStudentPortal();if(state.ui.studentPortalView==='hallway')void refreshStudentHallway();}
+    else if(action==='student-menu-view'){state.ui=state.ui||{};const nextView=btn.dataset.view||'home';if(nextView==='achievements'){state.ui.studentPortalView='scoring';}else{state.ui.studentPortalView=nextView;}if(state.ui.studentPortalView!=='challenges')state.ui.studentSelectedTestId='';saveState();renderStudentPortal();if(state.ui.studentPortalView==='hallway')void refreshStudentHallway();}
     else if(action==='student-menu-home'){state.ui=state.ui||{};state.ui.studentPortalView='home';state.ui.studentSelectedTestId='';saveState();renderStudentPortal();}
     else if(action==='student-portal-tab'){state.ui=state.ui||{};state.ui.studentPortalView=btn.dataset.tab||'home';saveState();renderStudentPortal();}
-    else if(action==='student-scoring-view'){state.ui=state.ui||{};state.ui.studentPortalView='scoring';state.ui.studentScoringView=btn.dataset.view==='trophies'?'trophies':'ranking';saveState();renderStudentPortal();}
-    else if(action==='student-trophy-view'){state.ui=state.ui||{};state.ui.studentPortalView='scoring';state.ui.studentScoringView='trophies';state.ui.studentTrophyView=btn.dataset.view==='list'?'list':'cabinet';saveState();renderStudentPortal();}
-    else if(action==='student-trophy-list'){state.ui=state.ui||{};state.ui.studentPortalView='scoring';state.ui.studentScoringView='trophies';state.ui.studentTrophyView='list';saveState();renderStudentPortal();}
+    else if(action==='student-trophy-view'){state.ui=state.ui||{};state.ui.studentPortalView='scoring';state.ui.studentTrophyView=btn.dataset.view==='list'?'list':'cabinet';saveState();renderStudentPortal();}
+    else if(action==='student-trophy-list'){state.ui=state.ui||{};state.ui.studentPortalView='scoring';state.ui.studentTrophyView='list';saveState();renderStudentPortal();}
     else if(action==='student-test-open'){const id=String(document.getElementById('student-test-select')?.value||'');if(!id)return toast('Vyber test.','warn');state.ui=state.ui||{};state.ui.studentSelectedTestId=id;saveState();renderStudentPortal();}
     else if(action==='student-test-close'){state.ui=state.ui||{};state.ui.studentSelectedTestId='';saveState();renderStudentPortal();}
     else if(action==='student-invest-score'){openStudentInvestScoreModal();}
