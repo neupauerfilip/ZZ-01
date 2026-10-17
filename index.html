@@ -5947,6 +5947,29 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 .student-avatar-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:9px}.student-avatar-choice{min-width:0;padding:7px 4px;border:2px solid #126c80;background:#061823;color:#fff4dc;box-shadow:2px 2px 0 #02070d;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px}.student-avatar-choice:hover{filter:brightness(1.08)}.student-avatar-choice.active{border-color:#ff9b15;background:#38230d;box-shadow:inset 0 0 0 2px #8c4f06,2px 2px 0 #02070d}.student-avatar-choice>span:last-child{font-family:var(--pixel);font-size:.54rem;line-height:1.2;text-align:center}.student-avatar-choice .student-avatar-wrap{box-shadow:none}
 .student-achievement-locks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.student-achievement-locks>div{min-height:90px;border:2px dashed #1a7282;background:#061a28;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;color:#8edfe3}.student-achievement-locks strong{font-family:var(--pixel);font-size:.62rem}
 
+/* ===== STUDENT ACHIEVEMENTS V1 ===== */
+.student-achievement-summary{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0 14px}
+.student-achievement-summary .student-chip{font-family:var(--pixel);font-size:.62rem}
+.student-achievements-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.student-achievement-card{position:relative;overflow:hidden;border:2px solid #15566a;background:linear-gradient(180deg,#071d2b,#04131d);padding:10px;min-height:258px;box-shadow:inset 0 0 0 1px #082f3d}
+.student-achievement-card.unlocked{border-color:#24b7ca;box-shadow:0 0 18px #00d8ff22,inset 0 0 0 1px #0a5365}
+.student-achievement-card.max-tier{border-color:#55edff;box-shadow:0 0 22px #23eaff38,inset 0 0 0 1px #1f7382}
+.student-achievement-card.locked{opacity:.72}
+.student-achievement-art{height:132px;display:flex;align-items:center;justify-content:center;margin:-3px -3px 5px}
+.student-achievement-art img{width:100%;height:100%;object-fit:contain;image-rendering:auto}
+.student-achievement-card.locked .student-achievement-art img{filter:grayscale(.85) brightness(.48)}
+.student-achievement-card h3{font-family:var(--pixel);font-size:.66rem;line-height:1.45;color:#e9fbff;margin:4px 0 2px;text-transform:uppercase}
+.student-achievement-meta{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:.76rem;color:#7ecbd5;margin-bottom:7px}
+.student-achievement-tier{font-family:var(--pixel);font-size:.52rem;padding:4px 6px;border:1px solid #24697a;background:#061b28;white-space:nowrap}
+.student-achievement-tier.bronze{color:#f0a56a;border-color:#96562f}.student-achievement-tier.silver{color:#dfefff;border-color:#7697b0}.student-achievement-tier.gold{color:#ffd84f;border-color:#bc8218}.student-achievement-tier.diamond{color:#63efff;border-color:#24b9d0}.student-achievement-tier.locked{color:#7897a0;border-color:#294651}
+.student-achievement-desc{font-size:.82rem;line-height:1.35;color:#b8d7dc;min-height:44px}
+.student-achievement-progress{height:9px;border:1px solid #17495a;background:#031018;margin:9px 0 5px;overflow:hidden}
+.student-achievement-progress>span{display:block;height:100%;background:linear-gradient(90deg,#1c8295,#54ebf4);width:0}
+.student-achievement-progress-text{display:flex;justify-content:space-between;gap:8px;font-size:.72rem;color:#75aeb8}
+.student-achievement-secret.locked .student-achievement-desc,.student-achievement-secret.locked .student-achievement-progress-text{filter:blur(3px);user-select:none}
+@media(max-width:700px){.student-achievements-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.student-achievement-card{min-height:238px;padding:8px}.student-achievement-art{height:112px}}
+
+
 .hall-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.hall-layout{display:grid;grid-template-columns:minmax(250px,.7fr) minmax(0,1.3fr);gap:12px}.hall-directory,.hall-chat-panel,.hall-room-open{border:3px solid #11c9d5;background:rgba(4,22,34,.96);box-shadow:4px 4px 0 #02070d;padding:12px}.hall-directory{max-height:70vh;overflow:auto}.hall-directory-class{margin-bottom:14px}.hall-directory-class h3{margin:0 0 7px;color:#20e7eb;font-family:var(--pixel);font-size:.72rem}.hall-people{display:grid;gap:6px}.hall-person,.teacher-hall-contact{width:100%;border:2px solid #155e70;background:#071d2b;color:#fff;text-align:left;padding:7px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px;align-items:center;cursor:pointer}.hall-person:hover,.teacher-hall-contact:hover,.hall-person.active,.teacher-hall-contact.active{border-color:#ff9b15;background:#32220e}.hall-person span,.teacher-hall-contact span{min-width:0;display:flex;flex-direction:column;gap:2px}.hall-person strong,.teacher-hall-contact strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hall-person small,.teacher-hall-contact small{color:#8cdde3;font-size:.68rem}.hall-chat-panel{min-height:420px;display:flex;flex-direction:column}.hall-chat-head{display:flex;align-items:center;gap:10px;border-bottom:2px solid #126c80;padding-bottom:9px;margin-bottom:9px}.hall-chat-head h2,.hall-chat-head h3{margin:0}.hall-chat-head span{color:#8cdde3;font-size:.72rem}.hall-messages{height:360px;overflow:auto;padding:8px;background:#03131f;border:2px solid #0c5061;display:flex;flex-direction:column;gap:8px}.hall-message{display:flex;align-items:flex-start;gap:7px}.hall-message.mine{flex-direction:row-reverse}.hall-bubble{max-width:76%;background:#0b2938;border:2px solid #17677a;padding:8px;color:#fff}.hall-message.mine .hall-bubble{background:#3a260d;border-color:#ff9b15}.hall-meta{display:flex;justify-content:space-between;gap:12px;margin-bottom:4px;color:#78dce2;font-size:.65rem}.hall-meta span{opacity:.8}.hall-compose{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-top:8px}.hall-compose textarea{min-height:64px;resize:vertical}.hall-empty{min-height:130px;display:grid;place-items:center;color:#8ab8bd;text-align:center}
 .hall-room-list{display:grid;gap:8px}.hall-room-card{display:flex;align-items:center;justify-content:space-between;gap:10px;border:2px solid #155e70;background:#061b29;padding:10px}.hall-room-card.active{border-color:#ff9b15;background:#30210d}.hall-room-open{margin-top:12px}.hall-room-icon{width:48px;height:48px;display:grid;place-items:center;border:2px solid #20e7eb;background:#072331;font-family:var(--pixel);font-size:1.4rem}.hall-room-actions{margin-left:auto}.hall-room-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(220px,.6fr);gap:10px}.hall-members{border:2px solid #155e70;background:#061722;padding:8px;max-height:430px;overflow:auto}.hall-members h3{margin-top:0}.hall-member{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;align-items:center;gap:6px;padding:6px 0;border-bottom:1px dashed #174858}.hall-member:last-child{border-bottom:0}.hall-member>span{display:flex;flex-direction:column}.hall-member small{color:#80cdd2}.hall-member.pending{background:#2a220d}.hall-member .btn{min-height:32px;padding:5px 7px;font-size:.64rem}
 .staffroom-student-hall{margin-top:18px;border:3px solid #17cbd7;background:#061a27;padding:14px;box-shadow:4px 4px 0 #02070d}.teacher-hall-layout{display:grid;grid-template-columns:minmax(230px,.7fr) minmax(0,1.3fr);gap:10px}.teacher-hall-contacts{max-height:520px;overflow:auto;display:grid;align-content:start;gap:6px}.teacher-hall-contact{grid-template-columns:auto minmax(0,1fr) auto}.teacher-hall-contact time{font-size:.58rem;color:#7dbcc3}.teacher-hall-chat{border:2px solid #145c6d;background:#04141f;padding:9px}.teacher-hall-chat .hall-messages{height:330px}
@@ -7298,16 +7321,17 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     const resolvedAccount=studentPortalRows(accountRes.data)[0]||null;
     if(!resolvedAccount)return false;
 
-    const [historyRes,pointRes,inventoryRes,walletRes,scoreboardRes,challengesRes,teachersRes]=await Promise.all([
+    const [historyRes,pointRes,inventoryRes,walletRes,scoreboardRes,challengesRes,teachersRes,achievementRes]=await Promise.all([
       supabaseClient.rpc('student_portal_history',{p_session_token:sessionToken}),
       supabaseClient.rpc('student_portal_points',{p_session_token:sessionToken}),
       supabaseClient.rpc('student_portal_inventory',{p_session_token:sessionToken}),
       supabaseClient.rpc('student_game_wallet',{p_session_token:sessionToken}),
       supabaseClient.rpc('student_game_scoreboard',{p_session_token:sessionToken}),
       supabaseClient.rpc('student_game_challenges',{p_session_token:sessionToken}),
-      supabaseClient.rpc('student_feedback_teachers',{p_session_token:sessionToken})
+      supabaseClient.rpc('student_feedback_teachers',{p_session_token:sessionToken}),
+      supabaseClient.rpc('student_achievement_stats',{p_session_token:sessionToken})
     ]);
-    const failed=[historyRes,pointRes,inventoryRes,walletRes,scoreboardRes,challengesRes,teachersRes].find(r=>r.error);
+    const failed=[historyRes,pointRes,inventoryRes,walletRes,scoreboardRes,challengesRes,teachersRes,achievementRes].find(r=>r.error);
     if(failed)throw failed.error;
 
     state.ui=state.ui||{};
@@ -7322,6 +7346,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       scoreboard:studentPortalRows(scoreboardRes.data),
       challenges:studentPortalRows(challengesRes.data),
       feedbackTeachers:studentPortalRows(teachersRes.data),
+      achievements:studentPortalRows(achievementRes.data)[0]?.stats||{},
       loadedAt:now()
     };
     state.authenticated=true;
@@ -10637,6 +10662,108 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     ]});
   }
 
+
+  const STUDENT_ACHIEVEMENT_TIERS=[
+    {key:'bronze',label:'Bronz'},
+    {key:'silver',label:'Stříbro'},
+    {key:'gold',label:'Zlato'},
+    {key:'diamond',label:'Diamant'}
+  ];
+
+  const STUDENT_ACHIEVEMENT_DEFS=[
+    {id:'challenge',title:'Výzvař',metric:'completed_tests',thresholds:[5,15,30,50],unit:'dokončených testů',desc:'Dokončuj dobrovolné školní testy.'},
+    {id:'perfect',title:'Perfekcionista',metric:'perfect_tests',thresholds:[1,5,15,30],unit:'testů na 100 %',desc:'Dokonči test bez jediné chyby.'},
+    {id:'brain',title:'Mozkovna',metric:'correct_answers',thresholds:[25,75,150,300],unit:'správných odpovědí',desc:'Sbírej správné odpovědi ve školních testech.'},
+    {id:'credit',title:'Kreditář',metric:'earned_credits',thresholds:[10,50,100,250],unit:'získaných kreditů',desc:'Získávej kredity za správné odpovědi.'},
+    {id:'investor',title:'Investor',metric:'invested_credits',thresholds:[5,20,50,100],unit:'investovaných kreditů',desc:'Převáděj kredity do svého dlouhodobého scoringu.'},
+    {id:'rising',title:'Stoupající hvězda',metric:'current_score',thresholds:[5,10,25,50],unit:'bodů scoringu',desc:'Dostaň svůj dlouhodobý scoring do plusu.'},
+    {id:'league',title:'Školní liga',metric:'school_rank',thresholds:[25,10,3,1],mode:'rank',unit:'pořadí ve škole',desc:'Stoupej v celkovém školním žebříčku.'},
+    {id:'locker',title:'Šatníkář',metric:'locker_opened',thresholds:[5,15,30,50],unit:'otevřených skříněk',desc:'Otevírej šatní skříňky a sbírej jejich obsah.'},
+    {id:'lucky',title:'Šťastlivec',metric:'locker_positive',thresholds:[5,15,30,50],unit:'dobrých nálezů',desc:'Najdi ve skříňkách užitečné věci nebo bonusy.'},
+    {id:'unlucky',title:'Smolař',metric:'locker_negative',thresholds:[3,10,20,40],unit:'špatných nálezů',desc:'I smůla je sběratelská disciplína.'},
+    {id:'collector',title:'Sběratel',metric:'collector_combos',thresholds:[3,5,8,12],unit:'různých úlovků',desc:'Nasbírej různé kombinace předmětů a věcí.'},
+    {id:'founder',title:'Zakladatel',metric:'rooms_created',thresholds:[1,3,5,10],unit:'vlastních místností',desc:'Zakládej vlastní místnosti na Chodbě.'},
+    {id:'first_blood',title:'První krev',special:true,target:1,metric:'completed_tests',desc:'Dokonči svůj první školní test.'},
+    {id:'comeback',title:'Návrat do hry',special:true,target:1,metric:'recovery_count',desc:'Vrať se ze záporného scoringu na nulu nebo výš.'},
+    {id:'completionist',title:'Kompletář',special:true,target:3,metric:'inventory_item_types',desc:'Získej alespoň jednou každý současný typ předmětu ze skříněk.'},
+    {id:'good_deed',title:'Dobrý skutek',special:true,target:1,metric:'positive_teacher_feedback',desc:'Poprvé přiděl kladný kredit učiteli.'},
+    {id:'critic',title:'Kritik',special:true,target:1,metric:'negative_teacher_feedback',desc:'Poprvé přiděl záporný kredit učiteli.'},
+    {id:'manager',title:'Správce',special:true,target:1,metric:'approved_room_members',desc:'Přijmi prvního člena do vlastní místnosti.'},
+    {id:'veteran',title:'Veterán ZZ-01',special:true,target:365,metric:'account_age_days',desc:'Používej svůj žákovský účet celý rok.'},
+    {id:'secret',title:'???',special:true,secret:true,desc:'Tajný achievement ZZ-01.'}
+  ];
+
+  function studentAchievementStats(){
+    return state.studentPortal?.achievements||{};
+  }
+
+  function studentAchievementState(def,stats=studentAchievementStats()){
+    const n=v=>Math.max(0,Number(v||0));
+    if(def.secret){
+      const unlocked=n(stats.completed_tests)>=10&&n(stats.earned_credits)>=50&&n(stats.rooms_created)>=1&&n(stats.inventory_item_types)>=3;
+      return {unlocked,tier:unlocked?4:0,tierKey:unlocked?'diamond':'locked',tierLabel:unlocked?'Tajný':'Zamčeno',value:unlocked?1:0,target:1,progress:unlocked?100:0,nextText:unlocked?'Odemčeno':'???'};
+    }
+    const value=n(stats[def.metric]);
+    if(def.special){
+      const target=Math.max(1,Number(def.target||1));
+      const unlocked=value>=target;
+      return {unlocked,tier:unlocked?4:0,tierKey:unlocked?'diamond':'locked',tierLabel:unlocked?'Speciální':'Zamčeno',value,target,progress:Math.min(100,Math.round(value/target*100)),nextText:unlocked?'Odemčeno':`${value} / ${target}`};
+    }
+    if(def.mode==='rank'){
+      const rank=Number(stats.school_rank||0), schoolSize=Math.max(0,Number(stats.school_students||0));
+      let tier=0;
+      if(rank>0){def.thresholds.forEach((t,i)=>{if(rank<=t)tier=i+1;});}
+      const next=tier<4?def.thresholds[tier]:1;
+      let progress=0;
+      if(tier>=4)progress=100;
+      else if(rank>0){
+        const start=tier===0?Math.max(schoolSize,def.thresholds[0]+1):def.thresholds[tier-1];
+        progress=Math.max(0,Math.min(100,Math.round((start-rank)/Math.max(1,start-next)*100)));
+      }
+      const tk=tier?STUDENT_ACHIEVEMENT_TIERS[tier-1]:null;
+      return {unlocked:tier>0,tier,tierKey:tk?.key||'locked',tierLabel:tk?.label||'Zamčeno',value:rank,target:next,progress,nextText:rank?`${rank}. místo · další TOP ${next}`:`Bez pořadí`};
+    }
+    let tier=0;
+    def.thresholds.forEach((t,i)=>{if(value>=t)tier=i+1;});
+    const next=tier<4?def.thresholds[tier]:def.thresholds[3];
+    const prev=tier===0?0:def.thresholds[tier-1];
+    const progress=tier>=4?100:Math.max(0,Math.min(100,Math.round((value-prev)/Math.max(1,next-prev)*100)));
+    const tk=tier?STUDENT_ACHIEVEMENT_TIERS[tier-1]:null;
+    return {unlocked:tier>0,tier,tierKey:tk?.key||'locked',tierLabel:tk?.label||'Zamčeno',value,target:next,progress,nextText:tier>=4?'Maximum':`${value} / ${next}`};
+  }
+
+  function studentAchievementImage(def,st){
+    if(def.special)return `assets/achievements/${def.id}_special.png`;
+    const tier=st.tierKey==='locked'?'bronze':st.tierKey;
+    return `assets/achievements/${def.id}_${tier}.png`;
+  }
+
+  function studentAchievementUnit(def,st){
+    if(def.mode==='rank')return st.value?`${st.value}. místo ve škole`:'Bez pořadí';
+    if(def.secret)return st.unlocked?'Tajemství ZZ-01 odhaleno':'Podmínka je skrytá';
+    return `${st.value} ${def.unit||''}`.trim();
+  }
+
+  function renderStudentAchievements(){
+    const stats=studentAchievementStats();
+    const items=STUDENT_ACHIEVEMENT_DEFS.map(def=>({def,st:studentAchievementState(def,stats)}));
+    const unlocked=items.filter(x=>x.st.unlocked).length;
+    const diamond=items.filter(x=>x.st.tier>=4).length;
+    const cards=items.map(({def,st})=>{
+      const title=def.secret&&!st.unlocked?'???':(def.secret?'Tajemství ZZ-01':def.title);
+      const desc=def.secret&&!st.unlocked?'Tajná podmínka. Zkouškomat ti ji neprozradí.':def.desc;
+      return `<article class="student-achievement-card ${st.unlocked?'unlocked':'locked'} ${st.tier>=4?'max-tier':''} ${def.secret?'student-achievement-secret':''}">
+        <div class="student-achievement-art"><img src="${studentAchievementImage(def,st)}" alt="${esc(title)}"></div>
+        <h3>${esc(title)}</h3>
+        <div class="student-achievement-meta"><span>${esc(studentAchievementUnit(def,st))}</span><span class="student-achievement-tier ${st.tierKey}">${esc(st.tierLabel)}</span></div>
+        <div class="student-achievement-desc">${esc(desc)}</div>
+        <div class="student-achievement-progress"><span style="width:${st.progress}%"></span></div>
+        <div class="student-achievement-progress-text"><span>${st.unlocked?'✓ získáno':'🔒 rozpracováno'}</span><strong>${esc(st.nextText)}</strong></div>
+      </article>`;
+    }).join('');
+    return `<section class="student-panel student-achievements-showcase"><div class="student-panel-head"><h2>Achievementy</h2><span>${unlocked} / ${items.length} odemčeno</span></div><div class="student-achievement-summary"><span class="student-chip">ODEMČENO ${unlocked}</span><span class="student-chip">DIAMANT / SPECIÁL ${diamond}</span><span class="student-chip">CELKEM ${items.length}</span></div><p class="muted">Achievementy se počítají automaticky z výsledků, kreditů, scoringu, skříněk a Chodby. U stupňovaných odznaků se grafika mění s úrovní.</p><div class="student-achievements-grid">${cards}</div></section>`;
+  }
+
   function renderStudentPortal(){
     const portal=state.studentPortal;
     if(!portal?.account)return renderStudentLink();
@@ -10733,7 +10860,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     }else if(view==='profile'){
       const avatar=a.avatar||'student:s01';
       const avatarGrid=studentAvatarPresets.map(p=>`<button class="student-avatar-choice ${p.id===avatar?'active':''}" data-action="student-avatar-set" data-avatar="${p.id}" title="${esc(p.label)}">${studentAvatarMarkup(p.id,'lg')}<span>${esc(p.label)}</span></button>`).join('');
-      body=`${studentPortalScreenNav('Profil')}<section class="student-portal student-subpage"><div class="student-hero student-profile-hero"><div class="student-profile-avatar-main">${studentAvatarMarkup(avatar,'xl')}</div><div><div class="student-kicker">ŽÁKOVSKÝ PROFIL</div><h1>${esc(a.student_name||state.user.name||'Žák')}</h1><div class="student-school">${esc(a.school_name||'')} · ${esc(a.school_year||'')}</div><div class="student-chips">${classChips}</div></div><div class="student-id-card">ZZ-01<br>STUDENT</div></div><div class="student-game-kpis"><div><span>Scoring</span><strong class="point-value ${pointTone(currentScore)}">${formatSignedNumber(currentScore)} b.</strong></div><div><span>Kredity</span><strong>${credits}</strong></div><div><span>Kód školy</span><strong>${esc(a.school_code||'—')}</strong></div></div><section class="student-panel"><div class="student-panel-head"><h2>Vyber si avatara</h2><span>${studentAvatarPresets.length} postaviček</span></div><p class="muted">Avatar se zobrazuje v profilu a v Chodbě. Můžeš ho kdykoliv změnit.</p><div class="student-avatar-grid">${avatarGrid}</div></section><section class="student-panel"><div class="student-panel-head"><h2>Účet</h2><span>přihlášení žáka</span></div><div class="student-profile-grid"><div><span>Jméno a příjmení</span><strong>${esc(a.student_name||'—')}</strong></div><div><span>Škola</span><strong>${esc(a.school_name||'—')}</strong></div><div><span>Školní rok</span><strong>${esc(a.school_year||'—')}</strong></div><div><span>Třídy</span><strong>${classes.map(c=>esc(c.name)).join(', ')||'—'}</strong></div></div></section><section class="student-panel student-achievements-preview"><div class="student-panel-head"><h2>Achievementy</h2><span>PŘIPRAVUJEME</span></div><div class="student-achievement-locks"><div>🔒<strong>Výzvy</strong></div><div>🔒<strong>Scoring</strong></div><div>🔒<strong>Školní série</strong></div></div><p class="tiny muted">Později sem přidáme studentské achievementy a stupně podobně jako u učitelů.</p></section></section>`;
+      body=`${studentPortalScreenNav('Profil')}<section class="student-portal student-subpage"><div class="student-hero student-profile-hero"><div class="student-profile-avatar-main">${studentAvatarMarkup(avatar,'xl')}</div><div><div class="student-kicker">ŽÁKOVSKÝ PROFIL</div><h1>${esc(a.student_name||state.user.name||'Žák')}</h1><div class="student-school">${esc(a.school_name||'')} · ${esc(a.school_year||'')}</div><div class="student-chips">${classChips}</div></div><div class="student-id-card">ZZ-01<br>STUDENT</div></div><div class="student-game-kpis"><div><span>Scoring</span><strong class="point-value ${pointTone(currentScore)}">${formatSignedNumber(currentScore)} b.</strong></div><div><span>Kredity</span><strong>${credits}</strong></div><div><span>Kód školy</span><strong>${esc(a.school_code||'—')}</strong></div></div><section class="student-panel"><div class="student-panel-head"><h2>Vyber si avatara</h2><span>${studentAvatarPresets.length} postaviček</span></div><p class="muted">Avatar se zobrazuje v profilu a v Chodbě. Můžeš ho kdykoliv změnit.</p><div class="student-avatar-grid">${avatarGrid}</div></section><section class="student-panel"><div class="student-panel-head"><h2>Účet</h2><span>přihlášení žáka</span></div><div class="student-profile-grid"><div><span>Jméno a příjmení</span><strong>${esc(a.student_name||'—')}</strong></div><div><span>Škola</span><strong>${esc(a.school_name||'—')}</strong></div><div><span>Školní rok</span><strong>${esc(a.school_year||'—')}</strong></div><div><span>Třídy</span><strong>${classes.map(c=>esc(c.name)).join(', ')||'—'}</strong></div></div></section>${renderStudentAchievements()}</section>`;
     }else if(view==='hallway'){
       body=`${studentPortalScreenNav('Chodba')}<section class="student-portal student-subpage"><div class="student-game-kpis"><div><span>Moje třídy</span><strong>${classes.length}</strong></div><div><span>Soukromé zprávy</span><strong>1 : 1</strong></div><div><span>Místnosti</span><strong>třídní + vlastní</strong></div></div>${renderStudentHallway()}</section>`;
     }else{

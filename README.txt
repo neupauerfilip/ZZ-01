@@ -1,13 +1,23 @@
-ZZ-01 – 50 studentských avatarů
+ZZ-01 STUDENT V9 – ACHIEVEMENTY
 
-Změny:
-- 50 unikátních studentských avatarů v pixel-art stylu Zkouškomatu
-- avatary jsou vyříznuté ze schváleného sprite-sheetu bez popisků a vnějších rámečků
-- profil nabízí všech 50 avatarů
-- Supabase student_set_avatar podporuje student:s01 až student:s50
+Co je nové:
+- 20 studentských achievementů napojených na skutečná data ze Supabase.
+- 12 stupňovaných achievementů: bronz / stříbro / zlato / diamant.
+- 8 speciálních achievementů včetně tajného ???.
+- 56 grafických PNG souborů v assets/achievements/.
+- Profil žáka obsahuje kompletní vitrínu, progres, další metu a stav odemčení.
+- Zamčené achievementy jsou ztmavené; tajný achievement neukazuje podmínku.
+- Supabase RPC public.student_achievement_stats(text) je už nasazené v projektu.
 
-Nahrát:
-- index.html
-- assets/avatars/student_01.png až student_50.png
+Stupňované řady:
+Výzvař, Perfekcionista, Mozkovna, Kreditář, Investor, Stoupající hvězda,
+Školní liga, Šatníkář, Šťastlivec, Smolař, Sběratel, Zakladatel.
 
-PREVIEW_50_AVATARU.png je jen kontrolní náhled.
+Speciální:
+První krev, Návrat do hry, Kompletář, Dobrý skutek, Kritik, Správce,
+Veterán ZZ-01, ???.
+
+Nasazení:
+Nahraj index.html a celou složku assets/achievements do kořene repozitáře.
+Složka assets/avatars je přibalena také, aby balíček navazoval na V8 s 50 avatary.
+Ostatní existující assets v repozitáři nemaž.
