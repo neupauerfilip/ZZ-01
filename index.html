@@ -6039,6 +6039,31 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 }
 
 
+/* ===== STUDENT TROPHY UNLOCK V14 ===== */
+.student-trophy-card{position:relative}
+.student-trophy-new-ribbon{position:absolute;top:7px;right:7px;z-index:3;font-family:var(--pixel);font-size:.54rem;line-height:1;padding:6px 7px 5px;border:2px solid #ffd85b;background:#d85d00;color:#fff7ce;box-shadow:2px 2px 0 #02070d;transform:rotate(2deg);text-shadow:1px 1px 0 #5a2400}
+.student-trophy-list-row{position:relative}
+.student-trophy-list-row .student-trophy-new-ribbon{top:8px;right:8px}
+.student-trophy-unlock-overlay{position:fixed;inset:0;z-index:100000;display:grid;place-items:center;padding:18px;background:rgba(0,6,13,.82);backdrop-filter:blur(3px);animation:studentTrophyFadeIn .18s ease-out}
+.student-trophy-unlock-card{position:relative;width:min(560px,94vw);overflow:hidden;border:4px solid #1bdbe8;background:linear-gradient(180deg,#071a27 0%,#03111a 72%,#07131b 100%);box-shadow:0 0 0 3px #071018,0 0 44px rgba(33,228,239,.34),10px 10px 0 rgba(0,0,0,.7);padding:22px 22px 18px;text-align:center}
+.student-trophy-unlock-card:before{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(180deg,rgba(255,255,255,.025) 0,rgba(255,255,255,.025) 1px,transparent 1px,transparent 4px)}
+.student-trophy-unlock-burst{position:absolute;left:50%;top:36%;width:420px;height:420px;transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;background:repeating-conic-gradient(from 0deg,rgba(41,237,246,.11) 0 7deg,transparent 7deg 15deg);animation:studentTrophySpin 16s linear infinite}
+.student-trophy-unlock-kicker{position:relative;font-family:var(--pixel);font-size:clamp(.72rem,2vw,1rem);letter-spacing:.08em;color:#ffdf63;text-shadow:2px 2px 0 #482300;margin:2px 0 12px}
+.student-trophy-unlock-art{position:relative;width:min(330px,70vw);height:245px;margin:0 auto 8px;display:grid;place-items:center;filter:drop-shadow(0 0 20px rgba(50,232,246,.28));animation:studentTrophyPop .48s cubic-bezier(.2,1.35,.35,1) both}
+.student-trophy-unlock-art img{width:100%;height:100%;object-fit:contain;display:block}
+.student-trophy-unlock-title{position:relative;font-family:var(--pixel);font-size:clamp(1rem,3vw,1.45rem);line-height:1.3;color:#fff1c4;text-shadow:2px 2px 0 #071018;margin:5px 0}
+.student-trophy-unlock-tier{position:relative;display:inline-block;margin:4px auto 10px;padding:6px 10px;border:2px solid #28dce6;background:#092735;font-family:var(--pixel);font-size:.62rem;color:#8df7ff;box-shadow:2px 2px 0 #02070d}
+.student-trophy-unlock-tier.bronze{border-color:#cf7a3a;color:#ffc18e;background:#2a160b}.student-trophy-unlock-tier.silver{border-color:#becbd3;color:#f1f7fb;background:#14212b}.student-trophy-unlock-tier.gold{border-color:#f3c432;color:#fff0a0;background:#332206}.student-trophy-unlock-tier.diamond{border-color:#53ecff;color:#9ff8ff;background:#082c3a}
+.student-trophy-unlock-desc{position:relative;max-width:440px;margin:0 auto 14px;color:#a9d8df;font-size:.88rem;line-height:1.55}
+.student-trophy-unlock-card .btn{position:relative;min-width:190px}
+.student-trophy-unlock-spark{position:absolute;width:9px;height:9px;background:#fff08a;box-shadow:0 0 14px #ffe35a;transform:rotate(45deg);animation:studentTrophySpark 1.2s ease-in-out infinite alternate}.student-trophy-unlock-spark.s1{left:14%;top:22%}.student-trophy-unlock-spark.s2{right:14%;top:27%;animation-delay:.3s}.student-trophy-unlock-spark.s3{left:22%;bottom:25%;animation-delay:.6s}.student-trophy-unlock-spark.s4{right:22%;bottom:23%;animation-delay:.15s}
+@keyframes studentTrophyFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes studentTrophyPop{0%{opacity:0;transform:scale(.62) translateY(20px)}100%{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes studentTrophySpin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes studentTrophySpark{from{opacity:.25;transform:rotate(45deg) scale(.65)}to{opacity:1;transform:rotate(45deg) scale(1.15)}}
+@media(max-width:560px){.student-trophy-unlock-card{padding:16px 12px 14px}.student-trophy-unlock-art{height:190px}.student-trophy-unlock-desc{font-size:.78rem}}
+
+
 .hall-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.hall-layout{display:grid;grid-template-columns:minmax(250px,.7fr) minmax(0,1.3fr);gap:12px}.hall-directory,.hall-chat-panel,.hall-room-open{border:3px solid #11c9d5;background:rgba(4,22,34,.96);box-shadow:4px 4px 0 #02070d;padding:12px}.hall-directory{max-height:70vh;overflow:auto}.hall-directory-class{margin-bottom:14px}.hall-directory-class h3{margin:0 0 7px;color:#20e7eb;font-family:var(--pixel);font-size:.72rem}.hall-people{display:grid;gap:6px}.hall-person,.teacher-hall-contact{width:100%;border:2px solid #155e70;background:#071d2b;color:#fff;text-align:left;padding:7px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px;align-items:center;cursor:pointer}.hall-person:hover,.teacher-hall-contact:hover,.hall-person.active,.teacher-hall-contact.active{border-color:#ff9b15;background:#32220e}.hall-person span,.teacher-hall-contact span{min-width:0;display:flex;flex-direction:column;gap:2px}.hall-person strong,.teacher-hall-contact strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hall-person small,.teacher-hall-contact small{color:#8cdde3;font-size:.68rem}.hall-chat-panel{min-height:420px;display:flex;flex-direction:column}.hall-chat-head{display:flex;align-items:center;gap:10px;border-bottom:2px solid #126c80;padding-bottom:9px;margin-bottom:9px}.hall-chat-head h2,.hall-chat-head h3{margin:0}.hall-chat-head span{color:#8cdde3;font-size:.72rem}.hall-messages{height:360px;overflow:auto;padding:8px;background:#03131f;border:2px solid #0c5061;display:flex;flex-direction:column;gap:8px}.hall-message{display:flex;align-items:flex-start;gap:7px}.hall-message.mine{flex-direction:row-reverse}.hall-bubble{max-width:76%;background:#0b2938;border:2px solid #17677a;padding:8px;color:#fff}.hall-message.mine .hall-bubble{background:#3a260d;border-color:#ff9b15}.hall-meta{display:flex;justify-content:space-between;gap:12px;margin-bottom:4px;color:#78dce2;font-size:.65rem}.hall-meta span{opacity:.8}.hall-compose{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-top:8px}.hall-compose textarea{min-height:64px;resize:vertical}.hall-empty{min-height:130px;display:grid;place-items:center;color:#8ab8bd;text-align:center}
 .hall-room-list{display:grid;gap:8px}.hall-room-card{display:flex;align-items:center;justify-content:space-between;gap:10px;border:2px solid #155e70;background:#061b29;padding:10px}.hall-room-card.active{border-color:#ff9b15;background:#30210d}.hall-room-open{margin-top:12px}.hall-room-icon{width:48px;height:48px;display:grid;place-items:center;border:2px solid #20e7eb;background:#072331;font-family:var(--pixel);font-size:1.4rem}.hall-room-actions{margin-left:auto}.hall-room-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(220px,.6fr);gap:10px}.hall-members{border:2px solid #155e70;background:#061722;padding:8px;max-height:430px;overflow:auto}.hall-members h3{margin-top:0}.hall-member{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;align-items:center;gap:6px;padding:6px 0;border-bottom:1px dashed #174858}.hall-member:last-child{border-bottom:0}.hall-member>span{display:flex;flex-direction:column}.hall-member small{color:#80cdd2}.hall-member.pending{background:#2a220d}.hall-member .btn{min-height:32px;padding:5px 7px;font-size:.64rem}
 .staffroom-student-hall{margin-top:18px;border:3px solid #17cbd7;background:#061a27;padding:14px;box-shadow:4px 4px 0 #02070d}.teacher-hall-layout{display:grid;grid-template-columns:minmax(230px,.7fr) minmax(0,1.3fr);gap:10px}.teacher-hall-contacts{max-height:520px;overflow:auto;display:grid;align-content:start;gap:6px}.teacher-hall-contact{grid-template-columns:auto minmax(0,1fr) auto}.teacher-hall-contact time{font-size:.58rem;color:#7dbcc3}.teacher-hall-chat{border:2px solid #145c6d;background:#04141f;padding:9px}.teacher-hall-chat .hall-messages{height:330px}
@@ -7390,7 +7415,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     const resolvedAccount=studentPortalRows(accountRes.data)[0]||null;
     if(!resolvedAccount)return false;
 
-    const [historyRes,pointRes,inventoryRes,walletRes,scoreboardRes,challengesRes,teachersRes,achievementRes]=await Promise.all([
+    const [historyRes,pointRes,inventoryRes,walletRes,scoreboardRes,challengesRes,teachersRes,achievementRes,achievementProgressRes]=await Promise.all([
       supabaseClient.rpc('student_portal_history',{p_session_token:sessionToken}),
       supabaseClient.rpc('student_portal_points',{p_session_token:sessionToken}),
       supabaseClient.rpc('student_portal_inventory',{p_session_token:sessionToken}),
@@ -7398,9 +7423,10 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       supabaseClient.rpc('student_game_scoreboard',{p_session_token:sessionToken}),
       supabaseClient.rpc('student_game_challenges',{p_session_token:sessionToken}),
       supabaseClient.rpc('student_feedback_teachers',{p_session_token:sessionToken}),
-      supabaseClient.rpc('student_achievement_stats',{p_session_token:sessionToken})
+      supabaseClient.rpc('student_achievement_stats',{p_session_token:sessionToken}),
+      supabaseClient.rpc('student_achievement_sync',{p_session_token:sessionToken})
     ]);
-    const failed=[historyRes,pointRes,inventoryRes,walletRes,scoreboardRes,challengesRes,teachersRes,achievementRes].find(r=>r.error);
+    const failed=[historyRes,pointRes,inventoryRes,walletRes,scoreboardRes,challengesRes,teachersRes,achievementRes,achievementProgressRes].find(r=>r.error);
     if(failed)throw failed.error;
 
     state.ui=state.ui||{};
@@ -7416,8 +7442,10 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       challenges:studentPortalRows(challengesRes.data),
       feedbackTeachers:studentPortalRows(teachersRes.data),
       achievements:studentPortalRows(achievementRes.data)[0]?.stats||{},
+      achievementProgress:studentPortalRows(achievementProgressRes.data),
       loadedAt:now()
     };
+    studentTrophySyncProgress(resolvedAccount.student_id,state.studentPortal.achievements);
     state.authenticated=true;
     state.authProvider='student-pin';
     state.user=state.user||{};
@@ -10808,6 +10836,37 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     return {unlocked:tier>0,tier,tierKey:tk?.key||'locked',tierLabel:tk?.label||'Zamčeno',value,target:next,progress,nextText:tier>=4?'Maximum':`${value} / ${next}`};
   }
 
+  function studentAchievementPersistedTier(id){
+    const rows=Array.isArray(state.studentPortal?.achievementProgress)?state.studentPortal.achievementProgress:[];
+    const row=rows.find(x=>String(x.achievement_id||'')===String(id||''));
+    return Math.max(0,Math.min(4,Number(row?.highest_tier||0)));
+  }
+
+  function studentAchievementEffectiveState(def,stats=studentAchievementStats()){
+    const base=studentAchievementState(def,stats);
+    const persisted=studentAchievementPersistedTier(def.id);
+    if(persisted<=Number(base.tier||0))return base;
+    if(def.special){
+      return {...base,unlocked:true,tier:4,tierKey:'diamond',tierLabel:def.secret?'Tajný':'Speciální',progress:100,nextText:'Odemčeno'};
+    }
+    const tier=Math.max(1,Math.min(4,persisted));
+    const meta=STUDENT_ACHIEVEMENT_TIERS[tier-1];
+    if(def.mode==='rank'){
+      const rank=Number(base.value||0);
+      if(tier>=4)return {...base,unlocked:true,tier,tierKey:meta.key,tierLabel:meta.label,target:1,progress:100,nextText:'Maximum'};
+      const start=Number(def.thresholds[tier-1]);
+      const next=Number(def.thresholds[tier]);
+      const progress=rank>0?Math.max(0,Math.min(100,Math.round((start-rank)/Math.max(1,start-next)*100))):0;
+      return {...base,unlocked:true,tier,tierKey:meta.key,tierLabel:meta.label,target:next,progress,nextText:rank?`${rank}. místo · další TOP ${next}`:`Další TOP ${next}`};
+    }
+    const value=Math.max(0,Number(base.value||0));
+    if(tier>=4)return {...base,unlocked:true,tier,tierKey:meta.key,tierLabel:meta.label,target:Number(def.thresholds[3]),progress:100,nextText:'Maximum'};
+    const prev=Number(def.thresholds[tier-1]);
+    const next=Number(def.thresholds[tier]);
+    const progress=Math.max(0,Math.min(100,Math.round((value-prev)/Math.max(1,next-prev)*100)));
+    return {...base,unlocked:true,tier,tierKey:meta.key,tierLabel:meta.label,target:next,progress,nextText:`${value} / ${next}`};
+  }
+
   function studentAchievementImage(def,st){
     if(def.special)return `assets/achievements/${def.id}_special.png`;
     const tier=st.tierKey==='locked'?'bronze':st.tierKey;
@@ -10822,7 +10881,109 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
 
   function studentAchievementItems(){
     const stats=studentAchievementStats();
-    return STUDENT_ACHIEVEMENT_DEFS.map(def=>({def,st:studentAchievementState(def,stats)}));
+    return STUDENT_ACHIEVEMENT_DEFS.map(def=>({def,st:studentAchievementEffectiveState(def,stats)}));
+  }
+
+
+  const STUDENT_TROPHY_TRACKER_VERSION='v14';
+  function studentTrophyTrackerKey(studentId){return `zz01:student-trophies:${STUDENT_TROPHY_TRACKER_VERSION}:${String(studentId||'unknown')}`;}
+  function studentTrophyReadTracker(studentId){
+    try{
+      const raw=localStorage.getItem(studentTrophyTrackerKey(studentId));
+      const parsed=raw?JSON.parse(raw):null;
+      if(parsed&&typeof parsed==='object')return {known:parsed.known&&typeof parsed.known==='object'?parsed.known:null,fresh:parsed.fresh&&typeof parsed.fresh==='object'?parsed.fresh:{}};
+    }catch(err){console.warn('Trophy tracker read failed',err);}
+    return {known:null,fresh:{}};
+  }
+  function studentTrophyWriteTracker(studentId,tracker){
+    try{localStorage.setItem(studentTrophyTrackerKey(studentId),JSON.stringify(tracker));}catch(err){console.warn('Trophy tracker write failed',err);}
+  }
+  function studentTrophySnapshot(stats){
+    const out={};
+    STUDENT_ACHIEVEMENT_DEFS.forEach(def=>{out[def.id]=Number(studentAchievementEffectiveState(def,stats).tier||0);});
+    return out;
+  }
+  function studentTrophySyncProgress(studentId,stats){
+    if(!studentId)return;
+    state.ui=state.ui||{};
+    const tracker=studentTrophyReadTracker(studentId);
+    const current=studentTrophySnapshot(stats||{});
+    if(!tracker.known){
+      tracker.known=current;
+      tracker.fresh={};
+      studentTrophyWriteTracker(studentId,tracker);
+      state.ui.studentTrophyNewMap={};
+      return;
+    }
+    const queue=[];
+    STUDENT_ACHIEVEMENT_DEFS.forEach(def=>{
+      const from=Math.max(0,Number(tracker.known?.[def.id]||0));
+      const to=Math.max(0,Number(current?.[def.id]||0));
+      if(to>from){
+        queue.push({id:def.id,from,to});
+        tracker.fresh[def.id]=to;
+      }
+    });
+    tracker.known=current;
+    studentTrophyWriteTracker(studentId,tracker);
+    state.ui.studentTrophyNewMap={...tracker.fresh};
+    if(queue.length){
+      const existing=Array.isArray(state.ui.studentTrophyPopupQueue)?state.ui.studentTrophyPopupQueue:[];
+      const keys=new Set(existing.map(x=>`${x.id}:${x.to}`));
+      queue.forEach(x=>{if(!keys.has(`${x.id}:${x.to}`))existing.push(x);});
+      state.ui.studentTrophyPopupQueue=existing;
+      setTimeout(showNextStudentTrophyPopup,260);
+    }
+  }
+  function studentTrophyIsFresh(id){return Number(state.ui?.studentTrophyNewMap?.[id]||0)>0;}
+  function studentTrophyScheduleFreshClear(){
+    const studentId=state.studentPortal?.account?.student_id;
+    if(!studentId||!Object.keys(state.ui?.studentTrophyNewMap||{}).length||state.ui?.studentTrophyFreshClearScheduled)return;
+    state.ui.studentTrophyFreshClearScheduled=true;
+    setTimeout(()=>{
+      const tracker=studentTrophyReadTracker(studentId);
+      tracker.fresh={};
+      studentTrophyWriteTracker(studentId,tracker);
+      state.ui.studentTrophyNewMap={};
+      state.ui.studentTrophyFreshClearScheduled=false;
+      document.querySelectorAll('.student-trophy-new-ribbon').forEach(el=>el.remove());
+    },7000);
+  }
+  function studentTrophyImageAtTier(def,tier){
+    if(def.special)return `assets/achievements/${def.id}_special.png`;
+    const safeTier=Math.max(1,Math.min(4,Number(tier||1)));
+    return `assets/achievements/${def.id}_${STUDENT_ACHIEVEMENT_TIERS[safeTier-1].key}.png`;
+  }
+  function showNextStudentTrophyPopup(){
+    state.ui=state.ui||{};
+    if(document.querySelector('.student-trophy-unlock-overlay'))return;
+    const queue=Array.isArray(state.ui.studentTrophyPopupQueue)?state.ui.studentTrophyPopupQueue:[];
+    const item=queue.shift();
+    state.ui.studentTrophyPopupQueue=queue;
+    if(!item)return;
+    const def=STUDENT_ACHIEVEMENT_DEFS.find(x=>x.id===item.id);
+    if(!def){setTimeout(showNextStudentTrophyPopup,80);return;}
+    const upgraded=Number(item.from||0)>0&&!def.special;
+    const tier=def.special?4:Math.max(1,Math.min(4,Number(item.to||1)));
+    const tierMeta=STUDENT_ACHIEVEMENT_TIERS[tier-1];
+    const title=def.secret?'Tajemství ZZ-01':def.title;
+    const tierLabel=def.secret?'TAJNÁ TROFEJ':(def.special?'SPECIÁLNÍ TROFEJ':String(tierMeta?.label||'TROFEJ').toUpperCase());
+    const overlay=document.createElement('div');
+    overlay.className='student-trophy-unlock-overlay';
+    overlay.innerHTML=`<section class="student-trophy-unlock-card" role="dialog" aria-modal="true" aria-label="${esc(title)}">
+      <div class="student-trophy-unlock-burst"></div><i class="student-trophy-unlock-spark s1"></i><i class="student-trophy-unlock-spark s2"></i><i class="student-trophy-unlock-spark s3"></i><i class="student-trophy-unlock-spark s4"></i>
+      <div class="student-trophy-unlock-kicker">${upgraded?'TROFEJ VYLEPŠENA':'TROFEJ ODEMČENA'}</div>
+      <div class="student-trophy-unlock-art"><img src="${studentTrophyImageAtTier(def,tier)}" alt="${esc(title)}"></div>
+      <div class="student-trophy-unlock-title">${esc(title)}</div>
+      <div class="student-trophy-unlock-tier ${def.special?'diamond':tierMeta?.key||'diamond'}">${esc(tierLabel)}</div>
+      <p class="student-trophy-unlock-desc">${esc(def.secret?'Tajemství ZZ-01 bylo odhaleno.':def.desc)}</p>
+      <button type="button" class="btn primary" data-trophy-popup-close>Pokračovat</button>
+    </section>`;
+    const close=()=>{overlay.remove();setTimeout(showNextStudentTrophyPopup,180);};
+    overlay.querySelector('[data-trophy-popup-close]').addEventListener('click',close);
+    overlay.addEventListener('click',e=>{if(e.target===overlay)close();});
+    document.body.appendChild(overlay);
+    overlay.querySelector('[data-trophy-popup-close]')?.focus();
   }
 
   function studentAchievementRequirement(def,index=0){
@@ -10840,6 +11001,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
       ? (def.special?'Speciální achievement':(st.tier>=4?'MAX · diamant dokončen':`${st.nextText} → ${nextTier?.label||''}`))
       : (def.secret?'Tajný achievement':studentAchievementRequirement(def,0));
     return `<div class="trophy-card student-trophy-card ${st.unlocked?'unlocked':'locked'} tier-${st.tier||0}">
+      ${studentTrophyIsFresh(def.id)?'<span class="student-trophy-new-ribbon">NOVÁ</span>':''}
       <div class="student-trophy-art"><img src="${studentAchievementImage(def,st)}" alt="${esc(title)}"></div>
       <div class="trophy-name">${esc(title)}</div>
       <div class="tier-badge trophy-tier-material ${st.tierKey}">${esc(st.tierLabel)}</div>
@@ -10936,6 +11098,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
           ? 'Podmínka je skrytá.'
           : (st.unlocked&&def.special?'Trofej je odemčena.':st.nextText);
         return `<article class="student-trophy-list-row ${st.unlocked?'unlocked':'locked'}">
+          ${studentTrophyIsFresh(def.id)?'<span class="student-trophy-new-ribbon">NOVÁ</span>':''}
           <div class="student-trophy-list-art"><img src="${studentAchievementImage(def,st)}" alt="${esc(title)}"></div>
           <div class="student-trophy-list-copy"><h3>${esc(title)}</h3><p>${esc(def.secret&&!st.unlocked?'Tajná trofej ZZ-01.':def.desc)}</p><small>${esc(studentAchievementUnit(def,st))}</small><div class="student-trophy-list-progress"><span style="width:${st.progress}%"></span></div></div>
           <div class="student-trophy-list-status"><span class="student-achievement-tier ${st.tierKey}">${esc(status)}</span><strong>${esc(detail)}</strong></div>
@@ -11034,6 +11197,7 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
           ? `<section class="student-panel"><div class="student-panel-head"><h2>Seznam trofejí</h2><span>${STUDENT_ACHIEVEMENT_DEFS.filter(x=>!x.secret).length} veřejných</span></div><p class="muted">Tady vidíš všechny veřejné trofeje, jejich podmínky, aktuální stupeň a postup. Tajná trofej se objeví až po odemčení.</p>${renderStudentTrophyList()}</section>`
           : `<section class="student-panel"><div class="student-panel-head"><h2>Kabinet trofejí</h2><span>trvalá sbírka</span></div><p class="muted">Trofeje jsou přímo součástí Scoringu. Získané trofeje zůstávají v kabinetu a stupňované trofeje postupují z bronzu přes stříbro a zlato až na diamant.</p>${renderStudentAchievementCabinet()}</section>`}</section>`;
       body=`${studentPortalScreenNav('Scoring')}<section class="student-portal student-subpage">${rankingBody}${trophiesBody}</section>`;
+      setTimeout(studentTrophyScheduleFreshClear,350);
     }else if(view==='challenges'){
       const tests=challenges.filter(ch=>ch.challenge_type==='test').slice().sort((a,b)=>(Number(a.attempted)-Number(b.attempted)) || String(a.teacher_name||'').localeCompare(String(b.teacher_name||''),'cs') || String(a.title||'').localeCompare(String(b.title||''),'cs'));
       const selectedId=String(state.ui.studentSelectedTestId||'');
