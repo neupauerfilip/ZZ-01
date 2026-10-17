@@ -6172,6 +6172,8 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
   <div id="app" class="app-shell" aria-live="polite"></div>
   <div id="toast-root" class="toast-root" aria-live="assertive" aria-atomic="true"></div>
   <div id="modal-root"></div>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
 (() => {
@@ -11159,6 +11161,109 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
     return renderStudentAchievementCabinet();
   }
 
+
+  function studentResultsUi(){
+    state.ui=state.ui||{};
+    if(!state.ui.studentResultsFilters||typeof state.ui.studentResultsFilters!=='object')state.ui.studentResultsFilters={year:'all',subject:'all',period:'all',grade:'all'};
+    if(!['overview','history','stats'].includes(state.ui.studentResultsTab))state.ui.studentResultsTab='overview';
+    return {filters:state.ui.studentResultsFilters,tab:state.ui.studentResultsTab};
+  }
+
+  function studentResultRows(){
+    const rows=Array.isArray(state.studentPortal?.history)?state.studentPortal.history.filter(h=>(h.grade!==null&&h.grade!==undefined)||h.no_grade_status):[];
+    const ui=studentResultsUi();
+    const f=ui.filters;
+    return rows.filter(r=>{
+      if(f.year!=='all'&&String(r.school_year||'')!==String(f.year))return false;
+      if(f.subject!=='all'&&String(r.subject_name||'')!==String(f.subject))return false;
+      if(f.grade!=='all'){
+        if(f.grade==='nograde'){if(!(r.grade===null||r.grade===undefined))return false;}
+        else if(Number(r.grade)!==Number(f.grade))return false;
+      }
+      if(f.period!=='all'){
+        const d=new Date(r.occurred_at); if(Number.isNaN(d.getTime()))return false;
+        const m=d.getMonth()+1;
+        if(f.period==='h1' && !(m>=9||m===1))return false;
+        if(f.period==='h2' && !(m>=2&&m<=6))return false;
+        if(f.period==='30d' && (Date.now()-d.getTime())>30*86400000)return false;
+      }
+      return true;
+    });
+  }
+
+  function studentResultLabel(r){
+    if(r?.no_grade_status)return String(r.no_grade_status);
+    if(r?.grade!==null&&r?.grade!==undefined)return String(r.grade);
+    return '—';
+  }
+
+  function studentResultFilename(ext){
+    const a=state.studentPortal?.account||{};
+    const safe=String(a.student_name||'zak').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9_-]+/g,'_').replace(/^_+|_+$/g,'')||'zak';
+    const d=new Date(); const stamp=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    return `ZZ-01_vysledky_${safe}_${stamp}.${ext}`;
+  }
+
+  function studentResultFilterSummary(){
+    const f=studentResultsUi().filters;
+    const parts=[];
+    if(f.year!=='all')parts.push(`Školní rok: ${f.year}`);
+    if(f.subject!=='all')parts.push(`Předmět: ${f.subject}`);
+    if(f.period==='h1')parts.push('Období: 1. pololetí');
+    if(f.period==='h2')parts.push('Období: 2. pololetí');
+    if(f.period==='30d')parts.push('Období: posledních 30 dní');
+    if(f.grade!=='all')parts.push(`Výsledek: ${f.grade==='nograde'?'bez známky':f.grade}`);
+    return parts.length?parts.join(' · '):'Bez filtru';
+  }
+
+  function exportStudentResultsExcel(){
+    if(!window.XLSX)return toast('Excel export se nepodařilo načíst. Zkus stránku obnovit.','error');
+    const rows=studentResultRows();
+    if(!rows.length)return toast('Pro aktuální filtr nejsou žádné výsledky k exportu.','warn');
+    const a=state.studentPortal?.account||{};
+    const numeric=rows.filter(r=>Number.isFinite(Number(r.grade))&&Number(r.grade)>=1&&Number(r.grade)<=5);
+    const avg=numeric.length?numeric.reduce((s,r)=>s+Number(r.grade),0)/numeric.length:null;
+    const data=rows.map(r=>({
+      'Datum':fmtDate(r.occurred_at),
+      'Školní rok':r.school_year||'',
+      'Třída':r.class_name||'',
+      'Předmět':r.subject_name||'',
+      'Téma':r.topic||'',
+      'Výsledek':studentResultLabel(r),
+      'Poznámka':r.note||'',
+      'Propustka':r.pass_used?'ANO':'NE'
+    }));
+    const summary=[
+      ['Výpis výsledků ZZ-01',''],
+      ['Žák',a.student_name||''],['Škola',a.school_name||''],['Filtr',studentResultFilterSummary()],
+      ['Počet záznamů',rows.length],['Průměr známek',avg===null?'—':Number(avg.toFixed(2))],
+      ['Jedničky',numeric.filter(r=>Number(r.grade)===1).length],['Vygenerováno',new Date().toLocaleString('cs-CZ')]
+    ];
+    const wb=XLSX.utils.book_new();
+    const ws1=XLSX.utils.json_to_sheet(data);
+    ws1['!cols']=[{wch:14},{wch:14},{wch:16},{wch:22},{wch:34},{wch:13},{wch:38},{wch:12}];
+    const ws2=XLSX.utils.aoa_to_sheet(summary);
+    ws2['!cols']=[{wch:24},{wch:52}];
+    XLSX.utils.book_append_sheet(wb,ws1,'Výsledky');
+    XLSX.utils.book_append_sheet(wb,ws2,'Souhrn');
+    XLSX.writeFile(wb,studentResultFilename('xlsx'));
+    toast('Excel export byl vytvořen.');
+  }
+
+  function exportStudentResultsPdf(){
+    if(!window.html2pdf)return toast('PDF export se nepodařilo načíst. Zkus stránku obnovit.','error');
+    const rows=studentResultRows();
+    if(!rows.length)return toast('Pro aktuální filtr nejsou žádné výsledky k exportu.','warn');
+    const a=state.studentPortal?.account||{};
+    const numeric=rows.filter(r=>Number.isFinite(Number(r.grade))&&Number(r.grade)>=1&&Number(r.grade)<=5);
+    const avg=numeric.length?numeric.reduce((s,r)=>s+Number(r.grade),0)/numeric.length:null;
+    const holder=document.createElement('div');
+    holder.style.cssText='position:fixed;left:-100000px;top:0;width:1050px;background:#fff;color:#111;padding:28px;font-family:Arial,sans-serif;font-size:14px;z-index:-1';
+    holder.innerHTML=`<div style="border-bottom:4px solid #111;padding-bottom:12px;margin-bottom:16px"><h1 style="margin:0 0 6px;font-size:26px">Výpis výsledků ZZ-01</h1><div><strong>${esc(a.student_name||'Žák')}</strong> · ${esc(a.school_name||'')}</div><div style="margin-top:5px;color:#444">${esc(studentResultFilterSummary())}</div></div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px"><div style="border:1px solid #999;padding:10px"><small>Záznamů</small><br><b>${rows.length}</b></div><div style="border:1px solid #999;padding:10px"><small>Průměr</small><br><b>${avg===null?'—':avg.toFixed(2).replace('.',',')}</b></div><div style="border:1px solid #999;padding:10px"><small>Jedničky</small><br><b>${numeric.filter(r=>Number(r.grade)===1).length}</b></div><div style="border:1px solid #999;padding:10px"><small>Vygenerováno</small><br><b>${esc(new Date().toLocaleDateString('cs-CZ'))}</b></div></div><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:#eee"><th style="border:1px solid #888;padding:7px;text-align:left">Datum</th><th style="border:1px solid #888;padding:7px;text-align:left">Předmět</th><th style="border:1px solid #888;padding:7px;text-align:left">Téma</th><th style="border:1px solid #888;padding:7px;text-align:left">Výsledek</th><th style="border:1px solid #888;padding:7px;text-align:left">Poznámka</th><th style="border:1px solid #888;padding:7px;text-align:left">Propustka</th></tr></thead><tbody>${rows.map(r=>`<tr><td style="border:1px solid #bbb;padding:6px">${esc(fmtDate(r.occurred_at))}</td><td style="border:1px solid #bbb;padding:6px">${esc(r.subject_name||'')}</td><td style="border:1px solid #bbb;padding:6px">${esc(r.topic||'')}</td><td style="border:1px solid #bbb;padding:6px;font-weight:bold">${esc(studentResultLabel(r))}</td><td style="border:1px solid #bbb;padding:6px">${esc(r.note||'')}</td><td style="border:1px solid #bbb;padding:6px">${r.pass_used?'ANO':'NE'}</td></tr>`).join('')}</tbody></table><div style="margin-top:14px;color:#666;font-size:10px">Zkouškomat ZZ-01 · export žákovských výsledků</div>`;
+    document.body.appendChild(holder);
+    html2pdf().set({margin:7,filename:studentResultFilename('pdf'),image:{type:'jpeg',quality:.96},html2canvas:{scale:2,useCORS:true,backgroundColor:'#ffffff'},jsPDF:{unit:'mm',format:'a4',orientation:'landscape'},pagebreak:{mode:['css','legacy']}}).from(holder).save().then(()=>{holder.remove();toast('PDF export byl vytvořen.');}).catch(err=>{console.error(err);holder.remove();toast('PDF export se nepodařil.','error');});
+  }
+
   function renderStudentPortal(){
     const portal=state.studentPortal;
     if(!portal?.account)return renderStudentLink();
@@ -11260,7 +11365,34 @@ body:not([data-route="home"]) .modal :where(h1,h2,h3){
         <section class="student-panel"><div class="student-panel-head"><h2>Pro učitele</h2><span>+ / − body</span></div><p class="muted">Rozhodni, kolik kreditů chceš přidělit vybranému učiteli. Najednou nejvýše 20. Učitel vidí souhrn, ne jméno žáka.</p><div class="student-teacher-rating-list">${cards||'<div class="empty">Pro tvoje třídy nejsou přiřazeni žádní učitelé k hodnocení.</div>'}</div></section>
       </section>`;
     }else if(view==='results'){
-      body=`${studentPortalScreenNav('Moje výsledky')}<section class="student-portal student-subpage"><div class="student-kpis"><div><span>Celkový scoring</span><strong class="point-value ${pointTone(currentScore)}">${formatSignedNumber(currentScore)} b.</strong></div><div><span>Aktuální stav pravidel</span><strong class="point-value ${pointTone(currentRules)}">${formatSignedNumber(currentRules)} b.</strong></div><div><span>Záznamů</span><strong>${grades.length}</strong></div></div><section class="student-panel"><div class="student-panel-head"><h2>Moje známky a zkoušení</h2><span>${grades.length} záznamů</span></div><div class="table-wrap"><table><thead><tr><th>Datum</th><th>Předmět</th><th>Téma</th><th>Výsledek</th><th>Poznámka</th></tr></thead><tbody>${gradeRows||'<tr><td colspan="5">Zatím tu nejsou žádné výsledky.</td></tr>'}</tbody></table></div></section></section>`;
+      const resultsUi=studentResultsUi();
+      const rf=resultsUi.filters;
+      const allResults=grades.slice();
+      const years=[...new Set(allResults.map(r=>String(r.school_year||'')).filter(Boolean))].sort((a,b)=>b.localeCompare(a,'cs'));
+      const subjects=[...new Set(allResults.map(r=>String(r.subject_name||'')).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'cs'));
+      const filtered=studentResultRows();
+      const numeric=filtered.filter(r=>Number.isFinite(Number(r.grade))&&Number(r.grade)>=1&&Number(r.grade)<=5);
+      const avg=numeric.length?numeric.reduce((sum,r)=>sum+Number(r.grade),0)/numeric.length:null;
+      const ones=numeric.filter(r=>Number(r.grade)===1).length;
+      const last=filtered.slice().sort((a,b)=>new Date(b.occurred_at)-new Date(a.occurred_at))[0]||null;
+      const subjectMap=new Map();
+      filtered.forEach(r=>{const key=String(r.subject_name||'Bez předmětu');if(!subjectMap.has(key))subjectMap.set(key,[]);subjectMap.get(key).push(r);});
+      const subjectCards=[...subjectMap.entries()].sort((a,b)=>a[0].localeCompare(b[0],'cs')).map(([name,rows])=>{
+        const ng=rows.filter(r=>Number.isFinite(Number(r.grade))&&Number(r.grade)>=1&&Number(r.grade)<=5);
+        const a=ng.length?ng.reduce((s,r)=>s+Number(r.grade),0)/ng.length:null;
+        const newest=rows.slice().sort((x,y)=>new Date(y.occurred_at)-new Date(x.occurred_at))[0];
+        return `<button class="student-result-subject-card" data-action="student-results-subject-card" data-subject="${esc(name)}"><h3>${esc(name)}</h3><div class="subject-result-main">${a===null?'bez průměru':`Ø ${a.toFixed(2).replace('.',',')}`}</div><div class="subject-result-meta">${rows.length} zkoušení<br>Poslední: <strong>${esc(studentResultLabel(newest))}</strong> · ${esc(fmtDate(newest.occurred_at))}</div></button>`;
+      }).join('');
+      const historyRows=filtered.map(r=>`<tr><td>${esc(fmtDate(r.occurred_at))}</td><td>${esc(r.school_year||'—')}</td><td>${esc(r.subject_name||'—')}</td><td>${esc(r.topic||'—')}</td><td><span class="student-result-grade">${esc(studentResultLabel(r))}</span></td><td>${esc(r.note||'')}</td><td>${r.pass_used?'<span class="pass-used">ANO</span>':'—'}</td></tr>`).join('');
+      const gradeCounts=[1,2,3,4,5].map(g=>numeric.filter(r=>Number(r.grade)===g).length);
+      const maxGradeCount=Math.max(1,...gradeCounts);
+      const bars=gradeCounts.map((c,i)=>`<div class="student-grade-bar"><span>${i+1}</span><div class="student-grade-bar-track"><div class="student-grade-bar-fill" style="width:${Math.round(c/maxGradeCount*100)}%"></div></div><b>${c}×</b></div>`).join('');
+      const trendRows=numeric.slice().sort((a,b)=>new Date(a.occurred_at)-new Date(b.occurred_at)).slice(-20);
+      const trendSvg=(()=>{if(!trendRows.length)return '<div class="student-results-empty">Pro graf zatím nejsou číselné známky.</div>';const W=640,H=220,pad=34;const xs=trendRows.map((_,i)=>trendRows.length===1?W/2:pad+i*(W-2*pad)/(trendRows.length-1));const ys=trendRows.map(r=>pad+(Number(r.grade)-1)*(H-2*pad)/4);const points=xs.map((x,i)=>`${x.toFixed(1)},${ys[i].toFixed(1)}`).join(' ');return `<svg class="student-results-trend" viewBox="0 0 ${W} ${H}" role="img" aria-label="Vývoj známek"><line x1="${pad}" y1="${pad}" x2="${pad}" y2="${H-pad}" stroke="#245766"/><line x1="${pad}" y1="${H-pad}" x2="${W-pad}" y2="${H-pad}" stroke="#245766"/>${[1,2,3,4,5].map(g=>{const y=pad+(g-1)*(H-2*pad)/4;return `<text x="8" y="${y+4}" class="student-results-trend-label">${g}</text><line x1="${pad}" y1="${y}" x2="${W-pad}" y2="${y}" stroke="#123441" stroke-dasharray="4 5"/>`;}).join('')}<polyline points="${points}" class="student-results-trend-line"/>${xs.map((x,i)=>`<circle cx="${x}" cy="${ys[i]}" r="5" class="student-results-trend-dot"><title>${esc(fmtDate(trendRows[i].occurred_at))} · ${esc(trendRows[i].subject_name||'')} · ${Number(trendRows[i].grade)}</title></circle>`).join('')}</svg>`;})();
+      const overviewBody=`<section class="student-panel"><div class="student-panel-head"><h2>Předměty</h2><span>${subjectMap.size} předmětů</span></div>${subjectCards?`<div class="student-results-subject-grid">${subjectCards}</div>`:'<div class="student-results-empty">Pro aktuální filtr nejsou žádné výsledky.</div>'}</section><section class="student-panel"><div class="student-panel-head"><h2>Poslední výsledky</h2><span>${Math.min(filtered.length,6)} zobrazeno</span></div><div class="table-wrap"><table class="student-results-table"><thead><tr><th>Datum</th><th>Předmět</th><th>Téma</th><th>Výsledek</th></tr></thead><tbody>${filtered.slice(0,6).map(r=>`<tr><td>${esc(fmtDate(r.occurred_at))}</td><td>${esc(r.subject_name||'—')}</td><td>${esc(r.topic||'—')}</td><td><span class="student-result-grade">${esc(studentResultLabel(r))}</span></td></tr>`).join('')||'<tr><td colspan="4">Bez výsledků.</td></tr>'}</tbody></table></div></section>`;
+      const historyBody=`<section class="student-panel"><div class="student-panel-head"><h2>Kompletní historie</h2><span>${filtered.length} záznamů</span></div><div class="table-wrap"><table class="student-results-table"><thead><tr><th>Datum</th><th>Školní rok</th><th>Předmět</th><th>Téma</th><th>Výsledek</th><th>Poznámka</th><th>Propustka</th></tr></thead><tbody>${historyRows||'<tr><td colspan="7">Pro aktuální filtr nejsou žádné výsledky.</td></tr>'}</tbody></table></div></section>`;
+      const statsBody=`<div class="student-results-stats-grid"><section class="student-result-chart"><h3>Rozložení známek</h3><div class="student-grade-bars">${bars}</div></section><section class="student-result-chart"><h3>Vývoj posledních známek</h3>${trendSvg}<div class="tiny muted" style="margin-top:8px">Graf zobrazuje posledních ${trendRows.length} číselných známek. Nižší hodnota = lepší známka.</div></section></div>`;
+      body=`${studentPortalScreenNav('Moje výsledky')}<section class="student-portal student-subpage student-results-page"><section class="student-results-hero"><div class="student-panel-head"><div><h2>Moje výsledky</h2><span>osobní přehled známek a zkoušení</span></div><span>${filtered.length} / ${allResults.length} záznamů</span></div><div class="student-results-kpis"><div><span>Počet zkoušení</span><strong>${filtered.length}</strong></div><div><span>Průměr známek</span><strong>${avg===null?'—':avg.toFixed(2).replace('.',',')}</strong></div><div><span>Jedničky</span><strong>${ones}</strong></div><div><span>Poslední výsledek</span><strong>${last?esc(studentResultLabel(last)):'—'}</strong></div></div><div class="student-results-filter-grid"><label>Školní rok<select id="student-results-year"><option value="all">Všechny</option>${years.map(y=>`<option value="${esc(y)}" ${rf.year===y?'selected':''}>${esc(y)}</option>`).join('')}</select></label><label>Předmět<select id="student-results-subject"><option value="all">Všechny</option>${subjects.map(x=>`<option value="${esc(x)}" ${rf.subject===x?'selected':''}>${esc(x)}</option>`).join('')}</select></label><label>Období<select id="student-results-period"><option value="all" ${rf.period==='all'?'selected':''}>Celý rok</option><option value="h1" ${rf.period==='h1'?'selected':''}>1. pololetí</option><option value="h2" ${rf.period==='h2'?'selected':''}>2. pololetí</option><option value="30d" ${rf.period==='30d'?'selected':''}>Posledních 30 dní</option></select></label><label>Výsledek<select id="student-results-grade"><option value="all" ${rf.grade==='all'?'selected':''}>Všechny</option>${[1,2,3,4,5].map(g=>`<option value="${g}" ${String(rf.grade)===String(g)?'selected':''}>Známka ${g}</option>`).join('')}<option value="nograde" ${rf.grade==='nograde'?'selected':''}>Bez známky</option></select></label></div><div class="student-results-actions"><button class="btn secondary" data-action="student-results-clear-filters">Zrušit filtry</button><span class="spacer"></span><button class="btn secondary" data-action="student-results-export-xlsx">Export Excel</button><button class="btn primary" data-action="student-results-export-pdf">Export PDF</button></div></section><div class="student-results-tabs"><button class="btn ${resultsUi.tab==='overview'?'primary':'secondary'}" data-action="student-results-tab" data-tab="overview">Přehled</button><button class="btn ${resultsUi.tab==='history'?'primary':'secondary'}" data-action="student-results-tab" data-tab="history">Historie</button><button class="btn ${resultsUi.tab==='stats'?'primary':'secondary'}" data-action="student-results-tab" data-tab="stats">Statistiky</button></div>${resultsUi.tab==='history'?historyBody:(resultsUi.tab==='stats'?statsBody:overviewBody)}</section>`;
     }else if(view==='inventory'){
       const invSubjects=inventory.slice();
       const invTotal=invSubjects.reduce((s,x)=>s+Number(x.pass_count||0)+Number(x.cheat_count||0)+Number(x.coffee_count||0),0);
@@ -14413,6 +14545,47 @@ body::after{
 .teacher-private-panel .teacher-hall-contacts{padding:9px;border:2px solid #145c6d;background:#04141f}
 @media(max-width:700px){.hall-person-type-tabs{grid-template-columns:1fr 1fr}}
 
+
+
+/* ===== STUDENT RESULTS V16 — přehled, filtry, statistiky, export ===== */
+.student-results-page{display:grid;gap:14px}
+.student-results-hero{border:3px solid #12d7e0;background:linear-gradient(180deg,#082837,#051722);box-shadow:4px 4px 0 #02070d;padding:14px}
+.student-results-filter-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:10px}
+.student-results-filter-grid label{font-family:var(--pixel);font-size:.56rem;color:#8fdbe0;text-transform:uppercase}
+.student-results-filter-grid select{margin-top:5px;border:2px solid #17778a;background:#041722;color:#fff4dc;min-height:42px}
+.student-results-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
+.student-results-actions .spacer{flex:1 1 auto}
+.student-results-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.student-results-tabs .btn{min-width:0}
+.student-results-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.student-results-kpis>div{border:2px solid #176477;background:#061924;padding:10px 12px;min-height:74px;display:flex;flex-direction:column;justify-content:center;gap:5px;box-shadow:3px 3px 0 #02070d}
+.student-results-kpis span{font-family:var(--pixel);font-size:.52rem;color:#7fc7cd;text-transform:uppercase}
+.student-results-kpis strong{font-family:var(--pixel);font-size:1rem;color:#fff2d7}
+.student-results-subject-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.student-result-subject-card{border:3px solid #176879;background:linear-gradient(180deg,#082331,#051722);color:#fff;text-align:left;padding:12px;min-height:132px;box-shadow:4px 4px 0 #02070d;cursor:pointer}
+.student-result-subject-card:hover{border-color:#ff9b15;background:#2b210f}
+.student-result-subject-card h3{margin:0 0 9px;color:#fff0d0;font-family:var(--pixel);font-size:.7rem;line-height:1.35}
+.student-result-subject-card .subject-result-main{font-family:var(--pixel);font-size:1rem;color:#35edf0;margin-bottom:8px}
+.student-result-subject-card .subject-result-meta{font-size:.72rem;color:#9ac4c9;line-height:1.45}
+.student-result-grade{display:inline-grid;place-items:center;min-width:31px;min-height:31px;padding:2px 7px;border:2px solid #25dbe3;background:#082936;color:#fff2df;font-family:var(--pixel)}
+.student-results-table td,.student-results-table th{vertical-align:middle}
+.student-results-table .pass-used{color:#ffd05b;font-family:var(--pixel);font-size:.56rem}
+.student-results-stats-grid{display:grid;grid-template-columns:minmax(280px,.8fr) minmax(0,1.2fr);gap:12px}
+.student-result-chart{border:2px solid #165f70;background:#04141e;padding:12px;min-height:280px}
+.student-result-chart h3{margin:0 0 10px;font-family:var(--pixel);font-size:.66rem;color:#fff0d4}
+.student-grade-bars{display:grid;gap:10px}
+.student-grade-bar{display:grid;grid-template-columns:34px minmax(0,1fr) 38px;gap:8px;align-items:center}
+.student-grade-bar>span:first-child{font-family:var(--pixel);color:#fff1d4;text-align:center}
+.student-grade-bar-track{height:18px;border:1px solid #17667a;background:#020d13;overflow:hidden}
+.student-grade-bar-fill{height:100%;background:linear-gradient(90deg,#1b8fa2,#44e5ec);min-width:0}
+.student-grade-bar b{font-family:var(--pixel);font-size:.6rem;color:#8fdde2;text-align:right}
+.student-results-trend{width:100%;height:230px;display:block;background:#03111a;border:1px solid #124a59}
+.student-results-trend-label{font-size:11px;fill:#9fcbd0;font-family:monospace}
+.student-results-trend-line{fill:none;stroke:#41e7ed;stroke-width:3}
+.student-results-trend-dot{fill:#ffae28;stroke:#06131d;stroke-width:2}
+.student-results-empty{padding:28px;text-align:center;border:2px dashed #1d6373;background:#061822;color:#8fb9bf}
+@media(max-width:820px){.student-results-filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.student-results-subject-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.student-results-stats-grid{grid-template-columns:1fr}}
+@media(max-width:560px){.student-results-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.student-results-filter-grid,.student-results-subject-grid,.student-results-tabs{grid-template-columns:1fr}.student-results-actions{display:grid;grid-template-columns:1fr 1fr}.student-results-actions .spacer{display:none}.student-results-actions .btn{width:100%}}
 </style>
 </head><body><h1>${esc(state.school.name)} – klasifikační přehled</h1><div class="meta">${esc(c.displayName)} · ${esc(subject)} · ${semester}. pololetí · ${esc(c.schoolYear)} · učitel: ${esc(state.user.name)}</div><table><thead><tr><th>Žák</th>${dates.map(d=>`<th>${esc(d.split('-').reverse().join('. '))}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table><script>window.onload=()=>setTimeout(()=>window.print(),150)<\/script></body></html>`);
     w.document.close();
@@ -15397,6 +15570,13 @@ body::after{
       state.ui.gradeSemester=e.target.value; saveState(); render();
     }else if(e.target.id==='score-class'){
       state.ui.scoreClassId=e.target.value; saveState(); render();
+    }else if(['student-results-year','student-results-subject','student-results-period','student-results-grade'].includes(e.target.id)){
+      const ui=studentResultsUi();
+      if(e.target.id==='student-results-year')ui.filters.year=e.target.value;
+      if(e.target.id==='student-results-subject')ui.filters.subject=e.target.value;
+      if(e.target.id==='student-results-period')ui.filters.period=e.target.value;
+      if(e.target.id==='student-results-grade')ui.filters.grade=e.target.value;
+      saveState();renderStudentPortal();
     }else if(e.target.id==='student-hall-member-class'){
       filterStudentHallCandidates();
     }else if(e.target.id==='student-hall-contact-class'){
@@ -15494,6 +15674,11 @@ body::after{
     else if(action==='student-trophy-view'){state.ui=state.ui||{};state.ui.studentPortalView='scoring';state.ui.studentTrophyView=btn.dataset.view==='list'?'list':'cabinet';saveState();renderStudentPortal();}
     else if(action==='student-trophy-list'){state.ui=state.ui||{};state.ui.studentPortalView='scoring';state.ui.studentTrophyView='list';saveState();renderStudentPortal();}
     else if(action==='student-inventory-subject'){const rows=Array.isArray(state.studentPortal?.inventory)?state.studentPortal.inventory:[];const row=rows[Number(btn.dataset.index)];state.ui=state.ui||{};state.ui.studentInventorySubject=String(row?.subject_name||'');saveState();renderStudentPortal();}
+    else if(action==='student-results-tab'){const ui=studentResultsUi();ui.tab=['overview','history','stats'].includes(btn.dataset.tab)?btn.dataset.tab:'overview';saveState();renderStudentPortal();}
+    else if(action==='student-results-subject-card'){const ui=studentResultsUi();ui.filters.subject=btn.dataset.subject||'all';ui.tab='history';saveState();renderStudentPortal();}
+    else if(action==='student-results-clear-filters'){const ui=studentResultsUi();ui.filters={year:'all',subject:'all',period:'all',grade:'all'};saveState();renderStudentPortal();}
+    else if(action==='student-results-export-xlsx'){exportStudentResultsExcel();}
+    else if(action==='student-results-export-pdf'){exportStudentResultsPdf();}
     else if(action==='student-test-open'){const id=String(document.getElementById('student-test-select')?.value||'');if(!id)return toast('Vyber test.','warn');state.ui=state.ui||{};state.ui.studentSelectedTestId=id;saveState();renderStudentPortal();}
     else if(action==='student-test-close'){state.ui=state.ui||{};state.ui.studentSelectedTestId='';saveState();renderStudentPortal();}
     else if(action==='student-invest-score'){openStudentInvestScoreModal();}

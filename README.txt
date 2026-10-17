@@ -1,12 +1,16 @@
-ZZ-01 STUDENT V15 — INVENTÁŘ = ŽÁKOVA SKŘÍŇKA
+ZZ-01 STUDENT V16 – MOJE VÝSLEDKY
 
 Změny:
-- Inventář má vizuální otevřenou školní skříňku.
-- Obsah se přepíná podle předmětu.
-- Propustka, Tahák a Kafíčko se zobrazují přímo ve skříňce s počtem kusů.
-- Přidána historie získání/použití inventářových předmětů.
-- Dole zůstává klasický přehled všech předmětů.
-- Používají se existující assets/locker z aplikace.
+- nová stránka Moje výsledky
+- karty: počet zkoušení, průměr známek, jedničky, poslední výsledek
+- filtry: školní rok, předmět, období, výsledek
+- záložky: Přehled / Historie / Statistiky
+- souhrnné karty jednotlivých předmětů
+- kompletní historie včetně poznámky a použití propustky
+- statistika známek 1–5 a graf vývoje posledních známek
+- Export Excel (.xlsx) podle aktuálního filtru
+- Export PDF podle aktuálního filtru
 
-Supabase RPC student_portal_inventory_history je již nasazen.
-Pro nasazení stačí nahradit index.html.
+Nasazení:
+Nahraď pouze index.html. Žádné nové lokální assets nejsou potřeba.
+Exporty používají CDN knihovny SheetJS a html2pdf.js stejně jako aplikace používá CDN pro Supabase.
