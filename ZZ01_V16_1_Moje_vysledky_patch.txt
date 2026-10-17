@@ -1,0 +1,328 @@
+*** Zkouškomat ZZ-01 — V16.1 / Moje výsledky
+*** Bezpečný vizuální patch pro index.html
+*** Zachovává stávající JS logiku filtrů, statistik a exportů.
+
+APLIKOVAT TYTO 3 ZMĚNY:
+
+1) V definici `overviewBody` změnit první panel:
+   PŮVODNĚ:
+   <section class="student-panel"><div class="student-panel-head"><h2>Předměty</h2>
+
+   NOVĚ:
+   <section class="student-panel student-results-subject-panel"><div class="student-panel-head"><h2>Předměty</h2>
+
+2) Ve stejné definici `overviewBody` změnit panel „Poslední výsledky“:
+   PŮVODNĚ:
+   </section><section class="student-panel"><div class="student-panel-head"><h2>Poslední výsledky</h2>
+
+   NOVĚ:
+   </section><section class="student-panel student-results-recent-panel"><div class="student-panel-head"><h2>Poslední výsledky</h2>
+
+3) Nahradit celý CSS blok začínající:
+   /* ===== STUDENT RESULTS V16 — přehled, filtry, statistiky, export ===== */
+   až po jeho poslední @media pravidlo následujícím blokem:
+*/
+
+/* ===== STUDENT RESULTS V16.1 — přehlednější žákovské výsledky ===== */
+.student-results-page{
+  display:grid;
+  grid-template-columns:minmax(280px,.78fr) minmax(0,1.22fr);
+  gap:12px;
+  align-items:start;
+}
+.student-results-hero,
+.student-results-tabs,
+.student-results-stats-grid,
+.student-results-page>.student-panel:not(.student-results-subject-panel):not(.student-results-recent-panel){
+  grid-column:1/-1;
+}
+.student-results-subject-panel{grid-column:1}
+.student-results-recent-panel{grid-column:2;min-width:0}
+
+.student-results-hero{
+  border:2px solid #176879;
+  background:linear-gradient(180deg,#071f2b,#04141e);
+  box-shadow:3px 3px 0 #02070d;
+  padding:0;
+  overflow:hidden;
+}
+.student-results-hero>.student-panel-head{
+  margin:0;
+  padding:13px 16px 11px;
+  border-bottom:1px solid #123d49;
+}
+.student-results-hero>.student-panel-head h2{
+  margin:0 0 3px;
+  font-size:.84rem;
+}
+.student-results-hero>.student-panel-head span{
+  color:#6f9fa6;
+  font-size:.65rem;
+}
+.student-results-hero>.student-panel-head>span:last-child{
+  font-family:var(--pixel);
+  font-size:.48rem;
+  color:#65aab3;
+}
+
+.student-results-kpis{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:0;
+  margin:0;
+  border-bottom:1px solid #123d49;
+}
+.student-results-kpis>div{
+  min-height:66px;
+  padding:11px 15px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:5px;
+  background:transparent;
+  border:0;
+  border-right:1px solid #123d49;
+  box-shadow:none;
+}
+.student-results-kpis>div:last-child{border-right:0}
+.student-results-kpis span{
+  font-family:var(--pixel);
+  font-size:.45rem;
+  color:#659aa2;
+  text-transform:uppercase;
+  letter-spacing:.02em;
+}
+.student-results-kpis strong{
+  font-family:var(--pixel);
+  font-size:.84rem;
+  color:#fff0d4;
+}
+.student-results-kpis>div:nth-child(2) strong{
+  color:#ffab2e;
+  font-size:1.05rem;
+}
+
+.student-results-filter-grid{
+  display:grid;
+  grid-template-columns:1fr 1.3fr 1fr 1fr;
+  gap:8px;
+  margin:0;
+  padding:10px 12px 0;
+}
+.student-results-filter-grid label{
+  font-family:var(--pixel);
+  font-size:.45rem;
+  color:#618e96;
+  text-transform:uppercase;
+}
+.student-results-filter-grid select{
+  width:100%;
+  min-height:35px;
+  margin-top:4px;
+  padding:5px 8px;
+  border:1px solid #17596a;
+  background:#03131c;
+  color:#fff0d6;
+  font-size:.68rem;
+}
+.student-results-actions{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex-wrap:wrap;
+  margin:0;
+  padding:9px 12px 11px;
+}
+.student-results-actions .spacer{flex:1 1 auto}
+.student-results-actions .btn{
+  min-height:34px;
+  padding:5px 10px;
+  font-size:.52rem;
+  box-shadow:2px 2px 0 #02070d;
+}
+.student-results-actions .btn[data-action="student-results-clear-filters"]{
+  background:transparent;
+  border-color:#174956;
+  color:#75a4aa;
+  box-shadow:none;
+}
+
+.student-results-tabs{
+  display:flex;
+  gap:0;
+  padding:0 4px;
+  border-bottom:2px solid #174b58;
+}
+.student-results-tabs .btn{
+  flex:0 1 180px;
+  min-width:0;
+  min-height:38px;
+  padding:7px 13px;
+  border:0!important;
+  border-bottom:3px solid transparent!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#669ca4!important;
+}
+.student-results-tabs .btn:hover{
+  background:#061923!important;
+  color:#d6f5f3!important;
+}
+.student-results-tabs .btn.primary{
+  background:#071a24!important;
+  color:#fff0d6!important;
+  border-bottom-color:#ff9f22!important;
+}
+
+.student-results-subject-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:7px;
+}
+.student-result-subject-card{
+  min-height:82px;
+  padding:10px 11px;
+  border:1px solid #155261;
+  border-left:3px solid #177f91;
+  background:#051822;
+  color:#fff;
+  text-align:left;
+  box-shadow:none;
+  cursor:pointer;
+}
+.student-result-subject-card:hover{
+  border-color:#ff9b15;
+  border-left-color:#ff9b15;
+  background:#102018;
+}
+.student-result-subject-card h3{
+  margin:0 0 7px;
+  color:#fff0d0;
+  font-family:var(--pixel);
+  font-size:.59rem;
+  line-height:1.35;
+}
+.student-result-subject-card .subject-result-main{
+  font-family:var(--pixel);
+  font-size:.78rem;
+  color:#36dbe2;
+  margin-bottom:5px;
+}
+.student-result-subject-card .subject-result-meta{
+  font-size:.65rem;
+  color:#6d999f;
+  line-height:1.35;
+}
+.student-result-subject-card .subject-result-meta strong{
+  color:#fff0d4;
+}
+
+.student-result-grade{
+  display:inline-grid;
+  place-items:center;
+  min-width:29px;
+  min-height:29px;
+  padding:2px 6px;
+  border:1px solid #22aeb9;
+  background:#08242e;
+  color:#fff1dc;
+  font-family:var(--pixel);
+  font-size:.6rem;
+}
+.student-results-table td,.student-results-table th{vertical-align:middle}
+.student-results-table th{
+  color:#78adb4;
+  font-size:.5rem;
+}
+.student-results-table td{
+  padding-top:8px;
+  padding-bottom:8px;
+}
+.student-results-table .pass-used{
+  color:#ffd05b;
+  font-family:var(--pixel);
+  font-size:.53rem;
+}
+
+.student-results-stats-grid{
+  display:grid;
+  grid-template-columns:minmax(280px,.72fr) minmax(0,1.28fr);
+  gap:12px;
+}
+.student-result-chart{
+  border:1px solid #155363;
+  background:#04141e;
+  padding:13px;
+  min-height:260px;
+}
+.student-result-chart h3{
+  margin:0 0 11px;
+  font-family:var(--pixel);
+  font-size:.6rem;
+  color:#fff0d4;
+}
+.student-grade-bars{display:grid;gap:10px}
+.student-grade-bar{
+  display:grid;
+  grid-template-columns:30px minmax(0,1fr) 36px;
+  gap:8px;
+  align-items:center;
+}
+.student-grade-bar>span:first-child{
+  font-family:var(--pixel);
+  color:#fff1d4;
+  text-align:center;
+}
+.student-grade-bar-track{
+  height:16px;
+  border:1px solid #17667a;
+  background:#020d13;
+  overflow:hidden;
+}
+.student-grade-bar-fill{
+  height:100%;
+  background:linear-gradient(90deg,#1b8fa2,#44e5ec);
+  min-width:0;
+}
+.student-grade-bar b{
+  font-family:var(--pixel);
+  font-size:.55rem;
+  color:#8fdde2;
+  text-align:right;
+}
+.student-results-trend{
+  width:100%;
+  height:220px;
+  display:block;
+  background:#03111a;
+  border:1px solid #124a59;
+}
+.student-results-trend-label{font-size:11px;fill:#9fcbd0;font-family:monospace}
+.student-results-trend-line{fill:none;stroke:#41e7ed;stroke-width:3}
+.student-results-trend-dot{fill:#ffae28;stroke:#06131d;stroke-width:2}
+.student-results-empty{
+  padding:24px;
+  text-align:center;
+  border:1px dashed #1d6373;
+  background:#061822;
+  color:#8fb9bf;
+}
+
+@media(max-width:900px){
+  .student-results-page{grid-template-columns:1fr}
+  .student-results-hero,.student-results-tabs,.student-results-stats-grid,
+  .student-results-page>.student-panel,
+  .student-results-subject-panel,.student-results-recent-panel{grid-column:1}
+  .student-results-filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .student-results-stats-grid{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  .student-results-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .student-results-kpis>div:nth-child(2){border-right:0}
+  .student-results-kpis>div:nth-child(-n+2){border-bottom:1px solid #123d49}
+  .student-results-filter-grid{grid-template-columns:1fr}
+  .student-results-actions{display:grid;grid-template-columns:1fr 1fr}
+  .student-results-actions .spacer{display:none}
+  .student-results-actions .btn{width:100%}
+  .student-results-tabs .btn{flex:1 1 33%;font-size:.52rem;padding:7px 5px}
+}
